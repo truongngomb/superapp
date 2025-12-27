@@ -1,31 +1,33 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
+import cookieParser from 'cookie-parser';
 import { categoriesRouter } from './routes/categories.js';
+import { authRouter } from './routes/auth.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { cache } from './config/cache.js';
-
-const PORT = process.env['PORT'] ?? 3001;
-const NODE_ENV = process.env['NODE_ENV'] ?? 'development';
+import { config } from './config/env.js';
 
 const app = express();
 
 // Security middleware - Helmet adds various HTTP headers for security
 app.use(helmet({
-  contentSecurityPolicy: NODE_ENV === 'production',
+  contentSecurityPolicy: config.nodeEnv === 'production',
   crossOriginEmbedderPolicy: false,
 }));
 
 // CORS configuration
 app.use(cors({
-  origin: NODE_ENV === 'production' 
-    ? ['https://yourdomain.com'] 
-    : ['http://localhost:5173', 'http://localhost:3000'],
+  origin: [config.clientUrl],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 }));
+
+// Cookie parser middleware
+app.use(cookieParser());
 
 // Compression middleware for better performance
 app.use(compression());
@@ -45,6 +47,7 @@ app.get('/api/health', (_req, res) => {
 });
 
 // API Routes
+app.use('/api/auth', authRouter);
 app.use('/api/categories', categoriesRouter);
 
 // 404 handler
@@ -59,13 +62,13 @@ app.use('/api/*', (_req, res) => {
 app.use(errorHandler);
 
 // Start server
-app.listen(PORT, () => {
+app.listen(config.port, () => {
   console.log(`
 🚀 SuperApp Server is running!
-📍 Environment: ${NODE_ENV}
-🌐 URL: http://localhost:${PORT}
-📚 API: http://localhost:${PORT}/api
-❤️  Health: http://localhost:${PORT}/api/health
+📍 Environment: ${config.nodeEnv}
+🌐 URL: http://localhost:${config.port}
+📚 API: http://localhost:${config.port}/api
+❤️  Health: http://localhost:${config.port}/api/health
   `);
 });
 

@@ -1,8 +1,9 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Menu, Moon, Sun, X } from 'lucide-react';
+import { LogOut, Menu, Moon, Sun, User, X } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/utils';
+import { useAuth } from '@/context/AuthContext';
 
 interface HeaderProps {
   onMenuToggle?: () => void;
@@ -14,12 +15,19 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
     document.documentElement.classList.contains('dark')
   );
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, isAuthenticated, logout } = useAuth();
 
   const toggleTheme = () => {
     const newMode = !darkMode;
     setDarkMode(newMode);
     document.documentElement.classList.toggle('dark', newMode);
     localStorage.setItem('theme', newMode ? 'dark' : 'light');
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
   };
 
   const navLinks = [
@@ -63,6 +71,7 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
 
         {/* Actions */}
         <div className="flex items-center gap-2">
+          {/* Theme toggle */}
           <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={toggleTheme}
@@ -75,6 +84,48 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
               <Moon className="w-5 h-5 text-muted" />
             )}
           </motion.button>
+
+          {/* Auth buttons */}
+          {isAuthenticated && user ? (
+            <div className="flex items-center gap-2">
+              {/* User avatar */}
+              <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-surface">
+                {user.avatar ? (
+                  <img
+                    src={user.avatar}
+                    alt={user.name || 'User'}
+                    className="w-7 h-7 rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="w-7 h-7 rounded-full bg-primary/20 flex items-center justify-center">
+                    <User className="w-4 h-4 text-primary" />
+                  </div>
+                )}
+                <span className="text-sm font-medium hidden sm:inline max-w-[100px] truncate">
+                  {user.name || user.email}
+                </span>
+              </div>
+              {/* Logout button */}
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                onClick={handleLogout}
+                className="p-2 rounded-lg hover:bg-surface transition-colors text-muted hover:text-red-500"
+                aria-label="Đăng xuất"
+                title="Đăng xuất"
+              >
+                <LogOut className="w-5 h-5" />
+              </motion.button>
+            </div>
+          ) : (
+            <Link to="/login">
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                className="px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary/90 transition-colors"
+              >
+                Đăng nhập
+              </motion.button>
+            </Link>
+          )}
 
           {/* Mobile menu toggle */}
           <motion.button

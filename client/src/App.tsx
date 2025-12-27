@@ -2,10 +2,12 @@ import { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { MainLayout } from '@/components/layout';
 import { LoadingSpinner } from '@/components/common';
+import { AuthProvider } from '@/context/AuthContext';
 
 // Lazy load pages for code splitting
 const HomePage = lazy(() => import('@/pages/HomePage').then((m) => ({ default: m.HomePage })));
 const CategoriesPage = lazy(() => import('@/pages/CategoriesPage').then((m) => ({ default: m.CategoriesPage })));
+const LoginPage = lazy(() => import('@/pages/LoginPage').then((m) => ({ default: m.LoginPage })));
 
 // Fallback component for Suspense
 function PageLoader() {
@@ -31,28 +33,38 @@ function NotFoundPage() {
 
 export function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<MainLayout />}>
-          <Route
-            index
-            element={
-              <Suspense fallback={<PageLoader />}>
-                <HomePage />
-              </Suspense>
-            }
-          />
-          <Route
-            path="categories"
-            element={
-              <Suspense fallback={<PageLoader />}>
-                <CategoriesPage />
-              </Suspense>
-            }
-          />
-          <Route path="*" element={<NotFoundPage />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<MainLayout />}>
+            <Route
+              index
+              element={
+                <Suspense fallback={<PageLoader />}>
+                  <HomePage />
+                </Suspense>
+              }
+            />
+            <Route
+              path="categories"
+              element={
+                <Suspense fallback={<PageLoader />}>
+                  <CategoriesPage />
+                </Suspense>
+              }
+            />
+            <Route
+              path="login"
+              element={
+                <Suspense fallback={<PageLoader />}>
+                  <LoginPage />
+                </Suspense>
+              }
+            />
+            <Route path="*" element={<NotFoundPage />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }

@@ -4,7 +4,11 @@ import PocketBase from 'pocketbase';
  * PocketBase client instance
  * Configure the URL based on your PocketBase server
  */
-const POCKETBASE_URL = process.env['POCKETBASE_URL'] ?? 'http://127.0.0.1:8090';
+const POCKETBASE_URL = process.env['POCKETBASE_URL'];
+
+if (!POCKETBASE_URL) {
+  throw new Error('POCKETBASE_URL environment variable is required');
+}
 
 export const pb = new PocketBase(POCKETBASE_URL);
 

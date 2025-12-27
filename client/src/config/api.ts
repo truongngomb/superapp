@@ -2,7 +2,8 @@
  * API Configuration and HTTP Client
  */
 
-const API_BASE = import.meta.env.VITE_API_URL || '/api';
+// Use relative path to leverage Vite proxy
+const API_BASE = '/api';
 
 interface RequestConfig {
   headers?: Record<string, string>;
@@ -54,6 +55,8 @@ async function request<T>(
   const response = await fetch(url, {
     ...options,
     headers,
+    // Always include credentials (cookies) for auth
+    credentials: 'include',
     ...(config.signal && { signal: config.signal }),
   });
 
