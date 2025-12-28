@@ -30,7 +30,7 @@ export default function RolesPage() {
   });
 
   useEffect(() => {
-    loadRoles();
+    void loadRoles();
   }, []);
 
   const loadRoles = async () => {
@@ -52,7 +52,7 @@ export default function RolesPage() {
       setFormData({
         name: role.name,
         description: role.description || '',
-        permissions: role.permissions || {},
+        permissions: role.permissions,
       });
     } else {
       setEditingRole(null);
@@ -93,7 +93,7 @@ export default function RolesPage() {
         await roleService.create(formData);
       }
       setIsModalOpen(false);
-      loadRoles();
+      void loadRoles();
     } catch (error) {
       logger.error('RolesPage', 'Failed to save role', error);
       alert('Failed to save role');
@@ -104,7 +104,7 @@ export default function RolesPage() {
     if (!confirm('Are you sure you want to delete this role?')) return;
     try {
       await roleService.delete(id);
-      loadRoles();
+      void loadRoles();
     } catch (error) {
       logger.error('RolesPage', 'Failed to delete role', error);
       alert('Failed to delete role');
@@ -119,7 +119,7 @@ export default function RolesPage() {
         <h1 className="text-2xl font-bold">Role Management</h1>
         <PermissionGuard resource="roles" action="create">
           <button 
-            onClick={() => handleOpenModal()}
+            onClick={() => { handleOpenModal(); }}
             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
           >
             Create Role
@@ -140,7 +140,7 @@ export default function RolesPage() {
             <div className="flex gap-2">
               <PermissionGuard resource="roles" action="update">
                 <button 
-                  onClick={() => handleOpenModal(role)}
+                  onClick={() => { handleOpenModal(role); }}
                   className="bg-gray-100 px-3 py-1 rounded hover:bg-gray-200"
                 >
                   Edit
@@ -148,7 +148,7 @@ export default function RolesPage() {
               </PermissionGuard>
               <PermissionGuard resource="roles" action="delete">
                 <button 
-                  onClick={() => handleDelete(role.id)}
+                  onClick={() => void handleDelete(role.id)}
                   className="bg-red-50 text-red-600 px-3 py-1 rounded hover:bg-red-100"
                 >
                   Delete
@@ -164,14 +164,14 @@ export default function RolesPage() {
           <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <h2 className="text-xl font-bold mb-4">{editingRole ? 'Edit Role' : 'Create Role'}</h2>
             
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-1">Name</label>
                 <input 
                   type="text" 
                   required
                   value={formData.name}
-                  onChange={e => setFormData({...formData, name: e.target.value})}
+                  onChange={e => { setFormData({...formData, name: e.target.value}); }}
                   className="w-full border rounded p-2"
                 />
               </div>
@@ -181,7 +181,7 @@ export default function RolesPage() {
                 <input 
                   type="text" 
                   value={formData.description}
-                  onChange={e => setFormData({...formData, description: e.target.value})}
+                  onChange={e => { setFormData({...formData, description: e.target.value}); }}
                   className="w-full border rounded p-2"
                 />
               </div>
@@ -200,7 +200,7 @@ export default function RolesPage() {
                               <input 
                                 type="checkbox"
                                 checked={isChecked || false}
-                                onChange={() => handleTogglePermission(resource, action)}
+                                onChange={() => { handleTogglePermission(resource, action); }}
                               />
                               <span className="capitalize">{action}</span>
                             </label>
@@ -215,7 +215,7 @@ export default function RolesPage() {
               <div className="flex justify-end gap-2 pt-4">
                 <button 
                   type="button"
-                  onClick={() => setIsModalOpen(false)}
+                  onClick={() => { setIsModalOpen(false); }}
                   className="px-4 py-2 border rounded hover:bg-gray-50"
                 >
                   Cancel

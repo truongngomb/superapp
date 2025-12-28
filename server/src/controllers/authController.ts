@@ -51,20 +51,20 @@ export const initGoogleAuth = async (_req: Request, res: Response) => {
  */
 export const handleGoogleCallback = async (req: Request, res: Response) => {
   try {
-    const { code, state } = req.query;
-    const oauthState = req.cookies['oauth_state'];
+    const { code, state } = req.query as { code: string; state: string };
+    const oauthState = req.cookies['oauth_state'] as string | undefined;
 
     if (!code || !state || !oauthState) {
-      return res.redirect(`${config.clientUrl}/login?error=invalid_callback`);
+      res.redirect(`${config.clientUrl}/login?error=invalid_callback`); return;
     }
 
-    const { state: savedState, codeVerifier } = JSON.parse(oauthState);
+    const { state: savedState, codeVerifier } = JSON.parse(oauthState) as { state: string; codeVerifier: string };
 
     if (state !== savedState) {
-      return res.redirect(`${config.clientUrl}/login?error=state_mismatch`);
+      res.redirect(`${config.clientUrl}/login?error=state_mismatch`); return;
     }
 
-    const { token } = await authService.handleGoogleCallback(code as string, codeVerifier);
+    const { token } = await authService.handleGoogleCallback(code, codeVerifier);
 
     // Clear OAuth state cookie
     res.clearCookie('oauth_state');
@@ -86,7 +86,7 @@ export const handleGoogleCallback = async (req: Request, res: Response) => {
  * GET /auth/me - Get current authenticated user session
  */
 export const getMe = async (req: Request, res: Response) => {
-  const token = req.cookies[COOKIE_NAME];
+  const token = req.cookies[COOKIE_NAME] as string | undefined;
 
   if (!token) {
     return res.json({ 

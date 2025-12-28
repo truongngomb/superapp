@@ -56,8 +56,8 @@ const getCallerLocation = (): string => {
   if (match) {
     // Get just filename for cleaner output
     const fullPath = match[1];
-    const fileName = fullPath?.split(/[/\\]/).pop() || fullPath;
-    return `${fileName}:${match[2]}`;
+    const fileName = fullPath?.split(/[/\\]/).pop() ?? 'unknown';
+    return `${fileName}:${match[2] ?? '0'}`;
   }
   return '';
 };
@@ -150,7 +150,7 @@ export const logger = {
   /**
    * Error level - errors and exceptions
    */
-  error: (context: string, message: string, errorOrData?: Error | unknown): void => {
+  error: (context: string, message: string, errorOrData?: unknown): void => {
     if (errorOrData instanceof Error) {
       logMessage('error', context, message, { error: errorOrData });
     } else {
@@ -174,8 +174,8 @@ export const logger = {
  * ```
  */
 export const createLogger = (context: string) => ({
-  debug: (message: string, data?: unknown) => logger.debug(context, message, data),
-  info: (message: string, data?: unknown) => logger.info(context, message, data),
-  warn: (message: string, data?: unknown) => logger.warn(context, message, data),
-  error: (message: string, errorOrData?: Error | unknown) => logger.error(context, message, errorOrData),
+  debug: (message: string, data?: unknown) => { logger.debug(context, message, data); },
+  info: (message: string, data?: unknown) => { logger.info(context, message, data); },
+  warn: (message: string, data?: unknown) => { logger.warn(context, message, data); },
+  error: (message: string, errorOrData?: unknown) => { logger.error(context, message, errorOrData); },
 });

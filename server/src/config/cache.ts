@@ -127,6 +127,7 @@ export function clearAll(): void {
  * }
  * ```
  */
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export function cached<T>(key: string, ttl?: number) {
   return function (
     _target: unknown,

@@ -42,7 +42,7 @@ export const requirePermission = (resource: Resource, action: Action) => {
       throw new UnauthorizedError('Please login to access this resource');
     }
 
-    const permissions = user.permissions || {};
+    const permissions = user.permissions;
 
     // Debug logging in development
     if (config.isDevelopment) {
@@ -121,7 +121,7 @@ export const requireAnyPermission = (
       throw new UnauthorizedError('Please login to access this resource');
     }
 
-    const userPerms = user.permissions || {};
+    const userPerms = user.permissions;
     const hasAny = permissions.some(([resource, action]) =>
       checkPermission(userPerms, resource, action)
     );
@@ -155,7 +155,7 @@ export const requireAllPermissions = (
       throw new UnauthorizedError('Please login to access this resource');
     }
 
-    const userPerms = user.permissions || {};
+    const userPerms = user.permissions;
     const hasAll = permissions.every(([resource, action]) =>
       checkPermission(userPerms, resource, action)
     );

@@ -1,11 +1,9 @@
 /**
- * Authentication Context
+ * Auth Provider Component
  * Manages authentication state and user session
  */
 
 import {
-  createContext,
-  useContext,
   useState,
   useEffect,
   useCallback,
@@ -17,49 +15,7 @@ import { logger } from '@/utils';
 import { ApiException } from '@/config';
 import { PermissionAction, PermissionResource } from '@/types';
 import type { AuthUser } from '@/types';
-
-// ============================================================================
-// Types
-// ============================================================================
-
-interface AuthContextType {
-  /** Current authenticated user */
-  user: AuthUser | null;
-  /** Whether user is authenticated */
-  isAuthenticated: boolean;
-  /** Whether auth check is in progress */
-  isLoading: boolean;
-  /** Auth error message */
-  error: string | null;
-  /** Initiate Google OAuth login */
-  loginWithGoogle: () => void;
-  /** Logout current user */
-  logout: () => Promise<void>;
-  /** Check if user has specific permission */
-  checkPermission: (resource: string, action: string) => boolean;
-  /** Refresh user session */
-  refreshUser: () => Promise<void>;
-  /** Clear auth error */
-  clearError: () => void;
-}
-
-// ============================================================================
-// Context
-// ============================================================================
-
-const AuthContext = createContext<AuthContextType | null>(null);
-
-/**
- * Hook to access auth context
- * @throws Error if used outside AuthProvider
- */
-export function useAuth(): AuthContextType {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-}
+import { AuthContext, type AuthContextType } from './AuthContext';
 
 // ============================================================================
 // Provider
@@ -99,7 +55,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // Check auth on mount
   useEffect(() => {
-    checkAuth();
+    void checkAuth();
   }, [checkAuth]);
 
   // Login with Google OAuth

@@ -84,31 +84,31 @@ export function formatRelativeTime(date: string | Date): string {
   
   if (diffInSeconds < HOUR) {
     const minutes = Math.floor(diffInSeconds / MINUTE);
-    return `${minutes} phút trước`;
+    return `${String(minutes)} phút trước`;
   }
   
   if (diffInSeconds < DAY) {
     const hours = Math.floor(diffInSeconds / HOUR);
-    return `${hours} giờ trước`;
+    return `${String(hours)} giờ trước`;
   }
   
   if (diffInSeconds < WEEK) {
     const days = Math.floor(diffInSeconds / DAY);
-    return `${days} ngày trước`;
+    return `${String(days)} ngày trước`;
   }
   
   if (diffInSeconds < MONTH) {
     const weeks = Math.floor(diffInSeconds / WEEK);
-    return `${weeks} tuần trước`;
+    return `${String(weeks)} tuần trước`;
   }
   
   if (diffInSeconds < YEAR) {
     const months = Math.floor(diffInSeconds / MONTH);
-    return `${months} tháng trước`;
+    return `${String(months)} tháng trước`;
   }
   
   const years = Math.floor(diffInSeconds / YEAR);
-  return `${years} năm trước`;
+  return `${String(years)} năm trước`;
 }
 
 // ============================================================================

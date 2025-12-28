@@ -48,15 +48,15 @@ async function startServer(): Promise<void> {
     }, 10000);
   };
 
-  process.on('SIGTERM', () => shutdown('SIGTERM'));
-  process.on('SIGINT', () => shutdown('SIGINT'));
+  process.on('SIGTERM', () => { shutdown('SIGTERM'); });
+  process.on('SIGINT', () => { shutdown('SIGINT'); });
 }
 
 // =============================================================================
 // Run
 // =============================================================================
 
-startServer().catch((error) => {
+startServer().catch((error: unknown) => {
   log.error('Failed to start server', error);
   process.exit(1);
 });

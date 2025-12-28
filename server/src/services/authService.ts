@@ -117,8 +117,8 @@ class AuthService {
       const authData = await pb.collection(Collections.USERS).authRefresh();
       const user = authData.record;
 
-      const avatarUrl = user.avatar
-        ? pb.files.getUrl(user, user.avatar)
+      const avatarUrl = user['avatar']
+        ? pb.files.getUrl(user, user['avatar'] as string)
         : null;
 
       const permissions = await permissionService.getUserPermissions(user.id);
@@ -126,8 +126,8 @@ class AuthService {
       return {
         user: {
           id: user.id,
-          email: user.email,
-          name: user.name,
+          email: user['email'] as string,
+          name: user['name'] as string,
           avatar: avatarUrl,
           permissions,
         },

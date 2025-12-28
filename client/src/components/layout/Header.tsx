@@ -7,7 +7,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { LogOut, Menu, Moon, Sun, User, X } from 'lucide-react';
 import { cn } from '@/utils';
-import { useAuth, useTheme } from '@/context';
+import { useAuth } from '@/hooks';
+import { useTheme } from '@/context';
 
 // ============================================================================
 // Types
@@ -39,9 +40,13 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
   const { user, isAuthenticated, logout } = useAuth();
   const { isDark, toggleTheme } = useTheme();
 
-  const handleLogout = async () => {
-    await logout();
-    navigate('/');
+  const handleLogout = () => {
+    void logout()
+      .catch(() => { /* Ignore logout errors */ })
+      .then(() => {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        navigate('/');
+      });
   };
 
   return (

@@ -117,7 +117,7 @@ export const validate = (validateFn: ValidationFn) => {
  */
 export const validators = {
   required: (field: string) => (body: Record<string, unknown>) => {
-    const value = body?.[field];
+    const value = body[field];
     if (value === undefined || value === null || 
         (typeof value === 'string' && value.trim() === '')) {
       return `${field} is required`;

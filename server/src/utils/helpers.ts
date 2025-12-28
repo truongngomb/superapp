@@ -60,9 +60,10 @@ export const omit = <T extends Record<string, unknown>, K extends keyof T>(
   obj: T,
   keys: K[]
 ): Omit<T, K> => {
-  const result = { ...obj };
-  keys.forEach((key) => delete result[key]);
-  return result;
+  const keysSet = new Set(keys as string[]);
+  return Object.fromEntries(
+    Object.entries(obj).filter(([key]) => !keysSet.has(key))
+  ) as Omit<T, K>;
 };
 
 // =============================================================================
@@ -104,7 +105,7 @@ export const retry = async <T>(
     }
   }
   
-  throw lastError;
+  throw lastError ?? new Error('Retry operation failed');
 };
 
 // =============================================================================

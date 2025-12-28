@@ -5,6 +5,7 @@
  */
 import { Request, Response } from 'express';
 import { roleService } from '../services/index.js';
+import { RoleCreateInput, RoleUpdateInput } from '../types/index.js';
 
 // =============================================================================
 // Handlers
@@ -22,7 +23,7 @@ export const getAll = async (_req: Request, res: Response) => {
  * GET /roles/:id - Get role by ID
  */
 export const getById = async (req: Request, res: Response) => {
-  const role = await roleService.getById(req.params['id'] ?? '');
+  const role = await roleService.getById(req.params['id'] as string);
   res.json({ success: true, data: role });
 };
 
@@ -31,7 +32,7 @@ export const getById = async (req: Request, res: Response) => {
  */
 export const create = async (req: Request, res: Response) => {
   // Body is already validated by middleware (validateBody)
-  const role = await roleService.create(req.body);
+  const role = await roleService.create(req.body as RoleCreateInput);
   res.status(201).json({ success: true, data: role });
 };
 
@@ -39,7 +40,7 @@ export const create = async (req: Request, res: Response) => {
  * PUT /roles/:id - Update role
  */
 export const update = async (req: Request, res: Response) => {
-  const role = await roleService.update(req.params['id'] ?? '', req.body);
+  const role = await roleService.update(req.params['id'] as string, req.body as RoleUpdateInput);
   res.json({ success: true, data: role });
 };
 
@@ -47,6 +48,6 @@ export const update = async (req: Request, res: Response) => {
  * DELETE /roles/:id - Delete role
  */
 export const remove = async (req: Request, res: Response) => {
-  await roleService.delete(req.params['id'] ?? '');
+  await roleService.delete(req.params['id'] as string);
   res.status(204).send();
 };

@@ -18,7 +18,7 @@ interface EnvConfig {
  * Get environment variable with default value
  */
 function getEnvVar(key: string, defaultValue: string): string {
-  return import.meta.env[key] ?? defaultValue;
+  return (import.meta.env[key] as string | undefined) ?? defaultValue;
 }
 
 /**

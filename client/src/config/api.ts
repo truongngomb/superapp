@@ -44,7 +44,8 @@ export class ApiException extends Error {
     this.code = code;
     this.isNetworkError = isNetworkError;
     
-    // Maintains proper stack trace for where error was thrown
+    // Maintains proper stack trace for where error was thrown (V8 only)
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, ApiException);
     }
@@ -184,7 +185,7 @@ async function request<T>(
         return undefined as T;
       }
 
-      const json = await response.json();
+      const json: unknown = await response.json();
 
       if (!response.ok) {
         const errorData = json as ApiErrorData;
@@ -201,8 +202,9 @@ async function request<T>(
       }
 
       // Unwrap { success, data } format from server
-      if (json && typeof json === 'object' && 'success' in json && 'data' in json) {
-        return json.data as T;
+      const typedJson = json as Record<string, unknown>;
+      if (typeof json === 'object' && json !== null && 'success' in typedJson && 'data' in typedJson) {
+        return typedJson.data as T;
       }
 
       return json as T;
@@ -307,10 +309,10 @@ export function createAbortController(timeoutMs: number): {
   clear: () => void;
 } {
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  const timeoutId = setTimeout(() => { controller.abort(); }, timeoutMs);
   
   return {
     controller,
-    clear: () => clearTimeout(timeoutId),
+    clear: () => { clearTimeout(timeoutId); },
   };
 }

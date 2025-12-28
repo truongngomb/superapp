@@ -29,7 +29,6 @@ export type {
   Category,
   CategoryCreateInput,
   CategoryUpdateInput,
-  CategoryInput,
 } from './category.js';
 
 // Role & Permission types
@@ -40,8 +39,6 @@ export type {
   Role,
   RoleCreateInput,
   RoleUpdateInput,
-  CreateRoleInput,
-  UpdateRoleInput,
 } from './role.js';
 export { Resources, Actions } from './role.js';
 

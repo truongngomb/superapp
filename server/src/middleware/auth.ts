@@ -6,7 +6,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { pb } from '../config/database.js';
 import { getUserPermissions } from '../services/permissionService.js';
-import { AuthUser } from '../types/index.js';
+import { AuthUser, User } from '../types/index.js';
 import { UnauthorizedError } from './errorHandler.js';
 import { logger } from '../utils/index.js';
 
@@ -15,6 +15,7 @@ import { logger } from '../utils/index.js';
 // =============================================================================
 
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
     interface Request {
       user?: AuthUser;
@@ -45,10 +46,10 @@ export const authenticate = async (
   _res: Response,
   next: NextFunction
 ) => {
-  const token = req.cookies[COOKIE_NAME];
+  const token = req.cookies[COOKIE_NAME] as string | undefined;
 
   if (!token || typeof token !== 'string') {
-    return next();
+    next(); return;
   }
 
   try {
@@ -56,12 +57,12 @@ export const authenticate = async (
     pb.authStore.save(token, null);
 
     if (!pb.authStore.isValid) {
-      return next();
+      next(); return;
     }
 
     // Fetch fresh user data from PocketBase
     const authData = await pb.collection('users').authRefresh();
-    const model = authData.record;
+    const model = authData.record as unknown as User;
 
     // Fetch user permissions
     const permissions = await getUserPermissions(model.id);

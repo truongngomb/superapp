@@ -21,7 +21,7 @@ if ('serviceWorker' in navigator) {
         });
       }
     });
-  }).catch((error) => {
+  }).catch((error: unknown) => {
     logger.error('SW', 'Registration failed:', error);
   });
 }

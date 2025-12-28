@@ -51,12 +51,12 @@ class PermissionService {
         return {};
       }
 
-      let perms = role['permissions'];
+      let perms: unknown = role['permissions'];
 
       // Handle potential string serialization from PocketBase
       if (typeof perms === 'string') {
         try {
-          perms = JSON.parse(perms);
+          perms = JSON.parse(perms) as unknown;
         } catch {
           log.error('Failed to parse permissions JSON');
           return {};

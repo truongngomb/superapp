@@ -49,7 +49,7 @@ function CategoryRow({ index, style, data }: CategoryRowProps) {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => data.onEdit(category)}
+              onClick={() => { data.onEdit(category); }}
               aria-label="Edit"
             >
               <Edit2 className="w-4 h-4" />
@@ -59,7 +59,7 @@ function CategoryRow({ index, style, data }: CategoryRowProps) {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => data.onDelete(category.id)}
+              onClick={() => { data.onDelete(category.id); }}
               aria-label="Delete"
             >
               <Trash2 className="w-4 h-4 text-red-500" />
@@ -104,7 +104,7 @@ function CategoryForm({ category, onSubmit, onClose, loading }: CategoryFormProp
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) => { e.stopPropagation(); }}
         className="w-full max-w-md"
       >
         <Card>
@@ -116,14 +116,14 @@ function CategoryForm({ category, onSubmit, onClose, loading }: CategoryFormProp
               <Input
                 label="Category Name"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={(e) => { setFormData({ ...formData, name: e.target.value }); }}
                 placeholder="Enter category name"
                 required
               />
               <Input
                 label="Description"
                 value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                onChange={(e) => { setFormData({ ...formData, description: e.target.value }); }}
                 placeholder="Enter description"
               />
               <div className="flex flex-col gap-1.5">
@@ -131,7 +131,7 @@ function CategoryForm({ category, onSubmit, onClose, loading }: CategoryFormProp
                 <input
                   type="color"
                   value={formData.color}
-                  onChange={(e) => setFormData({ ...formData, color: e.target.value })}
+                  onChange={(e) => { setFormData({ ...formData, color: e.target.value }); }}
                   className="w-full h-10 rounded-lg cursor-pointer"
                 />
               </div>
@@ -260,7 +260,7 @@ export function CategoriesPage() {
           <p className="text-muted mt-1">Manage product categories</p>
         </div>
         <PermissionGuard resource="categories" action="create">
-          <Button onClick={() => setShowForm(true)}>
+          <Button onClick={() => { setShowForm(true); }}>
             <Plus className="w-5 h-5" />
             Add New
           </Button>
@@ -273,7 +273,7 @@ export function CategoriesPage() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" />
           <Input
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => { setSearchQuery(e.target.value); }}
             placeholder="Search categories..."
             className="pl-10"
           />
@@ -295,7 +295,7 @@ export function CategoriesPage() {
             </p>
             {!searchQuery && (
               <PermissionGuard resource="categories" action="create">
-                <Button onClick={() => setShowForm(true)} className="mt-4">
+                <Button onClick={() => { setShowForm(true); }} className="mt-4">
                   Add first category
                 </Button>
               </PermissionGuard>
@@ -312,7 +312,7 @@ export function CategoriesPage() {
             itemData={{
               categories: filteredCategories,
               onEdit: handleEdit,
-              onDelete: handleDelete,
+              onDelete: (id: string) => void handleDelete(id),
             }}
           >
             {CategoryRow}
@@ -325,7 +325,7 @@ export function CategoriesPage() {
         {showForm && (
           <CategoryForm
             category={editingCategory}
-            onSubmit={handleSubmit}
+            onSubmit={(data) => void handleSubmit(data)}
             onClose={() => {
               setShowForm(false);
               setEditingCategory(null);
@@ -340,7 +340,7 @@ export function CategoriesPage() {
         message={toast?.message ?? ''}
         type={toast?.type}
         visible={!!toast}
-        onClose={() => setToast(null)}
+        onClose={() => { setToast(null); }}
       />
     </div>
   );

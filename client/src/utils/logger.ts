@@ -62,7 +62,7 @@ function getCallerInfo(): string {
                 callerLine.match(/at\\s+(.*):(\\d+):(\\d+)/);
   
   if (match) {
-    return `@ ${match[1]}:${match[2]}`;
+    return `@ ${match[1] ?? ''}:${match[2] ?? ''}`;
   }
   return '';
 }

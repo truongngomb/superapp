@@ -6,7 +6,7 @@
 import { useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/context';
+import { useAuth } from '@/hooks';
 import { LoadingSpinner } from '@/components/common';
 
 // ============================================================================
@@ -47,7 +47,7 @@ export function LoginPage() {
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/', { replace: true });
+      void navigate('/', { replace: true });
     }
   }, [isAuthenticated, navigate]);
 
@@ -55,8 +55,8 @@ export function LoginPage() {
     loginWithGoogle();
   }, [loginWithGoogle]);
 
-  // Show loading while checking initial auth or redirecting
-  if (isLoading || isAuthenticated) {
+  // Show loading while checking initial auth 
+  if (isLoading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
         <LoadingSpinner size="lg" />
@@ -90,6 +90,7 @@ export function LoginPage() {
             disabled={isLoading}
             className="w-full flex items-center justify-center gap-3 bg-white hover:bg-gray-50 text-gray-800 font-medium py-3 px-4 rounded-xl border border-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
+            {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
             {isLoading ? (
               <div className="w-5 h-5 border-2 border-gray-300 border-t-primary rounded-full animate-spin" />
             ) : (

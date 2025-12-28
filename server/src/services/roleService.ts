@@ -23,7 +23,7 @@ class RoleService extends BaseService<Role> {
       id: record['id'] as string,
       name: record['name'] as string,
       description: (record['description'] as string) || undefined,
-      permissions: (record['permissions'] as RolePermissions) || {},
+      permissions: (record['permissions'] as RolePermissions | undefined) ?? {},
       created: record['created'] as string,
       updated: record['updated'] as string,
     };

@@ -184,7 +184,7 @@ export function errorHandler(
   const code = err.code || 'UNKNOWN_ERROR';
 
   // Log error
-  logger.error('GlobalError', `[${code}] ${status}: ${message}`);
+  logger.error('GlobalError', `[${code}] ${status.toString()}: ${message}`);
   if (config.isDevelopment) {
     logger.error('GlobalError', 'Stack:', err.stack);
   }

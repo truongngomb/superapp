@@ -4,7 +4,7 @@
  */
 
 import { type ReactNode, type ReactElement } from 'react';
-import { useAuth } from '@/context';
+import { useAuth } from '@/hooks';
 import { PermissionAction, PermissionResource } from '@/types';
 
 // ============================================================================
@@ -65,27 +65,4 @@ export function PermissionGuard({
   return fallback as ReactElement | null;
 }
 
-// ============================================================================
-// Helper Hooks
-// ============================================================================
 
-/**
- * Hook to check a single permission
- */
-export function usePermission(resource: string, action: string): boolean {
-  const { checkPermission, isAuthenticated } = useAuth();
-  return isAuthenticated && checkPermission(resource, action);
-}
-
-/**
- * Hook to check multiple permissions
- */
-export function usePermissions(
-  permissions: Array<{ resource: string; action: string }>
-): boolean[] {
-  const { checkPermission, isAuthenticated } = useAuth();
-  
-  return permissions.map(({ resource, action }) =>
-    isAuthenticated && checkPermission(resource, action)
-  );
-}

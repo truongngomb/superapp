@@ -1,52 +1,18 @@
 /**
- * Theme Context
+ * Theme Provider
  * Manages application theme (light/dark mode)
  */
 
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  useCallback,
-  type ReactNode,
-} from 'react';
+import { useState, useEffect, useCallback, type ReactNode } from 'react';
 import { THEME, STORAGE_KEYS } from '@/config';
 import { getStorageItem, setStorageItem } from '@/utils';
+import { ThemeContext } from './themeContext.internal';
 
 // ============================================================================
 // Types
 // ============================================================================
 
 type Theme = typeof THEME.LIGHT | typeof THEME.DARK;
-
-interface ThemeContextType {
-  /** Current theme */
-  theme: Theme;
-  /** Whether dark mode is active */
-  isDark: boolean;
-  /** Toggle between light and dark */
-  toggleTheme: () => void;
-  /** Set specific theme */
-  setTheme: (theme: Theme) => void;
-}
-
-// ============================================================================
-// Context
-// ============================================================================
-
-const ThemeContext = createContext<ThemeContextType | null>(null);
-
-/**
- * Hook to access theme context
- */
-export function useTheme(): ThemeContextType {
-  const context = useContext(ThemeContext);
-  if (!context) {
-    throw new Error('useTheme must be used within a ThemeProvider');
-  }
-  return context;
-}
 
 // ============================================================================
 // Provider
@@ -97,7 +63,7 @@ export function ThemeProvider({ children, defaultTheme = THEME.LIGHT }: ThemePro
     };
 
     mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
+    return () => { mediaQuery.removeEventListener('change', handleChange); };
   }, []);
 
   const setTheme = useCallback((newTheme: Theme) => {
@@ -109,7 +75,7 @@ export function ThemeProvider({ children, defaultTheme = THEME.LIGHT }: ThemePro
     setTheme(theme === THEME.DARK ? THEME.LIGHT : THEME.DARK);
   }, [theme, setTheme]);
 
-  const value: ThemeContextType = {
+  const value = {
     theme,
     isDark: theme === THEME.DARK,
     toggleTheme,

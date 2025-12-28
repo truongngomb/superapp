@@ -151,13 +151,13 @@ export const rules = {
   
   minLength: (min: number, message?: string): ValidatorRule => ({
     validate: (v) => minLength(v, min),
-    message: message ?? `Must be at least ${min} characters`,
+    message: message ?? `Must be at least ${String(min)} characters`,
     code: 'MIN_LENGTH',
   }),
   
   maxLength: (max: number, message?: string): ValidatorRule => ({
     validate: (v) => maxLength(v, max),
-    message: message ?? `Must be at most ${max} characters`,
+    message: message ?? `Must be at most ${String(max)} characters`,
     code: 'MAX_LENGTH',
   }),
   

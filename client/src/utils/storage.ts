@@ -9,7 +9,7 @@ import { STORAGE_KEYS } from '@/config';
 // Types
 // ============================================================================
 
-type StorageKey = typeof STORAGE_KEYS[keyof typeof STORAGE_KEYS] | string;
+type StorageKey = string;
 
 interface StorageOptions {
   /** Storage type (default: localStorage) */
@@ -30,6 +30,7 @@ interface StoredItem<T> {
 /**
  * Get item from storage with type safety
  */
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export function getStorageItem<T>(key: StorageKey, options?: StorageOptions): T | null {
   const storage = options?.storage ?? localStorage;
   
@@ -37,7 +38,7 @@ export function getStorageItem<T>(key: StorageKey, options?: StorageOptions): T 
     const item = storage.getItem(key);
     if (!item) return null;
 
-    const parsed: StoredItem<T> = JSON.parse(item);
+    const parsed = JSON.parse(item) as StoredItem<T>;
     
     // Check expiration
     if (parsed.expires && Date.now() > parsed.expires) {
@@ -54,7 +55,8 @@ export function getStorageItem<T>(key: StorageKey, options?: StorageOptions): T 
 /**
  * Set item in storage with optional expiration
  */
-export function setStorageItem<T>(
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
+export function setStorageItem<T extends Record<string, unknown> | string | number | boolean | null>(
   key: StorageKey,
   value: T,
   options?: StorageOptions

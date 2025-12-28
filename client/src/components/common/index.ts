@@ -15,8 +15,7 @@ export { LoadingSpinner } from './LoadingSpinner';
 export { Toast } from './Toast';
 
 // Permission Components
-export { 
-  PermissionGuard,
-  usePermission,
-  usePermissions,
-} from './PermissionGuard';
+export { PermissionGuard } from './PermissionGuard';
+
+// Permission Hooks (re-exported from hooks folder)
+export { usePermission, usePermissions } from '@/hooks/usePermission';

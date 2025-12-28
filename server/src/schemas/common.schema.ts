@@ -57,7 +57,7 @@ export const sortSchema = z.object({
 /**
  * Combined pagination and sorting
  */
-export const listQuerySchema = paginationSchema.merge(sortSchema);
+export const listQuerySchema = paginationSchema.extend(sortSchema.shape);
 
 // =============================================================================
 // Param Schemas
