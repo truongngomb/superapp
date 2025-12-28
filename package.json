@@ -17,6 +17,7 @@
     "lint": "npm run lint --workspace=client && npm run lint --workspace=server",
     "cap:sync": "npm run cap:sync --workspace=client",
     "android:open": "npm run android:open --workspace=client",
+    "android:build": "npm run android:build --workspace=client",
     "ios:open": "npm run ios:open --workspace=client"
   },
   "devDependencies": {

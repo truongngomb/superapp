@@ -5,7 +5,7 @@
 ## Tech Stack
 
 - **Frontend**: React 18, TypeScript, Vite, TailwindCSS
-- **Backend**: Node.js, Express, PocketBase
+- **Backend**: Node.js, Express, PocketBase, NodeCache (In-memory)
 - **Mobile**: Capacitor (Android/iOS)
 - **PWA**: Vite PWA Plugin
 
@@ -164,7 +164,6 @@ my-project/
 |--------|----------|-------------|
 | GET | `/auth/google` | Initiate Google OAuth |
 | GET | `/auth/google/callback` | Google OAuth callback |
-| POST | `/auth/google/one-tap` | Google One Tap login |
 | GET | `/auth/me` | Get current user |
 | POST | `/auth/logout` | Logout user |
 

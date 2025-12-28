@@ -10,6 +10,7 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "cap:sync": "cap sync",
     "android:open": "cap open android",
+    "android:build": "cd android && gradlew assembleDebug && start app/build/outputs/apk/debug",
     "ios:open": "cap open ios"
   },
   "dependencies": {
