@@ -1,39 +1,48 @@
+/**
+ * Header Component
+ * Application header with navigation, theme toggle, and user menu
+ */
+
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { LogOut, Menu, Moon, Sun, User, X } from 'lucide-react';
-import { useState } from 'react';
 import { cn } from '@/utils';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth, useTheme } from '@/context';
+
+// ============================================================================
+// Types
+// ============================================================================
 
 interface HeaderProps {
+  /** Callback when mobile menu toggle is clicked */
   onMenuToggle?: () => void;
+  /** Whether mobile menu is open */
   menuOpen?: boolean;
 }
 
+// ============================================================================
+// Constants
+// ============================================================================
+
+const NAV_LINKS = [
+  { path: '/', label: 'Home' },
+  { path: '/categories', label: 'Categories' },
+] as const;
+
+// ============================================================================
+// Component
+// ============================================================================
+
 export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
-  const [darkMode, setDarkMode] = useState(
-    document.documentElement.classList.contains('dark')
-  );
   const location = useLocation();
   const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuth();
+  const { isDark, toggleTheme } = useTheme();
 
-  const toggleTheme = () => {
-    const newMode = !darkMode;
-    setDarkMode(newMode);
-    document.documentElement.classList.toggle('dark', newMode);
-    localStorage.setItem('theme', newMode ? 'dark' : 'light');
-  };
-
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     navigate('/');
   };
-
-  const navLinks = [
-    { path: '/', label: 'Home' },
-    { path: '/categories', label: 'Categories' },
-  ];
 
   return (
     <header className="sticky top-0 z-40 w-full bg-background/80 backdrop-blur-lg border-b border-border safe-area-top">
@@ -53,7 +62,7 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-1">
-          {navLinks.map((link) => (
+          {NAV_LINKS.map((link) => (
             <Link
               key={link.path}
               to={link.path}
@@ -73,12 +82,13 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
         <div className="flex items-center gap-2">
           {/* Theme toggle */}
           <motion.button
+            type="button"
             whileTap={{ scale: 0.95 }}
             onClick={toggleTheme}
             className="p-2 rounded-lg hover:bg-surface transition-colors"
-            aria-label="Toggle theme"
+            aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
           >
-            {darkMode ? (
+            {isDark ? (
               <Sun className="w-5 h-5 text-muted" />
             ) : (
               <Moon className="w-5 h-5 text-muted" />
@@ -107,6 +117,7 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
               </div>
               {/* Logout button */}
               <motion.button
+                type="button"
                 whileTap={{ scale: 0.95 }}
                 onClick={handleLogout}
                 className="p-2 rounded-lg hover:bg-surface transition-colors text-muted hover:text-red-500"
@@ -119,6 +130,7 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
           ) : (
             <Link to="/login">
               <motion.button
+                type="button"
                 whileTap={{ scale: 0.95 }}
                 className="px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary/90 transition-colors"
               >
@@ -129,6 +141,7 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
 
           {/* Mobile menu toggle */}
           <motion.button
+            type="button"
             whileTap={{ scale: 0.95 }}
             onClick={onMenuToggle}
             className="p-2 rounded-lg hover:bg-surface transition-colors md:hidden"

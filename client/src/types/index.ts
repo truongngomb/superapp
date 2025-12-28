@@ -1,7 +1,15 @@
 /**
- * Common types used throughout the application
+ * Types Module Exports
  */
 
-export * from './category';
-export * from './role';
+// Common/Shared types
+export * from './common';
+
+// Auth types
 export * from './auth';
+
+// Category types
+export * from './category';
+
+// Role types
+export * from './role';

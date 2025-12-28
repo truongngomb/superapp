@@ -1,3 +1,7 @@
-export * from './auth.service';
-export * from './category.service';
-export * from './role.service';
+/**
+ * Services Module Exports
+ */
+
+export { authService } from './auth.service';
+export { categoryService } from './category.service';
+export { roleService } from './role.service';

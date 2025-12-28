@@ -1,22 +1,60 @@
 /**
- * Category type from API
+ * Category Types
  */
-export interface Category {
-  id: string;
+
+import type { BaseEntity } from './common';
+
+// ============================================================================
+// Entity
+// ============================================================================
+
+/**
+ * Category entity from API
+ */
+export interface Category extends BaseEntity {
   name: string;
   description: string;
   color: string;
   icon: string;
-  createdAt: string;
-  updatedAt: string;
+}
+
+// ============================================================================
+// Input/DTO Types
+// ============================================================================
+
+/**
+ * Create category input
+ */
+export interface CreateCategoryInput {
+  name: string;
+  description: string;
+  color: string;
+  icon: string;
 }
 
 /**
- * Create/Update category payload
+ * Update category input (all fields optional)
  */
-export interface CategoryInput {
-  name: string;
-  description: string;
-  color: string;
-  icon: string;
+export interface UpdateCategoryInput {
+  name?: string;
+  description?: string;
+  color?: string;
+  icon?: string;
+}
+
+/**
+ * Alias for backward compatibility
+ */
+export type CategoryInput = CreateCategoryInput;
+
+// ============================================================================
+// Query Types
+// ============================================================================
+
+/**
+ * Category filter options
+ */
+export interface CategoryFilters {
+  search?: string;
+  color?: string;
 }

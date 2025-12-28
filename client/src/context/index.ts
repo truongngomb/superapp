@@ -1,1 +1,6 @@
-export * from './AuthContext';
+/**
+ * Context Module Exports
+ */
+
+export { AuthProvider, useAuth } from './AuthContext';
+export { ThemeProvider, useTheme } from './ThemeContext';

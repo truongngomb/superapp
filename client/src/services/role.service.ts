@@ -1,39 +1,82 @@
-import { api } from '@/config/api';
+/**
+ * Role Service
+ * Handles all role-related API calls
+ */
+
+import { api, createAbortController, API_ENDPOINTS, type RequestConfig } from '@/config';
 import type { Role, CreateRoleInput, UpdateRoleInput } from '@/types';
+
+// ============================================================================
+// Types
+// ============================================================================
+
+interface ServiceConfig extends Omit<RequestConfig, 'signal'> {
+  /** Request timeout in ms (default: 10000) */
+  timeout?: number;
+  /** AbortSignal for cancellation */
+  signal?: AbortSignal;
+}
+
+// ============================================================================
+// Service
+// ============================================================================
 
 export const roleService = {
   /**
    * Get all roles
    */
-  getAll: async (): Promise<Role[]> => {
-    return api.get<Role[]>('/roles');
+  async getAll(config?: ServiceConfig): Promise<Role[]> {
+    const { controller, clear } = createAbortController(config?.timeout ?? 10000);
+    
+    try {
+      return await api.get<Role[]>(API_ENDPOINTS.ROLES, {
+        signal: config?.signal ?? controller.signal,
+      });
+    } finally {
+      clear();
+    }
   },
 
   /**
    * Get role by ID
    */
-  getById: async (id: string): Promise<Role> => {
-    return api.get<Role>(`/roles/${id}`);
+  async getById(id: string, config?: ServiceConfig): Promise<Role> {
+    const { controller, clear } = createAbortController(config?.timeout ?? 10000);
+    
+    try {
+      return await api.get<Role>(`${API_ENDPOINTS.ROLES}/${id}`, {
+        signal: config?.signal ?? controller.signal,
+      });
+    } finally {
+      clear();
+    }
   },
 
   /**
    * Create new role
    */
-  create: async (input: CreateRoleInput): Promise<Role> => {
-    return api.post<Role>('/roles', input);
+  async create(data: CreateRoleInput): Promise<Role> {
+    return api.post<Role>(API_ENDPOINTS.ROLES, data);
   },
 
   /**
    * Update role details and permissions
    */
-  update: async (id: string, input: UpdateRoleInput): Promise<Role> => {
-    return api.put<Role>(`/roles/${id}`, input);
+  async update(id: string, data: UpdateRoleInput): Promise<Role> {
+    return api.put<Role>(`${API_ENDPOINTS.ROLES}/${id}`, data);
   },
 
   /**
-   * Delete role
+   * Delete role by ID
    */
-  delete: async (id: string): Promise<void> => {
-    return api.delete(`/roles/${id}`);
+  async delete(id: string): Promise<void> {
+    return api.delete(`${API_ENDPOINTS.ROLES}/${id}`);
+  },
+
+  /**
+   * Duplicate a role
+   */
+  async duplicate(id: string, newName: string): Promise<Role> {
+    return api.post<Role>(`${API_ENDPOINTS.ROLES}/${id}/duplicate`, { name: newName });
   },
 };

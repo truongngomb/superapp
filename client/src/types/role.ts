@@ -1,23 +1,68 @@
 /**
- * Role types
+ * Role Types
  */
-export interface Role {
-  id: string;
+
+import type { BaseEntity } from './common';
+import { PermissionAction, PermissionResource } from './common';
+
+// ============================================================================
+// Entity
+// ============================================================================
+
+/**
+ * Permission map: resource -> actions[]
+ */
+export type RolePermissions = Record<string, string[]>;
+
+/**
+ * Role entity from API
+ */
+export interface Role extends BaseEntity {
   name: string;
   description?: string;
-  permissions: Record<string, string[]>;
-  created: string;
-  updated: string;
+  permissions: RolePermissions;
 }
 
+// ============================================================================
+// Input/DTO Types
+// ============================================================================
+
+/**
+ * Create role input
+ */
 export interface CreateRoleInput {
   name: string;
   description?: string;
-  permissions: Record<string, string[]>;
+  permissions: RolePermissions;
 }
 
+/**
+ * Update role input (all fields optional)
+ */
 export interface UpdateRoleInput {
   name?: string;
   description?: string;
-  permissions?: Record<string, string[]>;
+  permissions?: RolePermissions;
+}
+
+// ============================================================================
+// Permission Helpers
+// ============================================================================
+
+/**
+ * Check if role has specific permission
+ */
+export function hasPermission(
+  role: Role,
+  resource: PermissionResource | string,
+  action: PermissionAction | string
+): boolean {
+  const resourcePerms = role.permissions[resource] || [];
+  const allPerms = role.permissions[PermissionResource.All] || [];
+
+  return (
+    resourcePerms.includes(action) ||
+    resourcePerms.includes(PermissionAction.Manage) ||
+    allPerms.includes(PermissionAction.Manage)
+  );
 }

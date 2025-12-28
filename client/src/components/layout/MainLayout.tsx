@@ -1,23 +1,27 @@
+/**
+ * Main Layout Component
+ * Root layout with header, sidebar, and main content area
+ */
+
 import { Outlet } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
+
+// ============================================================================
+// Component
+// ============================================================================
 
 export function MainLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Initialize theme from localStorage
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-      document.documentElement.classList.add('dark');
-    }
+  const toggleSidebar = useCallback(() => {
+    setSidebarOpen((prev) => !prev);
   }, []);
 
-  const toggleSidebar = () => setSidebarOpen((prev) => !prev);
-  const closeSidebar = () => setSidebarOpen(false);
+  const closeSidebar = useCallback(() => {
+    setSidebarOpen(false);
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">

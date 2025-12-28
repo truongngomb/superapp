@@ -1,13 +1,84 @@
-import { AuthModel } from 'pocketbase';
+/**
+ * Authentication Types
+ */
+
+// ============================================================================
+// User Types
+// ============================================================================
 
 /**
- * Auth types
+ * Permission map: resource -> actions[]
  */
-export type AuthUser = AuthModel & {
-  permissions?: Record<string, string[]>;
-};
+export type PermissionMap = Record<string, string[]>;
 
-export interface AuthResponse {
+/**
+ * Authenticated user data
+ */
+export interface AuthUser {
+  id: string;
+  email: string;
+  name?: string;
+  avatar?: string;
+  verified?: boolean;
+  permissions?: PermissionMap;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+// ============================================================================
+// Auth Response Types
+// ============================================================================
+
+/**
+ * Auth status check response
+ */
+export interface AuthStatusResponse {
   user: AuthUser | null;
   isAuthenticated: boolean;
+}
+
+/**
+ * Login response
+ */
+export interface LoginResponse {
+  user: AuthUser;
+  token?: string;
+}
+
+// ============================================================================
+// Auth Request Types
+// ============================================================================
+
+/**
+ * Email/Password login input
+ */
+export interface LoginInput {
+  email: string;
+  password: string;
+}
+
+/**
+ * Registration input
+ */
+export interface RegisterInput {
+  email: string;
+  password: string;
+  name?: string;
+}
+
+// ============================================================================
+// OAuth Types
+// ============================================================================
+
+/**
+ * OAuth provider names
+ */
+export type OAuthProvider = 'google' | 'github' | 'facebook';
+
+/**
+ * OAuth config response
+ */
+export interface OAuthConfigResponse {
+  clientId: string;
+  redirectUri: string;
 }
