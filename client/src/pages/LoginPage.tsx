@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/context';
 import { useNavigate } from 'react-router-dom';
 
 export function LoginPage() {
@@ -29,8 +29,8 @@ export function LoginPage() {
           <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-4">
             <span className="text-white font-bold text-3xl">S</span>
           </div>
-          <h1 className="text-2xl font-bold text-gradient">Chào mừng đến SuperApp</h1>
-          <p className="text-muted mt-2">Đăng nhập để tiếp tục</p>
+          <h1 className="text-2xl font-bold text-gradient">Welcome to SuperApp</h1>
+          <p className="text-muted mt-2">Sign in to continue</p>
         </div>
 
         {/* Login Card */}
@@ -65,15 +65,15 @@ export function LoginPage() {
                     d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                   />
                 </svg>
-                Đăng nhập bằng Google
+                Sign in with Google
               </>
             )}
           </motion.button>
 
           <p className="text-center text-sm text-muted mt-4">
-            Bằng việc đăng nhập, bạn đồng ý với{' '}
+            By signing in, you agree to our{' '}
             <a href="#" className="text-primary hover:underline">
-              Điều khoản dịch vụ
+              Terms of Service
             </a>
           </p>
         </div>

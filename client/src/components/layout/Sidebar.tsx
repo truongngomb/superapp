@@ -9,9 +9,9 @@ interface SidebarProps {
 }
 
 const navItems = [
-  { path: '/', label: 'Trang chủ', icon: Home },
-  { path: '/categories', label: 'Danh mục', icon: Folder },
-  { path: '/settings', label: 'Cài đặt', icon: Settings },
+  { path: '/', label: 'Home', icon: Home },
+  { path: '/categories', label: 'Categories', icon: Folder },
+  { path: '/settings', label: 'Settings', icon: Settings },
 ];
 
 export function Sidebar({ open, onClose }: SidebarProps) {

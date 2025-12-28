@@ -31,8 +31,8 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
   };
 
   const navLinks = [
-    { path: '/', label: 'Trang chủ' },
-    { path: '/categories', label: 'Danh mục' },
+    { path: '/', label: 'Home' },
+    { path: '/categories', label: 'Categories' },
   ];
 
   return (
@@ -110,8 +110,8 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
                 whileTap={{ scale: 0.95 }}
                 onClick={handleLogout}
                 className="p-2 rounded-lg hover:bg-surface transition-colors text-muted hover:text-red-500"
-                aria-label="Đăng xuất"
-                title="Đăng xuất"
+                aria-label="Logout"
+                title="Logout"
               >
                 <LogOut className="w-5 h-5" />
               </motion.button>
@@ -122,7 +122,7 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
                 whileTap={{ scale: 0.95 }}
                 className="px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary/90 transition-colors"
               >
-                Đăng nhập
+                Login
               </motion.button>
             </Link>
           )}

@@ -4,6 +4,8 @@
  * Note: eruda is excluded from production builds to reduce bundle size
  */
 
+import { logger } from './logger';
+
 export async function initEruda(): Promise<void> {
   const isDev = import.meta.env.MODE === 'development';
   const urlParams = new URLSearchParams(window.location.search);
@@ -15,11 +17,11 @@ export async function initEruda(): Promise<void> {
     try {
       const eruda = await import('eruda');
       eruda.default.init();
-      console.log('[Eruda] Mobile debugger initialized');
+      logger.info('Eruda', 'Mobile debugger initialized');
     } catch {
       // Silently fail in production (eruda is not bundled)
       if (isDev) {
-        console.warn('[Eruda] Failed to load debugger');
+        logger.warn('Eruda', 'Failed to load debugger');
       }
     }
   }

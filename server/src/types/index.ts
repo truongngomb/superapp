@@ -2,33 +2,9 @@
  * Shared types for API requests and responses
  */
 
-export interface Category {
-  id: string;
-  name: string;
-  description: string;
-  color: string;
-  icon: string;
-  createdAt: string;
-  updatedAt: string;
-}
+export * from './common.js';
+export * from './category.js';
+export * from './user.js';
+export * from './permission.js';
+export * from './role.js';
 
-export interface CategoryInput {
-  name: string;
-  description: string;
-  color: string;
-  icon: string;
-}
-
-export interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  message?: string;
-}
-
-export interface PaginatedResponse<T> {
-  items: T[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-}

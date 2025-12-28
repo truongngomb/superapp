@@ -1,4 +1,5 @@
 import PocketBase from 'pocketbase';
+import { logger } from '../utils/index.js';
 
 /**
  * PocketBase client instance
@@ -18,14 +19,21 @@ export const pb = new PocketBase(POCKETBASE_URL);
 /**
  * Check if PocketBase is available
  */
-export async function checkPocketBaseHealth(): Promise<boolean> {
-  try {
-    await pb.health.check();
-    return true;
-  } catch {
-    console.warn('[PocketBase] Server not available at', POCKETBASE_URL);
-    return false;
+export async function checkPocketBaseHealth(retries = 3, delay = 500): Promise<boolean> {
+  for (let i = 0; i < retries; i++) {
+    try {
+      await pb.health.check();
+      return true;
+    } catch (error) {
+      if (i === retries - 1) {
+        logger.warn('Database', 'PocketBase server not available at', POCKETBASE_URL);
+        return false;
+      }
+      // Wait before retry
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
   }
+  return false;
 }
 
 /**
@@ -34,6 +42,7 @@ export async function checkPocketBaseHealth(): Promise<boolean> {
 export const Collections = {
   CATEGORIES: 'categories',
   USERS: 'users',
+  ROLES: 'roles',
 } as const;
 
 export type CollectionName = typeof Collections[keyof typeof Collections];

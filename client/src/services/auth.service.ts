@@ -1,10 +1,5 @@
-import { AuthModel } from 'pocketbase';
 import { api } from '@/config/api';
-
-export interface AuthResponse {
-  user: AuthModel | null;
-  isAuthenticated: boolean;
-}
+import type { AuthResponse } from '@/types';
 
 export const authService = {
   /**

@@ -2,25 +2,6 @@
  * Common types used throughout the application
  */
 
-/**
- * Category type from API
- */
-export interface Category {
-  id: string;
-  name: string;
-  description: string;
-  color: string;
-  icon: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-/**
- * Create/Update category payload
- */
-export interface CategoryInput {
-  name: string;
-  description: string;
-  color: string;
-  icon: string;
-}
+export * from './category';
+export * from './role';
+export * from './auth';

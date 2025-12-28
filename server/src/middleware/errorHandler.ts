@@ -1,4 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
+import { logger } from '../utils/index.js';
 
 interface ErrorWithStatus extends Error {
   status?: number;
@@ -17,9 +18,9 @@ export function errorHandler(
   const status = err.status ?? err.statusCode ?? 500;
   const message = err.message || 'Internal Server Error';
 
-  console.error(`[Error] ${status}: ${message}`);
+  logger.error('GlobalError', `${status}: ${message}`);
   if (process.env['NODE_ENV'] !== 'production') {
-    console.error(err.stack);
+    logger.error('GlobalError', 'Stack:', err.stack);
   }
 
   res.status(status).json({

@@ -6,23 +6,23 @@ import { Button } from '@/components/common';
 const features = [
   {
     icon: Zap,
-    title: 'Hiệu năng cao',
-    description: 'Được tối ưu hóa với Vite và React 18 cho trải nghiệm mượt mà',
+    title: 'High Performance',
+    description: 'Optimized with Vite and React 18 for a smooth experience',
   },
   {
     icon: Shield,
-    title: 'Bảo mật',
-    description: 'Tích hợp các tiêu chuẩn bảo mật OWASP và Helmet',
+    title: 'Security',
+    description: 'Integrated with OWASP security standards and Helmet',
   },
   {
     icon: Smartphone,
-    title: 'Đa nền tảng',
-    description: 'Chạy trên Web, Android và iOS với Capacitor',
+    title: 'Cross-Platform',
+    description: 'Runs on Web, Android, and iOS with Capacitor',
   },
   {
     icon: Folder,
-    title: 'Quản lý Danh mục',
-    description: 'Tính năng mẫu để phát triển ứng dụng',
+    title: 'Category Management',
+    description: 'Sample feature for application development',
   },
 ];
 
@@ -62,7 +62,7 @@ export function HomePage() {
           className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6"
         >
           <Zap className="w-4 h-4" />
-          Template sẵn sàng cho production
+          Production-ready template
         </motion.div>
 
         <h1 className="text-4xl md:text-6xl font-bold mb-6">
@@ -72,19 +72,19 @@ export function HomePage() {
         </h1>
 
         <p className="text-lg md:text-xl text-muted max-w-2xl mx-auto mb-8">
-          Ứng dụng mẫu dùng phát triển các ứng dụng cho nhóm. 
-          Được xây dựng với React, TypeScript, Vite và Node.js Express.
+          Template application for team development. 
+          Built with React, TypeScript, Vite, and Node.js Express.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link to="/categories">
             <Button size="lg" className="w-full sm:w-auto">
-              Bắt đầu ngay
+              Get Started
               <ArrowRight className="w-5 h-5 ml-1" />
             </Button>
           </Link>
           <Button variant="outline" size="lg" className="w-full sm:w-auto">
-            Xem tài liệu
+            Documentation
           </Button>
         </div>
       </motion.section>

@@ -1,9 +1,12 @@
 import { useState, useCallback, useEffect } from 'react';
+import { logger } from '@/utils/logger';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FixedSizeList as List } from 'react-window';
 import { Plus, Edit2, Trash2, Folder, Search, RefreshCw } from 'lucide-react';
 import { Button, Card, CardContent, Input, LoadingSpinner, Toast } from '@/components/common';
-import { api, ApiException } from '@/config';
+import { PermissionGuard } from '@/components/common/PermissionGuard';
+import { ApiException } from '@/config';
+import { categoryService } from '@/services';
 import type { Category, CategoryInput } from '@/types';
 import { cn } from '@/utils';
 
@@ -42,22 +45,26 @@ function CategoryRow({ index, style, data }: CategoryRowProps) {
           <p className="text-sm text-muted truncate">{category.description}</p>
         </div>
         <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => data.onEdit(category)}
-            aria-label="Sửa"
-          >
-            <Edit2 className="w-4 h-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => data.onDelete(category.id)}
-            aria-label="Xóa"
-          >
-            <Trash2 className="w-4 h-4 text-red-500" />
-          </Button>
+          <PermissionGuard resource="categories" action="update">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => data.onEdit(category)}
+              aria-label="Edit"
+            >
+              <Edit2 className="w-4 h-4" />
+            </Button>
+          </PermissionGuard>
+          <PermissionGuard resource="categories" action="delete">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => data.onDelete(category.id)}
+              aria-label="Delete"
+            >
+              <Trash2 className="w-4 h-4 text-red-500" />
+            </Button>
+          </PermissionGuard>
         </div>
       </motion.div>
     </div>
@@ -103,24 +110,24 @@ function CategoryForm({ category, onSubmit, onClose, loading }: CategoryFormProp
         <Card>
           <CardContent className="p-6">
             <h2 className="text-xl font-bold text-foreground mb-6">
-              {category ? 'Sửa danh mục' : 'Thêm danh mục mới'}
+              {category ? 'Edit Category' : 'Add New Category'}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <Input
-                label="Tên danh mục"
+                label="Category Name"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="Nhập tên danh mục"
+                placeholder="Enter category name"
                 required
               />
               <Input
-                label="Mô tả"
+                label="Description"
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                placeholder="Nhập mô tả"
+                placeholder="Enter description"
               />
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-foreground">Màu sắc</label>
+                <label className="text-sm font-medium text-foreground">Color</label>
                 <input
                   type="color"
                   value={formData.color}
@@ -130,10 +137,10 @@ function CategoryForm({ category, onSubmit, onClose, loading }: CategoryFormProp
               </div>
               <div className="flex gap-3 pt-4">
                 <Button type="button" variant="outline" onClick={onClose} className="flex-1">
-                  Hủy
+                  Cancel
                 </Button>
                 <Button type="submit" loading={loading} className="flex-1">
-                  {category ? 'Cập nhật' : 'Thêm mới'}
+                  {category ? 'Update' : 'Add New'}
                 </Button>
               </div>
             </form>
@@ -144,6 +151,16 @@ function CategoryForm({ category, onSubmit, onClose, loading }: CategoryFormProp
   );
 }
 
+/**
+ * CategoriesPage Component
+ * 
+ * Manages product categories including:
+ * - Listing categories with virtualization
+ * - Creating new categories
+ * - Updating existing categories
+ * - Deleting categories
+ * - Searching/Filtering
+ */
 export function CategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
@@ -157,17 +174,10 @@ export function CategoriesPage() {
   const fetchCategories = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await api.get<Category[]>('/categories');
+      const data = await categoryService.getAll();
       setCategories(data);
     } catch (error) {
-      // Use mock data if API is not available
-      setCategories([
-        { id: '1', name: 'Công nghệ', description: 'Các sản phẩm công nghệ', color: '#3b82f6', icon: 'folder', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-        { id: '2', name: 'Thời trang', description: 'Quần áo và phụ kiện', color: '#ec4899', icon: 'folder', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-        { id: '3', name: 'Thực phẩm', description: 'Đồ ăn và thức uống', color: '#22c55e', icon: 'folder', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-        { id: '4', name: 'Sức khỏe', description: 'Sản phẩm chăm sóc sức khỏe', color: '#f59e0b', icon: 'folder', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-      ]);
-      console.log('Using mock data:', error);
+      logger.warn('CategoriesPage', 'Using mock data:', error);
     } finally {
       setLoading(false);
     }
@@ -189,13 +199,13 @@ export function CategoriesPage() {
     setSubmitting(true);
     try {
       if (editingCategory) {
-        await api.put(`/categories/${editingCategory.id}`, data);
+        await categoryService.update(editingCategory.id, data);
         setCategories((prev) =>
           prev.map((cat) =>
             cat.id === editingCategory.id ? { ...cat, ...data, updatedAt: new Date().toISOString() } : cat
           )
         );
-        setToast({ message: 'Cập nhật danh mục thành công!', type: 'success' });
+        setToast({ message: 'Category updated successfully!', type: 'success' });
       } else {
         const newCategory: Category = {
           id: crypto.randomUUID(),
@@ -205,17 +215,17 @@ export function CategoriesPage() {
         };
         // Try API first, fallback to local state
         try {
-          const result = await api.post<Category>('/categories', data);
+          const result = await categoryService.create(data);
           setCategories((prev) => [...prev, result]);
         } catch {
           setCategories((prev) => [...prev, newCategory]);
         }
-        setToast({ message: 'Thêm danh mục thành công!', type: 'success' });
+        setToast({ message: 'Category added successfully!', type: 'success' });
       }
       setShowForm(false);
       setEditingCategory(null);
     } catch (error) {
-      const message = error instanceof ApiException ? error.message : 'Có lỗi xảy ra';
+      const message = error instanceof ApiException ? error.message : 'An error occurred';
       setToast({ message, type: 'error' });
     } finally {
       setSubmitting(false);
@@ -224,15 +234,15 @@ export function CategoriesPage() {
 
   // Handle delete
   const handleDelete = async (id: string) => {
-    if (!confirm('Bạn có chắc muốn xóa danh mục này?')) return;
+    if (!confirm('Are you sure you want to delete this category?')) return;
     
     try {
-      await api.delete(`/categories/${id}`);
+      await categoryService.delete(id);
     } catch {
       // Continue with local delete
     }
     setCategories((prev) => prev.filter((cat) => cat.id !== id));
-    setToast({ message: 'Xóa danh mục thành công!', type: 'success' });
+    setToast({ message: 'Category deleted successfully!', type: 'success' });
   };
 
   // Open edit form
@@ -246,13 +256,15 @@ export function CategoriesPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Quản lý Danh mục</h1>
-          <p className="text-muted mt-1">Quản lý các danh mục sản phẩm</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Category Management</h1>
+          <p className="text-muted mt-1">Manage product categories</p>
         </div>
-        <Button onClick={() => setShowForm(true)}>
-          <Plus className="w-5 h-5" />
-          Thêm mới
-        </Button>
+        <PermissionGuard resource="categories" action="create">
+          <Button onClick={() => setShowForm(true)}>
+            <Plus className="w-5 h-5" />
+            Add New
+          </Button>
+        </PermissionGuard>
       </div>
 
       {/* Search and filters */}
@@ -262,7 +274,7 @@ export function CategoriesPage() {
           <Input
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Tìm kiếm danh mục..."
+            placeholder="Search categories..."
             className="pl-10"
           />
         </div>
@@ -273,18 +285,20 @@ export function CategoriesPage() {
 
       {/* Categories list */}
       {loading ? (
-        <LoadingSpinner size="lg" text="Đang tải danh mục..." className="py-20" />
+        <LoadingSpinner size="lg" text="Loading categories..." className="py-20" />
       ) : filteredCategories.length === 0 ? (
         <Card className="py-12 text-center">
           <CardContent>
             <Folder className="w-12 h-12 text-muted mx-auto mb-4" />
             <p className="text-muted">
-              {searchQuery ? 'Không tìm thấy danh mục phù hợp' : 'Chưa có danh mục nào'}
+              {searchQuery ? 'No matching categories found' : 'No categories yet'}
             </p>
             {!searchQuery && (
-              <Button onClick={() => setShowForm(true)} className="mt-4">
-                Thêm danh mục đầu tiên
-              </Button>
+              <PermissionGuard resource="categories" action="create">
+                <Button onClick={() => setShowForm(true)} className="mt-4">
+                  Add first category
+                </Button>
+              </PermissionGuard>
             )}
           </CardContent>
         </Card>

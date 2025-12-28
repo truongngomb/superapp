@@ -1,14 +1,15 @@
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
-import { AuthModel } from 'pocketbase';
-import { authService } from '@/services/auth.service';
-import { Toast } from '@/components/common/Toast';
+import { authService } from '@/services';
+import { logger } from '@/utils/logger';
+import type { AuthUser } from '@/types';
 
 interface AuthContextType {
-  user: AuthModel | null;
+  user: AuthUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   loginWithGoogle: () => void;
   logout: () => Promise<void>;
+  checkPermission: (resource: string, action: string) => boolean;
   error: string | null;
 }
 
@@ -27,14 +28,14 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<AuthModel | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Check auth status on mount
   useEffect(() => {
     checkAuth();
-  }, []);
+  },[]);
 
   const checkAuth = async () => {
     try {
@@ -47,12 +48,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
         setUser(null);
       }
     } catch (err: any) {
-      console.error('Failed to check auth:', err);
-      if (err.status >= 500) {
-        setError('Không thể kết nối đến máy chủ xác thực.');
-      } else if (err.status !== 401 && err.status !== 403) {
-         // Ignore 401/403 as it just means not logged in
-         setError(err.message || 'Lỗi xác thực không xác định');
+      logger.error('AuthContext', 'Failed to check auth:', err);
+      // Ignore 401/403 as it just means not logged in
+      if (err.status && err.status !== 401 && err.status !== 403) {
+         setError(err.message || 'Unknown authentication error');
       }
       setUser(null);
     } finally {
@@ -69,11 +68,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
       await authService.logout();
       setUser(null);
     } catch (err: any) {
-      console.error('Logout failed:', err);
-      // Still clear user locally even if server logout fails
+      logger.error('AuthContext', 'Logout failed:', err);
       setUser(null); 
     }
   }, []);
+
+  const checkPermission = useCallback((resource: string, action: string): boolean => {
+    if (!user || !user.permissions) return false;
+
+    const resourcePerms = user.permissions[resource] || [];
+    const allPerms = user.permissions['all'] || [];
+
+    if (resourcePerms.includes(action)) return true;
+    if (resourcePerms.includes('manage')) return true;
+    if (allPerms.includes('manage')) return true;
+
+    return false;
+  }, [user]);
 
   const value: AuthContextType = {
     user,
@@ -81,6 +92,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     isLoading,
     loginWithGoogle,
     logout,
+    checkPermission,
     error,
   };
 

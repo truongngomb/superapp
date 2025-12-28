@@ -1,7 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './App';
-import { initEruda } from '@/utils';
+import { initEruda, logger } from '@/utils';
 import '@/assets/styles/index.scss';
 
 // Initialize Eruda debugger (only in development)
@@ -16,14 +16,14 @@ if ('serviceWorker' in navigator) {
         newWorker.addEventListener('statechange', () => {
           if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
             // New content is available, show update notification
-            console.log('[SW] New content available, refresh to update');
+            logger.info('SW', 'New content available, refresh to update');
             // You can show a toast or notification here
           }
         });
       }
     });
   }).catch((error) => {
-    console.error('[SW] Registration failed:', error);
+    logger.error('SW', 'Registration failed:', error);
   });
 }
 
@@ -34,7 +34,5 @@ if (!root) {
 }
 
 createRoot(root).render(
-  <StrictMode>
-    <App />
-  </StrictMode>
+  <App />
 );
