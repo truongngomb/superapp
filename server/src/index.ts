@@ -1,14 +1,62 @@
+/**
+ * Server Entry Point
+ * 
+ * Starts the Express server and handles graceful shutdown.
+ */
 import app from './app.js';
-import { config } from './config/index.js';
-import { logger } from './utils/index.js';
+import { config, checkPocketBaseHealth } from './config/index.js';
+import { createLogger } from './utils/index.js';
 
-// Start server
-app.listen(config.port, () => {
-  logger.info('Server', `
+const log = createLogger('Server');
+
+// =============================================================================
+// Server Startup
+// =============================================================================
+
+async function startServer(): Promise<void> {
+  // Check database connectivity
+  const dbHealthy = await checkPocketBaseHealth();
+  
+  if (!dbHealthy) {
+    log.warn('PocketBase is not available. Server will start with limited functionality.');
+  }
+
+  // Start Express server
+  const server = app.listen(config.port, () => {
+    log.info(`
 🚀 SuperApp Server is running!
 📍 Environment: ${config.nodeEnv}
-🌐 URL: http://localhost:${config.port}
-📚 API: http://localhost:${config.port}/api
-❤️  Health: http://localhost:${config.port}/api/health
-  `);
+🌐 URL: ${config.serverUrl}
+📚 API: ${config.serverUrl}/api
+❤️  Health: ${config.serverUrl}/api/health
+🗄️  Database: ${dbHealthy ? 'Connected' : 'Unavailable'}
+    `);
+  });
+
+  // Graceful shutdown
+  const shutdown = (signal: string) => {
+    log.info(`${signal} received. Shutting down gracefully...`);
+    server.close(() => {
+      log.info('Server closed.');
+      process.exit(0);
+    });
+
+    // Force close after 10 seconds
+    setTimeout(() => {
+      log.error('Forced shutdown after timeout.');
+      process.exit(1);
+    }, 10000);
+  };
+
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGINT', () => shutdown('SIGINT'));
+}
+
+// =============================================================================
+// Run
+// =============================================================================
+
+startServer().catch((error) => {
+  log.error('Failed to start server', error);
+  process.exit(1);
 });

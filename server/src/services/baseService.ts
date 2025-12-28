@@ -1,119 +1,229 @@
-import { pb, getOrSet, invalidateByPattern, checkPocketBaseHealth } from '../config/index.js';
-import { NotFoundError } from '../middleware/index.js';
-import { logger } from '../utils/index.js';
+/**
+ * Base Service
+ * 
+ * Abstract base class for PocketBase collection services.
+ * Provides CRUD operations with caching and error handling.
+ */
+import { pb, getOrSet, invalidate, checkPocketBaseHealth } from '../config/index.js';
+import { NotFoundError, ServiceUnavailableError } from '../middleware/index.js';
+import { createLogger } from '../utils/index.js';
+import type { BaseEntity } from '../types/index.js';
+
+// =============================================================================
+// Types
+// =============================================================================
+
+/** Options for list operations */
+export interface ListOptions {
+  /** Page number (1-indexed) */
+  page?: number;
+  /** Items per page */
+  limit?: number;
+  /** Sort field */
+  sort?: string;
+  /** Sort order */
+  order?: 'asc' | 'desc';
+  /** Filter expression */
+  filter?: string;
+}
+
+/** Paginated result */
+export interface PaginatedResult<T> {
+  items: T[];
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
+
+// =============================================================================
+// Base Service Class
+// =============================================================================
 
 /**
- * Base generic service for PocketBase collections
+ * Abstract base service for PocketBase collections
+ * 
+ * @template T - Entity type (must extend BaseEntity)
+ * 
+ * @example
+ * ```typescript
+ * class UserService extends BaseService<User> {
+ *   protected collectionName = 'users';
+ *   protected cacheKey = 'users';
+ *   
+ *   protected mapRecord(record: Record<string, unknown>): User {
+ *     return { id: record.id, name: record.name, ... };
+ *   }
+ * }
+ * ```
  */
-export abstract class BaseService<T extends { id: string }> {
-  protected abstract collectionName: string;
-  protected abstract cacheKey: string;
-  protected cacheTtl: number = 300; // 5 minutes
+export abstract class BaseService<T extends BaseEntity> {
+  /** PocketBase collection name */
+  protected abstract readonly collectionName: string;
+  
+  /** Cache key prefix */
+  protected abstract readonly cacheKey: string;
+  
+  /** Cache TTL in seconds (default: 5 minutes) */
+  protected cacheTtl = 300;
+
+  /** Scoped logger for this service */
+  protected readonly log = createLogger(this.constructor.name);
+
+  // ===========================================================================
+  // Abstract Methods
+  // ===========================================================================
 
   /**
-   * Helper to mapping PocketBase record to domain type
+   * Map PocketBase record to domain entity
    * Must be implemented by subclasses
    */
   protected abstract mapRecord(record: Record<string, unknown>): T;
 
+  // ===========================================================================
+  // Read Operations
+  // ===========================================================================
+
   /**
-   * Get all records
+   * Get all records (cached)
    */
   async getAll(): Promise<T[]> {
-    return getOrSet(this.cacheKey, async () => {
-      const pbAvailable = await checkPocketBaseHealth();
+    return getOrSet(
+      this.cacheKey,
+      async () => {
+        await this.ensureDbAvailable();
+        const records = await pb.collection(this.collectionName).getFullList();
+        return records.map((r) => this.mapRecord(r));
+      },
+      this.cacheTtl
+    );
+  }
 
-      if (pbAvailable) {
-        try {
-          const records = await pb.collection(this.collectionName).getFullList();
-          return records.map((r) => this.mapRecord(r));
-        } catch (error) {
-          logger.error(this.constructor.name, 'PocketBase error:', error);
-        }
-      }
+  /**
+   * Get paginated records
+   */
+  async getPage(options: ListOptions = {}): Promise<PaginatedResult<T>> {
+    const { page = 1, limit = 20, sort, order = 'asc', filter } = options;
+    
+    await this.ensureDbAvailable();
+    
+    const sortStr = sort ? `${order === 'desc' ? '-' : ''}${sort}` : '-created';
+    
+    const result = await pb.collection(this.collectionName).getList(page, limit, {
+      sort: sortStr,
+      filter: filter || '',
+    });
 
-      return this.getFallbackData();
-    }, this.cacheTtl);
+    return {
+      items: result.items.map((r) => this.mapRecord(r)),
+      page: result.page,
+      limit: result.perPage,
+      total: result.totalItems,
+      totalPages: result.totalPages,
+    };
   }
 
   /**
    * Get record by ID
+   * 
+   * @throws NotFoundError if record doesn't exist
    */
   async getById(id: string): Promise<T> {
-    const items = await this.getAll();
-    const item = items.find((i) => i.id === id);
-
-    if (!item) {
-      throw new NotFoundError(`Resource with id ${id} not found`);
+    await this.ensureDbAvailable();
+    
+    try {
+      const record = await pb.collection(this.collectionName).getOne(id);
+      return this.mapRecord(record);
+    } catch {
+      throw new NotFoundError(`${this.collectionName} with id '${id}' not found`);
     }
-
-    return item;
   }
+
+  /**
+   * Check if record exists
+   */
+  async exists(id: string): Promise<boolean> {
+    try {
+      await this.getById(id);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  // ===========================================================================
+  // Write Operations
+  // ===========================================================================
 
   /**
    * Create new record
    */
-  async create(input: Partial<Omit<T, 'id' | 'created' | 'updated'>>): Promise<T> {
-    const pbAvailable = await checkPocketBaseHealth();
-
-    if (pbAvailable) {
-      try {
-        const record = await pb.collection(this.collectionName).create(input);
-        invalidateByPattern(this.cacheKey);
-        return this.mapRecord(record);
-      } catch (error) {
-        logger.error(this.constructor.name, 'PocketBase error:', error);
-        throw error;
-      }
-    }
-
-    throw new Error('Database unavailable');
+  async create(input: Partial<Omit<T, keyof BaseEntity>>): Promise<T> {
+    await this.ensureDbAvailable();
+    
+    const record = await pb.collection(this.collectionName).create(input);
+    this.invalidateCache();
+    
+    this.log.info('Created record', { id: record.id });
+    return this.mapRecord(record);
   }
 
   /**
-   * Update record
+   * Update existing record
+   * 
+   * @throws NotFoundError if record doesn't exist
    */
-  async update(id: string, input: Partial<Omit<T, 'id' | 'created' | 'updated'>>): Promise<T> {
-    const pbAvailable = await checkPocketBaseHealth();
-
-    if (pbAvailable) {
-      try {
-        const record = await pb.collection(this.collectionName).update(id, input);
-        invalidateByPattern(this.cacheKey);
-        return this.mapRecord(record);
-      } catch (error) {
-        logger.error(this.constructor.name, 'PocketBase error:', error);
-        throw error;
-      }
+  async update(id: string, input: Partial<Omit<T, keyof BaseEntity>>): Promise<T> {
+    await this.ensureDbAvailable();
+    
+    try {
+      const record = await pb.collection(this.collectionName).update(id, input);
+      this.invalidateCache();
+      
+      this.log.info('Updated record', { id });
+      return this.mapRecord(record);
+    } catch {
+      throw new NotFoundError(`${this.collectionName} with id '${id}' not found`);
     }
-
-    throw new Error('Database unavailable');
   }
 
   /**
    * Delete record
+   * 
+   * @throws NotFoundError if record doesn't exist
    */
   async delete(id: string): Promise<void> {
-    const pbAvailable = await checkPocketBaseHealth();
-
-    if (pbAvailable) {
-      try {
-        await pb.collection(this.collectionName).delete(id);
-        invalidateByPattern(this.cacheKey);
-        return;
-      } catch (error) {
-        logger.error(this.constructor.name, 'PocketBase error:', error);
-        throw error;
-      }
+    await this.ensureDbAvailable();
+    
+    try {
+      await pb.collection(this.collectionName).delete(id);
+      this.invalidateCache();
+      
+      this.log.info('Deleted record', { id });
+    } catch {
+      throw new NotFoundError(`${this.collectionName} with id '${id}' not found`);
     }
+  }
 
-    throw new Error('Database unavailable');
+  // ===========================================================================
+  // Protected Helpers
+  // ===========================================================================
+
+  /**
+   * Ensure database is available
+   * @throws ServiceUnavailableError if database is unavailable
+   */
+  protected async ensureDbAvailable(): Promise<void> {
+    const available = await checkPocketBaseHealth();
+    if (!available) {
+      throw new ServiceUnavailableError('Database is currently unavailable');
+    }
   }
 
   /**
-   * Optional fallback data for read operations when DB is down
+   * Invalidate cache for this collection
    */
-  protected getFallbackData(): T[] {
-    return [];
+  protected invalidateCache(): void {
+    invalidate(this.cacheKey);
   }
 }

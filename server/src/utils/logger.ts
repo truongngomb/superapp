@@ -1,58 +1,181 @@
 /**
- * Log levels
+ * Logger Utility
+ * 
+ * Standardized logging with context, timestamps, and source location.
+ * Respects NODE_ENV for debug logging.
  */
-export type LogLevel = 'info' | 'warn' | 'error' | 'debug';
 
-/**
- * Standardized logger utility
- * Usage: logger.info('ModuleName', 'Message', data);
- */
-const getTimestamp = () => new Date().toISOString();
+// =============================================================================
+// Types
+// =============================================================================
 
-const getCallerInfo = () => {
+export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
+
+interface LogOptions {
+  /** Additional data to log */
+  data?: unknown;
+  /** Error object for stack trace */
+  error?: Error;
+}
+
+// =============================================================================
+// Configuration
+// =============================================================================
+
+/** Log level priority (higher = more severe) */
+const LOG_LEVELS: Record<LogLevel, number> = {
+  debug: 0,
+  info: 1,
+  warn: 2,
+  error: 3,
+};
+
+/** Minimum log level based on environment */
+const getMinLogLevel = (): number => {
+  const env = process.env['NODE_ENV'];
+  return env === 'production' ? LOG_LEVELS.info : LOG_LEVELS.debug;
+};
+
+// =============================================================================
+// Formatting
+// =============================================================================
+
+const getTimestamp = (): string => new Date().toISOString();
+
+const getCallerLocation = (): string => {
   const error = new Error();
-  // Stack trace lines:
-  // 0: Error
-  // 1: at getCallerInfo
-  // 2: at Object.info/warn/error (the logger method)
-  // 3: at ActualCaller (THIS IS WHAT WE WANT)
   const stack = error.stack?.split('\n') || [];
   
-  // Find the first line that isn't from this file
-  // Note: This is a simple heuristic and might need adjustment based on environment/build
-  const callerLine = stack[3] || '';
+  // Stack trace: Error -> getCallerLocation -> log method -> logMessage -> actual caller
+  const callerLine = stack[5] || stack[4] || '';
   
-  // Extract file path and line number
-  const match = callerLine.match(/\((.*):(\d+):(\d+)\)/) || callerLine.match(/at\s+(.*):(\d+):(\d+)/);
+  // Extract file:line from stack trace
+  const match = callerLine.match(/\((.+):(\d+):\d+\)/) || 
+                callerLine.match(/at\s+(.+):(\d+):\d+/);
+  
   if (match) {
-    // Return relative path or full path depending on preference. 
-    // VS Code terminal handles absolute paths well.
-    return match[1] + ':' + match[2];
+    // Get just filename for cleaner output
+    const fullPath = match[1];
+    const fileName = fullPath?.split(/[/\\]/).pop() || fullPath;
+    return `${fileName}:${match[2]}`;
   }
   return '';
 };
 
-export const logger = {
-  info: (context: string, message: string, ...args: any[]) => {
-    const caller = getCallerInfo();
-    console.log(`[${getTimestamp()}] [INFO] [${context}] ${message} ${caller ? `(${caller})` : ''}`, ...args);
-  },
-  
-  warn: (context: string, message: string, ...args: any[]) => {
-    const caller = getCallerInfo();
-    console.warn(`[${getTimestamp()}] [WARN] [${context}] ${message} ${caller ? `(${caller})` : ''}`, ...args);
-  },
-  
-  error: (context: string, message: string, ...args: any[]) => {
-    const caller = getCallerInfo();
-    console.error(`[${getTimestamp()}] [ERROR] [${context}] ${message} ${caller ? `(${caller})` : ''}`, ...args);
-  },
-  
-  debug: (context: string, message: string, ...args: any[]) => {
-    // Only log debug in non-production
-    if (process.env['NODE_ENV'] !== 'production') {
-      const caller = getCallerInfo();
-      console.debug(`[${getTimestamp()}] [DEBUG] [${context}] ${message} ${caller ? `(${caller})` : ''}`, ...args);
-    }
+const formatMessage = (
+  level: LogLevel,
+  context: string,
+  message: string,
+  location: string
+): string => {
+  const timestamp = getTimestamp();
+  const levelStr = level.toUpperCase().padEnd(5);
+  const locationStr = location ? ` (${location})` : '';
+  return `[${timestamp}] [${levelStr}] [${context}] ${message}${locationStr}`;
+};
+
+// =============================================================================
+// Core Logging
+// =============================================================================
+
+const logMessage = (
+  level: LogLevel,
+  context: string,
+  message: string,
+  options?: LogOptions
+): void => {
+  // Check log level
+  if (LOG_LEVELS[level] < getMinLogLevel()) {
+    return;
+  }
+
+  const location = getCallerLocation();
+  const formatted = formatMessage(level, context, message, location);
+
+  // Select console method
+  const consoleFn = level === 'error' ? console.error :
+                    level === 'warn' ? console.warn :
+                    level === 'debug' ? console.debug :
+                    console.log;
+
+  // Log message
+  if (options?.data !== undefined) {
+    consoleFn(formatted, options.data);
+  } else {
+    consoleFn(formatted);
+  }
+
+  // Log error stack separately for better visibility
+  if (options?.error?.stack && level === 'error') {
+    console.error(options.error.stack);
   }
 };
+
+// =============================================================================
+// Public API
+// =============================================================================
+
+/**
+ * Application logger
+ * 
+ * @example
+ * ```typescript
+ * logger.info('UserService', 'User created', { userId: '123' });
+ * logger.error('AuthController', 'Login failed', { error: err });
+ * logger.debug('Cache', 'Cache hit', { key: 'users' });
+ * ```
+ */
+export const logger = {
+  /**
+   * Debug level - only logged in development
+   */
+  debug: (context: string, message: string, data?: unknown): void => {
+    logMessage('debug', context, message, { data });
+  },
+
+  /**
+   * Info level - general information
+   */
+  info: (context: string, message: string, data?: unknown): void => {
+    logMessage('info', context, message, { data });
+  },
+
+  /**
+   * Warning level - potential issues
+   */
+  warn: (context: string, message: string, data?: unknown): void => {
+    logMessage('warn', context, message, { data });
+  },
+
+  /**
+   * Error level - errors and exceptions
+   */
+  error: (context: string, message: string, errorOrData?: Error | unknown): void => {
+    if (errorOrData instanceof Error) {
+      logMessage('error', context, message, { error: errorOrData });
+    } else {
+      logMessage('error', context, message, { data: errorOrData });
+    }
+  },
+};
+
+// =============================================================================
+// Utility Functions
+// =============================================================================
+
+/**
+ * Create a scoped logger for a specific context
+ * 
+ * @example
+ * ```typescript
+ * const log = createLogger('UserService');
+ * log.info('User created');
+ * log.error('Failed to create user', error);
+ * ```
+ */
+export const createLogger = (context: string) => ({
+  debug: (message: string, data?: unknown) => logger.debug(context, message, data),
+  info: (message: string, data?: unknown) => logger.info(context, message, data),
+  warn: (message: string, data?: unknown) => logger.warn(context, message, data),
+  error: (message: string, errorOrData?: Error | unknown) => logger.error(context, message, errorOrData),
+});

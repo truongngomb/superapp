@@ -1,40 +1,58 @@
-import { pb, config } from '../config/index.js';
-import { getUserPermissions } from './permissionService.js';
+/**
+ * Authentication Service
+ * 
+ * Handles OAuth authentication and session management.
+ */
+import { pb, config, Collections } from '../config/index.js';
+import { permissionService } from './permissionService.js';
+import type { UserSession } from '../types/index.js';
+import { createLogger } from '../utils/index.js';
 
-interface GoogleAuthInitResult {
+// =============================================================================
+// Types
+// =============================================================================
+
+/**
+ * Google OAuth initialization result
+ */
+export interface GoogleAuthInitResult {
   url: string;
   state: string;
   codeVerifier: string;
 }
 
-interface AuthResult {
+/**
+ * OAuth authentication result
+ */
+export interface OAuthResult {
   token: string;
-  model: Record<string, unknown>;
+  userId: string;
 }
 
-interface UserSession {
-  user: {
-    id: string;
-    email: string;
-    name: string;
-    avatar: string | null;
-    permissions: Record<string, string[]>;
-  } | null;
-  isAuthenticated: boolean;
-}
+// =============================================================================
+// Service Implementation
+// =============================================================================
 
-export class AuthService {
+const log = createLogger('AuthService');
+
+/**
+ * Service for handling authentication
+ */
+class AuthService {
   private readonly REDIRECT_URI = `${config.serverUrl}/api/auth/google/callback`;
 
   /**
    * Initialize Google OAuth flow
+   * 
+   * @returns OAuth URL, state, and code verifier
    */
   async initGoogleAuth(): Promise<GoogleAuthInitResult> {
-    const authMethods = await pb.collection('users').listAuthMethods();
-    const googleProvider = authMethods.authProviders.find(p => p.name === 'google');
-    
+    const authMethods = await pb.collection(Collections.USERS).listAuthMethods();
+    const googleProvider = authMethods.authProviders.find((p) => p.name === 'google');
+
     if (!googleProvider) {
-      throw new Error('Google OAuth not configured in PocketBase');
+      log.error('Google OAuth not configured in PocketBase');
+      throw new Error('Google OAuth not configured');
     }
 
     const url = new URL(googleProvider.authUrl);
@@ -49,50 +67,61 @@ export class AuthService {
 
   /**
    * Handle Google OAuth callback
+   * 
+   * @param code - Authorization code from Google
+   * @param codeVerifier - Code verifier from init
+   * @returns Token and user ID
    */
-  async handleGoogleCallback(code: string, codeVerifier: string): Promise<AuthResult> {
-    const authData = await pb.collection('users').authWithOAuth2Code(
+  async handleGoogleCallback(code: string, codeVerifier: string): Promise<OAuthResult> {
+    const authData = await pb.collection(Collections.USERS).authWithOAuth2Code(
       'google',
       code,
       codeVerifier,
       this.REDIRECT_URI
     );
 
+    log.info('User authenticated via Google OAuth', { userId: authData.record.id });
+
     return {
       token: pb.authStore.token,
-      model: authData.record,
+      userId: authData.record.id,
     };
   }
 
   /**
-   * clear session
+   * Clear current session
    */
   logout(): void {
     pb.authStore.clear();
+    log.info('User logged out');
   }
 
   /**
    * Validate session and get user details
+   * 
    * Token-only validation - fetches fresh user data from PocketBase
+   * 
+   * @param token - JWT token to validate
+   * @returns User session with permissions
    */
   async validateSession(token: string): Promise<UserSession> {
     try {
       // Load token and verify with PocketBase
       pb.authStore.save(token, null);
-      
+
       if (!pb.authStore.isValid) {
         return { user: null, isAuthenticated: false };
       }
 
       // Fetch fresh user data from PocketBase
-      const model = await pb.collection('users').authRefresh();
-      const user = model.record;
+      const authData = await pb.collection(Collections.USERS).authRefresh();
+      const user = authData.record;
 
-      const avatarUrl = user.avatar 
+      const avatarUrl = user.avatar
         ? pb.files.getUrl(user, user.avatar)
         : null;
 
-      const permissions = await getUserPermissions(user.id);
+      const permissions = await permissionService.getUserPermissions(user.id);
 
       return {
         user: {
@@ -104,11 +133,15 @@ export class AuthService {
         },
         isAuthenticated: true,
       };
-    } catch {
-      // Token invalid or expired
+    } catch (error) {
+      log.warn('Session validation failed', error);
       return { user: null, isAuthenticated: false };
     }
   }
 }
+
+// =============================================================================
+// Export Singleton
+// =============================================================================
 
 export const authService = new AuthService();

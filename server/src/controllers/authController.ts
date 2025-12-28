@@ -1,13 +1,33 @@
+/**
+ * Authentication Controller
+ * 
+ * Handles OAuth authentication and session management endpoints.
+ */
 import { Request, Response } from 'express';
-import { config } from '../config/env.js';
-import { authService } from '../services/authService.js';
-import { logger } from '../utils/index.js';
+import { config } from '../config/index.js';
+import { authService } from '../services/index.js';
+import { InternalServerError } from '../middleware/index.js';
+import { createLogger } from '../utils/index.js';
+
+// =============================================================================
+// Constants
+// =============================================================================
+
+const log = createLogger('AuthController');
 
 const COOKIE_NAME = 'pb_auth';
-const COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000; // 7 days
+const COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: config.isProduction,
+  sameSite: 'lax' as const,
+};
+
+// =============================================================================
+// Handlers
+// =============================================================================
 
 /**
- * Initiate Google OAuth flow
+ * GET /auth/google - Initiate Google OAuth flow
  */
 export const initGoogleAuth = async (_req: Request, res: Response) => {
   try {
@@ -15,21 +35,19 @@ export const initGoogleAuth = async (_req: Request, res: Response) => {
 
     // Store state and verifier in cookie for callback
     res.cookie('oauth_state', JSON.stringify({ state, codeVerifier }), {
-      httpOnly: true,
-      secure: config.nodeEnv === 'production',
+      ...COOKIE_OPTIONS,
       maxAge: 5 * 60 * 1000, // 5 minutes
-      sameSite: 'lax',
     });
 
     res.redirect(url);
   } catch (error) {
-    logger.error('AuthController', 'Google OAuth init error:', error);
-    res.status(500).json({ success: false, message: 'Failed to initiate OAuth' });
+    log.error('Google OAuth init error', error);
+    throw new InternalServerError('Failed to initiate OAuth');
   }
 };
 
 /**
- * Handle Google OAuth callback
+ * GET /auth/google/callback - Handle Google OAuth callback
  */
 export const handleGoogleCallback = async (req: Request, res: Response) => {
   try {
@@ -51,43 +69,46 @@ export const handleGoogleCallback = async (req: Request, res: Response) => {
     // Clear OAuth state cookie
     res.clearCookie('oauth_state');
 
-    // Set auth cookie with token only (optimized - no user model)
+    // Set auth cookie with token only (optimized)
     res.cookie(COOKIE_NAME, token, {
-      httpOnly: true,
-      secure: config.nodeEnv === 'production',
-      maxAge: COOKIE_MAX_AGE,
-      sameSite: 'lax',
+      ...COOKIE_OPTIONS,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
     res.redirect(config.clientUrl);
   } catch (error) {
-    logger.error('AuthController', 'Google callback error:', error);
+    log.error('Google callback error', error);
     res.redirect(`${config.clientUrl}/login?error=auth_failed`);
   }
 };
 
 /**
- * Get current authenticated user session
+ * GET /auth/me - Get current authenticated user session
  */
 export const getMe = async (req: Request, res: Response) => {
+  const token = req.cookies[COOKIE_NAME];
+
+  if (!token) {
+    return res.json({ 
+      success: true, 
+      data: { user: null, isAuthenticated: false } 
+    });
+  }
+
   try {
-    const token = req.cookies[COOKIE_NAME];
-    
-    if (!token) {
-      return res.json({ user: null, isAuthenticated: false });
-    }
-
     const session = await authService.validateSession(token);
-
-    res.json(session);
+    res.json({ success: true, data: session });
   } catch (error) {
-    logger.error('AuthController', 'Get user error:', error);
-    res.json({ user: null, isAuthenticated: false });
+    log.warn('Session validation failed', error);
+    res.json({ 
+      success: true, 
+      data: { user: null, isAuthenticated: false } 
+    });
   }
 };
 
 /**
- * Logout user
+ * POST /auth/logout - Logout user
  */
 export const logout = (_req: Request, res: Response) => {
   authService.logout();

@@ -1,63 +1,52 @@
+/**
+ * Role Controller
+ * 
+ * Handles HTTP requests for role operations.
+ */
 import { Request, Response } from 'express';
-import * as roleService from '../services/roleService.js';
-import { ValidationError } from '../middleware/index.js';
-import { CreateRoleInput, UpdateRoleInput } from '../types/index.js';
+import { roleService } from '../services/index.js';
+
+// =============================================================================
+// Handlers
+// =============================================================================
 
 /**
- * Get all roles
+ * GET /roles - Get all roles
  */
 export const getAll = async (_req: Request, res: Response) => {
-  const roles = await roleService.getRoles();
-  res.json(roles);
+  const roles = await roleService.getAll();
+  res.json({ success: true, data: roles });
 };
 
 /**
- * Get a role by ID
+ * GET /roles/:id - Get role by ID
  */
 export const getById = async (req: Request, res: Response) => {
-  const role = await roleService.getRoleById(req.params['id'] ?? '');
-  res.json(role);
+  const role = await roleService.getById(req.params['id'] ?? '');
+  res.json({ success: true, data: role });
 };
 
 /**
- * Create a new role
+ * POST /roles - Create new role
  */
 export const create = async (req: Request, res: Response) => {
-  const input = req.body as CreateRoleInput;
-
-  // Validation
-  if (!input.name || typeof input.name !== 'string' || input.name.trim().length === 0) {
-    throw new ValidationError('Name is required');
-  }
-
-  const role = await roleService.createRole({
-    name: input.name.trim(),
-    description: input.description?.trim(),
-    permissions: input.permissions ?? {},
-  });
-
-  res.status(201).json(role);
+  // Body is already validated by middleware (validateBody)
+  const role = await roleService.create(req.body);
+  res.status(201).json({ success: true, data: role });
 };
 
 /**
- * Update an existing role
+ * PUT /roles/:id - Update role
  */
 export const update = async (req: Request, res: Response) => {
-  const input = req.body as UpdateRoleInput;
-
-  const role = await roleService.updateRole(req.params['id'] ?? '', {
-    name: input.name?.trim(),
-    description: input.description?.trim(),
-    permissions: input.permissions,
-  });
-
-  res.json(role);
+  const role = await roleService.update(req.params['id'] ?? '', req.body);
+  res.json({ success: true, data: role });
 };
 
 /**
- * Delete a role
+ * DELETE /roles/:id - Delete role
  */
 export const remove = async (req: Request, res: Response) => {
-  await roleService.deleteRole(req.params['id'] ?? '');
+  await roleService.delete(req.params['id'] ?? '');
   res.status(204).send();
 };

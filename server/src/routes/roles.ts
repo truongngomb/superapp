@@ -1,11 +1,53 @@
+/**
+ * Role Routes
+ * 
+ * RESTful endpoints for role management.
+ */
 import { Router } from 'express';
-import { asyncHandler } from '../middleware/index.js';
+import { asyncHandler, requirePermission, validateBody } from '../middleware/index.js';
 import { roleController } from '../controllers/index.js';
+import { RoleCreateSchema, RoleUpdateSchema } from '../schemas/index.js';
+import { Resources, Actions } from '../types/index.js';
 
 export const rolesRouter = Router();
 
-rolesRouter.get('/', asyncHandler(roleController.getAll));
-rolesRouter.get('/:id', asyncHandler(roleController.getById));
-rolesRouter.post('/', asyncHandler(roleController.create));
-rolesRouter.put('/:id', asyncHandler(roleController.update));
-rolesRouter.delete('/:id', asyncHandler(roleController.remove));
+// =============================================================================
+// Protected Routes (all role operations require permission)
+// =============================================================================
+
+/** GET /roles - List all roles */
+rolesRouter.get(
+  '/',
+  requirePermission(Resources.ROLES, Actions.VIEW),
+  asyncHandler(roleController.getAll)
+);
+
+/** GET /roles/:id - Get role by ID */
+rolesRouter.get(
+  '/:id',
+  requirePermission(Resources.ROLES, Actions.VIEW),
+  asyncHandler(roleController.getById)
+);
+
+/** POST /roles - Create new role */
+rolesRouter.post(
+  '/',
+  requirePermission(Resources.ROLES, Actions.CREATE),
+  validateBody(RoleCreateSchema),
+  asyncHandler(roleController.create)
+);
+
+/** PUT /roles/:id - Update role */
+rolesRouter.put(
+  '/:id',
+  requirePermission(Resources.ROLES, Actions.UPDATE),
+  validateBody(RoleUpdateSchema),
+  asyncHandler(roleController.update)
+);
+
+/** DELETE /roles/:id - Delete role */
+rolesRouter.delete(
+  '/:id',
+  requirePermission(Resources.ROLES, Actions.DELETE),
+  asyncHandler(roleController.remove)
+);

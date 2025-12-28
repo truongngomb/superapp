@@ -1,55 +1,52 @@
+/**
+ * Category Controller
+ * 
+ * Handles HTTP requests for category operations.
+ */
 import { Request, Response } from 'express';
-import * as categoryService from '../services/categoryService.js';
-import { ValidationError } from '../middleware/index.js';
-import { CategoryInput } from '../types/index.js';
+import { categoryService } from '../services/index.js';
 
+// =============================================================================
+// Handlers
+// =============================================================================
+
+/**
+ * GET /categories - Get all categories
+ */
 export const getAll = async (_req: Request, res: Response) => {
-  const categories = await categoryService.getAllCategories();
-  res.json(categories);
+  const categories = await categoryService.getAll();
+  res.json({ success: true, data: categories });
 };
 
+/**
+ * GET /categories/:id - Get category by ID
+ */
 export const getById = async (req: Request, res: Response) => {
-  const category = await categoryService.getCategoryById(req.params['id'] ?? '');
-  res.json(category);
+  const category = await categoryService.getById(req.params['id'] ?? '');
+  res.json({ success: true, data: category });
 };
 
+/**
+ * POST /categories - Create new category
+ */
 export const create = async (req: Request, res: Response) => {
-  const input = req.body as CategoryInput;
-
-  // Validation
-  if (!input.name || typeof input.name !== 'string' || input.name.trim().length === 0) {
-    throw new ValidationError('Name is required');
-  }
-
-  const category = await categoryService.createCategory({
-    name: input.name.trim(),
-    description: input.description?.trim() ?? '',
-    color: input.color ?? '#3b82f6',
-    icon: input.icon ?? 'folder',
-  });
-
-  res.status(201).json(category);
+  // Body is already validated by middleware (validateBody)
+  const category = await categoryService.create(req.body);
+  res.status(201).json({ success: true, data: category });
 };
 
+/**
+ * PUT /categories/:id - Update category
+ */
 export const update = async (req: Request, res: Response) => {
-  const input = req.body as CategoryInput;
-
-  // Validation
-  if (!input.name || typeof input.name !== 'string' || input.name.trim().length === 0) {
-    throw new ValidationError('Name is required');
-  }
-
-  const category = await categoryService.updateCategory(req.params['id'] ?? '', {
-    name: input.name.trim(),
-    description: input.description?.trim() ?? '',
-    color: input.color ?? '#3b82f6',
-    icon: input.icon ?? 'folder',
-  });
-
-  res.json(category);
+  const category = await categoryService.update(req.params['id'] ?? '', req.body);
+  res.json({ success: true, data: category });
 };
 
+/**
+ * DELETE /categories/:id - Delete category
+ */
 export const remove = async (req: Request, res: Response) => {
-  await categoryService.deleteCategory(req.params['id'] ?? '');
+  await categoryService.delete(req.params['id'] ?? '');
   res.status(204).send();
 };

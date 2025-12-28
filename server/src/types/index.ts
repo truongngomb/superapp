@@ -1,10 +1,54 @@
 /**
- * Shared types for API requests and responses
+ * Types Module - Central Type Exports
+ * 
+ * Re-exports all types from individual modules.
+ * Import from here for cleaner imports throughout the app.
+ * 
+ * @example
+ * ```typescript
+ * import type { BaseEntity, Category, Role, AuthUser } from './types/index.js';
+ * import { Resources, Actions } from './types/index.js';
+ * ```
  */
 
-export * from './common.js';
-export * from './category.js';
-export * from './user.js';
-export * from './permission.js';
-export * from './role.js';
+// Common types
+export type {
+  BaseEntity,
+  Timestamps,
+  ApiResponse,
+  ApiErrorResponse,
+  PaginatedResponse,
+  PaginationParams,
+  PartialBy,
+  CreateInput,
+  UpdateInput,
+} from './common.js';
 
+// Category types
+export type {
+  Category,
+  CategoryCreateInput,
+  CategoryUpdateInput,
+  CategoryInput,
+} from './category.js';
+
+// Role & Permission types
+export type {
+  Resource,
+  Action,
+  RolePermissions,
+  Role,
+  RoleCreateInput,
+  RoleUpdateInput,
+  CreateRoleInput,
+  UpdateRoleInput,
+} from './role.js';
+export { Resources, Actions } from './role.js';
+
+// User & Auth types
+export type {
+  User,
+  AuthUser,
+  UserSession,
+  AuthResult,
+} from './user.js';

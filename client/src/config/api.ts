@@ -13,6 +13,7 @@ interface RequestConfig {
 interface ApiError {
   message: string;
   status: number;
+  code?: string;
 }
 
 /**
@@ -20,25 +21,29 @@ interface ApiError {
  */
 export class ApiException extends Error {
   status: number;
+  code?: string;
 
-  constructor(message: string, status: number) {
+  constructor(message: string, status: number, code?: string) {
     super(message);
     this.name = 'ApiException';
     this.status = status;
+    this.code = code;
   }
 }
 
 /**
- * Generic API response wrapper
+ * Generic API response wrapper from server
  */
 export interface ApiResponse<T> {
   data: T;
   success: boolean;
   message?: string;
+  code?: string;
 }
 
 /**
  * HTTP client with type safety
+ * Automatically unwraps { success, data } response format
  */
 async function request<T>(
   endpoint: string,
@@ -60,18 +65,30 @@ async function request<T>(
     ...(config.signal && { signal: config.signal }),
   });
 
-  if (!response.ok) {
-    let errorMessage = 'An error occurred';
-    try {
-      const errorData = await response.json() as ApiError;
-      errorMessage = errorData.message;
-    } catch {
-      errorMessage = response.statusText;
-    }
-    throw new ApiException(errorMessage, response.status);
+  // Handle 204 No Content
+  if (response.status === 204) {
+    return undefined as T;
   }
 
-  return response.json() as Promise<T>;
+  const json = await response.json();
+
+  if (!response.ok) {
+    const errorData = json as ApiError;
+    throw new ApiException(
+      errorData.message || 'An error occurred',
+      response.status,
+      errorData.code
+    );
+  }
+
+  // Unwrap { success, data } format from server
+  // This allows services to expect the data directly
+  if (json && typeof json === 'object' && 'success' in json && 'data' in json) {
+    return json.data as T;
+  }
+
+  // Fallback for endpoints that don't use the wrapper format
+  return json as T;
 }
 
 /**
