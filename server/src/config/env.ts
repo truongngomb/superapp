@@ -39,11 +39,6 @@ const envSchema = z.object({
   POCKETBASE_URL: z
     .string()
     .url('POCKETBASE_URL must be a valid URL'),
-  
-  // Google OAuth (optional)
-  GOOGLE_CLIENT_ID: z
-    .string()
-    .optional(),
 });
 
 // =============================================================================
@@ -100,9 +95,6 @@ export const config = {
   
   /** PocketBase database URL */
   pocketbaseUrl: env.POCKETBASE_URL,
-  
-  /** Google OAuth Client ID (optional) */
-  googleClientId: env.GOOGLE_CLIENT_ID,
   
   /** Helper to check if running in production */
   isProduction: env.NODE_ENV === 'production',
