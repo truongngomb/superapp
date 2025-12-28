@@ -19,37 +19,38 @@ const COOKIE_NAME = 'pb_auth';
 /**
  * Middleware to check authentication status and load permissions
  * Does not block the request, just populates req.user
+ * Optimized: Cookie now only contains token (not full user model)
  */
 export const authenticate = async (req: Request, _res: Response, next: NextFunction) => {
-  const authCookie = req.cookies[COOKIE_NAME];
+  const token = req.cookies[COOKIE_NAME];
   
-  if (!authCookie) {
+  if (!token || typeof token !== 'string') {
     return next();
   }
 
   try {
-    const { token, model } = JSON.parse(authCookie);
+    // Load token and validate with PocketBase
+    pb.authStore.save(token, null);
     
-    // Basic structural check
-    if (!token || !model) {
+    if (!pb.authStore.isValid) {
       return next();
     }
 
-    // In a real high-throughput scenario, we might trust the cookie for a short time
-    // OR verify with PB. For RBAC, we need fresh permissions.
-    if (pb.authStore.isValid) {
-      // Async fetch permissions
-      const permissions = await getUserPermissions(model.id);
+    // Fetch fresh user data from PocketBase
+    const authData = await pb.collection('users').authRefresh();
+    const model = authData.record;
+    
+    // Fetch user permissions
+    const permissions = await getUserPermissions(model.id);
 
-      req.user = {
-        id: model.id,
-        email: model.email,
-        role: model.role, // We might need to ensure 'role' is in the model
-        permissions
-      };
-    }
+    req.user = {
+      id: model.id,
+      email: model.email,
+      role: model.role,
+      permissions
+    };
   } catch (error) {
-    // Invalid token or JSON
+    // Invalid token or expired
     logger.warn('AuthMiddleware', 'Auth error:', error);
   }
   

@@ -46,13 +46,13 @@ export const handleGoogleCallback = async (req: Request, res: Response) => {
       return res.redirect(`${config.clientUrl}/login?error=state_mismatch`);
     }
 
-    const { token, model } = await authService.handleGoogleCallback(code as string, codeVerifier);
+    const { token } = await authService.handleGoogleCallback(code as string, codeVerifier);
 
     // Clear OAuth state cookie
     res.clearCookie('oauth_state');
 
-    // Set auth cookie with token
-    res.cookie(COOKIE_NAME, JSON.stringify({ token, model }), {
+    // Set auth cookie with token only (optimized - no user model)
+    res.cookie(COOKIE_NAME, token, {
       httpOnly: true,
       secure: config.nodeEnv === 'production',
       maxAge: COOKIE_MAX_AGE,
@@ -71,14 +71,13 @@ export const handleGoogleCallback = async (req: Request, res: Response) => {
  */
 export const getMe = async (req: Request, res: Response) => {
   try {
-    const authCookie = req.cookies[COOKIE_NAME];
+    const token = req.cookies[COOKIE_NAME];
     
-    if (!authCookie) {
+    if (!token) {
       return res.json({ user: null, isAuthenticated: false });
     }
 
-    const { token, model } = JSON.parse(authCookie);
-    const session = await authService.validateSession(token, model);
+    const session = await authService.validateSession(token);
 
     res.json(session);
   } catch (error) {

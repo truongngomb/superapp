@@ -73,31 +73,41 @@ export class AuthService {
 
   /**
    * Validate session and get user details
+   * Token-only validation - fetches fresh user data from PocketBase
    */
-  async validateSession(token: string, model: any): Promise<UserSession> {
-    // Validate token
-    pb.authStore.save(token, model);
-    
-    if (!pb.authStore.isValid) {
+  async validateSession(token: string): Promise<UserSession> {
+    try {
+      // Load token and verify with PocketBase
+      pb.authStore.save(token, null);
+      
+      if (!pb.authStore.isValid) {
+        return { user: null, isAuthenticated: false };
+      }
+
+      // Fetch fresh user data from PocketBase
+      const model = await pb.collection('users').authRefresh();
+      const user = model.record;
+
+      const avatarUrl = user.avatar 
+        ? pb.files.getUrl(user, user.avatar)
+        : null;
+
+      const permissions = await getUserPermissions(user.id);
+
+      return {
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          avatar: avatarUrl,
+          permissions,
+        },
+        isAuthenticated: true,
+      };
+    } catch {
+      // Token invalid or expired
       return { user: null, isAuthenticated: false };
     }
-
-    const avatarUrl = model.avatar 
-      ? pb.files.getUrl(model, model.avatar)
-      : null;
-
-    const permissions = await getUserPermissions(model.id);
-
-    return {
-      user: {
-        id: model.id,
-        email: model.email,
-        name: model.name,
-        avatar: avatarUrl,
-        permissions,
-      },
-      isAuthenticated: true,
-    };
   }
 }
 
