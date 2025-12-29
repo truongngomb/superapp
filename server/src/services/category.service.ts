@@ -3,7 +3,7 @@
  * 
  * Handles CRUD operations for categories.
  */
-import { BaseService } from './baseService.js';
+import { BaseService } from './base.service.js';
 import { Collections, CacheKeys } from '../config/index.js';
 import type { Category } from '../types/index.js';
 

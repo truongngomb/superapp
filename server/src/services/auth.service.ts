@@ -4,7 +4,7 @@
  * Handles OAuth authentication and session management.
  */
 import { pb, config, Collections } from '../config/index.js';
-import { permissionService } from './permissionService.js';
+import { permissionService } from './permission.service.js';
 import type { UserSession } from '../types/index.js';
 import { createLogger } from '../utils/index.js';
 

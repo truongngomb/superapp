@@ -3,7 +3,7 @@
  * 
  * Handles CRUD operations for user roles.
  */
-import { BaseService } from './baseService.js';
+import { BaseService } from './base.service.js';
 import { Collections, CacheKeys } from '../config/index.js';
 import type { Role, RolePermissions } from '../types/index.js';
 

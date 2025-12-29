@@ -5,7 +5,7 @@
  */
 import { Request, Response, NextFunction } from 'express';
 import { pb } from '../config/database.js';
-import { getUserPermissions } from '../services/permissionService.js';
+import { getUserPermissions } from '../services/permission.service.js';
 import { AuthUser, User } from '../types/index.js';
 import { UnauthorizedError } from './errorHandler.js';
 import { logger } from '../utils/index.js';
