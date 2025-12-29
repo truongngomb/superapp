@@ -6,8 +6,9 @@
 import { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { MainLayout } from '@/components/layout';
-import { LoadingSpinner } from '@/components/common';
+import { LoadingSpinner, ProtectedRoute, GuestGuard } from '@/components/common';
 import { AuthProvider, ThemeProvider } from '@/context';
+import { PermissionResource, PermissionAction } from '@/types';
 
 // ============================================================================
 // Lazy Loaded Pages
@@ -68,6 +69,7 @@ export function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<MainLayout />}>
+              {/* Public Routes */}
               <Route
                 index
                 element={
@@ -84,22 +86,35 @@ export function App() {
                   </Suspense>
                 }
               />
+              
+              {/* Guest Only Routes (redirect to home if already logged in) */}
               <Route
                 path="login"
                 element={
-                  <Suspense fallback={<PageLoader />}>
-                    <LoginPage />
-                  </Suspense>
+                  <GuestGuard>
+                    <Suspense fallback={<PageLoader />}>
+                      <LoginPage />
+                    </Suspense>
+                  </GuestGuard>
                 }
               />
+              
+              {/* Protected Admin Routes */}
               <Route
                 path="admin/roles"
                 element={
-                  <Suspense fallback={<PageLoader />}>
-                    <RolesPage />
-                  </Suspense>
+                  <ProtectedRoute 
+                    resource={PermissionResource.Roles} 
+                    action={PermissionAction.Read}
+                  >
+                    <Suspense fallback={<PageLoader />}>
+                      <RolesPage />
+                    </Suspense>
+                  </ProtectedRoute>
                 }
               />
+              
+              {/* Catch-all 404 */}
               <Route path="*" element={<NotFoundPage />} />
             </Route>
           </Routes>
@@ -108,3 +123,4 @@ export function App() {
     </ThemeProvider>
   );
 }
+
