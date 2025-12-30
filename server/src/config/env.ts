@@ -39,6 +39,17 @@ const envSchema = z.object({
   POCKETBASE_URL: z
     .string()
     .url('POCKETBASE_URL must be a valid URL'),
+  
+  // PocketBase Admin (for migrations)
+  POCKETBASE_ADMIN_EMAIL: z
+    .string()
+    .email('POCKETBASE_ADMIN_EMAIL must be a valid email')
+    .optional(),
+  
+  POCKETBASE_ADMIN_PASSWORD: z
+    .string()
+    .min(8, 'POCKETBASE_ADMIN_PASSWORD must be at least 8 characters')
+    .optional(),
 });
 
 // =============================================================================
@@ -95,6 +106,12 @@ export const config = {
   
   /** PocketBase database URL */
   pocketbaseUrl: env.POCKETBASE_URL,
+  
+  /** PocketBase admin email for migrations */
+  pocketbaseAdminEmail: env.POCKETBASE_ADMIN_EMAIL,
+  
+  /** PocketBase admin password for migrations */
+  pocketbaseAdminPassword: env.POCKETBASE_ADMIN_PASSWORD,
   
   /** Helper to check if running in production */
   isProduction: env.NODE_ENV === 'production',
