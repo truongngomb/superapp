@@ -8,11 +8,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "lint": "eslint .",
-    "db:status": "tsx src/scripts/migrate.ts --status",
-    "db:migrate": "tsx src/scripts/migrate.ts --migrate",
-    "db:migrate:force": "tsx src/scripts/migrate.ts --migrate --force",
-    "db:pull": "tsx src/scripts/migrate.ts --pull",
-    "db:generate": "tsx src/scripts/migrate.ts --generate"
+    "db": "tsx src/scripts/migrate.ts"
   },
   "dependencies": {
     "compression": "^1.7.5",
