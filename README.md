@@ -143,6 +143,7 @@ my-project/
 |------|------------|---------|
 | React Components | PascalCase | `Button.tsx`, `CategoriesPage.tsx` |
 | Context Providers | PascalCase | `AuthContext.tsx`, `ThemeContext.tsx` |
+| Controllers | kebab-case | `auth.controller.ts`, `user.controller.ts` |
 | Services | kebab-case | `auth.service.ts`, `category.service.ts` |
 | Utilities | camelCase | `storage.ts`, `validation.ts` |
 | Config files | camelCase | `api.ts`, `constants.ts` |

@@ -9,10 +9,9 @@
  */
 
 // Auth
-export * as authController from './authController.js';
+export * as authController from './auth.controller.js';
 
 // Domain
-export * as categoryController from './categoryController.js';
-export * as roleController from './roleController.js';
-export * as userController from './userController.js';
-
+export * as categoryController from './category.controller.js';
+export * as roleController from './role.controller.js';
+export * as userController from './user.controller.js';
