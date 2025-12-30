@@ -12,6 +12,7 @@ export const API_ENDPOINTS = {
   },
   CATEGORIES: '/categories',
   ROLES: '/roles',
+  USERS: '/users',
 } as const;
 
 // HTTP Methods

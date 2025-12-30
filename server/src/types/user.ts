@@ -67,3 +67,28 @@ export interface AuthResult {
   /** User record from PocketBase */
   record: User;
 }
+
+// =============================================================================
+// User Input Types
+// =============================================================================
+
+/**
+ * Input for updating a user profile
+ */
+export interface UserUpdateInput {
+  /** User's display name */
+  name?: string;
+  /** Avatar URL or filename */
+  avatar?: string;
+  /** Whether email is visible */
+  emailVisibility?: boolean;
+}
+
+/**
+ * Input for assigning a role to a user
+ */
+export interface UserRoleAssignment {
+  /** Role ID to assign */
+  roleId: string;
+}
+

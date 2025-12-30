@@ -39,6 +39,7 @@ export const cache = new NodeCache({
 export const CacheKeys = {
   CATEGORIES: 'categories',
   ROLES: 'roles',
+  USERS: 'users',
   USER_PERMISSIONS: (userId: string) => `user:${userId}:permissions`,
 } as const;
 

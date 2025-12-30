@@ -14,3 +14,5 @@ export * as authController from './authController.js';
 // Domain
 export * as categoryController from './categoryController.js';
 export * as roleController from './roleController.js';
+export * as userController from './userController.js';
+

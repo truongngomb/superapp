@@ -3,7 +3,7 @@ import { logger } from '@/utils/logger';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FixedSizeList as List } from 'react-window';
 import { Plus, Edit2, Trash2, Folder, Search, RefreshCw } from 'lucide-react';
-import { Button, Card, CardContent, Input, LoadingSpinner, Toast } from '@/components/common';
+import { Button, Card, CardContent, Input, LoadingSpinner, Toast, ConfirmModal, Modal } from '@/components/common';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
 import { ApiException } from '@/config';
 import { categoryService } from '@/services';
@@ -49,7 +49,7 @@ function CategoryRow({ index, style, data }: CategoryRowProps) {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => { data.onEdit(category); }}
+              onClick={(e) => { e.stopPropagation(); data.onEdit(category); }}
               aria-label="Edit"
             >
               <Edit2 className="w-4 h-4" />
@@ -59,7 +59,7 @@ function CategoryRow({ index, style, data }: CategoryRowProps) {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => { data.onDelete(category.id); }}
+              onClick={(e) => { e.stopPropagation(); data.onDelete(category.id); }}
               aria-label="Delete"
             >
               <Trash2 className="w-4 h-4 text-red-500" />
@@ -93,61 +93,47 @@ function CategoryForm({ category, onSubmit, onClose, loading }: CategoryFormProp
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
-      onClick={onClose}
+    <Modal
+      isOpen={true}
+      onClose={onClose}
+      title={category ? 'Edit Category' : 'Add New Category'}
+      size="md"
+      footer={
+        <div className="flex gap-3">
+          <Button type="button" variant="outline" onClick={onClose} className="flex-1">
+            Cancel
+          </Button>
+          <Button type="submit" form="category-form" loading={loading} className="flex-1">
+            {category ? 'Update' : 'Add New'}
+          </Button>
+        </div>
+      }
     >
-      <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        onClick={(e) => { e.stopPropagation(); }}
-        className="w-full max-w-md"
-      >
-        <Card>
-          <CardContent className="p-6">
-            <h2 className="text-xl font-bold text-foreground mb-6">
-              {category ? 'Edit Category' : 'Add New Category'}
-            </h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <Input
-                label="Category Name"
-                value={formData.name}
-                onChange={(e) => { setFormData({ ...formData, name: e.target.value }); }}
-                placeholder="Enter category name"
-                required
-              />
-              <Input
-                label="Description"
-                value={formData.description}
-                onChange={(e) => { setFormData({ ...formData, description: e.target.value }); }}
-                placeholder="Enter description"
-              />
-              <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-foreground">Color</label>
-                <input
-                  type="color"
-                  value={formData.color}
-                  onChange={(e) => { setFormData({ ...formData, color: e.target.value }); }}
-                  className="w-full h-10 rounded-lg cursor-pointer"
-                />
-              </div>
-              <div className="flex gap-3 pt-4">
-                <Button type="button" variant="outline" onClick={onClose} className="flex-1">
-                  Cancel
-                </Button>
-                <Button type="submit" loading={loading} className="flex-1">
-                  {category ? 'Update' : 'Add New'}
-                </Button>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
-      </motion.div>
-    </motion.div>
+      <form id="category-form" onSubmit={handleSubmit} className="space-y-4">
+        <Input
+          label="Category Name"
+          value={formData.name}
+          onChange={(e) => { setFormData({ ...formData, name: e.target.value }); }}
+          placeholder="Enter category name"
+          required
+        />
+        <Input
+          label="Description"
+          value={formData.description}
+          onChange={(e) => { setFormData({ ...formData, description: e.target.value }); }}
+          placeholder="Enter description"
+        />
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium text-foreground">Color</label>
+          <input
+            type="color"
+            value={formData.color}
+            onChange={(e) => { setFormData({ ...formData, color: e.target.value }); }}
+            className="w-full h-10 rounded-lg cursor-pointer"
+          />
+        </div>
+      </form>
+    </Modal>
   );
 }
 
@@ -169,6 +155,8 @@ export function CategoriesPage() {
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   // Fetch categories from API
   const fetchCategories = useCallback(async () => {
@@ -234,8 +222,7 @@ export function CategoriesPage() {
 
   // Handle delete
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this category?')) return;
-    
+    setDeleting(true);
     try {
       await categoryService.delete(id);
     } catch {
@@ -243,6 +230,8 @@ export function CategoriesPage() {
     }
     setCategories((prev) => prev.filter((cat) => cat.id !== id));
     setToast({ message: 'Category deleted successfully!', type: 'success' });
+    setDeleting(false);
+    setDeleteId(null);
   };
 
   // Open edit form
@@ -312,7 +301,7 @@ export function CategoriesPage() {
             itemData={{
               categories: filteredCategories,
               onEdit: handleEdit,
-              onDelete: (id: string) => void handleDelete(id),
+              onDelete: (id: string) => { setDeleteId(id); },
             }}
           >
             {CategoryRow}
@@ -334,6 +323,19 @@ export function CategoriesPage() {
           />
         )}
       </AnimatePresence>
+
+      {/* Delete Confirm Modal */}
+      <ConfirmModal
+        isOpen={!!deleteId}
+        title="Delete Category"
+        message="Are you sure you want to delete this category? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        loading={deleting}
+        onConfirm={() => { if (deleteId) void handleDelete(deleteId); }}
+        onCancel={() => { setDeleteId(null); }}
+        variant="danger"
+      />
 
       {/* Toast */}
       <Toast

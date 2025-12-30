@@ -50,3 +50,14 @@ export type {
   RoleCreateSchemaType,
   RoleUpdateSchemaType,
 } from './role.schema.js';
+
+// User schemas
+export {
+  UserUpdateSchema,
+  UserRoleAssignmentSchema,
+} from './user.schema.js';
+export type {
+  UserUpdateSchemaType,
+  UserRoleAssignmentSchemaType,
+} from './user.schema.js';
+

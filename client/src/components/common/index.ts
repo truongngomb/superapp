@@ -13,6 +13,8 @@ export { Card, CardHeader, CardContent, CardFooter } from './Card';
 // Feedback Components
 export { LoadingSpinner } from './LoadingSpinner';
 export { Toast } from './Toast';
+export { ConfirmModal } from './ConfirmModal';
+export { Modal } from './Modal';
 
 // Permission Components
 export { PermissionGuard } from './PermissionGuard';
