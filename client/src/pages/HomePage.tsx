@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Folder, Zap, Shield, Smartphone } from 'lucide-react';
 import { Button } from '@/components/common';
@@ -6,23 +7,23 @@ import { Button } from '@/components/common';
 const features = [
   {
     icon: Zap,
-    title: 'High Performance',
-    description: 'Optimized with Vite and React 18 for a smooth experience',
+    titleKey: 'home.features.performance.title',
+    descKey: 'home.features.performance.description',
   },
   {
     icon: Shield,
-    title: 'Security',
-    description: 'Integrated with OWASP security standards and Helmet',
+    titleKey: 'home.features.security.title',
+    descKey: 'home.features.security.description',
   },
   {
     icon: Smartphone,
-    title: 'Cross-Platform',
-    description: 'Runs on Web, Android, and iOS with Capacitor',
+    titleKey: 'home.features.cross_platform.title',
+    descKey: 'home.features.cross_platform.description',
   },
   {
     icon: Folder,
-    title: 'Category Management',
-    description: 'Sample feature for application development',
+    titleKey: 'home.features.category_mgmt.title',
+    descKey: 'home.features.category_mgmt.description',
   },
 ];
 
@@ -46,6 +47,8 @@ const itemVariants = {
 };
 
 export function HomePage() {
+  const { t } = useTranslation();
+
   return (
     <div className="max-w-5xl mx-auto">
       {/* Hero Section */}
@@ -62,29 +65,28 @@ export function HomePage() {
           className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6"
         >
           <Zap className="w-4 h-4" />
-          Production-ready template
+          {t('home.hero.badge')}
         </motion.div>
 
         <h1 className="text-4xl md:text-6xl font-bold mb-6">
           <span className="text-gradient">SuperApp</span>
           <br />
-          <span className="text-foreground">Cross-Platform Boilerplate</span>
+          <span className="text-foreground">{t('home.hero.subtitle')}</span>
         </h1>
 
         <p className="text-lg md:text-xl text-muted max-w-2xl mx-auto mb-8">
-          Template application for team development. 
-          Built with React, TypeScript, Vite, and Node.js Express.
+          {t('home.hero.description')}
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link to="/categories">
             <Button size="lg" className="w-full sm:w-auto">
-              Get Started
+              {t('common.get_started')}
               <ArrowRight className="w-5 h-5 ml-1" />
             </Button>
           </Link>
           <Button variant="outline" size="lg" className="w-full sm:w-auto">
-            Documentation
+            {t('common.documentation')}
           </Button>
         </div>
       </motion.section>
@@ -100,7 +102,7 @@ export function HomePage() {
           const Icon = feature.icon;
           return (
             <motion.div
-              key={feature.title}
+              key={feature.titleKey}
               variants={itemVariants}
               className="card-hover p-6"
             >
@@ -108,10 +110,10 @@ export function HomePage() {
                 <Icon className="w-6 h-6 text-primary" />
               </div>
               <h3 className="text-lg font-semibold text-foreground mb-2">
-                {feature.title}
+                {t(feature.titleKey)}
               </h3>
               <p className="text-muted">
-                {feature.description}
+                {t(feature.descKey)}
               </p>
             </motion.div>
           );
@@ -125,7 +127,7 @@ export function HomePage() {
         viewport={{ once: true }}
         className="py-12 text-center"
       >
-        <h2 className="text-2xl font-bold text-foreground mb-8">Tech Stack</h2>
+        <h2 className="text-2xl font-bold text-foreground mb-8">{t('common.tech_stack')}</h2>
         <div className="flex flex-wrap justify-center gap-3">
           {['React 18', 'TypeScript', 'Vite', 'TailwindCSS', 'Node.js', 'Express', 'Capacitor', 'PocketBase'].map((tech) => (
             <span

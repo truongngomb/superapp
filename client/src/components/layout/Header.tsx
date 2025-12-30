@@ -4,11 +4,13 @@
  */
 
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { LogOut, Menu, Moon, Sun, User, X } from 'lucide-react';
 import { cn } from '@/utils';
 import { useAuth } from '@/hooks';
 import { useTheme } from '@/context';
+import { LanguageSwitcher } from '../common/LanguageSwitcher';
 
 // ============================================================================
 // Types
@@ -26,8 +28,8 @@ interface HeaderProps {
 // ============================================================================
 
 const NAV_LINKS = [
-  { path: '/', label: 'Home' },
-  { path: '/categories', label: 'Categories' },
+  { path: '/', labelKey: 'common.home' },
+  { path: '/categories', labelKey: 'common.categories' },
 ] as const;
 
 // ============================================================================
@@ -35,6 +37,7 @@ const NAV_LINKS = [
 // ============================================================================
 
 export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuth();
@@ -78,20 +81,23 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
                   : 'text-muted hover:text-foreground hover:bg-surface'
               )}
             >
-              {link.label}
+              {t(link.labelKey)}
             </Link>
           ))}
         </nav>
 
         {/* Actions */}
         <div className="flex items-center gap-2">
+          {/* Language Switcher */}
+          <LanguageSwitcher />
+
           {/* Theme toggle */}
           <motion.button
             type="button"
             whileTap={{ scale: 0.95 }}
             onClick={toggleTheme}
             className="p-2 rounded-lg hover:bg-surface transition-colors"
-            aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+            aria-label={isDark ? t('common.switch_theme_light') : t('common.switch_theme_dark')}
           >
             {isDark ? (
               <Sun className="w-5 h-5 text-muted" />
@@ -126,8 +132,8 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
                 whileTap={{ scale: 0.95 }}
                 onClick={handleLogout}
                 className="p-2 rounded-lg hover:bg-surface transition-colors text-muted hover:text-red-500"
-                aria-label="Logout"
-                title="Logout"
+                aria-label={t('common.logout')}
+                title={t('common.logout')}
               >
                 <LogOut className="w-5 h-5" />
               </motion.button>
@@ -139,7 +145,7 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
                 whileTap={{ scale: 0.95 }}
                 className="px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary/90 transition-colors"
               >
-                Login
+                {t('common.login')}
               </motion.button>
             </Link>
           )}
@@ -150,7 +156,7 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
             whileTap={{ scale: 0.95 }}
             onClick={onMenuToggle}
             className="p-2 rounded-lg hover:bg-surface transition-colors md:hidden"
-            aria-label="Toggle menu"
+            aria-label={t('common.toggle_menu')}
           >
             {menuOpen ? (
               <X className="w-5 h-5 text-muted" />

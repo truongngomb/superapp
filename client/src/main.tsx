@@ -1,6 +1,7 @@
 import { createRoot } from 'react-dom/client';
 import { App } from './App';
 import { initEruda, logger } from '@/utils';
+import './config/i18n';
 import '@/assets/styles/index.scss';
 
 // Initialize Eruda debugger (only in development)

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button, Input, Modal } from '@/components/common';
 import type { Category, CategoryInput } from '@/types';
 
@@ -11,6 +12,7 @@ interface CategoryFormProps {
 }
 
 export function CategoryForm({ isOpen, category, onSubmit, onClose, loading }: CategoryFormProps) {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState<CategoryInput>({
     name: '',
     description: '',
@@ -48,35 +50,35 @@ export function CategoryForm({ isOpen, category, onSubmit, onClose, loading }: C
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={category ? 'Edit Category' : 'Add New Category'}
+      title={category ? t('categories.form.edit_title') : t('categories.form.add_title')}
       size="md"
       footer={
         <div className="flex gap-3">
           <Button type="button" variant="outline" onClick={onClose} className="flex-1">
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button type="submit" form="category-form" loading={loading} className="flex-1">
-            {category ? 'Update' : 'Add New'}
+            {category ? t('categories.form.submit_update') : t('categories.form.submit_add')}
           </Button>
         </div>
       }
     >
       <form id="category-form" onSubmit={handleSubmit} className="space-y-4">
         <Input
-          label="Category Name"
+          label={t('categories.form.name_label')}
           value={formData.name}
           onChange={(e) => { setFormData({ ...formData, name: e.target.value }); }}
-          placeholder="Enter category name"
+          placeholder={t('categories.form.name_placeholder')}
           required
         />
         <Input
-          label="Description"
+          label={t('categories.form.desc_label')}
           value={formData.description}
           onChange={(e) => { setFormData({ ...formData, description: e.target.value }); }}
-          placeholder="Enter description"
+          placeholder={t('categories.form.desc_placeholder')}
         />
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-foreground">Color</label>
+          <label className="text-sm font-medium text-foreground">{t('categories.form.color_label')}</label>
           <input
             type="color"
             value={formData.color}
@@ -93,7 +95,7 @@ export function CategoryForm({ isOpen, category, onSubmit, onClose, loading }: C
             className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
           />
           <label htmlFor="isActive" className="text-sm font-medium text-foreground">
-            Active
+            {t('categories.form.active_label')}
           </label>
         </div>
       </form>

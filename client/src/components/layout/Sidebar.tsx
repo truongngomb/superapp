@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Home, Folder, Settings, X } from 'lucide-react';
 import { cn } from '@/utils';
@@ -9,12 +10,13 @@ interface SidebarProps {
 }
 
 const navItems = [
-  { path: '/', label: 'Home', icon: Home },
-  { path: '/categories', label: 'Categories', icon: Folder },
-  { path: '/settings', label: 'Settings', icon: Settings },
+  { path: '/', labelKey: 'common.home', icon: Home },
+  { path: '/categories', labelKey: 'common.categories', icon: Folder },
+  { path: '/settings', labelKey: 'common.settings', icon: Settings },
 ];
 
 export function Sidebar({ open, onClose }: SidebarProps) {
+  const { t } = useTranslation();
   const location = useLocation();
 
   return (
@@ -73,7 +75,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                     )}
                   >
                     <Icon className="w-5 h-5" />
-                    <span>{item.label}</span>
+                    <span>{t(item.labelKey)}</span>
                     {isActive && (
                       <motion.div
                         layoutId="sidebar-indicator"

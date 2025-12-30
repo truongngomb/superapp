@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { Edit2, Trash2, Folder } from 'lucide-react';
 import { Button } from '@/components/common';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
@@ -15,6 +16,7 @@ interface CategoryRowProps {
 }
 
 export function CategoryRow({ index, style, data }: CategoryRowProps) {
+  const { t } = useTranslation();
   const category = data.categories[index];
   if (!category) return null;
 
@@ -38,7 +40,7 @@ export function CategoryRow({ index, style, data }: CategoryRowProps) {
           <h3 className="text-sm font-medium text-foreground truncate">{category.name}</h3>
           {!category.isActive && (
             <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">
-              Inactive
+              {t('common.inactive')}
             </span>
           )}
         </div>
@@ -50,7 +52,7 @@ export function CategoryRow({ index, style, data }: CategoryRowProps) {
               variant="ghost"
               size="sm"
               onClick={(e) => { e.stopPropagation(); data.onEdit(category); }}
-              aria-label="Edit"
+              aria-label={t('common.edit')}
             >
               <Edit2 className="w-4 h-4" />
             </Button>
@@ -60,7 +62,7 @@ export function CategoryRow({ index, style, data }: CategoryRowProps) {
               variant="ghost"
               size="sm"
               onClick={(e) => { e.stopPropagation(); data.onDelete(category.id); }}
-              aria-label="Delete"
+              aria-label={t('common.delete')}
             >
               <Trash2 className="w-4 h-4 text-red-500" />
             </Button>
