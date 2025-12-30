@@ -25,6 +25,7 @@ class CategoryService extends BaseService<Category> {
       description: (record['description'] as string) || '',
       color: (record['color'] as string) || '#3b82f6',
       icon: (record['icon'] as string) || 'folder',
+      isActive: record['isActive'] as boolean,
       created: record['created'] as string,
       updated: record['updated'] as string,
     };

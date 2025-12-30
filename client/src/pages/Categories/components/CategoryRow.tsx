@@ -33,10 +33,17 @@ export function CategoryRow({ index, style, data }: CategoryRowProps) {
         >
           <Folder className="w-5 h-5" style={{ color: category.color }} />
         </div>
-        <div className="flex-1 min-w-0">
-          <h3 className="font-medium text-foreground truncate">{category.name}</h3>
-          <p className="text-sm text-muted truncate">{category.description}</p>
+        <div className="flex-1 min-w-0 pr-4">
+        <div className="flex items-center gap-2">
+          <h3 className="text-sm font-medium text-foreground truncate">{category.name}</h3>
+          {!category.isActive && (
+            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">
+              Inactive
+            </span>
+          )}
         </div>
+        <p className="text-sm text-muted line-clamp-1">{category.description}</p>
+      </div>
         <div className="flex items-center gap-2">
           <PermissionGuard resource="categories" action="update">
             <Button

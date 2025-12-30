@@ -16,6 +16,7 @@ export interface Category extends BaseEntity {
   description: string;
   color: string;
   icon: string;
+  isActive: boolean;
 }
 
 // ============================================================================
@@ -30,6 +31,7 @@ export interface CreateCategoryInput {
   description: string;
   color: string;
   icon: string;
+  isActive?: boolean;
 }
 
 /**
@@ -40,6 +42,7 @@ export interface UpdateCategoryInput {
   description?: string;
   color?: string;
   icon?: string;
+  isActive?: boolean;
 }
 
 /**
@@ -57,4 +60,5 @@ export type CategoryInput = CreateCategoryInput;
 export interface CategoryFilters {
   search?: string;
   color?: string;
+  isActive?: boolean;
 }

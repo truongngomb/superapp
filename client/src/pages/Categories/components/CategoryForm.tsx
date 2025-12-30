@@ -16,6 +16,7 @@ export function CategoryForm({ isOpen, category, onSubmit, onClose, loading }: C
     description: '',
     color: '#3b82f6',
     icon: 'folder',
+    isActive: true,
   });
 
   useEffect(() => {
@@ -25,6 +26,7 @@ export function CategoryForm({ isOpen, category, onSubmit, onClose, loading }: C
         description: category.description,
         color: category.color,
         icon: category.icon,
+        isActive: category.isActive,
       });
     } else {
       setFormData({
@@ -32,6 +34,7 @@ export function CategoryForm({ isOpen, category, onSubmit, onClose, loading }: C
         description: '',
         color: '#3b82f6',
         icon: 'folder',
+        isActive: true,
       });
     }
   }, [category, isOpen]);
@@ -80,6 +83,18 @@ export function CategoryForm({ isOpen, category, onSubmit, onClose, loading }: C
             onChange={(e) => { setFormData({ ...formData, color: e.target.value }); }}
             className="w-full h-10 rounded-lg cursor-pointer"
           />
+        </div>
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            id="isActive"
+            checked={formData.isActive ?? true}
+            onChange={(e) => { setFormData({ ...formData, isActive: e.target.checked }); }}
+            className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
+          />
+          <label htmlFor="isActive" className="text-sm font-medium text-foreground">
+            Active
+          </label>
         </div>
       </form>
     </Modal>

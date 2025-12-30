@@ -21,6 +21,7 @@ export const CategoryCreateSchema = z.object({
   description: z.string().max(500, 'Description too long').default(''),
   color: hexColor.default('#3b82f6'),
   icon: z.string().min(1).default('folder'),
+  isActive: z.boolean().default(true),
 });
 
 /**
@@ -31,6 +32,7 @@ export const CategoryUpdateSchema = z.object({
   description: z.string().max(500, 'Description too long').optional(),
   color: hexColor.optional(),
   icon: z.string().min(1).optional(),
+  isActive: z.boolean().optional(),
 });
 
 // =============================================================================
