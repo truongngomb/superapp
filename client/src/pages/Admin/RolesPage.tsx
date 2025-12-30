@@ -3,10 +3,11 @@ import { logger } from '@/utils/logger';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FixedSizeList as List } from 'react-window';
 import { Plus, Edit2, Trash2, Shield, Search, RefreshCw } from 'lucide-react';
-import { Button, Card, CardContent, Input, LoadingSpinner, Toast, ConfirmModal, Modal } from '@/components/common';
+import { Button, Card, CardContent, Input, LoadingSpinner, ConfirmModal, Modal } from '@/components/common';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
 import { ApiException } from '@/config';
 import { roleService } from '@/services';
+import { useToast } from '@/context';
 import type { Role, CreateRoleInput } from '@/types';
 import { cn } from '@/utils';
 
@@ -193,9 +194,9 @@ export default function RolesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [editingRole, setEditingRole] = useState<Role | null>(null);
   const [showForm, setShowForm] = useState(false);
-  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const toast = useToast();
 
   // Fetch roles from API
   const fetchRoles = useCallback(async () => {
@@ -205,11 +206,11 @@ export default function RolesPage() {
       setRoles(data);
     } catch (error) {
       logger.warn('RolesPage', 'Failed to load roles:', error);
-      setToast({ message: 'Failed to load roles', type: 'error' });
+      toast.error('Failed to load roles');
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [toast]);
 
   useEffect(() => {
     void fetchRoles();
@@ -233,7 +234,7 @@ export default function RolesPage() {
             role.id === editingRole.id ? { ...role, ...data, updatedAt: new Date().toISOString() } : role
           )
         );
-        setToast({ message: 'Role updated successfully!', type: 'success' });
+        toast.success('Role updated successfully!');
       } else {
         const newRole: Role = {
           id: crypto.randomUUID(),
@@ -248,13 +249,13 @@ export default function RolesPage() {
         } catch {
           setRoles((prev) => [...prev, newRole]);
         }
-        setToast({ message: 'Role created successfully!', type: 'success' });
+        toast.success('Role created successfully!');
       }
       setShowForm(false);
       setEditingRole(null);
     } catch (error) {
       const message = error instanceof ApiException ? error.message : 'An error occurred';
-      setToast({ message, type: 'error' });
+      toast.error(message);
     } finally {
       setSubmitting(false);
     }
@@ -269,7 +270,7 @@ export default function RolesPage() {
       // Continue with local delete
     }
     setRoles((prev) => prev.filter((role) => role.id !== id));
-    setToast({ message: 'Role deleted successfully!', type: 'success' });
+    toast.success('Role deleted successfully!');
     setDeleting(false);
     setDeleteId(null);
   };
@@ -307,7 +308,7 @@ export default function RolesPage() {
             className="pl-10"
           />
         </div>
-        <Button variant="outline" onClick={() => void fetchRoles()}>
+        <Button variant="outline" onClick={() => { void fetchRoles(); }}>
           <RefreshCw className={cn('w-5 h-5', loading && 'animate-spin')} />
         </Button>
       </div>
@@ -354,7 +355,7 @@ export default function RolesPage() {
         {showForm && (
           <RoleForm
             role={editingRole}
-            onSubmit={(data) => void handleSubmit(data)}
+            onSubmit={(data) => { void handleSubmit(data); }}
             onClose={() => {
               setShowForm(false);
               setEditingRole(null);
@@ -375,14 +376,6 @@ export default function RolesPage() {
         onConfirm={() => { if (deleteId) void handleDelete(deleteId); }}
         onCancel={() => { setDeleteId(null); }}
         variant="danger"
-      />
-
-      {/* Toast */}
-      <Toast
-        message={toast?.message ?? ''}
-        type={toast?.type}
-        visible={!!toast}
-        onClose={() => { setToast(null); }}
       />
     </div>
   );

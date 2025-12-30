@@ -7,7 +7,7 @@ import { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { MainLayout } from '@/components/layout';
 import { LoadingSpinner, ProtectedRoute, GuestGuard } from '@/components/common';
-import { AuthProvider, ThemeProvider } from '@/context';
+import { AuthProvider, ThemeProvider, ToastProvider } from '@/context';
 import { PermissionResource, PermissionAction } from '@/types';
 
 // ============================================================================
@@ -65,61 +65,63 @@ function NotFoundPage() {
 export function App() {
   return (
     <ThemeProvider>
-      <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<MainLayout />}>
-              {/* Public Routes */}
-              <Route
-                index
-                element={
-                  <Suspense fallback={<PageLoader />}>
-                    <HomePage />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="categories"
-                element={
-                  <Suspense fallback={<PageLoader />}>
-                    <CategoriesPage />
-                  </Suspense>
-                }
-              />
-              
-              {/* Guest Only Routes (redirect to home if already logged in) */}
-              <Route
-                path="login"
-                element={
-                  <GuestGuard>
+      <ToastProvider>
+        <AuthProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<MainLayout />}>
+                {/* Public Routes */}
+                <Route
+                  index
+                  element={
                     <Suspense fallback={<PageLoader />}>
-                      <LoginPage />
+                      <HomePage />
                     </Suspense>
-                  </GuestGuard>
-                }
-              />
-              
-              {/* Protected Admin Routes */}
-              <Route
-                path="admin/roles"
-                element={
-                  <ProtectedRoute 
-                    resource={PermissionResource.Roles} 
-                    action={PermissionAction.Read}
-                  >
+                  }
+                />
+                <Route
+                  path="categories"
+                  element={
                     <Suspense fallback={<PageLoader />}>
-                      <RolesPage />
+                      <CategoriesPage />
                     </Suspense>
-                  </ProtectedRoute>
-                }
-              />
-              
-              {/* Catch-all 404 */}
-              <Route path="*" element={<NotFoundPage />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
-      </AuthProvider>
+                  }
+                />
+                
+                {/* Guest Only Routes (redirect to home if already logged in) */}
+                <Route
+                  path="login"
+                  element={
+                    <GuestGuard>
+                      <Suspense fallback={<PageLoader />}>
+                        <LoginPage />
+                      </Suspense>
+                    </GuestGuard>
+                  }
+                />
+                
+                {/* Protected Admin Routes */}
+                <Route
+                  path="admin/roles"
+                  element={
+                    <ProtectedRoute 
+                      resource={PermissionResource.Roles} 
+                      action={PermissionAction.Read}
+                    >
+                      <Suspense fallback={<PageLoader />}>
+                        <RolesPage />
+                      </Suspense>
+                    </ProtectedRoute>
+                  }
+                />
+                
+                {/* Catch-all 404 */}
+                <Route path="*" element={<NotFoundPage />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </AuthProvider>
+      </ToastProvider>
     </ThemeProvider>
   );
 }
