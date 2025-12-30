@@ -44,7 +44,7 @@ function RoleRow({ index, style, data }: RoleRowProps) {
           <h3 className="font-medium text-foreground truncate">{role.name}</h3>
           <p className="text-sm text-muted truncate">{role.description}</p>
           <div className="mt-1 text-xs text-muted">
-            {Object.keys(role.permissions).length} resources configured
+            {Object.entries(role.permissions).filter(([, actions]) => actions.length > 0).length} resources configured
           </div>
         </div>
         <div className="flex items-center gap-2">
