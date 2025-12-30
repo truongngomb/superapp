@@ -17,9 +17,7 @@ import { PermissionResource, PermissionAction } from '@/types';
 const HomePage = lazy(() => 
   import('@/pages/HomePage').then((m) => ({ default: m.HomePage }))
 );
-const CategoriesPage = lazy(() => 
-  import('@/pages/CategoriesPage').then((m) => ({ default: m.CategoriesPage }))
-);
+const CategoriesPage = lazy(() => import('@/pages/Categories/CategoriesPage'));
 const LoginPage = lazy(() => 
   import('@/pages/LoginPage').then((m) => ({ default: m.LoginPage }))
 );

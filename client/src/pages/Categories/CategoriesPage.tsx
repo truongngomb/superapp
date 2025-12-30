@@ -1,75 +1,79 @@
 import { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { FixedSizeList as List } from 'react-window';
-import { Plus, Shield, Search, RefreshCw } from 'lucide-react';
+import { Plus, Folder, Search, RefreshCw } from 'lucide-react';
 import { Button, Card, CardContent, Input, LoadingSpinner, ConfirmModal } from '@/components/common';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
-import type { Role, CreateRoleInput } from '@/types';
+import type { Category, CategoryInput } from '@/types';
 import { cn } from '@/utils';
-import { useRoles } from '@/hooks';
-import { RoleForm } from './components/RoleForm';
-import { RoleRow } from './components/RoleRow';
+import { useCategories } from '@/hooks';
+import { CategoryForm } from './components/CategoryForm';
+import { CategoryRow } from './components/CategoryRow';
 
 /**
- * RolesPage Component
+ * CategoriesPage Component
  * 
- * Administrative interface for managing Role-Based Access Control (RBAC).
- * Refactored to use useRoles hook and separated components.
+ * Manages product categories including:
+ * - Listing categories with virtualization
+ * - Creating new categories
+ * - Updating existing categories
+ * - Deleting categories
+ * - Searching/Filtering
  */
-export default function RolesPage() {
+export default function CategoriesPage() {
   const {
-    roles,
+    categories,
     loading,
     submitting,
     deleting,
-    fetchRoles,
-    createRole,
-    updateRole,
-    deleteRole
-  } = useRoles();
+    fetchCategories,
+    createCategory,
+    updateCategory,
+    deleteCategory
+  } = useCategories();
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [editingRole, setEditingRole] = useState<Role | null>(null);
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
   useEffect(() => {
-    void fetchRoles();
-  }, [fetchRoles]);
+    void fetchCategories();
+  }, [fetchCategories]);
 
-  // Filter roles by search query
-  const filteredRoles = roles.filter(
-    (role) =>
-      role.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (role.description?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false)
+  // Filter categories by search query
+  const filteredCategories = categories.filter(
+    (cat) =>
+      cat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      cat.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Handle form submit
-  const handleSubmit = async (data: CreateRoleInput) => {
+  const handleSubmit = async (data: CategoryInput) => {
     let success = false;
-    if (editingRole) {
-      success = await updateRole(editingRole.id, data);
+    if (editingCategory) {
+      success = await updateCategory(editingCategory.id, data);
     } else {
-      success = await createRole(data);
+      success = await createCategory(data);
     }
 
     if (success) {
       setShowForm(false);
-      setEditingRole(null);
+      setEditingCategory(null);
     }
   };
 
   // Handle delete
   const handleDelete = async (id: string) => {
-    const success = await deleteRole(id);
+    const success = await deleteCategory(id);
     if (success) {
       setDeleteId(null);
     }
   };
 
   // Open edit form
-  const handleEdit = (role: Role) => {
-    setEditingRole(role);
+  const handleEdit = (category: Category) => {
+    setEditingCategory(category);
     setShowForm(true);
   };
 
@@ -78,13 +82,13 @@ export default function RolesPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Role Management</h1>
-          <p className="text-muted mt-1">Manage user roles and permissions</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Category Management</h1>
+          <p className="text-muted mt-1">Manage product categories</p>
         </div>
-        <PermissionGuard resource="roles" action="create">
+        <PermissionGuard resource="categories" action="create">
           <Button onClick={() => { setShowForm(true); }}>
             <Plus className="w-5 h-5" />
-            Create Role
+            Add New
           </Button>
         </PermissionGuard>
       </div>
@@ -96,29 +100,29 @@ export default function RolesPage() {
           <Input
             value={searchQuery}
             onChange={(e) => { setSearchQuery(e.target.value); }}
-            placeholder="Search roles..."
+            placeholder="Search categories..."
             className="pl-10"
           />
         </div>
-        <Button variant="outline" onClick={() => { void fetchRoles(); }}>
+        <Button variant="outline" onClick={() => void fetchCategories()}>
           <RefreshCw className={cn('w-5 h-5', loading && 'animate-spin')} />
         </Button>
       </div>
 
-      {/* Roles list */}
+      {/* Categories list */}
       {loading ? (
-        <LoadingSpinner size="lg" text="Loading roles..." className="py-20" />
-      ) : filteredRoles.length === 0 ? (
+        <LoadingSpinner size="lg" text="Loading categories..." className="py-20" />
+      ) : filteredCategories.length === 0 ? (
         <Card className="py-12 text-center">
           <CardContent>
-            <Shield className="w-12 h-12 text-muted mx-auto mb-4" />
+            <Folder className="w-12 h-12 text-muted mx-auto mb-4" />
             <p className="text-muted">
-              {searchQuery ? 'No matching roles found' : 'No roles yet'}
+              {searchQuery ? 'No matching categories found' : 'No categories yet'}
             </p>
             {!searchQuery && (
-              <PermissionGuard resource="roles" action="create">
+              <PermissionGuard resource="categories" action="create">
                 <Button onClick={() => { setShowForm(true); }} className="mt-4">
-                  Create first role
+                  Add first category
                 </Button>
               </PermissionGuard>
             )}
@@ -128,16 +132,16 @@ export default function RolesPage() {
         <div className="h-[500px]">
           <List
             height={500}
-            itemCount={filteredRoles.length}
+            itemCount={filteredCategories.length}
             itemSize={88}
             width="100%"
             itemData={{
-              roles: filteredRoles,
+              categories: filteredCategories,
               onEdit: handleEdit,
               onDelete: (id: string) => { setDeleteId(id); },
             }}
           >
-            {RoleRow}
+            {CategoryRow}
           </List>
         </div>
       )}
@@ -145,13 +149,13 @@ export default function RolesPage() {
       {/* Form modal */}
       <AnimatePresence>
         {showForm && (
-          <RoleForm
+          <CategoryForm
             isOpen={showForm}
-            role={editingRole}
-            onSubmit={(data) => { void handleSubmit(data); }}
+            category={editingCategory}
+            onSubmit={(data) => void handleSubmit(data)}
             onClose={() => {
               setShowForm(false);
-              setEditingRole(null);
+              setEditingCategory(null);
             }}
             loading={submitting}
           />
@@ -161,8 +165,8 @@ export default function RolesPage() {
       {/* Delete Confirm Modal */}
       <ConfirmModal
         isOpen={!!deleteId}
-        title="Delete Role"
-        message="Are you sure you want to delete this role? This action cannot be undone."
+        title="Delete Category"
+        message="Are you sure you want to delete this category? This action cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         loading={deleting}
