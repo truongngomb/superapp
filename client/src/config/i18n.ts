@@ -14,6 +14,16 @@ import enTranslation from '../locales/en/translation.json';
 import viTranslation from '../locales/vi/translation.json';
 
 // Configure resources
+declare module 'i18next' {
+  interface CustomTypeOptions {
+    defaultNS: 'translation';
+    resources: {
+      translation: typeof enTranslation;
+    };
+  }
+}
+
+// Configure resources
 const resources = {
   en: {
     translation: enTranslation as Record<string, unknown>,

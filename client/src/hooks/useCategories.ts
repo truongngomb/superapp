@@ -32,6 +32,7 @@ export function useCategories() {
       const newCategory: Category = {
         id: crypto.randomUUID(),
         ...data,
+        isActive: data.isActive ?? true,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };

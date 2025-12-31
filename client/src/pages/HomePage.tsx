@@ -25,7 +25,7 @@ const features = [
     titleKey: 'home.features.category_mgmt.title',
     descKey: 'home.features.category_mgmt.description',
   },
-];
+] as const;
 
 const containerVariants = {
   hidden: { opacity: 0 },
