@@ -16,6 +16,7 @@ export { Toast } from './Toast';
 export { ConfirmModal } from './ConfirmModal';
 export { Modal } from './Modal';
 export { Badge } from './Badge';
+export { DataRow } from './DataRow';
 
 // Permission Components
 export { PermissionGuard } from './PermissionGuard';
