@@ -28,7 +28,7 @@ export function MainLayout() {
       <Header onMenuToggle={toggleSidebar} menuOpen={sidebarOpen} />
       <Sidebar open={sidebarOpen} onClose={closeSidebar} />
 
-      <main className="container mx-auto px-4 py-6 safe-area-bottom">
+      <main className="max-w-7xl mx-auto px-4 py-6 safe-area-bottom">
         <Outlet />
       </main>
     </div>
