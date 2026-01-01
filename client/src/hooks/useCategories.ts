@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { categoryService } from '@/services';
 import { useToast } from '@/context';
 import type { Category, CategoryInput } from '@/types';
@@ -11,6 +12,7 @@ export function useCategories() {
   const [submitting, setSubmitting] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const toast = useToast();
+  const { t } = useTranslation('categories');
 
   const fetchCategories = useCallback(async () => {
     setLoading(true);
@@ -19,11 +21,11 @@ export function useCategories() {
       setCategories(data);
     } catch (error) {
       logger.warn('useCategories', 'Failed to load categories:', error);
-      toast.error('Failed to load categories');
+      toast.error(t('toast.load_error'));
     } finally {
       setLoading(false);
     }
-  }, [toast]);
+  }, [toast, t]);
 
   const createCategory = async (data: CategoryInput) => {
     setSubmitting(true);
@@ -43,10 +45,10 @@ export function useCategories() {
       } catch {
         setCategories((prev) => [...prev, newCategory]);
       }
-      toast.success('Category created successfully!');
+      toast.success(t('toast.create_success'));
       return true;
     } catch (error) {
-      const message = error instanceof ApiException ? error.message : 'An error occurred';
+      const message = error instanceof ApiException ? error.message : t('toast.error');
       toast.error(message);
       return false;
     } finally {
@@ -63,10 +65,10 @@ export function useCategories() {
           cat.id === id ? { ...cat, ...data, updatedAt: new Date().toISOString() } : cat
         )
       );
-      toast.success('Category updated successfully!');
+      toast.success(t('toast.update_success'));
       return true;
     } catch (error) {
-      const message = error instanceof ApiException ? error.message : 'An error occurred';
+      const message = error instanceof ApiException ? error.message : t('toast.error');
       toast.error(message);
       return false;
     } finally {
@@ -83,10 +85,10 @@ export function useCategories() {
         // Continue with local delete if API fails
       }
       setCategories((prev) => prev.filter((cat) => cat.id !== id));
-      toast.success('Category deleted successfully!');
+      toast.success(t('toast.delete_success'));
       return true;
     } catch (error) {
-      const message = error instanceof ApiException ? error.message : 'An error occurred';
+      const message = error instanceof ApiException ? error.message : t('toast.error');
       toast.error(message);
       return false;
     } finally {
@@ -105,3 +107,4 @@ export function useCategories() {
     deleteCategory,
   };
 }
+

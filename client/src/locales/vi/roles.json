@@ -16,5 +16,12 @@
   "desc_label": "Mô tả",
   "desc_placeholder": "Nhập mô tả cho role",
   "permissions_label": "Quyền hạn",
-  "resources_configured": "tài nguyên được cấu hình"
+  "resources_configured": "tài nguyên được cấu hình",
+  "toast": {
+    "load_error": "Không thể tải danh sách role",
+    "create_success": "Tạo role thành công!",
+    "update_success": "Cập nhật role thành công!",
+    "delete_success": "Xóa role thành công!",
+    "error": "Đã xảy ra lỗi"
+  }
 }

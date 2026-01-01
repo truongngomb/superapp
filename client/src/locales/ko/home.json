@@ -1,0 +1,25 @@
+{
+  "hero": {
+    "badge": "프로덕션 레디 템플릿",
+    "subtitle": "크로스 플랫폼 보일러플레이트",
+    "description": "팀 개발을 위한 템플릿 애플리케이션. React, TypeScript, Vite 및 Node.js Express로 구축되었습니다."
+  },
+  "features": {
+    "performance": {
+      "title": "고성능",
+      "description": "Vite와 React 18로 최적화되어 부드러운 경험 제공"
+    },
+    "security": {
+      "title": "보안",
+      "description": "OWASP 보안 표준 및 Helmet과 통합"
+    },
+    "cross_platform": {
+      "title": "크로스 플랫폼",
+      "description": "Capacitor로 웹, Android, iOS에서 실행"
+    },
+    "category_mgmt": {
+      "title": "카테고리 관리",
+      "description": "애플리케이션 개발을 위한 샘플 기능"
+    }
+  }
+}

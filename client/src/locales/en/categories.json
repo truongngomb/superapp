@@ -17,5 +17,12 @@
     "active_label": "Active",
     "submit_add": "Add New",
     "submit_update": "Update"
+  },
+  "toast": {
+    "load_error": "Failed to load categories",
+    "create_success": "Category created successfully!",
+    "update_success": "Category updated successfully!",
+    "delete_success": "Category deleted successfully!",
+    "error": "An error occurred"
   }
 }

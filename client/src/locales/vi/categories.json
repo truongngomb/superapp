@@ -17,5 +17,12 @@
     "active_label": "Hoạt động",
     "submit_add": "Thêm mới",
     "submit_update": "Cập nhật"
+  },
+  "toast": {
+    "load_error": "Không thể tải danh sách danh mục",
+    "create_success": "Tạo danh mục thành công!",
+    "update_success": "Cập nhật danh mục thành công!",
+    "delete_success": "Xóa danh mục thành công!",
+    "error": "Đã xảy ra lỗi"
   }
 }

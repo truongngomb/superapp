@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { roleService } from '@/services';
 import { useToast } from '@/context';
 import type { Role, CreateRoleInput } from '@/types';
@@ -11,6 +12,7 @@ export function useRoles() {
   const [submitting, setSubmitting] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const toast = useToast();
+  const { t } = useTranslation('roles');
 
   const fetchRoles = useCallback(async () => {
     setLoading(true);
@@ -19,11 +21,11 @@ export function useRoles() {
       setRoles(data);
     } catch (error) {
       logger.warn('useRoles', 'Failed to load roles:', error);
-      toast.error('Failed to load roles');
+      toast.error(t('toast.load_error'));
     } finally {
       setLoading(false);
     }
-  }, [toast]);
+  }, [toast, t]);
 
   const createRole = async (data: CreateRoleInput) => {
     setSubmitting(true);
@@ -42,10 +44,10 @@ export function useRoles() {
       } catch {
         setRoles((prev) => [...prev, newRole]);
       }
-      toast.success('Role created successfully!');
+      toast.success(t('toast.create_success'));
       return true;
     } catch (error) {
-      const message = error instanceof ApiException ? error.message : 'An error occurred';
+      const message = error instanceof ApiException ? error.message : t('toast.error');
       toast.error(message);
       return false;
     } finally {
@@ -62,10 +64,10 @@ export function useRoles() {
           role.id === id ? { ...role, ...data, updatedAt: new Date().toISOString() } : role
         )
       );
-      toast.success('Role updated successfully!');
+      toast.success(t('toast.update_success'));
       return true;
     } catch (error) {
-      const message = error instanceof ApiException ? error.message : 'An error occurred';
+      const message = error instanceof ApiException ? error.message : t('toast.error');
       toast.error(message);
       return false;
     } finally {
@@ -83,10 +85,10 @@ export function useRoles() {
         // Adjust logic based on strictness requirements
       }
       setRoles((prev) => prev.filter((role) => role.id !== id));
-      toast.success('Role deleted successfully!');
+      toast.success(t('toast.delete_success'));
       return true;
     } catch (error) {
-      const message = error instanceof ApiException ? error.message : 'An error occurred';
+      const message = error instanceof ApiException ? error.message : t('toast.error');
       toast.error(message);
       return false;
     } finally {
@@ -105,3 +107,4 @@ export function useRoles() {
     deleteRole,
   };
 }
+
