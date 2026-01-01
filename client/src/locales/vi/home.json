@@ -1,0 +1,25 @@
+{
+  "hero": {
+    "badge": "Template sẵn sàng cho Production",
+    "subtitle": "Boilerplate Đa nền tảng",
+    "description": "Ứng dụng mẫu cho phát triển nhóm. Xây dựng với React, TypeScript, Vite và Node.js Express."
+  },
+  "features": {
+    "performance": {
+      "title": "Hiệu suất cao",
+      "description": "Tối ưu hóa với Vite và React 18 cho trải nghiệm mượt mà"
+    },
+    "security": {
+      "title": "Bảo mật",
+      "description": "Tích hợp các tiêu chuẩn bảo mật OWASP và Helmet"
+    },
+    "cross_platform": {
+      "title": "Đa nền tảng",
+      "description": "Chạy trên Web, Android và iOS với Capacitor"
+    },
+    "category_mgmt": {
+      "title": "Quản lý danh mục",
+      "description": "Tính năng mẫu cho phát triển ứng dụng"
+    }
+  }
+}

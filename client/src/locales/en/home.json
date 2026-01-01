@@ -1,0 +1,25 @@
+{
+  "hero": {
+    "badge": "Production-ready template",
+    "subtitle": "Cross-Platform Boilerplate",
+    "description": "Template application for team development. Built with React, TypeScript, Vite, and Node.js Express."
+  },
+  "features": {
+    "performance": {
+      "title": "High Performance",
+      "description": "Optimized with Vite and React 18 for a smooth experience"
+    },
+    "security": {
+      "title": "Security",
+      "description": "Integrated with OWASP security standards and Helmet"
+    },
+    "cross_platform": {
+      "title": "Cross-Platform",
+      "description": "Runs on Web, Android, and iOS with Capacitor"
+    },
+    "category_mgmt": {
+      "title": "Category Management",
+      "description": "Sample feature for application development"
+    }
+  }
+}

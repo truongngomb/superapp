@@ -10,9 +10,9 @@ interface SidebarProps {
 }
 
 const navItems = [
-  { path: '/', labelKey: 'common.home', icon: Home },
-  { path: '/categories', labelKey: 'common.categories', icon: Folder },
-  { path: '/settings', labelKey: 'common.settings', icon: Settings },
+  { path: '/', labelKey: 'home', icon: Home },
+  { path: '/categories', labelKey: 'categories', icon: Folder },
+  { path: '/settings', labelKey: 'settings', icon: Settings },
 ] as const;
 
 export function Sidebar({ open, onClose }: SidebarProps) {

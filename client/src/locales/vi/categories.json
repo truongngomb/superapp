@@ -1,0 +1,21 @@
+{
+  "title": "Quản lý Danh mục",
+  "subtitle": "Quản lý danh mục sản phẩm",
+  "list": {
+    "empty": "Chưa có danh mục nào",
+    "empty_search": "Không tìm thấy danh mục phù hợp",
+    "add_first": "Thêm danh mục đầu tiên"
+  },
+  "form": {
+    "add_title": "Thêm danh mục mới",
+    "edit_title": "Chỉnh sửa danh mục",
+    "name_label": "Tên danh mục",
+    "name_placeholder": "Nhập tên danh mục",
+    "desc_label": "Mô tả",
+    "desc_placeholder": "Nhập mô tả",
+    "color_label": "Màu sắc",
+    "active_label": "Hoạt động",
+    "submit_add": "Thêm mới",
+    "submit_update": "Cập nhật"
+  }
+}

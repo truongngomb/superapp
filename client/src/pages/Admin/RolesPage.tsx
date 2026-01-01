@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { FixedSizeList as List } from 'react-window';
 import { Plus, Shield, Search, RefreshCw } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button, Card, CardContent, Input, LoadingSpinner, ConfirmModal } from '@/components/common';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
 import type { Role, CreateRoleInput } from '@/types';
@@ -17,6 +18,7 @@ import { RoleRow } from './components/RoleRow';
  * Refactored to use useRoles hook and separated components.
  */
 export default function RolesPage() {
+  const { t } = useTranslation(['roles', 'common']);
   const {
     roles,
     loading,
@@ -78,13 +80,13 @@ export default function RolesPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Role Management</h1>
-          <p className="text-muted mt-1">Manage user roles and permissions</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t('roles:title')}</h1>
+          <p className="text-muted mt-1">{t('roles:subtitle')}</p>
         </div>
         <PermissionGuard resource="roles" action="create">
           <Button onClick={() => { setShowForm(true); }}>
             <Plus className="w-5 h-5" />
-            Create Role
+            {t('roles:create_btn')}
           </Button>
         </PermissionGuard>
       </div>
@@ -96,7 +98,7 @@ export default function RolesPage() {
           <Input
             value={searchQuery}
             onChange={(e) => { setSearchQuery(e.target.value); }}
-            placeholder="Search roles..."
+            placeholder={t('roles:search_placeholder')}
             className="pl-10"
           />
         </div>
@@ -107,18 +109,18 @@ export default function RolesPage() {
 
       {/* Roles list */}
       {loading ? (
-        <LoadingSpinner size="lg" text="Loading roles..." className="py-20" />
+        <LoadingSpinner size="lg" text={t('roles:loading')} className="py-20" />
       ) : filteredRoles.length === 0 ? (
         <Card className="py-12 text-center">
           <CardContent>
             <Shield className="w-12 h-12 text-muted mx-auto mb-4" />
             <p className="text-muted">
-              {searchQuery ? 'No matching roles found' : 'No roles yet'}
+              {searchQuery ? t('roles:empty_search') : t('roles:empty')}
             </p>
             {!searchQuery && (
               <PermissionGuard resource="roles" action="create">
                 <Button onClick={() => { setShowForm(true); }} className="mt-4">
-                  Create first role
+                  {t('roles:add_first')}
                 </Button>
               </PermissionGuard>
             )}
@@ -161,10 +163,10 @@ export default function RolesPage() {
       {/* Delete Confirm Modal */}
       <ConfirmModal
         isOpen={!!deleteId}
-        title="Delete Role"
-        message="Are you sure you want to delete this role? This action cannot be undone."
-        confirmText="Delete"
-        cancelText="Cancel"
+        title={t('roles:delete_title')}
+        message={t('roles:delete_confirm')}
+        confirmText={t('common:delete')}
+        cancelText={t('common:cancel')}
         loading={deleting}
         onConfirm={() => { if (deleteId) void handleDelete(deleteId); }}
         onCancel={() => { setDeleteId(null); }}

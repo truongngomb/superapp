@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button, Input, Modal } from '@/components/common';
 import { PERMISSIONS } from '@/config/constants';
 import type { Role, CreateRoleInput } from '@/types';
@@ -12,6 +13,7 @@ interface RoleFormProps {
 }
 
 export function RoleForm({ role, onSubmit, onClose, loading, isOpen }: RoleFormProps) {
+  const { t } = useTranslation(['roles', 'common']);
   const [formData, setFormData] = useState<CreateRoleInput>({
     name: '',
     description: '',
@@ -56,36 +58,36 @@ export function RoleForm({ role, onSubmit, onClose, loading, isOpen }: RoleFormP
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={role ? 'Edit Role' : 'Create Role'}
+      title={role ? t('roles:form_edit_title') : t('roles:form_add_title')}
       size="xl"
       footer={
         <div className="flex gap-3">
           <Button type="button" variant="outline" onClick={onClose} className="flex-1">
-            Cancel
+            {t('common:cancel')}
           </Button>
           <Button type="submit" form="role-form" loading={loading} className="flex-1">
-            {role ? 'Update' : 'Create'}
+            {role ? t('common:save') : t('common:add')}
           </Button>
         </div>
       }
     >
       <form id="role-form" onSubmit={handleSubmit} className="space-y-4">
         <Input
-          label="Name"
+          label={t('roles:name_label')}
           value={formData.name}
           onChange={(e) => { setFormData({ ...formData, name: e.target.value }); }}
-          placeholder="Enter role name"
+          placeholder={t('roles:name_placeholder')}
           required
         />
         <Input
-          label="Description"
+          label={t('roles:desc_label')}
           value={formData.description}
           onChange={(e) => { setFormData({ ...formData, description: e.target.value }); }}
-          placeholder="Enter role description"
+          placeholder={t('roles:desc_placeholder')}
         />
 
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">Permissions</label>
+          <label className="block text-sm font-medium text-foreground mb-2">{t('roles:permissions_label')}</label>
           <div className="border border-border rounded-lg p-4 space-y-4 bg-background">
             {PERMISSIONS.RESOURCES.map(resource => (
               <div key={resource} className="border-b border-border pb-3 last:border-0 last:pb-0">

@@ -7,23 +7,23 @@ import { Button } from '@/components/common';
 const features = [
   {
     icon: Zap,
-    titleKey: 'home.features.performance.title',
-    descKey: 'home.features.performance.description',
+    titleKey: 'home:features.performance.title',
+    descKey: 'home:features.performance.description',
   },
   {
     icon: Shield,
-    titleKey: 'home.features.security.title',
-    descKey: 'home.features.security.description',
+    titleKey: 'home:features.security.title',
+    descKey: 'home:features.security.description',
   },
   {
     icon: Smartphone,
-    titleKey: 'home.features.cross_platform.title',
-    descKey: 'home.features.cross_platform.description',
+    titleKey: 'home:features.cross_platform.title',
+    descKey: 'home:features.cross_platform.description',
   },
   {
     icon: Folder,
-    titleKey: 'home.features.category_mgmt.title',
-    descKey: 'home.features.category_mgmt.description',
+    titleKey: 'home:features.category_mgmt.title',
+    descKey: 'home:features.category_mgmt.description',
   },
 ] as const;
 
@@ -47,7 +47,7 @@ const itemVariants = {
 };
 
 export function HomePage() {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['home', 'common']);
 
   return (
     <div className="max-w-5xl mx-auto">
@@ -65,28 +65,28 @@ export function HomePage() {
           className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6"
         >
           <Zap className="w-4 h-4" />
-          {t('home.hero.badge')}
+          {t('home:hero.badge')}
         </motion.div>
 
         <h1 className="text-4xl md:text-6xl font-bold mb-6">
           <span className="text-gradient">SuperApp</span>
           <br />
-          <span className="text-foreground">{t('home.hero.subtitle')}</span>
+          <span className="text-foreground">{t('home:hero.subtitle')}</span>
         </h1>
 
         <p className="text-lg md:text-xl text-muted max-w-2xl mx-auto mb-8">
-          {t('home.hero.description')}
+          {t('home:hero.description')}
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link to="/categories">
             <Button size="lg" className="w-full sm:w-auto">
-              {t('common.get_started')}
+              {t('common:get_started')}
               <ArrowRight className="w-5 h-5 ml-1" />
             </Button>
           </Link>
           <Button variant="outline" size="lg" className="w-full sm:w-auto">
-            {t('common.documentation')}
+            {t('common:documentation')}
           </Button>
         </div>
       </motion.section>
@@ -127,7 +127,7 @@ export function HomePage() {
         viewport={{ once: true }}
         className="py-12 text-center"
       >
-        <h2 className="text-2xl font-bold text-foreground mb-8">{t('common.tech_stack')}</h2>
+        <h2 className="text-2xl font-bold text-foreground mb-8">{t('common:tech_stack')}</h2>
         <div className="flex flex-wrap justify-center gap-3">
           {['React 18', 'TypeScript', 'Vite', 'TailwindCSS', 'Node.js', 'Express', 'Capacitor', 'PocketBase'].map((tech) => (
             <span

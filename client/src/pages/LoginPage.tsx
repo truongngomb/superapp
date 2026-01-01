@@ -42,7 +42,7 @@ function GoogleIcon() {
 // ============================================================================
 
 export function LoginPage() {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['auth']);
   const { loginWithGoogle, isLoading, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
@@ -78,8 +78,8 @@ export function LoginPage() {
           <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-4">
             <span className="text-white font-bold text-3xl">S</span>
           </div>
-          <h1 className="text-2xl font-bold text-gradient">{t('auth.login.title')}</h1>
-          <p className="text-muted mt-2">{t('auth.login.subtitle')}</p>
+          <h1 className="text-2xl font-bold text-gradient">{t('auth:login.title')}</h1>
+          <p className="text-muted mt-2">{t('auth:login.subtitle')}</p>
         </div>
 
         {/* Login Card */}
@@ -98,7 +98,7 @@ export function LoginPage() {
             ) : (
               <>
                 <GoogleIcon />
-                {t('auth.login.google_button')}
+                {t('auth:login.google_button')}
               </>
             )}
           </motion.button>

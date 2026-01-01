@@ -22,7 +22,7 @@ import { CategoryRow } from './components/CategoryRow';
  * - Searching/Filtering
  */
 export default function CategoriesPage() {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['categories', 'common']);
   const {
     categories,
     loading,
@@ -84,13 +84,13 @@ export default function CategoriesPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t('categories.title')}</h1>
-          <p className="text-muted mt-1">{t('categories.subtitle')}</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t('categories:title')}</h1>
+          <p className="text-muted mt-1">{t('categories:subtitle')}</p>
         </div>
         <PermissionGuard resource="categories" action="create">
           <Button onClick={() => { setShowForm(true); }}>
             <Plus className="w-5 h-5" />
-            {t('common.add')}
+            {t('common:add')}
           </Button>
         </PermissionGuard>
       </div>
@@ -102,7 +102,7 @@ export default function CategoriesPage() {
           <Input
             value={searchQuery}
             onChange={(e) => { setSearchQuery(e.target.value); }}
-            placeholder={t('common.search')}
+            placeholder={t('common:search')}
             className="pl-10"
           />
         </div>
@@ -113,18 +113,18 @@ export default function CategoriesPage() {
 
       {/* Categories list */}
       {loading ? (
-        <LoadingSpinner size="lg" text={t('common.loading')} className="py-20" />
+        <LoadingSpinner size="lg" text={t('common:loading')} className="py-20" />
       ) : filteredCategories.length === 0 ? (
         <Card className="py-12 text-center">
           <CardContent>
             <Folder className="w-12 h-12 text-muted mx-auto mb-4" />
             <p className="text-muted">
-              {searchQuery ? t('categories.list.empty_search') : t('categories.list.empty')}
+              {searchQuery ? t('categories:list.empty_search') : t('categories:list.empty')}
             </p>
             {!searchQuery && (
               <PermissionGuard resource="categories" action="create">
                 <Button onClick={() => { setShowForm(true); }} className="mt-4">
-                  {t('categories.list.add_first')}
+                  {t('categories:list.add_first')}
                 </Button>
               </PermissionGuard>
             )}
@@ -167,10 +167,10 @@ export default function CategoriesPage() {
       {/* Delete Confirm Modal */}
       <ConfirmModal
         isOpen={!!deleteId}
-        title={t('common.delete')}
+        title={t('common:delete')}
         message="Are you sure you want to delete this category? This action cannot be undone."
-        confirmText={t('common.delete')}
-        cancelText={t('common.cancel')}
+        confirmText={t('common:delete')}
+        cancelText={t('common:cancel')}
         loading={deleting}
         onConfirm={() => { if (deleteId) void handleDelete(deleteId); }}
         onCancel={() => { setDeleteId(null); }}

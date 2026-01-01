@@ -1,0 +1,21 @@
+{
+  "title": "Category Management",
+  "subtitle": "Manage product categories",
+  "list": {
+    "empty": "No categories found",
+    "empty_search": "No matching categories found",
+    "add_first": "Add first category"
+  },
+  "form": {
+    "add_title": "Add New Category",
+    "edit_title": "Edit Category",
+    "name_label": "Category Name",
+    "name_placeholder": "Enter category name",
+    "desc_label": "Description",
+    "desc_placeholder": "Enter description",
+    "color_label": "Color",
+    "active_label": "Active",
+    "submit_add": "Add New",
+    "submit_update": "Update"
+  }
+}

@@ -28,8 +28,8 @@ interface HeaderProps {
 // ============================================================================
 
 const NAV_LINKS = [
-  { path: '/', labelKey: 'common.home' },
-  { path: '/categories', labelKey: 'common.categories' },
+  { path: '/', labelKey: 'home' },
+  { path: '/categories', labelKey: 'categories' },
 ] as const;
 
 // ============================================================================
@@ -97,7 +97,7 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
             whileTap={{ scale: 0.95 }}
             onClick={toggleTheme}
             className="p-2 rounded-lg hover:bg-surface transition-colors"
-            aria-label={isDark ? t('common.switch_theme_light') : t('common.switch_theme_dark')}
+            aria-label={isDark ? t('switch_theme_light') : t('switch_theme_dark')}
           >
             {isDark ? (
               <Sun className="w-5 h-5 text-muted" />
@@ -132,8 +132,8 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
                 whileTap={{ scale: 0.95 }}
                 onClick={handleLogout}
                 className="p-2 rounded-lg hover:bg-surface transition-colors text-muted hover:text-red-500"
-                aria-label={t('common.logout')}
-                title={t('common.logout')}
+                aria-label={t('logout')}
+                title={t('logout')}
               >
                 <LogOut className="w-5 h-5" />
               </motion.button>
@@ -145,7 +145,7 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
                 whileTap={{ scale: 0.95 }}
                 className="px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary/90 transition-colors"
               >
-                {t('common.login')}
+                {t('login')}
               </motion.button>
             </Link>
           )}
@@ -156,7 +156,7 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
             whileTap={{ scale: 0.95 }}
             onClick={onMenuToggle}
             className="p-2 rounded-lg hover:bg-surface transition-colors md:hidden"
-            aria-label={t('common.toggle_menu')}
+            aria-label={t('toggle_menu')}
           >
             {menuOpen ? (
               <X className="w-5 h-5 text-muted" />

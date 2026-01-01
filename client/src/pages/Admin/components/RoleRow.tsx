@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Shield, Edit2, Trash2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import type { Role } from '@/types';
 import { Button } from '@/components/common';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
@@ -15,6 +16,7 @@ interface RoleRowProps {
 }
 
 export function RoleRow({ index, style, data }: RoleRowProps) {
+  const { t } = useTranslation(['roles', 'common']);
   const role = data.roles[index];
   if (!role) return null;
 
@@ -34,7 +36,7 @@ export function RoleRow({ index, style, data }: RoleRowProps) {
           <h3 className="font-medium text-foreground truncate">{role.name}</h3>
           <p className="text-sm text-muted truncate">{role.description}</p>
           <div className="mt-1 text-xs text-muted">
-            {Object.entries(role.permissions).filter(([, actions]) => actions.length > 0).length} resources configured
+            {Object.entries(role.permissions).filter(([, actions]) => actions.length > 0).length} {t('roles:resources_configured')}
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -43,7 +45,7 @@ export function RoleRow({ index, style, data }: RoleRowProps) {
               variant="ghost"
               size="sm"
               onClick={(e) => { e.stopPropagation(); data.onEdit(role); }}
-              aria-label="Edit"
+              aria-label={t('common:edit')}
             >
               <Edit2 className="w-4 h-4" />
             </Button>
@@ -53,7 +55,7 @@ export function RoleRow({ index, style, data }: RoleRowProps) {
               variant="ghost"
               size="sm"
               onClick={(e) => { e.stopPropagation(); data.onDelete(role.id); }}
-              aria-label="Delete"
+              aria-label={t('common:delete')}
             >
               <Trash2 className="w-4 h-4 text-red-500" />
             </Button>

@@ -10,28 +10,43 @@ import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
 // Import translation files
-import enTranslation from '../locales/en/translation.json';
-import viTranslation from '../locales/vi/translation.json';
+import commonEn from '../locales/en/common.json';
+import homeEn from '../locales/en/home.json';
+import authEn from '../locales/en/auth.json';
+import categoriesEn from '../locales/en/categories.json';
+import rolesEn from '../locales/en/roles.json';
+
+import commonVi from '../locales/vi/common.json';
+import homeVi from '../locales/vi/home.json';
+import authVi from '../locales/vi/auth.json';
+import categoriesVi from '../locales/vi/categories.json';
+import rolesVi from '../locales/vi/roles.json';
+
+// Configure resources
+export const resources = {
+  en: {
+    common: commonEn,
+    home: homeEn,
+    auth: authEn,
+    categories: categoriesEn,
+    roles: rolesEn,
+  },
+  vi: {
+    common: commonVi,
+    home: homeVi,
+    auth: authVi,
+    categories: categoriesVi,
+    roles: rolesVi,
+  },
+} as const;
 
 // Configure resources
 declare module 'i18next' {
   interface CustomTypeOptions {
-    defaultNS: 'translation';
-    resources: {
-      translation: typeof enTranslation;
-    };
+    defaultNS: 'common';
+    resources: typeof resources['en'];
   }
 }
-
-// Configure resources
-const resources = {
-  en: {
-    translation: enTranslation as Record<string, unknown>,
-  },
-  vi: {
-    translation: viTranslation as Record<string, unknown>,
-  },
-};
 
 // Initialize i18next
 void i18n
@@ -41,6 +56,8 @@ void i18n
   .use(initReactI18next)
   .init({
     resources,
+    defaultNS: 'common',
+    ns: ['common', 'home', 'auth', 'categories', 'roles'],
     fallbackLng: 'en', // Default language if detection fails
     supportedLngs: ['en', 'vi'],
     

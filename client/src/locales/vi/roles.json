@@ -1,0 +1,20 @@
+{
+  "title": "Quản lý Role",
+  "subtitle": "Quản lý vai trò và phân quyền người dùng",
+  "create_btn": "Tạo Role",
+  "search_placeholder": "Tìm kiếm role...",
+  "loading": "Đang tải danh sách role...",
+  "empty": "Chưa có role nào",
+  "empty_search": "Không tìm thấy role phù hợp",
+  "add_first": "Tạo role đầu tiên",
+  "delete_title": "Xóa Role",
+  "delete_confirm": "Bạn có chắc chắn muốn xóa role này không? Hành động này không thể hoàn tác.",
+  "form_add_title": "Tạo Role Mới",
+  "form_edit_title": "Chỉnh sửa Role",
+  "name_label": "Tên Role",
+  "name_placeholder": "Nhập tên role",
+  "desc_label": "Mô tả",
+  "desc_placeholder": "Nhập mô tả cho role",
+  "permissions_label": "Quyền hạn",
+  "resources_configured": "tài nguyên được cấu hình"
+}
