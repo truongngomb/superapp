@@ -4,7 +4,7 @@
  */
 
 import { Suspense, lazy } from 'react';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, Navigate } from 'react-router-dom';
 import { MainLayout } from '@/components/layout';
 import { LoadingSpinner, ProtectedRoute, GuestGuard } from '@/components/common';
 import { AuthProvider, ThemeProvider, ToastProvider } from '@/context';
@@ -23,6 +23,8 @@ const LoginPage = lazy(() =>
 );
 const RolesPage = lazy(() => import('@/pages/Admin/RolesPage'));
 const UsersPage = lazy(() => import('@/pages/Admin/UsersPage'));
+const AdminDashboard = lazy(() => import('@/pages/Admin/AdminDashboard'));
+const AdminLayout = lazy(() => import('@/pages/Admin/AdminLayout'));
 
 // ============================================================================
 // Fallback Components
@@ -101,31 +103,50 @@ export function App() {
                 
                 {/* Protected Admin Routes */}
                 <Route
-                  path="admin/roles"
-                  element={
-                    <ProtectedRoute 
-                      resource={PermissionResource.Roles} 
-                      action={PermissionAction.Read}
-                    >
-                      <Suspense fallback={<PageLoader />}>
-                        <RolesPage />
-                      </Suspense>
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="admin/users"
+                  path="admin"
                   element={
                     <ProtectedRoute 
                       resource={PermissionResource.Users} 
                       action={PermissionAction.Read}
                     >
                       <Suspense fallback={<PageLoader />}>
-                        <UsersPage />
+                        <AdminLayout />
                       </Suspense>
                     </ProtectedRoute>
                   }
-                />
+                >
+                  {/* Default redirect to dashboard */}
+                  <Route index element={<Navigate to="dashboard" replace />} />
+                  <Route
+                    path="dashboard"
+                    element={
+                      <Suspense fallback={<PageLoader />}>
+                        <AdminDashboard />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="users"
+                    element={
+                      <Suspense fallback={<PageLoader />}>
+                        <UsersPage />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="roles"
+                    element={
+                      <ProtectedRoute 
+                        resource={PermissionResource.Roles} 
+                        action={PermissionAction.Read}
+                      >
+                        <Suspense fallback={<PageLoader />}>
+                          <RolesPage />
+                        </Suspense>
+                      </ProtectedRoute>
+                    }
+                  />
+                </Route>
                 
                 {/* Catch-all 404 */}
                 <Route path="*" element={<NotFoundPage />} />

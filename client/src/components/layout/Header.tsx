@@ -41,7 +41,7 @@ const NAV_LINKS = [
   { path: '/', labelKey: 'home'},
   { path: '/categories', labelKey: 'categories' },
   { 
-    path: '/admin/roles', 
+    path: '/admin/dashboard', 
     labelKey: 'admin', 
     permission: { resource: 'roles', action: 'read' },
     matchPrefix: true,

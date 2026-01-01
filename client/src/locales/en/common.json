@@ -24,5 +24,15 @@
   "documentation": "Documentation",
   "tech_stack": "Tech Stack",
   "admin": "Admin",
-  "users": "Users"
+  "admin_dashboard": {
+    "dashboard": "Dashboard",
+    "manage_users": "Manage Users",
+    "manage_users_desc": "Create, edit, and manage user accounts and permissions",
+    "manage_roles": "Manage Roles",
+    "manage_roles_desc": "Configure roles and access control policies",
+    "quick_actions": "Quick Actions"
+  },
+  "users": "Users",
+  "roles": "Roles",
+  "dashboard": "Overview"
 }

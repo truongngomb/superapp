@@ -24,5 +24,15 @@
   "documentation": "Tài liệu",
   "tech_stack": "Công nghệ sử dụng",
   "admin": "Quản trị",
-  "users": "Người dùng"
+  "admin_dashboard": {
+    "dashboard": "Tổng quan",
+    "manage_users": "Quản lý người dùng",
+    "manage_users_desc": "Tạo, chỉnh sửa và quản lý tài khoản người dùng và quyền hạn",
+    "manage_roles": "Quản lý vai trò",
+    "manage_roles_desc": "Cấu hình vai trò và chính sách kiểm soát truy cập",
+    "quick_actions": "Thao tác nhanh"
+  },
+  "users": "Người dùng",
+  "roles": "Vai trò",
+  "dashboard": "Tổng quan"
 }
