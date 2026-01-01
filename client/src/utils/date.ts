@@ -1,7 +1,10 @@
 /**
  * Date Formatting Utilities
  * Consistent date formatting across the app
+ * Uses i18n locale for formatting
  */
+
+import { getCurrentLocale } from '@/config/i18n';
 
 // ============================================================================
 // Formatters
@@ -16,7 +19,7 @@ export function formatDate(
 ): string {
   const d = typeof date === 'string' ? new Date(date) : date;
   
-  return d.toLocaleDateString('vi-VN', {
+  return d.toLocaleDateString(getCurrentLocale(), {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
@@ -33,7 +36,7 @@ export function formatDateTime(
 ): string {
   const d = typeof date === 'string' ? new Date(date) : date;
   
-  return d.toLocaleDateString('vi-VN', {
+  return d.toLocaleDateString(getCurrentLocale(), {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
@@ -52,7 +55,7 @@ export function formatTime(
 ): string {
   const d = typeof date === 'string' ? new Date(date) : date;
   
-  return d.toLocaleTimeString('vi-VN', {
+  return d.toLocaleTimeString(getCurrentLocale(), {
     hour: '2-digit',
     minute: '2-digit',
     ...options,
@@ -72,43 +75,46 @@ const YEAR = DAY * 365;
 
 /**
  * Format date as relative time (e.g., "2 hours ago")
+ * Uses Intl.RelativeTimeFormat for localized output
  */
 export function formatRelativeTime(date: string | Date): string {
   const d = typeof date === 'string' ? new Date(date) : date;
   const now = new Date();
   const diffInSeconds = Math.floor((now.getTime() - d.getTime()) / 1000);
+  
+  const rtf = new Intl.RelativeTimeFormat(getCurrentLocale(), { numeric: 'auto' });
 
   if (diffInSeconds < MINUTE) {
-    return 'Vừa xong';
+    return rtf.format(-diffInSeconds, 'second');
   }
   
   if (diffInSeconds < HOUR) {
     const minutes = Math.floor(diffInSeconds / MINUTE);
-    return `${String(minutes)} phút trước`;
+    return rtf.format(-minutes, 'minute');
   }
   
   if (diffInSeconds < DAY) {
     const hours = Math.floor(diffInSeconds / HOUR);
-    return `${String(hours)} giờ trước`;
+    return rtf.format(-hours, 'hour');
   }
   
   if (diffInSeconds < WEEK) {
     const days = Math.floor(diffInSeconds / DAY);
-    return `${String(days)} ngày trước`;
+    return rtf.format(-days, 'day');
   }
   
   if (diffInSeconds < MONTH) {
     const weeks = Math.floor(diffInSeconds / WEEK);
-    return `${String(weeks)} tuần trước`;
+    return rtf.format(-weeks, 'week');
   }
   
   if (diffInSeconds < YEAR) {
     const months = Math.floor(diffInSeconds / MONTH);
-    return `${String(months)} tháng trước`;
+    return rtf.format(-months, 'month');
   }
   
   const years = Math.floor(diffInSeconds / YEAR);
-  return `${String(years)} năm trước`;
+  return rtf.format(-years, 'year');
 }
 
 // ============================================================================

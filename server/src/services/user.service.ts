@@ -20,11 +20,16 @@ class UserService extends BaseService<User> {
   protected readonly cacheKey = CacheKeys.USERS;
 
   protected mapRecord(record: Record<string, unknown>): User {
+    const avatarFileName = record['avatar'] as string | undefined;
+    const avatarUrl = avatarFileName 
+      ? pb.files.getUrl(record, avatarFileName)
+      : undefined;
+
     return {
       id: record['id'] as string,
       email: record['email'] as string,
       name: record['name'] as string,
-      avatar: (record['avatar'] as string) || undefined,
+      avatar: avatarUrl,
       emailVisibility: record['emailVisibility'] as boolean | undefined,
       role: (record['role'] as string) || undefined,
       created: record['created'] as string,
@@ -33,10 +38,35 @@ class UserService extends BaseService<User> {
   }
 
   /**
-   * Get paginated users with optional filters
+   * Get paginated users with role information
    */
-  async getUsers(options: ListOptions = {}): Promise<PaginatedResult<User>> {
-    return this.getPage({ ...options, sort: options.sort || 'created' });
+  async getUsers(options: ListOptions = {}): Promise<PaginatedResult<User & { roleName?: string }>> {
+    const { page = 1, limit = 20, sort, order = 'asc', filter } = options;
+    
+    await this.ensureDbAvailable();
+    
+    const sortStr = sort ? `${order === 'desc' ? '-' : ''}${sort}` : '-created';
+    
+    const result = await pb.collection(this.collectionName).getList(page, limit, {
+      sort: sortStr,
+      filter: filter || '',
+      expand: 'role',
+    });
+
+    return {
+      items: result.items.map((record) => {
+        const user = this.mapRecord(record);
+        const expandedRole = record.expand?.['role'] as Record<string, unknown> | undefined;
+        return {
+          ...user,
+          roleName: expandedRole?.['name'] as string | undefined,
+        };
+      }),
+      page: result.page,
+      limit: result.perPage,
+      total: result.totalItems,
+      totalPages: result.totalPages,
+    };
   }
 
   /**

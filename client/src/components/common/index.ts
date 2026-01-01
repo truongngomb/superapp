@@ -15,6 +15,7 @@ export { LoadingSpinner } from './LoadingSpinner';
 export { Toast } from './Toast';
 export { ConfirmModal } from './ConfirmModal';
 export { Modal } from './Modal';
+export { Badge } from './Badge';
 
 // Permission Components
 export { PermissionGuard } from './PermissionGuard';

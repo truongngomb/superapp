@@ -1,0 +1,27 @@
+{
+  "title": "Quản lý Người dùng",
+  "subtitle": "Quản lý người dùng và phân quyền",
+  "search_placeholder": "Tìm kiếm người dùng...",
+  "loading": "Đang tải danh sách người dùng...",
+  "empty": "Chưa có người dùng nào",
+  "empty_search": "Không tìm thấy người dùng phù hợp",
+  "delete_title": "Xóa Người dùng",
+  "delete_confirm": "Bạn có chắc chắn muốn xóa người dùng này không? Hành động này không thể hoàn tác.",
+  "edit_title": "Chỉnh sửa Người dùng",
+  "assign_role_title": "Gán vai trò",
+  "name_label": "Tên",
+  "name_placeholder": "Nhập tên người dùng",
+  "email_label": "Email",
+  "role_label": "Vai trò",
+  "no_role": "Chưa có vai trò",
+  "select_role": "Chọn vai trò",
+  "created_at": "Ngày tham gia",
+  "toast": {
+    "load_error": "Không thể tải danh sách người dùng",
+    "update_success": "Cập nhật người dùng thành công!",
+    "delete_success": "Xóa người dùng thành công!",
+    "assign_role_success": "Gán vai trò thành công!",
+    "remove_role_success": "Xóa vai trò thành công!",
+    "error": "Đã xảy ra lỗi"
+  }
+}

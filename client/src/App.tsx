@@ -22,6 +22,7 @@ const LoginPage = lazy(() =>
   import('@/pages/LoginPage').then((m) => ({ default: m.LoginPage }))
 );
 const RolesPage = lazy(() => import('@/pages/Admin/RolesPage'));
+const UsersPage = lazy(() => import('@/pages/Admin/UsersPage'));
 
 // ============================================================================
 // Fallback Components
@@ -108,6 +109,19 @@ export function App() {
                     >
                       <Suspense fallback={<PageLoader />}>
                         <RolesPage />
+                      </Suspense>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="admin/users"
+                  element={
+                    <ProtectedRoute 
+                      resource={PermissionResource.Users} 
+                      action={PermissionAction.Read}
+                    >
+                      <Suspense fallback={<PageLoader />}>
+                        <UsersPage />
                       </Suspense>
                     </ProtectedRoute>
                   }
