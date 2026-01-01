@@ -5,7 +5,7 @@ import type { User } from '@/services/user.service';
 
 interface UserFormProps {
   user: User | null;
-  onSubmit: (data: { name: string }) => void;
+  onSubmit: (data: { name: string; isActive?: boolean }) => void;
   onClose: () => void;
   loading: boolean;
   isOpen: boolean;
@@ -14,17 +14,19 @@ interface UserFormProps {
 export function UserForm({ user, onSubmit, onClose, loading, isOpen }: UserFormProps) {
   const { t } = useTranslation(['users', 'common']);
   const [name, setName] = useState('');
+  const [isActive, setIsActive] = useState(true);
 
   useEffect(() => {
     if (isOpen) {
       setName(user?.name || '');
+      setIsActive(user?.isActive !== false); // Default to true if undefined
     }
   }, [user, isOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (name.trim()) {
-      onSubmit({ name: name.trim() });
+      onSubmit({ name: name.trim(), isActive });
     }
   };
 
@@ -74,7 +76,31 @@ export function UserForm({ user, onSubmit, onClose, loading, isOpen }: UserFormP
           placeholder={t('users:name_placeholder')}
           required
         />
+
+        {/* Active Status Toggle */}
+        <div className="flex items-center justify-between p-3 bg-surface rounded-lg">
+          <div>
+            <label className="font-medium text-foreground">{t('common:active')}</label>
+            <p className="text-sm text-muted">{t('users:active_description')}</p>
+          </div>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={isActive}
+            onClick={() => { setIsActive(!isActive); }}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+              isActive ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'
+            }`}
+          >
+            <span
+              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                isActive ? 'translate-x-6' : 'translate-x-1'
+              }`}
+            />
+          </button>
+        </div>
       </form>
     </Modal>
   );
 }
+

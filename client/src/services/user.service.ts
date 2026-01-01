@@ -17,6 +17,7 @@ export interface User {
   avatar?: string;
   role?: string;
   roleName?: string;
+  isActive?: boolean;
   created: string;
   updated: string;
 }

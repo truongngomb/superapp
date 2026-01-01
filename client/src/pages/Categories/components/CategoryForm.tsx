@@ -86,17 +86,27 @@ export function CategoryForm({ isOpen, category, onSubmit, onClose, loading }: C
             className="w-full h-10 rounded-lg cursor-pointer"
           />
         </div>
-        <div className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            id="isActive"
-            checked={formData.isActive ?? true}
-            onChange={(e) => { setFormData({ ...formData, isActive: e.target.checked }); }}
-            className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
-          />
-          <label htmlFor="isActive" className="text-sm font-medium text-foreground">
-            {t('categories:form.active_label')}
-          </label>
+        {/* Active Status Toggle */}
+        <div className="flex items-center justify-between p-3 bg-surface rounded-lg">
+          <div>
+            <label className="font-medium text-foreground">{t('common:active')}</label>
+            <p className="text-sm text-muted">{t('categories:form.active_description')}</p>
+          </div>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={formData.isActive}
+            onClick={() => { setFormData({ ...formData, isActive: !formData.isActive }); }}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+              formData.isActive ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'
+            }`}
+          >
+            <span
+              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                formData.isActive ? 'translate-x-6' : 'translate-x-1'
+              }`}
+            />
+          </button>
         </div>
       </form>
     </Modal>

@@ -14,6 +14,7 @@
   "email_label": "Email",
   "role_label": "Role",
   "no_role": "No role assigned",
+  "active_description": "Allow user to access the system",
   "select_role": "Select a role",
   "created_at": "Joined",
   "toast": {

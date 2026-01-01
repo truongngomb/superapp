@@ -17,6 +17,7 @@
   "desc_placeholder": "Nhập mô tả cho role",
   "permissions_label": "Quyền hạn",
   "resources_configured": "tài nguyên được cấu hình",
+  "active_description": "Cho phép người dùng với role này truy cập hệ thống",
   "toast": {
     "load_error": "Không thể tải danh sách role",
     "create_success": "Tạo role thành công!",

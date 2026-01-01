@@ -15,6 +15,7 @@
     "desc_placeholder": "설명 입력",
     "color_label": "색상",
     "active_label": "활성",
+    "active_description": "카테고리가 표시되고 사용 가능함",
     "submit_add": "추가",
     "submit_update": "업데이트"
   },

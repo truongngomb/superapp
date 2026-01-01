@@ -14,6 +14,7 @@
   "email_label": "Email",
   "role_label": "Vai trò",
   "no_role": "Chưa có vai trò",
+  "active_description": "Cho phép người dùng truy cập hệ thống",
   "select_role": "Chọn vai trò",
   "created_at": "Ngày tham gia",
   "toast": {

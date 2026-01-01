@@ -15,6 +15,7 @@
     "desc_placeholder": "Enter description",
     "color_label": "Color",
     "active_label": "Active",
+    "active_description": "Category is visible and available for use",
     "submit_add": "Add New",
     "submit_update": "Update"
   },

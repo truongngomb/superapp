@@ -24,6 +24,7 @@ class RoleService extends BaseService<Role> {
       name: record['name'] as string,
       description: (record['description'] as string) || undefined,
       permissions: (record['permissions'] as RolePermissions | undefined) ?? {},
+      isActive: record['isActive'] as boolean | undefined,
       created: record['created'] as string,
       updated: record['updated'] as string,
     };

@@ -2,7 +2,7 @@
  * Users Collection
  */
 import type { AuthCollectionSchema } from '../collection.schema.js';
-import { autodateField, fileField, relationField, textField } from '../collection.schema.js';
+import { autodateField, boolField, fileField, relationField, textField } from '../collection.schema.js';
 
 /**
  * Users collection
@@ -15,6 +15,7 @@ export const usersCollection: AuthCollectionSchema = {
     textField('name', { min: 0, max: 255 }),
     fileField('avatar', { maxSelect: 1 }),
     relationField('role', 'roles', { maxSelect: 1 }),
+    boolField('isActive'),
     autodateField('created'),
     autodateField('updated'),
   ],

@@ -46,9 +46,14 @@ export function UserRow({ index, style, data }: UserRowProps) {
 
         {/* User Info */}
         <div className="flex-1 min-w-0">
-          <h3 className="font-medium text-foreground truncate">
-            {user.name || user.email}
-          </h3>
+          <div className="flex items-center gap-2">
+            <h3 className="font-medium text-foreground truncate">
+              {user.name || user.email}
+            </h3>
+            {user.isActive === false && (
+              <Badge variant="danger" size="sm">{t('common:inactive')}</Badge>
+            )}
+          </div>
           <p className="text-sm text-muted truncate">{user.email}</p>
           <div className="mt-1">
             {user.roleName ? (

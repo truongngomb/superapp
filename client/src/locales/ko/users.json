@@ -14,6 +14,7 @@
   "email_label": "이메일",
   "role_label": "역할",
   "no_role": "역할 없음",
+  "active_description": "사용자가 시스템에 액세스할 수 있도록 허용",
   "select_role": "역할 선택",
   "created_at": "가입일",
   "toast": {

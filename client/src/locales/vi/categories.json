@@ -15,6 +15,7 @@
     "desc_placeholder": "Nhập mô tả",
     "color_label": "Màu sắc",
     "active_label": "Hoạt động",
+    "active_description": "Danh mục hiển thị và có thể sử dụng",
     "submit_add": "Thêm mới",
     "submit_update": "Cập nhật"
   },

@@ -18,6 +18,7 @@ export function RoleForm({ role, onSubmit, onClose, loading, isOpen }: RoleFormP
     name: '',
     description: '',
     permissions: {},
+    isActive: true,
   });
 
   useEffect(() => {
@@ -26,6 +27,7 @@ export function RoleForm({ role, onSubmit, onClose, loading, isOpen }: RoleFormP
         name: role?.name ?? '',
         description: role?.description ?? '',
         permissions: role?.permissions ?? {},
+        isActive: role?.isActive !== false, // Default to true if undefined
       });
     }
   }, [role, isOpen]);
@@ -86,6 +88,29 @@ export function RoleForm({ role, onSubmit, onClose, loading, isOpen }: RoleFormP
           placeholder={t('roles:desc_placeholder')}
         />
 
+        {/* Active Status Toggle */}
+        <div className="flex items-center justify-between p-3 bg-surface rounded-lg">
+          <div>
+            <label className="font-medium text-foreground">{t('common:active')}</label>
+            <p className="text-sm text-muted">{t('roles:active_description')}</p>
+          </div>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={formData.isActive}
+            onClick={() => { setFormData({ ...formData, isActive: !formData.isActive }); }}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+              formData.isActive ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'
+            }`}
+          >
+            <span
+              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                formData.isActive ? 'translate-x-6' : 'translate-x-1'
+              }`}
+            />
+          </button>
+        </div>
+
         <div>
           <label className="block text-sm font-medium text-foreground mb-2">{t('roles:permissions_label')}</label>
           <div className="border border-border rounded-lg p-4 space-y-4 bg-background">
@@ -116,3 +141,4 @@ export function RoleForm({ role, onSubmit, onClose, loading, isOpen }: RoleFormP
     </Modal>
   );
 }
+

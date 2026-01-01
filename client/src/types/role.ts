@@ -21,6 +21,7 @@ export interface Role extends BaseEntity {
   name: string;
   description?: string;
   permissions: RolePermissions;
+  isActive?: boolean;
 }
 
 // ============================================================================
@@ -34,6 +35,7 @@ export interface CreateRoleInput {
   name: string;
   description?: string;
   permissions: RolePermissions;
+  isActive?: boolean;
 }
 
 /**
@@ -43,6 +45,7 @@ export interface UpdateRoleInput {
   name?: string;
   description?: string;
   permissions?: RolePermissions;
+  isActive?: boolean;
 }
 
 // ============================================================================

@@ -17,6 +17,7 @@
   "desc_placeholder": "Enter role description",
   "permissions_label": "Permissions",
   "resources_configured": "resources configured",
+  "active_description": "Allow users with this role to access the system",
   "toast": {
     "load_error": "Failed to load roles",
     "create_success": "Role created successfully!",

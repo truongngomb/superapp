@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { Shield, Edit2, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { Role } from '@/types';
-import { Button } from '@/components/common';
+import { Button, Badge } from '@/components/common';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
 
 interface RoleRowProps {
@@ -33,7 +33,12 @@ export function RoleRow({ index, style, data }: RoleRowProps) {
           <Shield className="w-5 h-5 text-primary" />
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="font-medium text-foreground truncate">{role.name}</h3>
+          <div className="flex items-center gap-2">
+            <h3 className="font-medium text-foreground truncate">{role.name}</h3>
+            {role.isActive === false && (
+              <Badge variant="danger" size="sm">{t('common:inactive')}</Badge>
+            )}
+          </div>
           <p className="text-sm text-muted truncate">{role.description}</p>
           <div className="mt-1 text-xs text-muted">
             {Object.entries(role.permissions).filter(([, actions]) => actions.length > 0).length} {t('roles:resources_configured')}

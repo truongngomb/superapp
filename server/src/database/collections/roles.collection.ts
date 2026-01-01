@@ -2,7 +2,7 @@
  * Roles Collection
  */
 import type { BaseCollectionSchema } from '../collection.schema.js';
-import { autodateField, jsonField, textField } from '../collection.schema.js';
+import { autodateField, boolField, jsonField, textField } from '../collection.schema.js';
 
 /**
  * Roles collection
@@ -15,6 +15,7 @@ export const rolesCollection: BaseCollectionSchema = {
     textField('name', { min: 0, max: 0 }),
     textField('description', { min: 0, max: 0 }),
     jsonField('permissions'),
+    boolField('isActive'),
     autodateField('created'),
     autodateField('updated'),
   ],
