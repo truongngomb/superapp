@@ -7,13 +7,15 @@ import { useCallback } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { LogOut, Menu, Moon, Sun, User, X, type LucideIcon } from 'lucide-react';
+import { LogOut, Menu, Moon, Sun, User, X } from 'lucide-react';
 import { cn } from '@/utils';
 import { useAuth } from '@/hooks';
 import { useTheme } from '@/context';
 import { LanguageSwitcher } from '../common/LanguageSwitcher';
 import { PermissionGuard } from '../common/PermissionGuard';
+import { NAVIGATION_ITEMS } from '@/config/navigation';
 
+// ============================================================================
 // ============================================================================
 // Types
 // ============================================================================
@@ -23,30 +25,9 @@ interface HeaderProps {
   menuOpen?: boolean;
 }
 
-interface NavLinkItem {
-  path: string;
-  labelKey: string;
-  icon?: LucideIcon;
-  /** If true, check permission before showing */
-  permission?: { resource: string; action: string };
-  /** Match path prefix instead of exact match */
-  matchPrefix?: boolean;
-}
-
 // ============================================================================
 // Constants
 // ============================================================================
-
-const NAV_LINKS = [
-  { path: '/', labelKey: 'home'},
-  { path: '/categories', labelKey: 'categories' },
-  { 
-    path: '/admin/dashboard', 
-    labelKey: 'admin', 
-    permission: { resource: 'roles', action: 'read' },
-    matchPrefix: true,
-  },
-] as const;
 
 const ICON_BUTTON_CLASS = 'p-2 rounded-lg hover:bg-surface transition-colors';
 const ICON_CLASS = 'w-5 h-5 text-muted';
@@ -56,7 +37,7 @@ const ICON_CLASS = 'w-5 h-5 text-muted';
 // ============================================================================
 
 interface NavLinkProps {
-  link: NavLinkItem;
+  link: typeof NAVIGATION_ITEMS[number];
   isActive: boolean;
   label: string;
 }
@@ -68,13 +49,13 @@ function NavLink({ link, isActive, label }: NavLinkProps) {
       to={link.path}
       className={cn(
         'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
-        Icon && 'flex items-center gap-1.5',
+        'flex items-center gap-1.5',
         isActive
           ? 'bg-primary/10 text-primary'
           : 'text-muted hover:text-foreground hover:bg-surface'
       )}
     >
-      {Icon && <Icon className="w-4 h-4" />}
+      <Icon className="w-4 h-4" />
       {label}
     </Link>
   );
@@ -123,7 +104,7 @@ function UserAvatar({ avatar, name, email }: UserAvatarProps) {
 // ============================================================================
 
 export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['common', 'users', 'roles', 'categories', 'home', 'auth']);
   const location = useLocation();
   const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuth();
@@ -135,9 +116,9 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
       .then(() => { void navigate('/'); });
   }, [logout, navigate]);
 
-  const isLinkActive = useCallback((link: NavLinkItem) => {
+  const isLinkActive = useCallback((link: typeof NAVIGATION_ITEMS[number]) => {
     if (link.matchPrefix) {
-      return location.pathname.startsWith(link.path.split('/').slice(0, -1).join('/') || link.path);
+      return location.pathname.startsWith(link.path);
     }
     return location.pathname === link.path;
   }, [location.pathname]);
@@ -160,7 +141,7 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-1">
-          {NAV_LINKS.map((link) => (
+          {NAVIGATION_ITEMS.map((link) => (
             <NavLink
               key={link.path}
               link={link}

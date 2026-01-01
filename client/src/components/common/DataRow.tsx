@@ -39,49 +39,56 @@ export function DataRow({
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
         onClick={onClick}
-        className="card p-4 flex items-center gap-4 transition-colors hover:bg-muted/5 cursor-default"
+        className="card p-4 flex flex-col md:flex-row items-start md:items-center gap-4 transition-colors hover:bg-muted/5 cursor-default"
       >
-        {/* Icon / Avatar Area */}
-        {icon && (
-          <div 
-            className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${iconBgColor && !iconBgColor.includes('#') ? iconBgColor : ''}`}
-            style={iconBgColor && iconBgColor.includes('#') ? { backgroundColor: iconBgColor } : undefined}
-          >
-            {/* If icon is a raw node with its own styling, it renders here. 
-                If we need to apply color prop to the icon, the caller should do it or we cloneElement (simpler to let caller handle) */}
-            {icon}
-          </div>
-        )}
+        <div className="flex items-center gap-4 w-full md:w-auto">
+          {/* Icon / Avatar Area */}
+          {icon && (
+            <div 
+              className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${iconBgColor && !iconBgColor.includes('#') ? iconBgColor : ''}`}
+              style={iconBgColor && iconBgColor.includes('#') ? { backgroundColor: iconBgColor } : undefined}
+            >
+              {icon}
+            </div>
+          )}
 
-        {/* Main Content */}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
+          {/* Title & Badges - Mobile: Next to icon, Desktop: Part of main flow */}
+          <div className="md:hidden flex-1 min-w-0">
+             <div className="flex flex-wrap items-center gap-2">
+                <h3 className="font-medium text-foreground truncate">{title}</h3>
+                {typeof isActive === 'boolean' && !isActive && (
+                  <Badge variant="danger" size="sm">{t('inactive')}</Badge>
+                )}
+                {badges}
+             </div>
+          </div>
+        </div>
+
+        {/* Main Content - Desktop: Standard flow, Mobile: Below icon */}
+        <div className="flex-1 min-w-0 w-full md:w-auto pl-14 md:pl-0 -mt-2 md:mt-0">
+          <div className="hidden md:flex items-center gap-2">
             <h3 className="font-medium text-foreground truncate">{title}</h3>
-            
-            {/* Status Badge */}
             {typeof isActive === 'boolean' && !isActive && (
               <Badge variant="danger" size="sm">{t('inactive')}</Badge>
             )}
-            
-            {/* Custom Badges (e.g. Roles) */}
             {badges}
           </div>
           
           {description && (
-            <p className="text-sm text-muted truncate">{description}</p>
+            <p className="text-sm text-muted line-clamp-2 md:truncate mt-1 md:mt-0">{description}</p>
           )}
         </div>
 
-        {/* Meta Info (e.g. Date) - Hidden on small screens usually */}
+        {/* Meta Info */}
         {meta && (
           <div className="hidden md:block text-sm text-muted whitespace-nowrap">
             {meta}
           </div>
         )}
 
-        {/* Actions */}
+        {/* Actions - Mobile: Right aligned, Desktop: Right aligned */}
         {actions && (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-end gap-2 w-full md:w-auto border-t md:border-t-0 pt-3 md:pt-0 mt-2 md:mt-0">
             {actions}
           </div>
         )}

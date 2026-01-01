@@ -1,22 +1,18 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Home, Folder, Settings, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { cn } from '@/utils';
+import { NAVIGATION_ITEMS } from '@/config/navigation';
+import { PermissionGuard } from '@/components/common/PermissionGuard';
 
 interface SidebarProps {
   open: boolean;
   onClose: () => void;
 }
 
-const navItems = [
-  { path: '/', labelKey: 'home', icon: Home },
-  { path: '/categories', labelKey: 'categories', icon: Folder },
-  { path: '/settings', labelKey: 'settings', icon: Settings },
-] as const;
-
 export function Sidebar({ open, onClose }: SidebarProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['common', 'users', 'roles', 'categories', 'home', 'auth']);
   const location = useLocation();
 
   return (
@@ -58,11 +54,13 @@ export function Sidebar({ open, onClose }: SidebarProps) {
 
             {/* Navigation */}
             <nav className="p-4 space-y-1">
-              {navItems.map((item) => {
+              {NAVIGATION_ITEMS.map((item) => {
                 const Icon = item.icon;
-                const isActive = location.pathname === item.path;
+                const isActive = item.matchPrefix 
+                  ? location.pathname.startsWith(item.path)
+                  : location.pathname === item.path;
 
-                return (
+                const link = (
                   <Link
                     key={item.path}
                     to={item.path}
@@ -84,6 +82,20 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                     )}
                   </Link>
                 );
+
+                if (item.permission) {
+                  return (
+                    <PermissionGuard
+                      key={item.path}
+                      resource={item.permission.resource}
+                      action={item.permission.action}
+                    >
+                      {link}
+                    </PermissionGuard>
+                  );
+                }
+
+                return link;
               })}
             </nav>
           </motion.aside>
