@@ -3,24 +3,34 @@
  * Application header with navigation, theme toggle, and user menu
  */
 
+import { useCallback } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { LogOut, Menu, Moon, Sun, User, X } from 'lucide-react';
+import { LogOut, Menu, Moon, Sun, User, X, type LucideIcon } from 'lucide-react';
 import { cn } from '@/utils';
 import { useAuth } from '@/hooks';
 import { useTheme } from '@/context';
 import { LanguageSwitcher } from '../common/LanguageSwitcher';
+import { PermissionGuard } from '../common/PermissionGuard';
 
 // ============================================================================
 // Types
 // ============================================================================
 
 interface HeaderProps {
-  /** Callback when mobile menu toggle is clicked */
   onMenuToggle?: () => void;
-  /** Whether mobile menu is open */
   menuOpen?: boolean;
+}
+
+interface NavLinkItem {
+  path: string;
+  labelKey: string;
+  icon?: LucideIcon;
+  /** If true, check permission before showing */
+  permission?: { resource: string; action: string };
+  /** Match path prefix instead of exact match */
+  matchPrefix?: boolean;
 }
 
 // ============================================================================
@@ -28,12 +38,88 @@ interface HeaderProps {
 // ============================================================================
 
 const NAV_LINKS = [
-  { path: '/', labelKey: 'home' },
+  { path: '/', labelKey: 'home'},
   { path: '/categories', labelKey: 'categories' },
+  { 
+    path: '/admin/roles', 
+    labelKey: 'admin', 
+    permission: { resource: 'roles', action: 'read' },
+    matchPrefix: true,
+  },
 ] as const;
 
+const ICON_BUTTON_CLASS = 'p-2 rounded-lg hover:bg-surface transition-colors';
+const ICON_CLASS = 'w-5 h-5 text-muted';
+
 // ============================================================================
-// Component
+// Sub-components
+// ============================================================================
+
+interface NavLinkProps {
+  link: NavLinkItem;
+  isActive: boolean;
+  label: string;
+}
+
+function NavLink({ link, isActive, label }: NavLinkProps) {
+  const Icon = link.icon;
+  const content = (
+    <Link
+      to={link.path}
+      className={cn(
+        'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
+        Icon && 'flex items-center gap-1.5',
+        isActive
+          ? 'bg-primary/10 text-primary'
+          : 'text-muted hover:text-foreground hover:bg-surface'
+      )}
+    >
+      {Icon && <Icon className="w-4 h-4" />}
+      {label}
+    </Link>
+  );
+
+  // Wrap with PermissionGuard if permission is defined
+  if (link.permission) {
+    return (
+      <PermissionGuard resource={link.permission.resource} action={link.permission.action}>
+        {content}
+      </PermissionGuard>
+    );
+  }
+
+  return content;
+}
+
+interface UserAvatarProps {
+  avatar?: string;
+  name?: string;
+  email?: string;
+}
+
+function UserAvatar({ avatar, name, email }: UserAvatarProps) {
+  return (
+    <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-surface">
+      {avatar ? (
+        <img
+          src={avatar}
+          alt={name || 'User'}
+          className="w-7 h-7 rounded-full object-cover"
+        />
+      ) : (
+        <div className="w-7 h-7 rounded-full bg-primary/20 flex items-center justify-center">
+          <User className="w-4 h-4 text-primary" />
+        </div>
+      )}
+      <span className="text-sm font-medium hidden sm:inline max-w-[100px] truncate">
+        {name || email}
+      </span>
+    </div>
+  );
+}
+
+// ============================================================================
+// Main Component
 // ============================================================================
 
 export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
@@ -43,14 +129,18 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
   const { user, isAuthenticated, logout } = useAuth();
   const { isDark, toggleTheme } = useTheme();
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     void logout()
       .catch(() => { /* Ignore logout errors */ })
-      .then(() => {
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        navigate('/');
-      });
-  };
+      .then(() => { void navigate('/'); });
+  }, [logout, navigate]);
+
+  const isLinkActive = useCallback((link: NavLinkItem) => {
+    if (link.matchPrefix) {
+      return location.pathname.startsWith(link.path.split('/').slice(0, -1).join('/') || link.path);
+    }
+    return location.pathname === link.path;
+  }, [location.pathname]);
 
   return (
     <header className="sticky top-0 z-40 w-full bg-background/80 backdrop-blur-lg border-b border-border safe-area-top">
@@ -71,24 +161,17 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-1">
           {NAV_LINKS.map((link) => (
-            <Link
+            <NavLink
               key={link.path}
-              to={link.path}
-              className={cn(
-                'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
-                location.pathname === link.path
-                  ? 'bg-primary/10 text-primary'
-                  : 'text-muted hover:text-foreground hover:bg-surface'
-              )}
-            >
-              {t(link.labelKey)}
-            </Link>
+              link={link}
+              isActive={isLinkActive(link)}
+              label={t(link.labelKey)}
+            />
           ))}
         </nav>
 
         {/* Actions */}
         <div className="flex items-center gap-2">
-          {/* Language Switcher */}
           <LanguageSwitcher />
 
           {/* Theme toggle */}
@@ -96,46 +179,25 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
             type="button"
             whileTap={{ scale: 0.95 }}
             onClick={toggleTheme}
-            className="p-2 rounded-lg hover:bg-surface transition-colors"
+            className={ICON_BUTTON_CLASS}
             aria-label={isDark ? t('switch_theme_light') : t('switch_theme_dark')}
           >
-            {isDark ? (
-              <Sun className="w-5 h-5 text-muted" />
-            ) : (
-              <Moon className="w-5 h-5 text-muted" />
-            )}
+            {isDark ? <Sun className={ICON_CLASS} /> : <Moon className={ICON_CLASS} />}
           </motion.button>
 
-          {/* Auth buttons */}
+          {/* Auth section */}
           {isAuthenticated && user ? (
             <div className="flex items-center gap-2">
-              {/* User avatar */}
-              <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-surface">
-                {user.avatar ? (
-                  <img
-                    src={user.avatar}
-                    alt={user.name || 'User'}
-                    className="w-7 h-7 rounded-full object-cover"
-                  />
-                ) : (
-                  <div className="w-7 h-7 rounded-full bg-primary/20 flex items-center justify-center">
-                    <User className="w-4 h-4 text-primary" />
-                  </div>
-                )}
-                <span className="text-sm font-medium hidden sm:inline max-w-[100px] truncate">
-                  {user.name || user.email}
-                </span>
-              </div>
-              {/* Logout button */}
+              <UserAvatar avatar={user.avatar} name={user.name} email={user.email} />
               <motion.button
                 type="button"
                 whileTap={{ scale: 0.95 }}
                 onClick={handleLogout}
-                className="p-2 rounded-lg hover:bg-surface transition-colors text-muted hover:text-red-500"
+                className={cn(ICON_BUTTON_CLASS, 'text-muted hover:text-red-500')}
                 aria-label={t('logout')}
                 title={t('logout')}
               >
-                <LogOut className="w-5 h-5" />
+                <LogOut className={ICON_CLASS} />
               </motion.button>
             </div>
           ) : (
@@ -155,14 +217,10 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
             type="button"
             whileTap={{ scale: 0.95 }}
             onClick={onMenuToggle}
-            className="p-2 rounded-lg hover:bg-surface transition-colors md:hidden"
+            className={cn(ICON_BUTTON_CLASS, 'md:hidden')}
             aria-label={t('toggle_menu')}
           >
-            {menuOpen ? (
-              <X className="w-5 h-5 text-muted" />
-            ) : (
-              <Menu className="w-5 h-5 text-muted" />
-            )}
+            {menuOpen ? <X className={ICON_CLASS} /> : <Menu className={ICON_CLASS} />}
           </motion.button>
         </div>
       </div>

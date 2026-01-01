@@ -1,27 +1,40 @@
+import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Globe } from 'lucide-react';
+
+const LANGUAGES = {
+  vi: { flag: 'vn', name: 'Tiếng Việt' },
+  en: { flag: 'gb', name: 'English' },
+} as const;
+
+type LangCode = keyof typeof LANGUAGES;
+
+const DEFAULT_LANG: LangCode = 'en';
 
 export function LanguageSwitcher() {
   const { i18n } = useTranslation();
 
-  const toggleLanguage = () => {
-    const newLang = i18n.language === 'vi' ? 'en' : 'vi';
-    void i18n.changeLanguage(newLang);
-  };
+  const currentLangCode = (i18n.language in LANGUAGES ? i18n.language : DEFAULT_LANG) as LangCode;
+
+  const { currentLang, targetLang, targetLangCode } = useMemo(() => ({
+    currentLang: LANGUAGES[currentLangCode],
+    targetLangCode: currentLangCode === 'vi' ? 'en' : 'vi',
+    targetLang: LANGUAGES[currentLangCode === 'vi' ? 'en' : 'vi'],
+  }), [currentLangCode]);
+
+  const toggleLanguage = useCallback(() => {
+    void i18n.changeLanguage(targetLangCode);
+  }, [i18n, targetLangCode]);
 
   return (
     <motion.button
       whileTap={{ scale: 0.95 }}
       onClick={toggleLanguage}
-      className="p-2 rounded-lg hover:bg-surface transition-colors flex items-center gap-2"
-      aria-label="Switch language"
-      title={i18n.language === 'vi' ? 'Chuyển sang Tiếng Anh' : 'Switch to Vietnamese'}
+      className="p-2 rounded-lg hover:bg-surface transition-colors flex items-center"
+      aria-label={`Switch to ${targetLang.name}`}
+      title={`Switch to ${targetLang.name}`}
     >
-      <Globe className="w-5 h-5 text-muted" />
-      <span className="text-sm font-medium text-muted uppercase">
-        {i18n.language === 'vi' ? 'VI' : 'EN'}
-      </span>
+      <span className={`fi fi-${currentLang.flag} text-lg`} />
     </motion.button>
   );
 }

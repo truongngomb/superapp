@@ -3,6 +3,7 @@ import { App } from './App';
 import { initEruda, logger } from '@/utils';
 import './config/i18n';
 import '@/assets/styles/index.scss';
+import 'flag-icons/css/flag-icons.min.css';
 
 // Initialize Eruda debugger (only in development)
 void initEruda();
