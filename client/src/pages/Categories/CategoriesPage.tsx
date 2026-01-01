@@ -90,7 +90,7 @@ export default function CategoriesPage() {
         <PermissionGuard resource="categories" action="create">
           <Button onClick={() => { setShowForm(true); }}>
             <Plus className="w-5 h-5" />
-            {t('common:add')}
+            {t('categories:create_btn')}
           </Button>
         </PermissionGuard>
       </div>
@@ -168,7 +168,7 @@ export default function CategoriesPage() {
       <ConfirmModal
         isOpen={!!deleteId}
         title={t('common:delete')}
-        message="Are you sure you want to delete this category? This action cannot be undone."
+        message={t('categories:delete_confirm')}
         confirmText={t('common:delete')}
         cancelText={t('common:cancel')}
         loading={deleting}

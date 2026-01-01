@@ -1,6 +1,7 @@
 {
   "title": "Quản lý Danh mục",
   "subtitle": "Quản lý danh mục sản phẩm",
+  "create_btn": "Tạo Danh mục",
   "list": {
     "empty": "Chưa có danh mục nào",
     "empty_search": "Không tìm thấy danh mục phù hợp",
@@ -15,9 +16,7 @@
     "desc_placeholder": "Nhập mô tả",
     "color_label": "Màu sắc",
     "active_label": "Hoạt động",
-    "active_description": "Danh mục hiển thị và có thể sử dụng",
-    "submit_add": "Thêm mới",
-    "submit_update": "Cập nhật"
+    "active_description": "Danh mục hiển thị và có thể sử dụng"
   },
   "toast": {
     "load_error": "Không thể tải danh sách danh mục",
@@ -25,5 +24,6 @@
     "update_success": "Cập nhật danh mục thành công!",
     "delete_success": "Xóa danh mục thành công!",
     "error": "Đã xảy ra lỗi"
-  }
+  },
+  "delete_confirm": "Bạn có chắc chắn muốn xóa danh mục này không? Hành động này không thể hoàn tác."
 }

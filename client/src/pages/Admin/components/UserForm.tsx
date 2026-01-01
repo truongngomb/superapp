@@ -19,7 +19,7 @@ export function UserForm({ user, onSubmit, onClose, loading, isOpen }: UserFormP
   useEffect(() => {
     if (isOpen) {
       setName(user?.name || '');
-      setIsActive(user?.isActive !== false); // Default to true if undefined
+      setIsActive(user?.isActive ?? true);
     }
   }, [user, isOpen]);
 

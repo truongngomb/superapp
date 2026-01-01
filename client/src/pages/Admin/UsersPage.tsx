@@ -51,7 +51,7 @@ export default function UsersPage() {
   );
 
   // Handle edit user submit
-  const handleEditSubmit = async (data: { name: string }) => {
+  const handleEditSubmit = async (data: { name: string; isActive?: boolean }) => {
     if (!editingUser) return;
     const success = await updateUser(editingUser.id, data);
     if (success) {

@@ -24,6 +24,7 @@ export const RoleCreateSchema = z.object({
   name: z.string().min(1, 'Name is required').max(50, 'Name too long'),
   description: z.string().max(200, 'Description too long').optional(),
   permissions: permissionsSchema.default({}),
+  isActive: z.boolean().optional(),
 });
 
 /**
@@ -33,6 +34,7 @@ export const RoleUpdateSchema = z.object({
   name: z.string().min(1).max(50).optional(),
   description: z.string().max(200).optional(),
   permissions: permissionsSchema.optional(),
+  isActive: z.boolean().optional(),
 });
 
 // =============================================================================

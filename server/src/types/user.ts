@@ -84,6 +84,8 @@ export interface UserUpdateInput {
   avatar?: string;
   /** Whether email is visible */
   emailVisibility?: boolean;
+  /** Whether user is active */
+  isActive?: boolean;
 }
 
 /**

@@ -58,7 +58,7 @@ export function CategoryForm({ isOpen, category, onSubmit, onClose, loading }: C
             {t('common:cancel')}
           </Button>
           <Button type="submit" form="category-form" loading={loading} className="flex-1">
-            {category ? t('categories:form.submit_update') : t('categories:form.submit_add')}
+            {category ? t('common:save') : t('common:add')}
           </Button>
         </div>
       }

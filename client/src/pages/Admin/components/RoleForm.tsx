@@ -27,7 +27,7 @@ export function RoleForm({ role, onSubmit, onClose, loading, isOpen }: RoleFormP
         name: role?.name ?? '',
         description: role?.description ?? '',
         permissions: role?.permissions ?? {},
-        isActive: role?.isActive !== false, // Default to true if undefined
+        isActive: role?.isActive ?? true,
       });
     }
   }, [role, isOpen]);

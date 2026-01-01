@@ -1,6 +1,7 @@
 {
   "title": "카테고리 관리",
   "subtitle": "제품 카테고리 관리",
+  "create_btn": "카테고리 생성",
   "list": {
     "empty": "카테고리가 없습니다",
     "empty_search": "일치하는 카테고리가 없습니다",
@@ -15,9 +16,7 @@
     "desc_placeholder": "설명 입력",
     "color_label": "색상",
     "active_label": "활성",
-    "active_description": "카테고리가 표시되고 사용 가능함",
-    "submit_add": "추가",
-    "submit_update": "업데이트"
+    "active_description": "카테고리가 표시되고 사용 가능함"
   },
   "toast": {
     "load_error": "카테고리를 불러오는 데 실패했습니다",
@@ -25,5 +24,6 @@
     "update_success": "카테고리가 수정되었습니다!",
     "delete_success": "카테고리가 삭제되었습니다!",
     "error": "오류가 발생했습니다"
-  }
+  },
+  "delete_confirm": "이 카테고리를 삭제하시겠습니까? 이 작업은 취소할 수 없습니다."
 }

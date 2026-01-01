@@ -26,6 +26,7 @@ export interface UserUpdateInput {
   name?: string;
   avatar?: string;
   emailVisibility?: boolean;
+  isActive?: boolean;
 }
 
 export interface UserRoleAssignment {

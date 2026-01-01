@@ -18,6 +18,7 @@ export const UserUpdateSchema = z.object({
     .optional(),
   avatar: z.string().max(500, 'Avatar URL too long').optional(),
   emailVisibility: z.boolean().optional(),
+  isActive: z.boolean().optional(),
 });
 
 /**

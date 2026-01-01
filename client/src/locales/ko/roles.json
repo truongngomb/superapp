@@ -9,7 +9,7 @@
   "add_first": "첫 번째 역할 생성",
   "delete_title": "역할 삭제",
   "delete_confirm": "이 역할을 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.",
-  "form_add_title": "역할 생성",
+  "form_add_title": "새 역할 추가",
   "form_edit_title": "역할 수정",
   "name_label": "이름",
   "name_placeholder": "역할 이름 입력",

@@ -32,7 +32,7 @@ export function useUsers() {
     }
   }, [toast, t]);
 
-  const updateUser = async (id: string, data: { name?: string }) => {
+  const updateUser = async (id: string, data: { name?: string; isActive?: boolean }) => {
     setSubmitting(true);
     try {
       const updated = await userService.updateUser(id, data);
