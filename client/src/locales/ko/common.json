@@ -37,5 +37,7 @@
   "activity_logs": "활동 로그",
   "dashboard": "개요",
   "refresh": "새로 고침",
-  "no_data": "데이터 없음"
+  "retry": "재시도",
+  "no_data": "데이터가 없습니다",
+  "load_more": "더 보기"
 }

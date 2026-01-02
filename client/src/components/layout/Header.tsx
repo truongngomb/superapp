@@ -186,15 +186,15 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
                 </span>
               )}
             </motion.button>
-            <NotificationCenter 
-              isOpen={isNotificationsOpen} 
-              onClose={() => { setIsNotificationsOpen(false); }} 
-            />
           </div>
 
           {/* Auth section */}
           {isAuthenticated && user ? (
             <div className="flex items-center gap-2">
+              <NotificationCenter 
+                isOpen={isNotificationsOpen} 
+                onClose={() => { setIsNotificationsOpen(false); }} 
+              />
               <UserAvatar avatar={user.avatar} name={user.name} email={user.email} />
               <motion.button
                 type="button"

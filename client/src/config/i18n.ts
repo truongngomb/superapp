@@ -17,6 +17,7 @@ import categoriesEn from '../locales/en/categories.json';
 import rolesEn from '../locales/en/roles.json';
 import usersEn from '../locales/en/users.json';
 import activityLogsEn from '../locales/en/activity_logs.json';
+import notificationsEn from '../locales/en/notifications.json';
 
 // Import translation files - Vietnamese
 import commonVi from '../locales/vi/common.json';
@@ -26,6 +27,7 @@ import categoriesVi from '../locales/vi/categories.json';
 import rolesVi from '../locales/vi/roles.json';
 import usersVi from '../locales/vi/users.json';
 import activityLogsVi from '../locales/vi/activity_logs.json';
+import notificationsVi from '../locales/vi/notifications.json';
 
 // Import translation files - Korean
 import commonKo from '../locales/ko/common.json';
@@ -35,6 +37,7 @@ import categoriesKo from '../locales/ko/categories.json';
 import rolesKo from '../locales/ko/roles.json';
 import usersKo from '../locales/ko/users.json';
 import activityLogsKo from '../locales/ko/activity_logs.json';
+import notificationsKo from '../locales/ko/notifications.json';
 
 // Configure resources
 export const resources = {
@@ -46,6 +49,7 @@ export const resources = {
     roles: rolesEn,
     users: usersEn,
     activity_logs: activityLogsEn,
+    notifications: notificationsEn,
   },
   vi: {
     common: commonVi,
@@ -55,6 +59,7 @@ export const resources = {
     roles: rolesVi,
     users: usersVi,
     activity_logs: activityLogsVi,
+    notifications: notificationsVi,
   },
   ko: {
     common: commonKo,
@@ -64,6 +69,7 @@ export const resources = {
     roles: rolesKo,
     users: usersKo,
     activity_logs: activityLogsKo,
+    notifications: notificationsKo,
   },
 } as const;
 
@@ -84,7 +90,7 @@ void i18n
   .init({
     resources,
     defaultNS: 'common',
-    ns: ['common', 'home', 'auth', 'categories', 'roles', 'users', 'activity_logs'],
+    ns: ['common', 'home', 'auth', 'categories', 'roles', 'users', 'activity_logs', 'notifications'],
     fallbackLng: 'en', // Default language if detection fails
     supportedLngs: ['en', 'vi', 'ko'],
     

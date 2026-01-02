@@ -37,5 +37,7 @@
   "activity_logs": "Nhật ký hoạt động",
   "dashboard": "Tổng quan",
   "refresh": "Làm mới",
-  "no_data": "Không có dữ liệu"
+  "retry": "Thử lại",
+  "no_data": "Không tìm thấy dữ liệu",
+  "load_more": "Tải thêm"
 }

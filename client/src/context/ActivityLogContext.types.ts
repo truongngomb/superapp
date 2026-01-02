@@ -7,4 +7,7 @@ export interface ActivityLogContextType {
   unreadCount: number;
   resetUnreadCount: () => void;
   refetch: () => Promise<void>;
+  loadMore: () => Promise<void>;
+  hasMore: boolean;
+  isLoadingMore: boolean;
 }

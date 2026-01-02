@@ -40,5 +40,7 @@
   "activity_logs": "Activity Logs",
   "dashboard": "Overview",
   "refresh": "Refresh",
-  "no_data": "No data found"
+  "retry": "Retry",
+  "no_data": "No data found",
+  "load_more": "Load More"
 }

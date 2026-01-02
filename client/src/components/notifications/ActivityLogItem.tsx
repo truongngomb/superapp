@@ -61,44 +61,44 @@ export const ActivityLogItem: React.FC<ActivityLogItemProps> = ({ log, onClick }
   return (
     <div 
       className={cn(
-        "flex gap-3 p-3 hover:bg-slate-50 active:bg-slate-100 transition-colors cursor-pointer group rounded-xl border border-transparent hover:border-slate-100",
+        "flex gap-3 p-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 active:bg-slate-100 dark:active:bg-slate-800 transition-colors group rounded-xl border border-transparent hover:border-slate-100 dark:hover:border-slate-700",
       )}
       onClick={() => { onClick?.(log); }}
     >
       <div className="relative flex-shrink-0">
         {avatar ? (
-          <img src={avatar} alt={userName} className="w-10 h-10 rounded-full object-cover border border-slate-200" />
+          <img src={avatar} alt={userName} className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700" />
         ) : (
-          <div className="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 font-medium border border-indigo-100">
+          <div className="w-10 h-10 rounded-full bg-indigo-50 dark:bg-indigo-900/20 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-medium border border-indigo-100 dark:border-indigo-900">
             {userName.charAt(0).toUpperCase()}
           </div>
         )}
-        <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-0.5 shadow-sm border border-slate-50">
+        <div className="absolute -bottom-1 -right-1 bg-white dark:bg-slate-800 rounded-full p-0.5 shadow-sm border border-slate-50 dark:border-slate-700">
           {getActionIcon(log.action)}
         </div>
       </div>
       
       <div className="flex-1 min-w-0">
         <div className="flex justify-between items-start gap-2">
-          <p className="text-sm font-medium text-slate-900 truncate">
+          <p className="text-sm font-medium text-slate-900 dark:text-slate-200 truncate">
             {userName}
           </p>
-          <span className="text-[10px] text-slate-400 whitespace-nowrap pt-0.5">
+          <span className="text-[10px] text-slate-400 dark:text-slate-500 whitespace-nowrap pt-0.5">
             {timeAgo}
           </span>
         </div>
         
-        <p className="text-xs text-slate-600 line-clamp-2 mt-0.5 leading-relaxed">
+        <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-2 mt-0.5 leading-relaxed">
           {log.message}
         </p>
         
         <div className="mt-1.5 flex items-center gap-2">
-          <div className="flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-500 font-medium uppercase tracking-wider">
+          <div className="flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wider">
             {getResourceIcon(log.resource)}
             <span>{log.resource}</span>
           </div>
           {log.recordId && (
-            <span className="text-[10px] text-slate-300 font-mono">
+            <span className="text-[10px] text-slate-300 dark:text-slate-600 font-mono">
               #{log.recordId.slice(-6)}
             </span>
           )}
