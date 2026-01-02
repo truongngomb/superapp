@@ -32,7 +32,7 @@ export const getById = async (req: Request, res: Response) => {
  */
 export const create = async (req: Request, res: Response) => {
   // Body is already validated by middleware (validateBody)
-  const role = await roleService.create(req.body as RoleCreateInput);
+  const role = await roleService.create(req.body as RoleCreateInput, req.user?.id);
   res.status(201).json({ success: true, data: role });
 };
 
@@ -40,7 +40,11 @@ export const create = async (req: Request, res: Response) => {
  * PUT /roles/:id - Update role
  */
 export const update = async (req: Request, res: Response) => {
-  const role = await roleService.update(req.params['id'] as string, req.body as RoleUpdateInput);
+  const role = await roleService.update(
+    req.params['id'] as string,
+    req.body as RoleUpdateInput,
+    req.user?.id
+  );
   res.json({ success: true, data: role });
 };
 
@@ -48,6 +52,6 @@ export const update = async (req: Request, res: Response) => {
  * DELETE /roles/:id - Delete role
  */
 export const remove = async (req: Request, res: Response) => {
-  await roleService.delete(req.params['id'] as string);
+  await roleService.delete(req.params['id'] as string, req.user?.id);
   res.status(204).send();
 };

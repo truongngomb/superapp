@@ -42,7 +42,8 @@ export const getById = async (req: Request, res: Response) => {
 export const update = async (req: Request, res: Response) => {
   const user = await userService.updateProfile(
     req.params['id'] as string,
-    req.body as UserUpdateInput
+    req.body as UserUpdateInput,
+    req.user?.id
   );
   res.json({ success: true, data: user });
 };
@@ -52,7 +53,7 @@ export const update = async (req: Request, res: Response) => {
  * Note: Be careful with this operation
  */
 export const remove = async (req: Request, res: Response) => {
-  await userService.delete(req.params['id'] as string);
+  await userService.delete(req.params['id'] as string, req.user?.id);
   res.status(204).send();
 };
 
@@ -123,6 +124,6 @@ export const updateMe = async (req: Request, res: Response) => {
     return;
   }
   
-  const user = await userService.updateProfile(userId, req.body as UserUpdateInput);
+  const user = await userService.updateProfile(userId, req.body as UserUpdateInput, userId);
   res.json({ success: true, data: user });
 };

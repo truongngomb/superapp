@@ -25,6 +25,8 @@ export interface ListOptions {
   order?: 'asc' | 'desc';
   /** Filter expression */
   filter?: string;
+  /** Expand relations */
+  expand?: string;
 }
 
 /** Paginated result */
@@ -114,6 +116,7 @@ export abstract class BaseService<T extends BaseEntity> {
     const result = await pb.collection(this.collectionName).getList(page, limit, {
       sort: sortStr,
       filter: filter || '',
+      expand: options.expand || '',
     });
 
     return {
@@ -160,13 +163,18 @@ export abstract class BaseService<T extends BaseEntity> {
   /**
    * Create new record
    */
-  async create(input: Partial<Omit<T, keyof BaseEntity>>): Promise<T> {
+  async create(input: Partial<Omit<T, keyof BaseEntity>>, actorId?: string): Promise<T> {
     await this.ensureDbAvailable();
     
     const record = await pb.collection(this.collectionName).create(input);
     this.invalidateCache();
     
     this.log.info('Created record', { id: record.id });
+
+    // Log activity
+    const { activityLogService } = await import('./activity_log.service.js');
+    void activityLogService.logCRUD(actorId, 'create', this.collectionName, record.id, { data: input });
+
     return this.mapRecord(record);
   }
 
@@ -175,7 +183,7 @@ export abstract class BaseService<T extends BaseEntity> {
    * 
    * @throws NotFoundError if record doesn't exist
    */
-  async update(id: string, input: Partial<Omit<T, keyof BaseEntity>>): Promise<T> {
+  async update(id: string, input: Partial<Omit<T, keyof BaseEntity>>, actorId?: string): Promise<T> {
     await this.ensureDbAvailable();
     
     try {
@@ -183,8 +191,14 @@ export abstract class BaseService<T extends BaseEntity> {
       this.invalidateCache();
       
       this.log.info('Updated record', { id });
+
+      // Log activity
+      const { activityLogService } = await import('./activity_log.service.js');
+      void activityLogService.logCRUD(actorId, 'update', this.collectionName, id, { data: input });
+
       return this.mapRecord(record);
-    } catch {
+    } catch (error) {
+      if (error instanceof NotFoundError) throw error;
       throw new NotFoundError(`${this.collectionName} with id '${id}' not found`);
     }
   }
@@ -194,7 +208,7 @@ export abstract class BaseService<T extends BaseEntity> {
    * 
    * @throws NotFoundError if record doesn't exist
    */
-  async delete(id: string): Promise<void> {
+  async delete(id: string, actorId?: string): Promise<void> {
     await this.ensureDbAvailable();
     
     try {
@@ -202,6 +216,10 @@ export abstract class BaseService<T extends BaseEntity> {
       this.invalidateCache();
       
       this.log.info('Deleted record', { id });
+
+      // Log activity
+      const { activityLogService } = await import('./activity_log.service.js');
+      void activityLogService.logCRUD(actorId, 'delete', this.collectionName, id);
     } catch {
       throw new NotFoundError(`${this.collectionName} with id '${id}' not found`);
     }

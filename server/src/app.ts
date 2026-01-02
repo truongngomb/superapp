@@ -11,7 +11,7 @@ import cookieParser from 'cookie-parser';
 
 import { config, cache } from './config/index.js';
 import { authenticate, errorHandler, NotFoundError } from './middleware/index.js';
-import { authRouter, categoriesRouter, rolesRouter, usersRouter } from './routes/index.js';
+import { authRouter, categoriesRouter, rolesRouter, usersRouter, activityLogsRouter, realtimeRouter } from './routes/index.js';
 
 // =============================================================================
 // App Factory
@@ -37,7 +37,14 @@ function createApp(): Express {
   // Body Parsing & Compression
   // =========================================================================
   
-  app.use(compression());
+  app.use(compression({
+    filter: (req, res) => {
+      if (req.headers['accept'] === 'text/event-stream') {
+        return false;
+      }
+      return compression.filter(req, res);
+    }
+  }));
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
@@ -56,6 +63,8 @@ function createApp(): Express {
   app.use('/api/categories', categoriesRouter);
   app.use('/api/roles', rolesRouter);
   app.use('/api/users', usersRouter);
+  app.use('/api/activity-logs', activityLogsRouter);
+  app.use('/api/realtime', realtimeRouter);
 
   // =========================================================================
   // Health Check

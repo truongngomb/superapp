@@ -66,6 +66,7 @@ export const Collections = {
   USERS: 'users',
   CATEGORIES: 'categories',
   ROLES: 'roles',
+  ACTIVITY_LOGS: 'activity_logs',
 } as const;
 
 /** Union type of all collection names */

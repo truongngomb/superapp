@@ -7,7 +7,8 @@ import { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Link, Navigate } from 'react-router-dom';
 import { MainLayout } from '@/components/layout';
 import { LoadingSpinner, ProtectedRoute, GuestGuard } from '@/components/common';
-import { AuthProvider, ThemeProvider, ToastProvider } from '@/context';
+import { AuthProvider, ThemeProvider, ToastProvider, RealtimeProvider } from '@/context';
+import { ActivityLogProvider } from '@/context/ActivityLogContext';
 import { PermissionResource, PermissionAction } from '@/types';
 
 // ============================================================================
@@ -68,10 +69,12 @@ export function App() {
     <ThemeProvider>
       <ToastProvider>
         <AuthProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<MainLayout />}>
-                {/* Public Routes */}
+          <RealtimeProvider>
+            <ActivityLogProvider>
+              <BrowserRouter>
+                <Routes>
+                  <Route path="/" element={<MainLayout />}>
+                  {/* Public Routes */}
                 <Route
                   index
                   element={
@@ -148,14 +151,16 @@ export function App() {
                   />
                 </Route>
                 
-                {/* Catch-all 404 */}
-                <Route path="*" element={<NotFoundPage />} />
-              </Route>
-            </Routes>
-          </BrowserRouter>
-        </AuthProvider>
-      </ToastProvider>
-    </ThemeProvider>
-  );
+                  {/* Catch-all 404 */}
+                  <Route path="*" element={<NotFoundPage />} />
+                </Route>
+              </Routes>
+            </BrowserRouter>
+          </ActivityLogProvider>
+        </RealtimeProvider>
+      </AuthProvider>
+    </ToastProvider>
+  </ThemeProvider>
+);
 }
 

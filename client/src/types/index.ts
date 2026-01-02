@@ -13,3 +13,6 @@ export * from './category';
 
 // Role types
 export * from './role';
+
+// Activity Log types
+export * from './activityLog';

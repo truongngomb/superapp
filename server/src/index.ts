@@ -3,6 +3,15 @@
  * 
  * Starts the Express server and handles graceful shutdown.
  */
+import { EventSource } from 'eventsource';
+
+// Polyfill for PocketBase Realtime SDK
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+if (!(global as any).EventSource) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+  (global as any).EventSource = EventSource;
+}
+
 import app from './app.js';
 import { config, checkPocketBaseHealth } from './config/index.js';
 import { createLogger } from './utils/index.js';

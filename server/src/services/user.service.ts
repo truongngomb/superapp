@@ -111,8 +111,8 @@ class UserService extends BaseService<User> {
   /**
    * Update user profile
    */
-  async updateProfile(id: string, input: UserUpdateInput): Promise<User> {
-    return this.update(id, input as Partial<Omit<User, 'id' | 'created' | 'updated'>>);
+  async updateProfile(id: string, input: UserUpdateInput, actorId?: string): Promise<User> {
+    return this.update(id, input as Partial<Omit<User, 'id' | 'created' | 'updated'>>, actorId);
   }
 
   /**

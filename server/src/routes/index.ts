@@ -15,3 +15,5 @@ export { authRouter } from './auth.js';
 export { categoriesRouter } from './categories.js';
 export { rolesRouter } from './roles.js';
 export { usersRouter } from './users.js';
+export { activityLogsRouter } from './activity_logs.js';
+export { realtimeRouter } from './realtime.js';

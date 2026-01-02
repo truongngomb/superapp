@@ -3,16 +3,18 @@
  * Application header with navigation, theme toggle, and user menu
  */
 
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { LogOut, Menu, Moon, Sun, User, X } from 'lucide-react';
 import { cn } from '@/utils';
-import { useAuth } from '@/hooks';
+import { useAuth, useActivityLogs } from '@/hooks';
 import { useTheme } from '@/context';
 import { LanguageSwitcher } from '../common/LanguageSwitcher';
 import { PermissionGuard } from '../common/PermissionGuard';
+import { NotificationCenter } from '../notifications/NotificationCenter';
+import { Bell } from 'lucide-react';
 import { NAVIGATION_ITEMS } from '@/config/navigation';
 
 // ============================================================================
@@ -109,6 +111,8 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
   const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuth();
   const { isDark, toggleTheme } = useTheme();
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const { unreadCount } = useActivityLogs();
 
   const handleLogout = useCallback(() => {
     void logout()
@@ -166,6 +170,28 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
             {isDark ? <Sun className={ICON_CLASS} /> : <Moon className={ICON_CLASS} />}
           </motion.button>
 
+          {/* Notifications */}
+          <div className="relative">
+            <motion.button
+              type="button"
+              whileTap={{ scale: 0.95 }}
+              onClick={() => { setIsNotificationsOpen(true); }}
+              className={ICON_BUTTON_CLASS}
+              aria-label={t('toggle_notifications', 'Thông báo')}
+            >
+              <Bell className={ICON_CLASS} />
+              {unreadCount > 0 && (
+                <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow-sm ring-2 ring-background">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              )}
+            </motion.button>
+            <NotificationCenter 
+              isOpen={isNotificationsOpen} 
+              onClose={() => { setIsNotificationsOpen(false); }} 
+            />
+          </div>
+
           {/* Auth section */}
           {isAuthenticated && user ? (
             <div className="flex items-center gap-2">
@@ -173,7 +199,7 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
               <motion.button
                 type="button"
                 whileTap={{ scale: 0.95 }}
-                onClick={handleLogout}
+                onClick={() => { handleLogout(); }}
                 className={cn(ICON_BUTTON_CLASS, 'text-muted hover:text-red-500')}
                 aria-label={t('logout')}
                 title={t('logout')}

@@ -32,7 +32,7 @@ export const getById = async (req: Request, res: Response) => {
  */
 export const create = async (req: Request, res: Response) => {
   // Body is already validated by middleware (validateBody)
-  const category = await categoryService.create(req.body as CategoryCreateInput);
+  const category = await categoryService.create(req.body as CategoryCreateInput, req.user?.id);
   res.status(201).json({ success: true, data: category });
 };
 
@@ -40,7 +40,11 @@ export const create = async (req: Request, res: Response) => {
  * PUT /categories/:id - Update category
  */
 export const update = async (req: Request, res: Response) => {
-  const category = await categoryService.update(req.params['id'] as string, req.body as CategoryUpdateInput);
+  const category = await categoryService.update(
+    req.params['id'] as string,
+    req.body as CategoryUpdateInput,
+    req.user?.id
+  );
   res.json({ success: true, data: category });
 };
 
@@ -48,6 +52,6 @@ export const update = async (req: Request, res: Response) => {
  * DELETE /categories/:id - Delete category
  */
 export const remove = async (req: Request, res: Response) => {
-  await categoryService.delete(req.params['id'] as string);
+  await categoryService.delete(req.params['id'] as string, req.user?.id);
   res.status(204).send();
 };
