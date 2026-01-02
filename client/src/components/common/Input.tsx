@@ -20,6 +20,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         )}
         <input
           ref={ref}
+          autoComplete="off"
           id={inputId}
           className={cn(
             'w-full px-4 py-2.5 rounded-lg',
