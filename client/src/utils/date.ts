@@ -5,10 +5,24 @@
  */
 
 import { getCurrentLocale } from '@/config/i18n';
+import { enUS, vi, ko } from 'date-fns/locale';
+import type { Locale } from 'date-fns';
 
 // ============================================================================
 // Formatters
 // ============================================================================
+
+/**
+ * Get date-fns locale object based on current app locale
+ */
+export function getDateLocale(localeString?: string): Locale {
+  const current = localeString || getCurrentLocale();
+  switch (current) {
+    case 'vi': return vi;
+    case 'ko': return ko;
+    default: return enUS;
+  }
+}
 
 /**
  * Format date to locale string

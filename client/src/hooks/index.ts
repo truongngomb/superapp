@@ -9,4 +9,4 @@ export * from './useCategories';
 export * from './useUsers';
 export * from './useActivityLogs';
 export * from './useSort';
-
+export * from './useDataSorting';

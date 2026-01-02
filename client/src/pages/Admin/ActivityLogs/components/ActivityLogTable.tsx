@@ -1,10 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import { formatDistanceToNow } from 'date-fns';
-import { enUS, vi, ko } from 'date-fns/locale';
 
 import { Clock } from 'lucide-react';
 import { ActivityLog } from '@/types';
-import { cn } from '@/utils';
+import { cn, getDateLocale } from '@/utils';
 
 interface ActivityLogTableProps {
   logs: ActivityLog[];
@@ -14,14 +13,6 @@ interface ActivityLogTableProps {
 export function ActivityLogTable({ logs, loading }: ActivityLogTableProps) {
   const { t, i18n } = useTranslation('activity_logs');
   const { t: tCommon } = useTranslation('common');
-
-  const getDateLocale = () => {
-    switch (i18n.language) {
-      case 'vi': return vi;
-      case 'ko': return ko;
-      default: return enUS;
-    }
-  };
 
   if (loading) {
     return (
@@ -111,7 +102,7 @@ export function ActivityLogTable({ logs, loading }: ActivityLogTableProps) {
                         <span>
                             {formatDistanceToNow(new Date(log.created), { 
                                 addSuffix: true,
-                                locale: getDateLocale()
+                                locale: getDateLocale(i18n.language)
                             })}
                         </span>
                     </div>

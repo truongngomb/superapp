@@ -20,6 +20,7 @@ export {
 
 // Date utilities
 export {
+  getDateLocale,
   formatDate,
   formatDateTime,
   formatTime,

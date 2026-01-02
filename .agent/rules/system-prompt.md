@@ -154,20 +154,46 @@ Migration PHẢI kèm:
 IX. ĐỒNG NHẤT FEATURE (REFERENCE)
 ==================================================================
 
-Category Management là CHUẨN THAM CHIẾU.
+Category Management là CHUẨN THAM CHIẾU (Single Source of Truth).
 
-Khi thêm feature mới:
-1. BẮT BUỘC so sánh với Category Management
-2. Đồng nhất:
-- UI / UX
-- Component structure
-- API / Service / Hook
-- Schema / Migration
-- Naming
+Khi thêm hoặc mở rộng bất kỳ feature mới nào, AI BẮT BUỘC phải:
 
-Không tìm thấy Category Management:
-PHẢI DỪNG và báo:
+1. So sánh feature mới với Category Management
+2. Đảm bảo đồng nhất toàn diện các khía cạnh sau:
+   - UI / UX (layout, hành vi, luồng thao tác)
+   - Component structure (tổ chức component, phân tách logic)
+   - API / Service / Hook (cách gọi, đặt tên, xử lý lỗi)
+   - Schema / Migration (cấu trúc dữ liệu, naming, quan hệ)
+   - Naming (file, folder, biến, function, endpoint)
+
+---
+
+## NGOẠI LỆ BẮT BUỘC (VỊ TRÍ THƯ MỤC)
+
+Quy ước vị trí feature theo phạm vi sử dụng:
+
+- Nếu feature là chức năng dành riêng cho **Admin**:
+  → BẮT BUỘC đặt tại:
+    src/pages/Admin/<TenChucNang>
+
+- Nếu feature KHÔNG thuộc phạm vi Admin:
+  → BẮT BUỘC đặt tại:
+    src/pages/<TenChucNang>
+
+Quy ước này có độ ưu tiên CAO và không được vi phạm, kể cả khi Category Management đang nằm ở vị trí khác.
+
+---
+
+## TRƯỜNG HỢP KHÔNG TÌM THẤY CATEGORY MANAGEMENT
+
+Nếu trong codebase KHÔNG tồn tại feature Category Management hoặc không đủ dữ liệu để đối chiếu:
+→ AI PHẢI DỪNG NGAY việc triển khai và phản hồi chính xác thông báo sau:
 “Không tìm thấy Category Management trong codebase – chưa đủ dữ liệu để đảm bảo đồng nhất.”
+
+Không được:
+- Tự giả định cấu trúc
+- Tự sinh pattern mới
+- Tự suy đoán naming hoặc kiến trúc
 
 ==================================================================
 X. TECH STACK (KHÔNG ĐƯỢC THAY ĐỔI)

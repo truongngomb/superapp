@@ -6,7 +6,7 @@ import { Button, Card, CardContent, Input, LoadingSpinner, ConfirmModal, SortBar
 import { PermissionGuard } from '@/components/common/PermissionGuard';
 import type { Role, CreateRoleInput } from '@/types';
 import { cn } from '@/utils';
-import { useRoles, useSort } from '@/hooks';
+import { useRoles, useSort, useDataSorting } from '@/hooks';
 import { RoleForm } from './components/RoleForm';
 import { RoleRow } from './components/RoleRow';
 
@@ -39,56 +39,27 @@ export default function RolesPage() {
 
   // Sortable columns configuration
   const sortColumns: Array<{ field: string; label: string }> = [
-    { field: 'name', label: 'Name' },
-    { field: 'isActive', label: 'Status' },
-    { field: 'created', label: 'Created' },
-    { field: 'updated', label: 'Updated' },
+    { field: 'name', label: t('common:name', 'Name') },
+    { field: 'isActive', label: t('common:status', 'Status') },
+    { field: 'created', label: t('common:created', 'Created') },
+    { field: 'updated', label: t('common:updated', 'Updated') },
   ];
 
   useEffect(() => {
     void fetchRoles();
   }, [fetchRoles]);
 
-  // Filter and sort roles
+  // Filter roles
   const filteredRoles = useMemo(() => {
-    let result = roles.filter(
+    return roles.filter(
       (role) =>
         role.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (role.description?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false)
     );
+  }, [roles, searchQuery]);
 
-    // Sort
-    if (sortConfig.field && sortConfig.order) {
-      result = [...result].sort((a, b) => {
-        const field = sortConfig.field as keyof Role;
-        const aValue = a[field];
-        const bValue = b[field];
-
-        // Handle different types
-        if (typeof aValue === 'string' && typeof bValue === 'string') {
-          return sortConfig.order === 'asc' 
-            ? aValue.localeCompare(bValue)
-            : bValue.localeCompare(aValue);
-        }
-        if (typeof aValue === 'boolean' && typeof bValue === 'boolean') {
-          const aNum = aValue ? 1 : 0;
-          const bNum = bValue ? 1 : 0;
-          return sortConfig.order === 'asc' ? aNum - bNum : bNum - aNum;
-        }
-        // For primitive types only, skip objects/arrays
-        if (typeof aValue === 'object' || typeof bValue === 'object') {
-          return 0;
-        }
-        const aStr = aValue != null ? String(aValue) : '';
-        const bStr = bValue != null ? String(bValue) : '';
-        return sortConfig.order === 'asc' 
-          ? aStr.localeCompare(bStr)
-          : bStr.localeCompare(aStr);
-      });
-    }
-
-    return result;
-  }, [roles, searchQuery, sortConfig]);
+  // Sort roles
+  const sortedRoles = useDataSorting(filteredRoles, sortConfig);
 
   // Handle form submit
   const handleSubmit = async (data: CreateRoleInput) => {
@@ -174,7 +145,7 @@ export default function RolesPage() {
       {/* Roles list */}
       {loading ? (
         <LoadingSpinner size="lg" text={t("roles:loading")} className="py-20" />
-      ) : filteredRoles.length === 0 ? (
+      ) : sortedRoles.length === 0 ? (
         <Card className="py-12 text-center">
           <CardContent>
             <Shield className="w-12 h-12 text-muted mx-auto mb-4" />
@@ -197,13 +168,13 @@ export default function RolesPage() {
         </Card>
       ) : (
         <div className="space-y-2">
-          {filteredRoles.map((role, index) => (
+          {sortedRoles.map((role, index) => (
             <RoleRow
               key={role.id}
               index={index}
               style={{}}
               data={{
-                roles: filteredRoles,
+                roles: sortedRoles,
                 onEdit: handleEdit,
                 onDelete: (id) => {
                   setDeleteId(id);

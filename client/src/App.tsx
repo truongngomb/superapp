@@ -22,11 +22,11 @@ const CategoriesPage = lazy(() => import('@/pages/Categories/CategoriesPage'));
 const LoginPage = lazy(() => 
   import('@/pages/LoginPage').then((m) => ({ default: m.LoginPage }))
 );
-const RolesPage = lazy(() => import('@/pages/Admin/RolesPage'));
-const UsersPage = lazy(() => import('@/pages/Admin/UsersPage'));
+const RolesPage = lazy(() => import('@/pages/Admin/Roles/RolesPage'));
+const UsersPage = lazy(() => import('@/pages/Admin/Users/UsersPage'));
 const AdminDashboard = lazy(() => import('@/pages/Admin/AdminDashboard'));
 const AdminLayout = lazy(() => import('@/pages/Admin/AdminLayout'));
-const ActivityLogsPage = lazy(() => import('@/pages/Admin/ActivityLogsPage'));
+const ActivityLogsPage = lazy(() => import('@/pages/Admin/ActivityLogs/ActivityLogsPage'));
 
 // ============================================================================
 // Fallback Components

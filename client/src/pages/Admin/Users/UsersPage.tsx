@@ -3,12 +3,12 @@ import { AnimatePresence } from 'framer-motion';
 import { Users, Search, RefreshCw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button, Card, CardContent, Input, LoadingSpinner, ConfirmModal, SortBar } from '@/components/common';
-import { useUsers, useRoles, useSort } from '@/hooks';
+import { useUsers, useRoles, useSort, useDataSorting } from '@/hooks';
 import type { User } from '@/services/user.service';
 import { cn } from '@/utils';
 import { UserRow } from './components/UserRow';
 import { UserForm } from './components/UserForm';
-import { RoleSelectModal } from './components/RoleSelectModal';
+import { RoleSelectModal } from '@/pages/Admin/Roles/components/RoleSelectModal';
 
 /**
  * UsersPage Component
@@ -40,11 +40,11 @@ export default function UsersPage() {
 
   // Sortable columns configuration
   const sortColumns: Array<{ field: string; label: string }> = [
-    { field: 'name', label: 'Name' },
-    { field: 'email', label: 'Email' },
-    { field: 'isActive', label: 'Status' },
-    { field: 'created', label: 'Created' },
-    { field: 'updated', label: 'Updated' },
+    { field: 'name', label: t('common:name', 'Name') },
+    { field: 'email', label: t('common:email', 'Email') },
+    { field: 'isActive', label: t('common:status', 'Status') },
+    { field: 'created', label: t('common:created', 'Created') },
+    { field: 'updated', label: t('common:updated', 'Updated') },
   ];
 
   useEffect(() => {
@@ -52,47 +52,18 @@ export default function UsersPage() {
     void fetchRoles();
   }, [fetchUsers, fetchRoles]);
 
-  // Filter and sort users
+  // Filter users
   const filteredUsers = useMemo(() => {
-    let result = users.filter(
+    return users.filter(
       (user) =>
         user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (user.roleNames?.some(name => name.toLowerCase().includes(searchQuery.toLowerCase())) ?? false)
     );
+  }, [users, searchQuery]);
 
-    // Sort
-    if (sortConfig.field && sortConfig.order) {
-      result = [...result].sort((a, b) => {
-        const field = sortConfig.field as keyof User;
-        const aValue = a[field];
-        const bValue = b[field];
-
-        // Handle different types
-        if (typeof aValue === 'string' && typeof bValue === 'string') {
-          return sortConfig.order === 'asc' 
-            ? aValue.localeCompare(bValue)
-            : bValue.localeCompare(aValue);
-        }
-        if (typeof aValue === 'boolean' && typeof bValue === 'boolean') {
-          const aNum = aValue ? 1 : 0;
-          const bNum = bValue ? 1 : 0;
-          return sortConfig.order === 'asc' ? aNum - bNum : bNum - aNum;
-        }
-        // For primitive types only, skip objects/arrays
-        if (typeof aValue === 'object' || typeof bValue === 'object') {
-          return 0;
-        }
-        const aStr = aValue != null ? String(aValue) : '';
-        const bStr = bValue != null ? String(bValue) : '';
-        return sortConfig.order === 'asc' 
-          ? aStr.localeCompare(bStr)
-          : bStr.localeCompare(aStr);
-      });
-    }
-
-    return result;
-  }, [users, searchQuery, sortConfig]);
+  // Sort users
+  const sortedUsers = useDataSorting(filteredUsers, sortConfig);
 
   // Handle edit user submit
   const handleEditSubmit = async (data: { name: string; isActive?: boolean }) => {
@@ -165,7 +136,7 @@ export default function UsersPage() {
       {/* Users list */}
       {loading ? (
         <LoadingSpinner size="lg" text={t("users:loading")} className="py-20" />
-      ) : filteredUsers.length === 0 ? (
+      ) : sortedUsers.length === 0 ? (
         <Card className="py-12 text-center">
           <CardContent>
             <Users className="w-12 h-12 text-muted mx-auto mb-4" />
@@ -176,13 +147,13 @@ export default function UsersPage() {
         </Card>
       ) : (
         <div className="space-y-2">
-          {filteredUsers.map((user, index) => (
+          {sortedUsers.map((user, index) => (
             <UserRow
               key={user.id}
               index={index}
               style={{}}
               data={{
-                users: filteredUsers,
+                users: sortedUsers,
                 onEdit: (u) => {
                   setEditingUser(u);
                 },

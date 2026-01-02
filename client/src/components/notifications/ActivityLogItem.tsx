@@ -4,7 +4,6 @@
  */
 import React from 'react';
 import { formatDistanceToNow } from 'date-fns';
-import { enUS, vi, ko } from 'date-fns/locale';
 import { useTranslation } from 'react-i18next';
 import { 
   PlusCircle, 
@@ -17,7 +16,7 @@ import {
   Shield,
   Activity
 } from 'lucide-react';
-import { cn } from '@/utils';
+import { cn, getDateLocale } from '@/utils';
 import type { ActivityLog } from '@/types';
 
 interface ActivityLogItemProps {
@@ -49,7 +48,7 @@ export const ActivityLogItem: React.FC<ActivityLogItemProps> = ({ log, onClick }
   const { i18n } = useTranslation();
   
   // Determine locale for date-fns
-  const dateLocale = i18n.language === 'vi' ? vi : i18n.language === 'ko' ? ko : enUS;
+  const dateLocale = getDateLocale(i18n.language);
   
   const timeAgo = formatDistanceToNow(new Date(log.created), { 
     addSuffix: true,

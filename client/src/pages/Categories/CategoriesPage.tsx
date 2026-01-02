@@ -6,7 +6,7 @@ import { Button, Card, CardContent, Input, LoadingSpinner, ConfirmModal, SortBar
 import { PermissionGuard } from '@/components/common/PermissionGuard';
 import type { Category, CategoryInput } from '@/types';
 import { cn } from '@/utils';
-import { useCategories, useSort } from '@/hooks';
+import { useCategories, useSort, useDataSorting } from '@/hooks';
 import { CategoryForm } from './components/CategoryForm';
 import { CategoryRow } from './components/CategoryRow';
 
@@ -44,56 +44,27 @@ export default function CategoriesPage() {
 
   // Sortable columns configuration
   const sortColumns: Array<{ field: string; label: string }> = [
-    { field: 'name', label: 'Name' },
-    { field: 'isActive', label: 'Status' },
-    { field: 'created', label: 'Created' },
-    { field: 'updated', label: 'Updated' },
+    { field: 'name', label: t('common:name', 'Name') },
+    { field: 'isActive', label: t('common:status', 'Status') },
+    { field: 'created', label: t('common:created', 'Created') },
+    { field: 'updated', label: t('common:updated', 'Updated') },
   ];
 
   useEffect(() => {
     void fetchCategories();
   }, [fetchCategories]);
 
-  // Filter and sort categories
+  // Filter categories
   const filteredCategories = useMemo(() => {
-    let result = categories.filter(
+    return categories.filter(
       (cat) =>
         cat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         cat.description.toLowerCase().includes(searchQuery.toLowerCase())
     );
+  }, [categories, searchQuery]);
 
-    // Sort
-    if (sortConfig.field && sortConfig.order) {
-      result = [...result].sort((a, b) => {
-        const field = sortConfig.field as keyof Category;
-        const aValue = a[field];
-        const bValue = b[field];
-
-        // Handle different types
-        if (typeof aValue === 'string' && typeof bValue === 'string') {
-          return sortConfig.order === 'asc' 
-            ? aValue.localeCompare(bValue)
-            : bValue.localeCompare(aValue);
-        }
-        if (typeof aValue === 'boolean' && typeof bValue === 'boolean') {
-          const aNum = aValue ? 1 : 0;
-          const bNum = bValue ? 1 : 0;
-          return sortConfig.order === 'asc' ? aNum - bNum : bNum - aNum;
-        }
-        // For primitive types only, skip objects/arrays
-        if (typeof aValue === 'object' || typeof bValue === 'object') {
-          return 0;
-        }
-        const aStr = String(aValue);
-        const bStr = String(bValue);
-        return sortConfig.order === 'asc' 
-          ? aStr.localeCompare(bStr)
-          : bStr.localeCompare(aStr);
-      });
-    }
-
-    return result;
-  }, [categories, searchQuery, sortConfig]);
+  // Sort categories
+  const sortedCategories = useDataSorting(filteredCategories, sortConfig);
 
   // Handle form submit
   const handleSubmit = async (data: CategoryInput) => {
@@ -178,7 +149,7 @@ export default function CategoriesPage() {
           text={t("common:loading")}
           className="py-20"
         />
-      ) : filteredCategories.length === 0 ? (
+      ) : sortedCategories.length === 0 ? (
         <Card className="py-12 text-center">
           <CardContent>
             <Folder className="w-12 h-12 text-muted mx-auto mb-4" />
@@ -203,13 +174,13 @@ export default function CategoriesPage() {
         </Card>
       ) : (
         <div className="space-y-2">
-          {filteredCategories.map((category, index) => (
+          {sortedCategories.map((category, index) => (
             <CategoryRow
               key={category.id}
               index={index}
               style={{}}
               data={{
-                categories: filteredCategories,
+                categories: sortedCategories,
                 onEdit: handleEdit,
                 onDelete: (id) => {
                   setDeleteId(id);
