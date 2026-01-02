@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { userService, type User, type PaginatedUsers, type UserListParams } from '@/services/user.service';
 import { useToast } from '@/context';
@@ -13,11 +13,22 @@ export function useUsers() {
   const [deleting, setDeleting] = useState(false);
   const toast = useToast();
   const { t } = useTranslation('users');
+  
+  // Use refs to avoid infinite loop when reloading
+  const isReloading = useRef(false);
+  const lastParamsRef = useRef<UserListParams | undefined>(undefined);
 
   const fetchUsers = useCallback(async (params?: UserListParams) => {
+    // Skip if already reloading (prevent loop)
+    if (isReloading.current) return;
+    
     setLoading(true);
+    // Save params for reload
+    if (params !== undefined) {
+      lastParamsRef.current = params;
+    }
     try {
-      const data: PaginatedUsers = await userService.getUsers(params);
+      const data: PaginatedUsers = await userService.getUsers(params ?? lastParamsRef.current);
       setUsers(data.items);
       setPagination({
         page: data.page,
@@ -32,14 +43,31 @@ export function useUsers() {
     }
   }, [toast, t]);
 
+  // Silent reload without setting loading state
+  const reloadUsers = async () => {
+    try {
+      isReloading.current = true;
+      const data: PaginatedUsers = await userService.getUsers(lastParamsRef.current);
+      setUsers(data.items);
+      setPagination({
+        page: data.page,
+        totalPages: data.totalPages,
+        total: data.total,
+      });
+    } catch (error) {
+      logger.warn('useUsers', 'Failed to reload users:', error);
+    } finally {
+      isReloading.current = false;
+    }
+  };
+
   const updateUser = async (id: string, data: { name?: string; isActive?: boolean }) => {
     setSubmitting(true);
     try {
-      const updated = await userService.updateUser(id, data);
-      setUsers((prev) =>
-        prev.map((user) => (user.id === id ? { ...user, ...updated } : user))
-      );
+      await userService.updateUser(id, data);
       toast.success(t('toast.update_success'));
+      // Reload list after update
+      await reloadUsers();
       return true;
     } catch (error) {
       const message = error instanceof ApiException ? error.message : t('toast.error');
@@ -54,8 +82,9 @@ export function useUsers() {
     setDeleting(true);
     try {
       await userService.deleteUser(id);
-      setUsers((prev) => prev.filter((user) => user.id !== id));
       toast.success(t('toast.delete_success'));
+      // Reload list after delete
+      await reloadUsers();
       return true;
     } catch (error) {
       const message = error instanceof ApiException ? error.message : t('toast.error');
@@ -66,14 +95,16 @@ export function useUsers() {
     }
   };
 
-  const assignRole = async (userId: string, roleId: string) => {
+  /**
+   * Assign roles to user (replaces all existing roles)
+   */
+  const assignRoles = async (userId: string, roleIds: string[]) => {
     setSubmitting(true);
     try {
-      const updated = await userService.assignRole(userId, roleId);
-      setUsers((prev) =>
-        prev.map((user) => (user.id === userId ? { ...user, role: updated.role, roleName: updated.roleName } : user))
-      );
-      toast.success(t('toast.assign_role_success'));
+      await userService.assignRoles(userId, roleIds);
+      toast.success(t('toast.assign_roles_success'));
+      // Reload list after assign roles
+      await reloadUsers();
       return true;
     } catch (error) {
       const message = error instanceof ApiException ? error.message : t('toast.error');
@@ -84,14 +115,56 @@ export function useUsers() {
     }
   };
 
-  const removeRole = async (userId: string) => {
+  /**
+   * Add a single role to user
+   */
+  const addRole = async (userId: string, roleId: string) => {
     setSubmitting(true);
     try {
-      await userService.removeRole(userId);
-      setUsers((prev) =>
-        prev.map((user) => (user.id === userId ? { ...user, role: undefined, roleName: undefined } : user))
-      );
+      await userService.addRole(userId, roleId);
+      toast.success(t('toast.assign_role_success'));
+      // Reload list after add role
+      await reloadUsers();
+      return true;
+    } catch (error) {
+      const message = error instanceof ApiException ? error.message : t('toast.error');
+      toast.error(message);
+      return false;
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  /**
+   * Remove a specific role from user
+   */
+  const removeRole = async (userId: string, roleId: string) => {
+    setSubmitting(true);
+    try {
+      await userService.removeRole(userId, roleId);
       toast.success(t('toast.remove_role_success'));
+      // Reload list after remove role
+      await reloadUsers();
+      return true;
+    } catch (error) {
+      const message = error instanceof ApiException ? error.message : t('toast.error');
+      toast.error(message);
+      return false;
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  /**
+   * Remove all roles from user
+   */
+  const removeAllRoles = async (userId: string) => {
+    setSubmitting(true);
+    try {
+      await userService.removeAllRoles(userId);
+      toast.success(t('toast.remove_role_success'));
+      // Reload list after remove all roles
+      await reloadUsers();
       return true;
     } catch (error) {
       const message = error instanceof ApiException ? error.message : t('toast.error');
@@ -111,7 +184,9 @@ export function useUsers() {
     fetchUsers,
     updateUser,
     deleteUser,
-    assignRole,
+    assignRoles,
+    addRole,
     removeRole,
+    removeAllRoles,
   };
 }

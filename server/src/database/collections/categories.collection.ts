@@ -2,7 +2,7 @@
  * Categories Collection
  */
 import type { BaseCollectionSchema } from '../collection.schema.js';
-import { autodateField, textField, boolField } from '../collection.schema.js';
+import { autodateField, boolField, textField } from '../collection.schema.js';
 
 /**
  * Categories collection
@@ -17,8 +17,8 @@ export const categoriesCollection: BaseCollectionSchema = {
     textField('color', { min: 0, max: 0 }),
     textField('icon', { min: 0, max: 0 }),
     boolField('isActive'),
-    autodateField('created'),
-    autodateField('updated'),
+    autodateField('created', { onCreate: true, onUpdate: false }),
+    autodateField('updated', { onCreate: true, onUpdate: true }),
   ],
 
   indexes: [

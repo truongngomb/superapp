@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { categoryService } from '@/services';
 import { useToast } from '@/context';
@@ -13,8 +13,14 @@ export function useCategories() {
   const [deleting, setDeleting] = useState(false);
   const toast = useToast();
   const { t } = useTranslation('categories');
+  
+  // Use ref to avoid infinite loop when reloading
+  const isReloading = useRef(false);
 
   const fetchCategories = useCallback(async () => {
+    // Skip if already reloading (prevent loop)
+    if (isReloading.current) return;
+    
     setLoading(true);
     try {
       const data = await categoryService.getAll();
@@ -27,25 +33,26 @@ export function useCategories() {
     }
   }, [toast, t]);
 
+  // Silent reload without setting loading state
+  const reloadCategories = async () => {
+    try {
+      isReloading.current = true;
+      const data = await categoryService.getAll();
+      setCategories(data);
+    } catch (error) {
+      logger.warn('useCategories', 'Failed to reload categories:', error);
+    } finally {
+      isReloading.current = false;
+    }
+  };
+
   const createCategory = async (data: CategoryInput) => {
     setSubmitting(true);
     try {
-      // Optimistic/Fallback creation
-      const newCategory: Category = {
-        id: crypto.randomUUID(),
-        ...data,
-        isActive: data.isActive ?? true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-
-      try {
-        const result = await categoryService.create(data);
-        setCategories((prev) => [...prev, result]);
-      } catch {
-        setCategories((prev) => [...prev, newCategory]);
-      }
+      await categoryService.create(data);
       toast.success(t('toast.create_success'));
+      // Reload list after create
+      await reloadCategories();
       return true;
     } catch (error) {
       const message = error instanceof ApiException ? error.message : t('toast.error');
@@ -60,12 +67,9 @@ export function useCategories() {
     setSubmitting(true);
     try {
       await categoryService.update(id, data);
-      setCategories((prev) =>
-        prev.map((cat) =>
-          cat.id === id ? { ...cat, ...data, updatedAt: new Date().toISOString() } : cat
-        )
-      );
       toast.success(t('toast.update_success'));
+      // Reload list after update
+      await reloadCategories();
       return true;
     } catch (error) {
       const message = error instanceof ApiException ? error.message : t('toast.error');
@@ -79,13 +83,10 @@ export function useCategories() {
   const deleteCategory = async (id: string) => {
     setDeleting(true);
     try {
-      try {
-        await categoryService.delete(id);
-      } catch {
-        // Continue with local delete if API fails
-      }
-      setCategories((prev) => prev.filter((cat) => cat.id !== id));
+      await categoryService.delete(id);
       toast.success(t('toast.delete_success'));
+      // Reload list after delete
+      await reloadCategories();
       return true;
     } catch (error) {
       const message = error instanceof ApiException ? error.message : t('toast.error');
@@ -107,4 +108,3 @@ export function useCategories() {
     deleteCategory,
   };
 }
-

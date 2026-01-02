@@ -75,8 +75,12 @@ export function UserRow({ index, style, data }: UserRowProps) {
       description={user.email}
       isActive={user.isActive}
       badges={
-        user.roleName ? (
-          <Badge variant="secondary" size="sm">{user.roleName}</Badge>
+        user.roleNames && user.roleNames.length > 0 ? (
+          <div className="flex flex-wrap gap-1">
+            {user.roleNames.map((name, i) => (
+              <Badge key={i} variant="secondary" size="sm">{name}</Badge>
+            ))}
+          </div>
         ) : (
           <span className="text-xs text-muted">{t('users:no_role')}</span>
         )

@@ -13,15 +13,19 @@
   "name_placeholder": "Nhập tên người dùng",
   "email_label": "Email",
   "role_label": "Vai trò",
+  "roles_label": "Vai trò",
   "no_role": "Chưa có vai trò",
   "active_description": "Cho phép người dùng truy cập hệ thống",
   "select_role": "Chọn vai trò",
+  "select_roles": "Chọn các vai trò",
+  "roles_selected": "Đã chọn {{count}} vai trò",
   "created_at": "Ngày tham gia",
   "toast": {
     "load_error": "Không thể tải danh sách người dùng",
     "update_success": "Cập nhật người dùng thành công!",
     "delete_success": "Xóa người dùng thành công!",
     "assign_role_success": "Gán vai trò thành công!",
+    "assign_roles_success": "Gán các vai trò thành công!",
     "remove_role_success": "Xóa vai trò thành công!",
     "error": "Đã xảy ra lỗi"
   }

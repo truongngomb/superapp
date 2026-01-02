@@ -20,8 +20,8 @@ export interface User extends BaseEntity {
   avatar?: string;
   /** Whether email is verified */
   emailVisibility?: boolean;
-  /** Reference to user's role */
-  role?: string;
+  /** Reference to user's roles */
+  roles?: string[];
   /** Whether user is active */
   isActive?: boolean;
 }
@@ -39,8 +39,8 @@ export interface AuthUser {
   id: string;
   /** User email */
   email: string;
-  /** User's role ID (optional) */
-  role?: string;
+  /** User's role IDs (optional) */
+  roles?: string[];
   /** Resolved permissions from role */
   permissions: RolePermissions;
 }
@@ -89,10 +89,10 @@ export interface UserUpdateInput {
 }
 
 /**
- * Input for assigning a role to a user
+ * Input for assigning roles to a user
  */
 export interface UserRoleAssignment {
-  /** Role ID to assign */
-  roleId: string;
+  /** Role IDs to assign */
+  roleIds: string[];
 }
 

@@ -7,4 +7,5 @@ export { usePermission, usePermissions } from './usePermission';
 export * from './useRoles';
 export * from './useCategories';
 export * from './useUsers';
+export * from './useSort';
 

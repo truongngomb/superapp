@@ -9,6 +9,13 @@ import { NotFoundError, BadRequestError } from '../middleware/index.js';
 import type { User, UserUpdateInput, UserRoleAssignment } from '../types/index.js';
 
 // =============================================================================
+// Types
+// =============================================================================
+
+/** User with expanded role names */
+export type UserWithRoles = User & { roleNames?: string[] };
+
+// =============================================================================
 // Service Implementation
 // =============================================================================
 
@@ -25,13 +32,19 @@ class UserService extends BaseService<User> {
       ? pb.files.getUrl(record, avatarFileName)
       : undefined;
 
+    // Handle roles as array
+    const rolesRaw = record['roles'];
+    const roles: string[] = Array.isArray(rolesRaw) 
+      ? rolesRaw as string[]
+      : (rolesRaw ? [rolesRaw as string] : []);
+
     return {
       id: record['id'] as string,
       email: record['email'] as string,
       name: record['name'] as string,
       avatar: avatarUrl,
       emailVisibility: record['emailVisibility'] as boolean | undefined,
-      role: (record['role'] as string) || undefined,
+      roles,
       isActive: record['isActive'] as boolean | undefined,
       created: record['created'] as string,
       updated: record['updated'] as string,
@@ -39,9 +52,9 @@ class UserService extends BaseService<User> {
   }
 
   /**
-   * Get paginated users with role information
+   * Get paginated users with roles information
    */
-  async getUsers(options: ListOptions = {}): Promise<PaginatedResult<User & { roleName?: string }>> {
+  async getUsers(options: ListOptions = {}): Promise<PaginatedResult<UserWithRoles>> {
     const { page = 1, limit = 20, sort, order = 'asc', filter } = options;
     
     await this.ensureDbAvailable();
@@ -51,16 +64,17 @@ class UserService extends BaseService<User> {
     const result = await pb.collection(this.collectionName).getList(page, limit, {
       sort: sortStr,
       filter: filter || '',
-      expand: 'role',
+      expand: 'roles',
     });
 
     return {
       items: result.items.map((record) => {
         const user = this.mapRecord(record);
-        const expandedRole = record.expand?.['role'] as Record<string, unknown> | undefined;
+        const expandedRoles = record.expand?.['roles'] as Record<string, unknown>[] | undefined;
+        const roleNames = expandedRoles?.map(r => r['name'] as string) || [];
         return {
           ...user,
-          roleName: expandedRole?.['name'] as string | undefined,
+          roleNames,
         };
       }),
       page: result.page,
@@ -71,22 +85,23 @@ class UserService extends BaseService<User> {
   }
 
   /**
-   * Get user by ID with expanded role information
+   * Get user by ID with expanded roles information
    */
-  async getUserWithRole(id: string): Promise<User & { roleName?: string }> {
+  async getUserWithRoles(id: string): Promise<UserWithRoles> {
     await this.ensureDbAvailable();
 
     try {
       const record = await pb.collection(this.collectionName).getOne(id, {
-        expand: 'role',
+        expand: 'roles',
       });
 
       const user = this.mapRecord(record);
-      const expandedRole = record.expand?.['role'] as Record<string, unknown> | undefined;
+      const expandedRoles = record.expand?.['roles'] as Record<string, unknown>[] | undefined;
+      const roleNames = expandedRoles?.map(r => r['name'] as string) || [];
 
       return {
         ...user,
-        roleName: expandedRole?.['name'] as string | undefined,
+        roleNames,
       };
     } catch {
       throw new NotFoundError(`User with id '${id}' not found`);
@@ -101,32 +116,33 @@ class UserService extends BaseService<User> {
   }
 
   /**
-   * Assign role to user
+   * Assign roles to user (replaces all existing roles)
    */
-  async assignRole(userId: string, assignment: UserRoleAssignment): Promise<User> {
+  async assignRoles(userId: string, assignment: UserRoleAssignment): Promise<User> {
     await this.ensureDbAvailable();
 
-    // Validate roleId is a valid string
-    if (!assignment.roleId || typeof assignment.roleId !== 'string') {
-      throw new BadRequestError('Role ID is required and must be a string');
-    }
-    const roleId = assignment.roleId; // Now TypeScript knows this is definitely string
-
-    // Verify role exists
-    try {
-      await pb.collection(Collections.ROLES).getOne(roleId);
-    } catch {
-      throw new BadRequestError(`Role with id '${assignment.roleId}' not found`);
+    // Validate roleIds
+    if (assignment.roleIds.length === 0) {
+      throw new BadRequestError('At least one role ID is required');
     }
 
-    // Update user's role
+    // Verify all roles exist
+    for (const roleId of assignment.roleIds) {
+      try {
+        await pb.collection(Collections.ROLES).getOne(roleId);
+      } catch {
+        throw new BadRequestError(`Role with id '${roleId}' not found`);
+      }
+    }
+
+    // Update user's roles
     try {
       const record = await pb.collection(this.collectionName).update(userId, {
-        role: assignment.roleId,
+        roles: assignment.roleIds,
       });
       this.invalidateCache();
 
-      this.log.info('Role assigned to user', { userId, roleId: assignment.roleId });
+      this.log.info('Roles assigned to user', { userId, roleIds: assignment.roleIds });
       return this.mapRecord(record);
     } catch {
       throw new NotFoundError(`User with id '${userId}' not found`);
@@ -134,18 +150,82 @@ class UserService extends BaseService<User> {
   }
 
   /**
-   * Remove role from user
+   * Add a role to user (keeps existing roles)
    */
-  async removeRole(userId: string): Promise<User> {
+  async addRole(userId: string, roleId: string): Promise<User> {
+    await this.ensureDbAvailable();
+
+    // Verify role exists
+    try {
+      await pb.collection(Collections.ROLES).getOne(roleId);
+    } catch {
+      throw new BadRequestError(`Role with id '${roleId}' not found`);
+    }
+
+    // Get current user
+    const currentUser = await this.getById(userId);
+    const currentRoles = currentUser.roles || [];
+
+    // Check if role already assigned
+    if (currentRoles.includes(roleId)) {
+      return currentUser; // Already has role, no change needed
+    }
+
+    // Add new role
+    const newRoles = [...currentRoles, roleId];
+
+    try {
+      const record = await pb.collection(this.collectionName).update(userId, {
+        roles: newRoles,
+      });
+      this.invalidateCache();
+
+      this.log.info('Role added to user', { userId, roleId });
+      return this.mapRecord(record);
+    } catch {
+      throw new NotFoundError(`User with id '${userId}' not found`);
+    }
+  }
+
+  /**
+   * Remove a specific role from user
+   */
+  async removeRole(userId: string, roleId: string): Promise<User> {
+    await this.ensureDbAvailable();
+
+    // Get current user
+    const currentUser = await this.getById(userId);
+    const currentRoles = currentUser.roles || [];
+
+    // Remove the role
+    const newRoles = currentRoles.filter(id => id !== roleId);
+
+    try {
+      const record = await pb.collection(this.collectionName).update(userId, {
+        roles: newRoles,
+      });
+      this.invalidateCache();
+
+      this.log.info('Role removed from user', { userId, roleId });
+      return this.mapRecord(record);
+    } catch {
+      throw new NotFoundError(`User with id '${userId}' not found`);
+    }
+  }
+
+  /**
+   * Remove all roles from user
+   */
+  async removeAllRoles(userId: string): Promise<User> {
     await this.ensureDbAvailable();
 
     try {
       const record = await pb.collection(this.collectionName).update(userId, {
-        role: null,
+        roles: [],
       });
       this.invalidateCache();
 
-      this.log.info('Role removed from user', { userId });
+      this.log.info('All roles removed from user', { userId });
       return this.mapRecord(record);
     } catch {
       throw new NotFoundError(`User with id '${userId}' not found`);
@@ -159,7 +239,7 @@ class UserService extends BaseService<User> {
     await this.ensureDbAvailable();
 
     const records = await pb.collection(this.collectionName).getFullList({
-      filter: `role = "${roleId}"`,
+      filter: `roles ~ "${roleId}"`,
     });
 
     return records.map((r) => this.mapRecord(r));

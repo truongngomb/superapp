@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { Users, Search, RefreshCw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Button, Card, CardContent, Input, LoadingSpinner, ConfirmModal } from '@/components/common';
-import { useUsers, useRoles } from '@/hooks';
+import { Button, Card, CardContent, Input, LoadingSpinner, ConfirmModal, SortBar } from '@/components/common';
+import { useUsers, useRoles, useSort } from '@/hooks';
 import type { User } from '@/services/user.service';
 import { cn } from '@/utils';
 import { UserRow } from './components/UserRow';
@@ -25,8 +25,7 @@ export default function UsersPage() {
     fetchUsers,
     updateUser,
     deleteUser,
-    assignRole,
-    removeRole,
+    assignRoles,
   } = useUsers();
 
   const { roles, fetchRoles } = useRoles();
@@ -36,18 +35,64 @@ export default function UsersPage() {
   const [assigningUser, setAssigningUser] = useState<User | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
+  // Sorting state
+  const { sortConfig, handleSort } = useSort('created', 'desc');
+
+  // Sortable columns configuration
+  const sortColumns: Array<{ field: string; label: string }> = [
+    { field: 'name', label: 'Name' },
+    { field: 'email', label: 'Email' },
+    { field: 'isActive', label: 'Status' },
+    { field: 'created', label: 'Created' },
+    { field: 'updated', label: 'Updated' },
+  ];
+
   useEffect(() => {
     void fetchUsers({ limit: 100 });
     void fetchRoles();
   }, [fetchUsers, fetchRoles]);
 
-  // Filter users by search query
-  const filteredUsers = users.filter(
-    (user) =>
-      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (user.roleName?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false)
-  );
+  // Filter and sort users
+  const filteredUsers = useMemo(() => {
+    let result = users.filter(
+      (user) =>
+        user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (user.roleNames?.some(name => name.toLowerCase().includes(searchQuery.toLowerCase())) ?? false)
+    );
+
+    // Sort
+    if (sortConfig.field && sortConfig.order) {
+      result = [...result].sort((a, b) => {
+        const field = sortConfig.field as keyof User;
+        const aValue = a[field];
+        const bValue = b[field];
+
+        // Handle different types
+        if (typeof aValue === 'string' && typeof bValue === 'string') {
+          return sortConfig.order === 'asc' 
+            ? aValue.localeCompare(bValue)
+            : bValue.localeCompare(aValue);
+        }
+        if (typeof aValue === 'boolean' && typeof bValue === 'boolean') {
+          const aNum = aValue ? 1 : 0;
+          const bNum = bValue ? 1 : 0;
+          return sortConfig.order === 'asc' ? aNum - bNum : bNum - aNum;
+        }
+        // For primitive types only, skip objects/arrays
+        if (typeof aValue === 'object' || typeof bValue === 'object') {
+          return 0;
+        }
+        const aStr = aValue != null ? String(aValue) : '';
+        const bStr = bValue != null ? String(bValue) : '';
+        return sortConfig.order === 'asc' 
+          ? aStr.localeCompare(bStr)
+          : bStr.localeCompare(aStr);
+      });
+    }
+
+    return result;
+  }, [users, searchQuery, sortConfig]);
 
   // Handle edit user submit
   const handleEditSubmit = async (data: { name: string; isActive?: boolean }) => {
@@ -58,19 +103,10 @@ export default function UsersPage() {
     }
   };
 
-  // Handle assign role
-  const handleAssignRole = async (roleId: string) => {
+  // Handle assign roles
+  const handleAssignRoles = async (roleIds: string[]) => {
     if (!assigningUser) return;
-    const success = await assignRole(assigningUser.id, roleId);
-    if (success) {
-      setAssigningUser(null);
-    }
-  };
-
-  // Handle remove role
-  const handleRemoveRole = async () => {
-    if (!assigningUser) return;
-    const success = await removeRole(assigningUser.id);
+    const success = await assignRoles(assigningUser.id, roleIds);
     if (success) {
       setAssigningUser(null);
     }
@@ -97,7 +133,7 @@ export default function UsersPage() {
       </div>
 
       {/* Search and filters */}
-      <div className="flex gap-3 mb-6">
+      <div className="flex gap-3 mb-4">
         <div className="flex-1 relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" />
           <Input
@@ -118,6 +154,13 @@ export default function UsersPage() {
           <RefreshCw className={cn("w-5 h-5", loading && "animate-spin")} />
         </Button>
       </div>
+
+      {/* Sort Bar */}
+      <SortBar
+        columns={sortColumns}
+        currentSort={sortConfig}
+        onSort={handleSort}
+      />
 
       {/* Users list */}
       {loading ? (
@@ -179,11 +222,8 @@ export default function UsersPage() {
             isOpen={!!assigningUser}
             user={assigningUser}
             roles={roles}
-            onAssign={(roleId) => {
-              void handleAssignRole(roleId);
-            }}
-            onRemove={() => {
-              void handleRemoveRole();
+            onAssign={(roleIds) => {
+              void handleAssignRoles(roleIds);
             }}
             onClose={() => {
               setAssigningUser(null);

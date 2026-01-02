@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Shield } from 'lucide-react';
+import { Shield, X } from 'lucide-react';
 import { Button, Modal, Badge } from '@/components/common';
 import type { User } from '@/services/user.service';
 import type { Role } from '@/types';
@@ -9,8 +9,7 @@ interface RoleSelectModalProps {
   isOpen: boolean;
   user: User | null;
   roles: Role[];
-  onAssign: (roleId: string) => void;
-  onRemove: () => void;
+  onAssign: (roleIds: string[]) => void;
   onClose: () => void;
   loading?: boolean;
 }
@@ -20,27 +19,50 @@ export function RoleSelectModal({
   user,
   roles,
   onAssign,
-  onRemove,
   onClose,
   loading,
 }: RoleSelectModalProps) {
   const { t } = useTranslation(['users', 'common']);
-  const [selectedRoleId, setSelectedRoleId] = useState<string>('');
+  const [selectedRoleIds, setSelectedRoleIds] = useState<string[]>([]);
 
   useEffect(() => {
     if (isOpen && user) {
-      setSelectedRoleId(user.role || '');
+      setSelectedRoleIds(user.roles || []);
     }
   }, [user, isOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (selectedRoleId) {
-      onAssign(selectedRoleId);
-    }
+    onAssign(selectedRoleIds);
+  };
+
+  const toggleRole = (roleId: string) => {
+    setSelectedRoleIds(prev => 
+      prev.includes(roleId)
+        ? prev.filter(id => id !== roleId)
+        : [...prev, roleId]
+    );
+  };
+
+  const removeRole = (roleId: string) => {
+    setSelectedRoleIds(prev => prev.filter(id => id !== roleId));
+  };
+
+  // Check if selection changed from original
+  const hasChanges = () => {
+    const originalRoles = user?.roles || [];
+    if (originalRoles.length !== selectedRoleIds.length) return true;
+    return !originalRoles.every(id => selectedRoleIds.includes(id));
   };
 
   if (!user) return null;
+
+  // Get role names for selected IDs
+  const getSelectedRoleNames = () => {
+    return selectedRoleIds
+      .map(id => roles.find(r => r.id === id)?.name)
+      .filter(Boolean) as string[];
+  };
 
   return (
     <Modal
@@ -56,7 +78,7 @@ export function RoleSelectModal({
             type="submit"
             form="role-select-form"
             loading={loading}
-            disabled={!selectedRoleId || selectedRoleId === user.role}
+            disabled={!hasChanges()}
             className="flex-1"
           >
             {t('common:save')}
@@ -86,30 +108,38 @@ export function RoleSelectModal({
           </div>
         </div>
 
-        {/* Current Role */}
-        {user.roleName && (
-          <div className="p-3 rounded-lg bg-surface flex items-center justify-between">
-            <div className="flex items-center gap-2">
+        {/* Selected Roles Display */}
+        {selectedRoleIds.length > 0 && (
+          <div className="p-3 rounded-lg bg-surface">
+            <div className="flex items-center gap-2 mb-2">
               <Shield className="w-4 h-4 text-primary" />
-              <span className="text-sm">{t('users:role_label')}: </span>
-              <Badge variant="secondary">{user.roleName}</Badge>
+              <span className="text-sm font-medium">{t('users:roles_label')}: </span>
             </div>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={onRemove}
-              disabled={loading}
-            >
-              {t('common:delete')}
-            </Button>
+            <div className="flex flex-wrap gap-2">
+              {getSelectedRoleNames().map((name, i) => (
+                <Badge key={i} variant="secondary" className="flex items-center gap-1">
+                  {name}
+                  <button
+                    type="button"
+                    onClick={() => { 
+                      const roleId = selectedRoleIds[i];
+                      if (roleId) removeRole(roleId); 
+                    }}
+                    className="ml-1 p-0.5 hover:bg-black/10 dark:hover:bg-white/10 rounded"
+                    aria-label={t('common:delete')}
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </Badge>
+              ))}
+            </div>
           </div>
         )}
 
         {/* Role Selection */}
         <div>
           <label className="block text-sm font-medium text-foreground mb-2">
-            {t('users:select_role')}
+            {t('users:select_roles')}
           </label>
           <div className="space-y-2 max-h-60 overflow-y-auto">
             {roles.length === 0 ? (
@@ -117,34 +147,40 @@ export function RoleSelectModal({
                 {t('users:empty')}
               </p>
             ) : (
-              roles.map((role) => (
-                <label
-                  key={role.id}
-                  className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors
-                    ${selectedRoleId === role.id
-                      ? 'border-primary bg-primary/5'
-                      : 'border-border hover:bg-surface'
-                    }`}
-                >
-                  <input
-                    type="radio"
-                    name="role"
-                    value={role.id}
-                    checked={selectedRoleId === role.id}
-                    onChange={(e) => { setSelectedRoleId(e.target.value); }}
-                    className="accent-primary"
-                  />
-                  <div className="flex-1">
-                    <p className="font-medium text-foreground">{role.name}</p>
-                    {role.description && (
-                      <p className="text-sm text-muted">{role.description}</p>
-                    )}
-                  </div>
-                </label>
-              ))
+              roles.map((role) => {
+                const isSelected = selectedRoleIds.includes(role.id);
+                return (
+                  <label
+                    key={role.id}
+                    className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors
+                      ${isSelected
+                        ? 'border-primary bg-primary/5'
+                        : 'border-border hover:bg-surface'
+                      }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={isSelected}
+                      onChange={() => { toggleRole(role.id); }}
+                      className="accent-primary w-4 h-4"
+                    />
+                    <div className="flex-1">
+                      <p className="font-medium text-foreground">{role.name}</p>
+                      {role.description && (
+                        <p className="text-sm text-muted">{role.description}</p>
+                      )}
+                    </div>
+                  </label>
+                );
+              })
             )}
           </div>
         </div>
+
+        {/* Selection count */}
+        <p className="text-sm text-muted text-center">
+          {t('users:roles_selected', { count: selectedRoleIds.length })}
+        </p>
       </form>
     </Modal>
   );

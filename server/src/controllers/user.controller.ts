@@ -29,10 +29,10 @@ export const getAll = async (req: Request, res: Response) => {
 };
 
 /**
- * GET /users/:id - Get user by ID with role info
+ * GET /users/:id - Get user by ID with roles info
  */
 export const getById = async (req: Request, res: Response) => {
-  const user = await userService.getUserWithRole(req.params['id'] as string);
+  const user = await userService.getUserWithRoles(req.params['id'] as string);
   res.json({ success: true, data: user });
 };
 
@@ -57,10 +57,10 @@ export const remove = async (req: Request, res: Response) => {
 };
 
 /**
- * PUT /users/:id/role - Assign role to user
+ * PUT /users/:id/roles - Assign roles to user (replaces all)
  */
-export const assignRole = async (req: Request, res: Response) => {
-  const user = await userService.assignRole(
+export const assignRoles = async (req: Request, res: Response) => {
+  const user = await userService.assignRoles(
     req.params['id'] as string,
     req.body as UserRoleAssignment
   );
@@ -68,10 +68,32 @@ export const assignRole = async (req: Request, res: Response) => {
 };
 
 /**
- * DELETE /users/:id/role - Remove role from user
+ * POST /users/:id/roles/:roleId - Add a role to user
+ */
+export const addRole = async (req: Request, res: Response) => {
+  const user = await userService.addRole(
+    req.params['id'] as string,
+    req.params['roleId'] as string
+  );
+  res.json({ success: true, data: user });
+};
+
+/**
+ * DELETE /users/:id/roles/:roleId - Remove a specific role from user
  */
 export const removeRole = async (req: Request, res: Response) => {
-  const user = await userService.removeRole(req.params['id'] as string);
+  const user = await userService.removeRole(
+    req.params['id'] as string,
+    req.params['roleId'] as string
+  );
+  res.json({ success: true, data: user });
+};
+
+/**
+ * DELETE /users/:id/roles - Remove all roles from user
+ */
+export const removeAllRoles = async (req: Request, res: Response) => {
+  const user = await userService.removeAllRoles(req.params['id'] as string);
   res.json({ success: true, data: user });
 };
 
@@ -86,7 +108,7 @@ export const getMe = async (req: Request, res: Response) => {
     return;
   }
   
-  const user = await userService.getUserWithRole(userId);
+  const user = await userService.getUserWithRoles(userId);
   res.json({ success: true, data: user });
 };
 

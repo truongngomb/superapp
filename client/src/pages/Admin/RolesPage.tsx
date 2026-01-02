@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { Plus, Shield, Search, RefreshCw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Button, Card, CardContent, Input, LoadingSpinner, ConfirmModal } from '@/components/common';
+import { Button, Card, CardContent, Input, LoadingSpinner, ConfirmModal, SortBar } from '@/components/common';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
 import type { Role, CreateRoleInput } from '@/types';
 import { cn } from '@/utils';
-import { useRoles } from '@/hooks';
+import { useRoles, useSort } from '@/hooks';
 import { RoleForm } from './components/RoleForm';
 import { RoleRow } from './components/RoleRow';
 
@@ -34,16 +34,61 @@ export default function RolesPage() {
   const [showForm, setShowForm] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
+  // Sorting state
+  const { sortConfig, handleSort } = useSort('created', 'desc');
+
+  // Sortable columns configuration
+  const sortColumns: Array<{ field: string; label: string }> = [
+    { field: 'name', label: 'Name' },
+    { field: 'isActive', label: 'Status' },
+    { field: 'created', label: 'Created' },
+    { field: 'updated', label: 'Updated' },
+  ];
+
   useEffect(() => {
     void fetchRoles();
   }, [fetchRoles]);
 
-  // Filter roles by search query
-  const filteredRoles = roles.filter(
-    (role) =>
-      role.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (role.description?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false)
-  );
+  // Filter and sort roles
+  const filteredRoles = useMemo(() => {
+    let result = roles.filter(
+      (role) =>
+        role.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (role.description?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false)
+    );
+
+    // Sort
+    if (sortConfig.field && sortConfig.order) {
+      result = [...result].sort((a, b) => {
+        const field = sortConfig.field as keyof Role;
+        const aValue = a[field];
+        const bValue = b[field];
+
+        // Handle different types
+        if (typeof aValue === 'string' && typeof bValue === 'string') {
+          return sortConfig.order === 'asc' 
+            ? aValue.localeCompare(bValue)
+            : bValue.localeCompare(aValue);
+        }
+        if (typeof aValue === 'boolean' && typeof bValue === 'boolean') {
+          const aNum = aValue ? 1 : 0;
+          const bNum = bValue ? 1 : 0;
+          return sortConfig.order === 'asc' ? aNum - bNum : bNum - aNum;
+        }
+        // For primitive types only, skip objects/arrays
+        if (typeof aValue === 'object' || typeof bValue === 'object') {
+          return 0;
+        }
+        const aStr = aValue != null ? String(aValue) : '';
+        const bStr = bValue != null ? String(bValue) : '';
+        return sortConfig.order === 'asc' 
+          ? aStr.localeCompare(bStr)
+          : bStr.localeCompare(aStr);
+      });
+    }
+
+    return result;
+  }, [roles, searchQuery, sortConfig]);
 
   // Handle form submit
   const handleSubmit = async (data: CreateRoleInput) => {
@@ -97,7 +142,7 @@ export default function RolesPage() {
       </div>
 
       {/* Search and filters */}
-      <div className="flex gap-3 mb-6">
+      <div className="flex gap-3 mb-4">
         <div className="flex-1 relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" />
           <Input
@@ -118,6 +163,13 @@ export default function RolesPage() {
           <RefreshCw className={cn("w-5 h-5", loading && "animate-spin")} />
         </Button>
       </div>
+
+      {/* Sort Bar */}
+      <SortBar
+        columns={sortColumns}
+        currentSort={sortConfig}
+        onSort={handleSort}
+      />
 
       {/* Roles list */}
       {loading ? (

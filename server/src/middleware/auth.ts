@@ -70,7 +70,7 @@ export const authenticate = async (
     req.user = {
       id: model.id,
       email: model.email,
-      role: model.role,
+      roles: model.roles,
       permissions,
     };
   } catch (error) {

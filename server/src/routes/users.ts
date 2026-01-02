@@ -63,17 +63,35 @@ usersRouter.delete(
   asyncHandler(userController.remove)
 );
 
-/** PUT /users/:id/role - Assign role to user */
+// =============================================================================
+// Role Assignment Routes (Multi-role support)
+// =============================================================================
+
+/** PUT /users/:id/roles - Assign roles to user (replaces all) */
 usersRouter.put(
-  '/:id/role',
+  '/:id/roles',
   requirePermission(Resources.USERS, Actions.UPDATE),
   validateBody(UserRoleAssignmentSchema),
-  asyncHandler(userController.assignRole)
+  asyncHandler(userController.assignRoles)
 );
 
-/** DELETE /users/:id/role - Remove role from user */
+/** POST /users/:id/roles/:roleId - Add a single role to user */
+usersRouter.post(
+  '/:id/roles/:roleId',
+  requirePermission(Resources.USERS, Actions.UPDATE),
+  asyncHandler(userController.addRole)
+);
+
+/** DELETE /users/:id/roles/:roleId - Remove a specific role from user */
 usersRouter.delete(
-  '/:id/role',
+  '/:id/roles/:roleId',
   requirePermission(Resources.USERS, Actions.UPDATE),
   asyncHandler(userController.removeRole)
+);
+
+/** DELETE /users/:id/roles - Remove all roles from user */
+usersRouter.delete(
+  '/:id/roles',
+  requirePermission(Resources.USERS, Actions.UPDATE),
+  asyncHandler(userController.removeAllRoles)
 );

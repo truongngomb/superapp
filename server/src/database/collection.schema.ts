@@ -366,10 +366,12 @@ export function fileField(name: string, options?: Partial<Omit<FileField, 'name'
 
 /**
  * Create an autodate field definition
+ * Default: onCreate only (for 'created' field behavior)
+ * Use { onCreate: true, onUpdate: true } for 'updated' field
  */
 export function autodateField(
   name: string, 
-  options: { onCreate?: boolean; onUpdate?: boolean } = { onCreate: true, onUpdate: true }
+  options: { onCreate?: boolean; onUpdate?: boolean } = { onCreate: true, onUpdate: false }
 ): AutodateField {
   return { name, type: 'autodate', ...options };
 }

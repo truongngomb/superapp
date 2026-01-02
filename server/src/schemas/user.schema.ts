@@ -22,10 +22,10 @@ export const UserUpdateSchema = z.object({
 });
 
 /**
- * Schema for assigning a role to user
+ * Schema for assigning roles to user
  */
 export const UserRoleAssignmentSchema = z.object({
-  roleId: z.string().min(1, 'Role ID is required'),
+  roleIds: z.array(z.string().min(1, 'Role ID is required')).min(1, 'At least one role is required'),
 });
 
 // =============================================================================

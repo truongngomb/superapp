@@ -16,17 +16,17 @@ export const rolesCollection: BaseCollectionSchema = {
     textField('description', { min: 0, max: 0 }),
     jsonField('permissions'),
     boolField('isActive'),
-    autodateField('created'),
-    autodateField('updated'),
+    autodateField('created', { onCreate: true, onUpdate: true }),
+    autodateField('updated', { onCreate: true, onUpdate: true }),
   ],
 
   indexes: [
     'CREATE UNIQUE INDEX `idx_YFklELIcJE` ON `roles` (`name`)',
   ],
 
-  listRule: '@request.auth.role.name = "Admin"',
+  listRule: '@request.auth.roles.name ?= "Admin"',
   viewRule: '@request.auth.id != ""',
-  createRule: '@request.auth.role.name = "Admin"',
-  updateRule: '@request.auth.role.name = "Admin"',
-  deleteRule: '@request.auth.role.name = "Admin"',
+  createRule: '@request.auth.roles.name ?= "Admin"',
+  updateRule: '@request.auth.roles.name ?= "Admin"',
+  deleteRule: '@request.auth.roles.name ?= "Admin"',
 };

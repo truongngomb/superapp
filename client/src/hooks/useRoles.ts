@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { roleService } from '@/services';
 import { useToast } from '@/context';
@@ -13,8 +13,14 @@ export function useRoles() {
   const [deleting, setDeleting] = useState(false);
   const toast = useToast();
   const { t } = useTranslation('roles');
+  
+  // Use ref to avoid infinite loop when reloading
+  const isReloading = useRef(false);
 
   const fetchRoles = useCallback(async () => {
+    // Skip if already reloading (prevent loop)
+    if (isReloading.current) return;
+    
     setLoading(true);
     try {
       const data = await roleService.getAll();
@@ -27,24 +33,26 @@ export function useRoles() {
     }
   }, [toast, t]);
 
+  // Silent reload without setting loading state
+  const reloadRoles = async () => {
+    try {
+      isReloading.current = true;
+      const data = await roleService.getAll();
+      setRoles(data);
+    } catch (error) {
+      logger.warn('useRoles', 'Failed to reload roles:', error);
+    } finally {
+      isReloading.current = false;
+    }
+  };
+
   const createRole = async (data: CreateRoleInput) => {
     setSubmitting(true);
     try {
-      // Optimistic update fallback or direct API call
-      const newRole: Role = {
-        id: crypto.randomUUID(),
-        ...data,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-
-      try {
-        const result = await roleService.create(data);
-        setRoles((prev) => [...prev, result]);
-      } catch {
-        setRoles((prev) => [...prev, newRole]);
-      }
+      await roleService.create(data);
       toast.success(t('toast.create_success'));
+      // Reload list after create
+      await reloadRoles();
       return true;
     } catch (error) {
       const message = error instanceof ApiException ? error.message : t('toast.error');
@@ -59,12 +67,9 @@ export function useRoles() {
     setSubmitting(true);
     try {
       await roleService.update(id, data);
-      setRoles((prev) =>
-        prev.map((role) =>
-          role.id === id ? { ...role, ...data, updatedAt: new Date().toISOString() } : role
-        )
-      );
       toast.success(t('toast.update_success'));
+      // Reload list after update
+      await reloadRoles();
       return true;
     } catch (error) {
       const message = error instanceof ApiException ? error.message : t('toast.error');
@@ -78,14 +83,10 @@ export function useRoles() {
   const deleteRole = async (id: string) => {
     setDeleting(true);
     try {
-      try {
-        await roleService.delete(id);
-      } catch {
-        // Continue with local delete if API fails (optimistic/fallback)
-        // Adjust logic based on strictness requirements
-      }
-      setRoles((prev) => prev.filter((role) => role.id !== id));
+      await roleService.delete(id);
       toast.success(t('toast.delete_success'));
+      // Reload list after delete
+      await reloadRoles();
       return true;
     } catch (error) {
       const message = error instanceof ApiException ? error.message : t('toast.error');
@@ -107,4 +108,3 @@ export function useRoles() {
     deleteRole,
   };
 }
-

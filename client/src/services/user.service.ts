@@ -15,8 +15,8 @@ export interface User {
   email: string;
   name: string;
   avatar?: string;
-  role?: string;
-  roleName?: string;
+  roles?: string[];
+  roleNames?: string[];
   isActive?: boolean;
   created: string;
   updated: string;
@@ -30,7 +30,7 @@ export interface UserUpdateInput {
 }
 
 export interface UserRoleAssignment {
-  roleId: string;
+  roleIds: string[];
 }
 
 export interface PaginatedUsers {
@@ -75,7 +75,7 @@ export const userService = {
   },
 
   /**
-   * Get user by ID with role info
+   * Get user by ID with roles info
    */
   async getUserById(id: string): Promise<User> {
     return api.get<User>(`${API_ENDPOINTS.USERS}/${id}`);
@@ -110,19 +110,33 @@ export const userService = {
   },
 
   /**
-   * Assign role to user
+   * Assign roles to user (replaces all existing roles)
    */
-  async assignRole(userId: string, roleId: string): Promise<User> {
+  async assignRoles(userId: string, roleIds: string[]): Promise<User> {
     return api.put<User>(
-      `${API_ENDPOINTS.USERS}/${userId}/role`,
-      { roleId } as UserRoleAssignment
+      `${API_ENDPOINTS.USERS}/${userId}/roles`,
+      { roleIds } as UserRoleAssignment
     );
   },
 
   /**
-   * Remove role from user
+   * Add a single role to user (keeps existing roles)
    */
-  async removeRole(userId: string): Promise<User> {
-    return api.delete<User>(`${API_ENDPOINTS.USERS}/${userId}/role`);
+  async addRole(userId: string, roleId: string): Promise<User> {
+    return api.post<User>(`${API_ENDPOINTS.USERS}/${userId}/roles/${roleId}`);
+  },
+
+  /**
+   * Remove a specific role from user
+   */
+  async removeRole(userId: string, roleId: string): Promise<User> {
+    return api.delete<User>(`${API_ENDPOINTS.USERS}/${userId}/roles/${roleId}`);
+  },
+
+  /**
+   * Remove all roles from user
+   */
+  async removeAllRoles(userId: string): Promise<User> {
+    return api.delete<User>(`${API_ENDPOINTS.USERS}/${userId}/roles`);
   },
 };

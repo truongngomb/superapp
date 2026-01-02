@@ -1047,8 +1047,18 @@ export class MigrationService {
           : `fileField('${field.name}')`;
       }
         
-      case 'autodate':
+      case 'autodate': {
+        const onCreate = field['onCreate'] as boolean | undefined;
+        const onUpdate = field['onUpdate'] as boolean | undefined;
+        // Only include options if they differ from default (onCreate: true, onUpdate: false)
+        if (onCreate !== undefined || onUpdate !== undefined) {
+          const autodateOpts: string[] = [];
+          if (onCreate !== undefined) autodateOpts.push(`onCreate: ${String(onCreate)}`);
+          if (onUpdate !== undefined) autodateOpts.push(`onUpdate: ${String(onUpdate)}`);
+          return `autodateField('${field.name}', { ${autodateOpts.join(', ')} })`;
+        }
         return `autodateField('${field.name}')`;
+      }
         
       default:
         // Unknown type - generate as comment

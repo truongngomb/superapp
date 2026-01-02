@@ -85,14 +85,16 @@ export abstract class BaseService<T extends BaseEntity> {
   // ===========================================================================
 
   /**
-   * Get all records (cached)
+   * Get all records (cached), sorted by created date descending
    */
   async getAll(): Promise<T[]> {
     return getOrSet(
       this.cacheKey,
       async () => {
         await this.ensureDbAvailable();
-        const records = await pb.collection(this.collectionName).getFullList();
+        const records = await pb.collection(this.collectionName).getFullList({
+          sort: '-created', // Default sort by newest first
+        });
         return records.map((r) => this.mapRecord(r));
       },
       this.cacheTtl
