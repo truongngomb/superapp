@@ -37,5 +37,8 @@
   },
   "users": "Users",
   "roles": "Roles",
-  "dashboard": "Overview"
+  "activity_logs": "Activity Logs",
+  "dashboard": "Overview",
+  "refresh": "Refresh",
+  "no_data": "No data found"
 }

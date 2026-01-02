@@ -34,5 +34,8 @@
   },
   "users": "Người dùng",
   "roles": "Vai trò",
-  "dashboard": "Tổng quan"
+  "activity_logs": "Nhật ký hoạt động",
+  "dashboard": "Tổng quan",
+  "refresh": "Làm mới",
+  "no_data": "Không có dữ liệu"
 }

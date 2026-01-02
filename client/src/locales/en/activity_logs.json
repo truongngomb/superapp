@@ -1,0 +1,11 @@
+{
+  "title": "Activity Logs",
+  "description": "View and audit system activities",
+  "table": {
+    "user": "User",
+    "action": "Action",
+    "resource": "Resource",
+    "details": "Details",
+    "time": "Time"
+  }
+}

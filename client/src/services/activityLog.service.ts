@@ -16,6 +16,7 @@ export const activityLogService = {
     if (params?.limit) searchParams.set('limit', String(params.limit));
     if (params?.sort) searchParams.set('sort', params.sort);
     if (params?.order) searchParams.set('order', params.order);
+    if (params?.search) searchParams.set('search', params.search);
     
     const query = searchParams.toString();
     const endpoint = query ? `/activity-logs?${query}` : '/activity-logs';

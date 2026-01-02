@@ -16,12 +16,21 @@ router.get('/', authenticate, requirePermission(Resources.ROLES, Actions.VIEW), 
   const limit = req.query['limit'] ? Number(req.query['limit']) : undefined;
   const sort = req.query['sort'] as string | undefined;
   const order = req.query['order'] as 'asc' | 'desc' | undefined;
+  const search = req.query['search'] as string | undefined;
+
+  let filter = '';
+  if (search) {
+    // Filter by message, resource, or user name
+    // Note: PocketBase filter syntax
+    filter = `message ~ "${search}" || resource ~ "${search}" || action ~ "${search}"`;
+  }
   
   const result = await activityLogService.getPage({
     page,
     limit,
     sort,
     order,
+    filter,
   });
   
   res.json({ success: true, data: result });

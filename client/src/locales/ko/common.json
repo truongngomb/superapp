@@ -34,5 +34,8 @@
   },
   "users": "사용자",
   "roles": "역할",
-  "dashboard": "개요"
+  "activity_logs": "활동 로그",
+  "dashboard": "개요",
+  "refresh": "새로 고침",
+  "no_data": "데이터 없음"
 }

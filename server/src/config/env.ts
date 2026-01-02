@@ -50,6 +50,12 @@ const envSchema = z.object({
     .string()
     .min(8, 'POCKETBASE_ADMIN_PASSWORD must be at least 8 characters')
     .optional(),
+  
+  // Pagination
+  ITEMS_PER_PAGE: z
+    .string()
+    .default('20')
+    .transform((val) => parseInt(val, 10)),
 });
 
 // =============================================================================
@@ -118,6 +124,9 @@ export const config = {
   
   /** Helper to check if running in development */
   isDevelopment: env.NODE_ENV === 'development',
+
+  /** Default items per page */
+  itemsPerPage: env.ITEMS_PER_PAGE,
 } as const;
 
 // =============================================================================

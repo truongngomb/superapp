@@ -4,7 +4,7 @@
  * Abstract base class for PocketBase collection services.
  * Provides CRUD operations with caching and error handling.
  */
-import { pb, getOrSet, invalidate, checkPocketBaseHealth } from '../config/index.js';
+import { pb, getOrSet, invalidate, checkPocketBaseHealth, config } from '../config/index.js';
 import { NotFoundError, ServiceUnavailableError } from '../middleware/index.js';
 import { createLogger } from '../utils/index.js';
 import type { BaseEntity } from '../types/index.js';
@@ -107,7 +107,7 @@ export abstract class BaseService<T extends BaseEntity> {
    * Get paginated records
    */
   async getPage(options: ListOptions = {}): Promise<PaginatedResult<T>> {
-    const { page = 1, limit = 20, sort, order = 'asc', filter } = options;
+    const { page = 1, limit = config.itemsPerPage, sort, order = 'asc', filter } = options;
     
     await this.ensureDbAvailable();
     

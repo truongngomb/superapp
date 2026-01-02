@@ -18,6 +18,7 @@ export { Modal } from './Modal';
 export { Badge } from './Badge';
 export { DataRow } from './DataRow';
 export { SortBar } from './SortableHeader';
+export { Pagination } from './Pagination';
 
 // Permission Components
 export { PermissionGuard } from './PermissionGuard';

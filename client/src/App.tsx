@@ -26,6 +26,7 @@ const RolesPage = lazy(() => import('@/pages/Admin/RolesPage'));
 const UsersPage = lazy(() => import('@/pages/Admin/UsersPage'));
 const AdminDashboard = lazy(() => import('@/pages/Admin/AdminDashboard'));
 const AdminLayout = lazy(() => import('@/pages/Admin/AdminLayout'));
+const ActivityLogsPage = lazy(() => import('@/pages/Admin/ActivityLogsPage'));
 
 // ============================================================================
 // Fallback Components
@@ -145,6 +146,19 @@ export function App() {
                       >
                         <Suspense fallback={<PageLoader />}>
                           <RolesPage />
+                        </Suspense>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="activity-logs"
+                    element={
+                      <ProtectedRoute 
+                        resource={PermissionResource.Roles} 
+                        action={PermissionAction.Read}
+                      >
+                        <Suspense fallback={<PageLoader />}>
+                          <ActivityLogsPage />
                         </Suspense>
                       </ProtectedRoute>
                     }

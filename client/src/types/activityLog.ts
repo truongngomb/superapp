@@ -36,4 +36,5 @@ export interface ActivityLogParams {
   limit?: number;
   sort?: string;
   order?: 'asc' | 'desc';
+  search?: string;
 }
