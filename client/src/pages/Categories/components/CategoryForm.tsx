@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Input, Modal } from '@/components/common';
+import { Button, Input, Modal, Toggle } from '@/components/common';
 import type { Category, CategoryInput } from '@/types';
 
 interface CategoryFormProps {
@@ -87,27 +87,12 @@ export function CategoryForm({ isOpen, category, onSubmit, onClose, loading }: C
           />
         </div>
         {/* Active Status Toggle */}
-        <div className="flex items-center justify-between p-3 bg-surface rounded-lg">
-          <div>
-            <label className="font-medium text-foreground">{t('common:active')}</label>
-            <p className="text-sm text-muted">{t('categories:form.active_description')}</p>
-          </div>
-          <button
-            type="button"
-            role="switch"
-            aria-checked={formData.isActive}
-            onClick={() => { setFormData({ ...formData, isActive: !formData.isActive }); }}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-              formData.isActive ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'
-            }`}
-          >
-            <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                formData.isActive ? 'translate-x-6' : 'translate-x-1'
-              }`}
-            />
-          </button>
-        </div>
+        <Toggle
+          checked={formData.isActive ?? true}
+          onChange={(checked) => { setFormData({ ...formData, isActive: checked }); }}
+          label={t('common:active')}
+          description={t('categories:form.active_description')}
+        />
       </form>
     </Modal>
   );

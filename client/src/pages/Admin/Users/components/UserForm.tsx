@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Input, Modal } from '@/components/common';
+import { Button, Input, Modal, Toggle } from '@/components/common';
 import type { User } from '@/services/user.service';
 
 interface UserFormProps {
@@ -78,27 +78,12 @@ export function UserForm({ user, onSubmit, onClose, loading, isOpen }: UserFormP
         />
 
         {/* Active Status Toggle */}
-        <div className="flex items-center justify-between p-3 bg-surface rounded-lg">
-          <div>
-            <label className="font-medium text-foreground">{t('common:active')}</label>
-            <p className="text-sm text-muted">{t('users:active_description')}</p>
-          </div>
-          <button
-            type="button"
-            role="switch"
-            aria-checked={isActive}
-            onClick={() => { setIsActive(!isActive); }}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-              isActive ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'
-            }`}
-          >
-            <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                isActive ? 'translate-x-6' : 'translate-x-1'
-              }`}
-            />
-          </button>
-        </div>
+        <Toggle
+          checked={isActive}
+          onChange={(checked) => { setIsActive(checked); }}
+          label={t('common:active')}
+          description={t('users:active_description')}
+        />
       </form>
     </Modal>
   );
