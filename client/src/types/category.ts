@@ -55,10 +55,24 @@ export type CategoryInput = CreateCategoryInput;
 // ============================================================================
 
 /**
- * Category filter options
+ * Category list parameters for pagination and sorting
  */
-export interface CategoryFilters {
+export interface CategoryListParams {
+  page?: number;
+  limit?: number;
+  sort?: string;
+  order?: 'asc' | 'desc';
   search?: string;
   color?: string;
   isActive?: boolean;
+}
+
+/**
+ * Paginated category response
+ */
+export interface PaginatedCategories {
+  items: Category[];
+  page: number;
+  totalPages: number;
+  total: number;
 }

@@ -12,11 +12,26 @@ import { CategoryCreateInput, CategoryUpdateInput } from '../types/index.js';
 // =============================================================================
 
 /**
- * GET /categories - Get all categories
+ * GET /categories - Get paginated categories
  */
-export const getAll = async (_req: Request, res: Response) => {
-  const categories = await categoryService.getAll();
-  res.json({ success: true, data: categories });
+export const getAll = async (req: Request, res: Response) => {
+  const { page, limit, sort, order, search, color, isActive } = req.query;
+  
+  // Build filter string for PocketBase
+  const filters: string[] = [];
+  if (typeof search === 'string') filters.push(`(name ~ "${search}" || description ~ "${search}")`);
+  if (typeof color === 'string') filters.push(`color = "${color}"`);
+  if (isActive !== undefined) filters.push(`isActive = ${isActive === 'true' ? 'true' : 'false'}`);
+  
+  const result = await categoryService.getPage({
+    page: typeof page === 'string' ? parseInt(page, 10) : undefined,
+    limit: typeof limit === 'string' ? parseInt(limit, 10) : undefined,
+    sort: sort as string,
+    order: order as 'asc' | 'desc',
+    filter: filters.length > 0 ? filters.join(' && ') : undefined
+  });
+  
+  res.json({ success: true, data: result });
 };
 
 /**

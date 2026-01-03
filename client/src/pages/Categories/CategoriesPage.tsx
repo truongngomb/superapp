@@ -1,12 +1,12 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence } from 'framer-motion';
-import { Plus, Folder, Search, RefreshCw } from 'lucide-react';
-import { Button, Card, CardContent, Input, LoadingSpinner, ConfirmModal, SortBar } from '@/components/common';
+import { Plus, Folder, Search, RefreshCw, Loader2 } from 'lucide-react';
+import { Button, Card, CardContent, Input, LoadingSpinner, ConfirmModal, SortBar, Pagination } from '@/components/common';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
 import type { Category, CategoryInput } from '@/types';
 import { cn } from '@/utils';
-import { useCategories, useSort, useDataSorting } from '@/hooks';
+import { useCategories, useSort, useDebounce } from '@/hooks';
 import { CategoryForm } from './components/CategoryForm';
 import { CategoryRow } from './components/CategoryRow';
 
@@ -25,7 +25,9 @@ export default function CategoriesPage() {
   const { t } = useTranslation(['categories', 'common']);
   const {
     categories,
+    pagination,
     loading,
+    isLoadingMore,
     submitting,
     deleting,
     fetchCategories,
@@ -35,6 +37,7 @@ export default function CategoriesPage() {
   } = useCategories();
 
   const [searchQuery, setSearchQuery] = useState('');
+  const debouncedSearchQuery = useDebounce(searchQuery, 400); // 400ms debounce
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -51,20 +54,17 @@ export default function CategoriesPage() {
   ];
 
   useEffect(() => {
-    void fetchCategories();
-  }, [fetchCategories]);
+    const params = {
+      search: debouncedSearchQuery || undefined,
+      sort: sortConfig.field,
+      order: (sortConfig.order ?? 'desc'),
+      page: 1
+    };
+    void fetchCategories(params);
+  }, [fetchCategories, debouncedSearchQuery, sortConfig]);
 
-  // Filter categories
-  const filteredCategories = useMemo(() => {
-    return categories.filter(
-      (cat) =>
-        cat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        cat.description.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [categories, searchQuery]);
-
-  // Sort categories
-  const sortedCategories = useDataSorting(filteredCategories, sortConfig);
+  // No more frontend filtering and sorting if we use backend pagination
+  const displayCategories = categories;
 
   // Handle form submit
   const handleSubmit = async (data: CategoryInput) => {
@@ -130,17 +130,21 @@ export default function CategoriesPage() {
             className="pl-10"
           />
         </div>
-        <Button variant="outline" onClick={() => void fetchCategories()}>
+        <Button variant="outline" onClick={() => { void fetchCategories(); }}>
           <RefreshCw className={cn("w-5 h-5", loading && "animate-spin")} />
         </Button>
       </div>
 
-      {/* Sort Bar */}
-      <SortBar
-        columns={sortColumns}
-        currentSort={sortConfig}
-        onSort={handleSort}
-      />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+        <SortBar
+          columns={sortColumns}
+          currentSort={sortConfig}
+          onSort={handleSort}
+        />
+        <p className="text-sm text-muted">
+          {t('common:total_items', { count: pagination.total })}
+        </p>
+      </div>
 
       {/* Categories list */}
       {loading ? (
@@ -149,7 +153,7 @@ export default function CategoriesPage() {
           text={t("common:loading")}
           className="py-20"
         />
-      ) : sortedCategories.length === 0 ? (
+      ) : displayCategories.length === 0 ? (
         <Card className="py-12 text-center">
           <CardContent>
             <Folder className="w-12 h-12 text-muted mx-auto mb-4" />
@@ -174,13 +178,13 @@ export default function CategoriesPage() {
         </Card>
       ) : (
         <div className="space-y-2">
-          {sortedCategories.map((category, index) => (
+          {displayCategories.map((category, index) => (
             <CategoryRow
               key={category.id}
               index={index}
               style={{}}
               data={{
-                categories: sortedCategories,
+                categories: displayCategories,
                 onEdit: handleEdit,
                 onDelete: (id) => {
                   setDeleteId(id);
@@ -188,6 +192,22 @@ export default function CategoriesPage() {
               }}
             />
           ))}
+          
+          {/* Pagination */}
+          {pagination.totalPages > 1 && (
+            <div className="mt-6 relative">
+              {isLoadingMore && (
+                <div className="absolute inset-0 flex items-center justify-center bg-background/50 rounded-lg z-10">
+                  <Loader2 className="w-5 h-5 animate-spin text-primary" />
+                </div>
+              )}
+              <Pagination
+                currentPage={pagination.page}
+                totalPages={pagination.totalPages}
+                onPageChange={(page) => { void fetchCategories({ page }); }}
+              />
+            </div>
+          )}
         </div>
       )}
 
@@ -197,7 +217,7 @@ export default function CategoriesPage() {
           <CategoryForm
             isOpen={showForm}
             category={editingCategory}
-            onSubmit={(data) => void handleSubmit(data)}
+            onSubmit={(data) => { void handleSubmit(data); }}
             onClose={() => {
               setShowForm(false);
               setEditingCategory(null);

@@ -4,7 +4,7 @@
  */
 
 import { api, createAbortController, API_ENDPOINTS, type RequestConfig } from '@/config';
-import type { Category, CreateCategoryInput, UpdateCategoryInput, CategoryFilters } from '@/types';
+import type { Category, CreateCategoryInput, UpdateCategoryInput, CategoryListParams, PaginatedCategories } from '@/types';
 
 // ============================================================================
 // Types
@@ -24,23 +24,51 @@ interface ServiceConfig extends Omit<RequestConfig, 'signal'> {
 export const categoryService = {
   /**
    * Get all categories
-   * @param filters Optional filters for search/color
+   * @param params Optional filters for search/color
    */
-  async getAll(filters?: CategoryFilters, config?: ServiceConfig): Promise<Category[]> {
+  async getAll(params?: CategoryListParams, config?: ServiceConfig): Promise<Category[]> {
     const { controller, clear } = createAbortController(config?.timeout ?? 10000);
     
     try {
-      // Build query params if filters provided
+      // Build query params if params provided
       let endpoint = API_ENDPOINTS.CATEGORIES;
-      if (filters) {
-        const params = new URLSearchParams();
-        if (filters.search) params.append('search', filters.search);
-        if (filters.color) params.append('color', filters.color);
-        const queryString = params.toString();
+      if (params) {
+        const queryParams = new URLSearchParams();
+        if (params.search) queryParams.append('search', params.search);
+        if (params.color) queryParams.append('color', params.color);
+        if (params.isActive !== undefined) queryParams.append('isActive', params.isActive.toString());
+        const queryString = queryParams.toString();
         if (queryString) endpoint += `?${queryString}`;
       }
       
       return await api.get<Category[]>(endpoint, {
+        signal: config?.signal ?? controller.signal,
+      });
+    } finally {
+      clear();
+    }
+  },
+
+  /**
+   * Get paginated categories
+   */
+  async getPage(params?: CategoryListParams, config?: ServiceConfig): Promise<PaginatedCategories> {
+    const { controller, clear } = createAbortController(config?.timeout ?? 10000);
+    
+    try {
+      const queryParams = new URLSearchParams();
+      if (params?.page) queryParams.append('page', params.page.toString());
+      if (params?.limit) queryParams.append('limit', params.limit.toString());
+      if (params?.sort) queryParams.append('sort', params.sort);
+      if (params?.order) queryParams.append('order', params.order);
+      if (params?.search) queryParams.append('search', params.search);
+      if (params?.color) queryParams.append('color', params.color);
+      if (params?.isActive !== undefined) queryParams.append('isActive', params.isActive.toString());
+
+      const queryString = queryParams.toString();
+      const endpoint = queryString ? `${API_ENDPOINTS.CATEGORIES}?${queryString}` : API_ENDPOINTS.CATEGORIES;
+
+      return await api.get<PaginatedCategories>(endpoint, {
         signal: config?.signal ?? controller.signal,
       });
     } finally {
