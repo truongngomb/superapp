@@ -1,5 +1,5 @@
 import { BaseService } from './base.service.js';
-import { pb, config } from '../config/index.js';
+import { adminPb, ensureAdminAuth, config } from '../config/index.js';
 import type { BaseEntity } from '../types/index.js';
 
 export interface ActivityLog extends BaseEntity {
@@ -89,11 +89,49 @@ export class ActivityLogService extends BaseService<ActivityLog> {
   }
 
   /**
+   * Sanitize log details to remove sensitive information
+   * Uses case-insensitive matching and keyword detection
+   */
+  private sanitizeDetails(details?: Record<string, unknown>): Record<string, unknown> | undefined {
+    if (!details) return undefined;
+
+    // Keywords that should trigger redaction if the field name contains them (case-insensitive)
+    const sensitiveKeywords = ['password', 'token', 'secret', 'credential', 'auth', 'cookie', 'session'];
+    // Exact field names that should be redacted
+    const sensitiveFields = ['state', 'codeVerifier', 'apiKey', 'key'];
+
+    const sanitized = JSON.parse(JSON.stringify(details)) as Record<string, unknown>;
+
+    const walk = (obj: Record<string, unknown>) => {
+      for (const key in obj) {
+        const lowerKey = key.toLowerCase();
+        const isSensitive = 
+          sensitiveFields.some(f => f.toLowerCase() === lowerKey) ||
+          sensitiveKeywords.some(kw => lowerKey.includes(kw));
+
+        if (isSensitive) {
+          obj[key] = '[REDACTED]';
+        } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+          walk(obj[key] as Record<string, unknown>);
+        }
+      }
+    };
+
+    walk(sanitized);
+    return sanitized;
+  }
+
+  /**
    * Log an activity to the database
    */
   async createLog(data: ActivityLogInput): Promise<void> {
     try {
-      await pb.collection(this.collectionName).create(data);
+      await ensureAdminAuth();
+      const sanitizedData = {
+        ...data,
+        details: this.sanitizeDetails(data.details),
+      };
+      await adminPb.collection(this.collectionName).create(sanitizedData);
       this.log.info(`Activity logged: ${data.action} on ${data.resource}`, {
         userId: data.user,
         recordId: data.recordId

@@ -28,7 +28,7 @@ export const activity_logsCollection: BaseCollectionSchema = {
 
   listRule: '@request.auth.roles.name ?= "Admin"',
   viewRule: '@request.auth.roles.name ?= "Admin"',
-  createRule: '',
-  updateRule: '',
+  createRule: null,
+  updateRule: null,
   deleteRule: null,
 };

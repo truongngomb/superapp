@@ -20,6 +20,13 @@ export const pb = new PocketBase(config.pocketbaseUrl);
 // Disable auto-cancellation for concurrent requests
 pb.autoCancellation(false);
 
+/**
+ * Dedicated PocketBase client for admin/system operations
+ * Use this for operations that bypass user-level rules
+ */
+export const adminPb = new PocketBase(config.pocketbaseUrl);
+adminPb.autoCancellation(false);
+
 // =============================================================================
 // Health Check
 // =============================================================================
@@ -52,6 +59,37 @@ export async function checkPocketBaseHealth(
     }
   }
   return false;
+}
+
+// =============================================================================
+// Admin Authentication
+// =============================================================================
+
+/**
+ * Ensure the admin PocketBase client is authenticated
+ * 
+ * @returns Promise<void>
+ */
+export async function ensureAdminAuth(): Promise<void> {
+  // Check if current token is still valid
+  if (adminPb.authStore.isValid) {
+    return;
+  }
+
+  try {
+    if (config.pocketbaseAdminEmail && config.pocketbaseAdminPassword) {
+      await adminPb.collection('_superusers').authWithPassword(
+        config.pocketbaseAdminEmail,
+        config.pocketbaseAdminPassword
+      );
+      logger.info('Database', 'Admin client authenticated successfully (as superuser)');
+    } else {
+      logger.warn('Database', 'Admin credentials not configured, system operations may fail');
+    }
+  } catch (error) {
+    logger.error('Database', 'Admin authentication failed:', error);
+    throw error;
+  }
 }
 
 // =============================================================================
