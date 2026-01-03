@@ -3,9 +3,21 @@
  * Handles user management API calls
  */
 
-import { api } from '@/config';
-import { API_ENDPOINTS } from '@/config';
+import { api, createAbortController, API_ENDPOINTS, type RequestConfig } from '@/config';
+
 import type { User, UserUpdateInput, UserRoleAssignment, PaginatedUsers, UserListParams } from '@/types';
+
+
+// ============================================================================
+// Types
+// ============================================================================
+
+interface ServiceConfig extends Omit<RequestConfig, 'signal'> {
+  /** Request timeout in ms (default: 10000) */
+  timeout?: number;
+  /** AbortSignal for cancellation */
+  signal?: AbortSignal;
+}
 
 // ============================================================================
 // Service
@@ -15,21 +27,29 @@ export const userService = {
   /**
    * Get paginated list of users
    */
-  async getUsers(params?: UserListParams): Promise<PaginatedUsers> {
-    const searchParams = new URLSearchParams();
+  async getUsers(params?: UserListParams, config?: ServiceConfig): Promise<PaginatedUsers> {
+    const { controller, clear } = createAbortController(config?.timeout ?? 10000);
     
-    if (params?.page) searchParams.set('page', String(params.page));
-    if (params?.limit) searchParams.set('limit', String(params.limit));
-    if (params?.sort) searchParams.set('sort', params.sort);
-    if (params?.order) searchParams.set('order', params.order);
-    if (params?.filter) searchParams.set('filter', params.filter);
-    
-    const query = searchParams.toString();
-    const endpoint = query 
-      ? `${API_ENDPOINTS.USERS}?${query}` 
-      : API_ENDPOINTS.USERS;
-    
-    return api.get<PaginatedUsers>(endpoint);
+    try {
+      const searchParams = new URLSearchParams();
+      
+      if (params?.page) searchParams.append('page', String(params.page));
+      if (params?.limit) searchParams.append('limit', String(params.limit));
+      if (params?.sort) searchParams.append('sort', params.sort);
+      if (params?.order) searchParams.append('order', params.order);
+      if (params?.search) searchParams.append('search', params.search);
+      
+      const query = searchParams.toString();
+      const endpoint = query 
+        ? `${API_ENDPOINTS.USERS}?${query}` 
+        : API_ENDPOINTS.USERS;
+      
+      return await api.get<PaginatedUsers>(endpoint, {
+        signal: config?.signal ?? controller.signal,
+      });
+    } finally {
+      clear();
+    }
   },
 
   /**

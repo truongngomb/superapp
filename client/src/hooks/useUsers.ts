@@ -10,6 +10,7 @@ export function useUsers() {
   const [users, setUsers] = useState<User[]>([]);
   const [pagination, setPagination] = useState({ page: 1, totalPages: 1, total: 0 });
   const [loading, setLoading] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const toast = useToast();
@@ -22,14 +23,26 @@ export function useUsers() {
   const fetchUsers = useCallback(async (params?: UserListParams) => {
     // Skip if already reloading (prevent loop)
     if (isReloading.current) return;
+
+    // Determine if this is a page change (loadingMore) or initial/filter change
+    const isPageChange = params?.page !== undefined && 
+      params.page !== 1 && 
+      lastParamsRef.current?.page !== params.page;
     
-    setLoading(true);
     // Save params for reload
     if (params !== undefined) {
-      lastParamsRef.current = params;
+      lastParamsRef.current = { ...lastParamsRef.current, ...params };
     }
+
+    // Set appropriate loading state
+    if (isPageChange) {
+      setIsLoadingMore(true);
+    } else {
+      setLoading(true);
+    }
+
     try {
-      const data: PaginatedUsers = await userService.getUsers(params ?? lastParamsRef.current);
+      const data: PaginatedUsers = await userService.getUsers(lastParamsRef.current);
       setUsers(data.items);
       setPagination({
         page: data.page,
@@ -41,6 +54,7 @@ export function useUsers() {
       toast.error(t('toast.load_error'));
     } finally {
       setLoading(false);
+      setIsLoadingMore(false);
     }
   }, [toast, t]);
 
@@ -180,6 +194,7 @@ export function useUsers() {
     users,
     pagination,
     loading,
+    isLoadingMore,
     submitting,
     deleting,
     fetchUsers,

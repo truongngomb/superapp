@@ -65,5 +65,5 @@ export interface UserListParams {
   limit?: number;
   sort?: string;
   order?: 'asc' | 'desc';
-  filter?: string;
+  search?: string;
 }

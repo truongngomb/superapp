@@ -1,9 +1,9 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { Users, Search, RefreshCw } from 'lucide-react';
+import { Users, Search, RefreshCw, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Button, Card, CardContent, Input, LoadingSpinner, ConfirmModal, SortBar } from '@/components/common';
-import { useUsers, useRoles, useSort, useDataSorting } from '@/hooks';
+import { Button, Card, CardContent, Input, LoadingSpinner, ConfirmModal, SortBar, Pagination } from '@/components/common';
+import { useUsers, useRoles, useSort, useDebounce } from '@/hooks';
 import type { User } from '@/types';
 import { cn } from '@/utils';
 import { UserRow } from './components/UserRow';
@@ -19,7 +19,9 @@ export default function UsersPage() {
   const { t } = useTranslation(['users', 'common']);
   const {
     users,
+    pagination,
     loading,
+    isLoadingMore,
     submitting,
     deleting,
     fetchUsers,
@@ -31,6 +33,7 @@ export default function UsersPage() {
   const { roles, fetchRoles } = useRoles();
 
   const [searchQuery, setSearchQuery] = useState('');
+  const debouncedSearchQuery = useDebounce(searchQuery, 400);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [assigningUser, setAssigningUser] = useState<User | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -48,22 +51,18 @@ export default function UsersPage() {
   ];
 
   useEffect(() => {
-    void fetchUsers({ limit: 100 });
+    const params = {
+      search: debouncedSearchQuery || undefined,
+      sort: sortConfig.field,
+      order: (sortConfig.order ?? 'desc'),
+      page: 1
+    };
+    void fetchUsers(params);
     void fetchRoles();
-  }, [fetchUsers, fetchRoles]);
+  }, [fetchUsers, fetchRoles, debouncedSearchQuery, sortConfig]);
 
-  // Filter users
-  const filteredUsers = useMemo(() => {
-    return users.filter(
-      (user) =>
-        user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (user.roleNames?.some(name => name.toLowerCase().includes(searchQuery.toLowerCase())) ?? false)
-    );
-  }, [users, searchQuery]);
-
-  // Sort users
-  const sortedUsers = useDataSorting(filteredUsers, sortConfig);
+  // Display users directly from backend (already filtered and sorted)
+  const displayUsers = users;
 
   // Handle edit user submit
   const handleEditSubmit = async (data: { name: string; isActive?: boolean }) => {
@@ -112,7 +111,7 @@ export default function UsersPage() {
             onChange={(e) => {
               setSearchQuery(e.target.value);
             }}
-            placeholder={t("users:search_placeholder")}
+            placeholder={t("users:list.search_placeholder")}
             className="pl-10"
           />
         </div>
@@ -126,34 +125,38 @@ export default function UsersPage() {
         </Button>
       </div>
 
-      {/* Sort Bar */}
-      <SortBar
-        columns={sortColumns}
-        currentSort={sortConfig}
-        onSort={handleSort}
-      />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+        <SortBar
+          columns={sortColumns}
+          currentSort={sortConfig}
+          onSort={handleSort}
+        />
+        <p className="text-sm text-muted">
+          {t('common:total_items', { count: pagination.total })}
+        </p>
+      </div>
 
       {/* Users list */}
       {loading ? (
         <LoadingSpinner size="lg" text={t("common:loading")} className="py-20" />
-      ) : sortedUsers.length === 0 ? (
+      ) : displayUsers.length === 0 ? (
         <Card className="py-12 text-center">
           <CardContent>
             <Users className="w-12 h-12 text-muted mx-auto mb-4" />
             <p className="text-muted">
-              {searchQuery ? t("users:empty_search") : t("users:empty")}
+              {searchQuery ? t("users:list.empty_search") : t("users:list.empty")}
             </p>
           </CardContent>
         </Card>
       ) : (
         <div className="space-y-2">
-          {sortedUsers.map((user, index) => (
+          {displayUsers.map((user, index) => (
             <UserRow
               key={user.id}
               index={index}
               style={{}}
               data={{
-                users: sortedUsers,
+                users: displayUsers,
                 onEdit: (u) => {
                   setEditingUser(u);
                 },
@@ -166,6 +169,22 @@ export default function UsersPage() {
               }}
             />
           ))}
+
+          {/* Pagination */}
+          {pagination.totalPages > 1 && (
+            <div className="mt-6 relative">
+              {isLoadingMore && (
+                <div className="absolute inset-0 flex items-center justify-center bg-background/50 rounded-lg z-10">
+                  <Loader2 className="w-5 h-5 animate-spin text-primary" />
+                </div>
+              )}
+              <Pagination
+                currentPage={pagination.page}
+                totalPages={pagination.totalPages}
+                onPageChange={(page) => { void fetchUsers({ page }); }}
+              />
+            </div>
+          )}
         </div>
       )}
 
@@ -207,7 +226,7 @@ export default function UsersPage() {
       {/* Delete Confirm Modal */}
       <ConfirmModal
         isOpen={!!deleteId}
-        title={t("users:delete_title")}
+        title={t("users:form.delete_title")}
         message={t("users:delete_confirm")}
         confirmText={t("common:delete")}
         cancelText={t("common:cancel")}

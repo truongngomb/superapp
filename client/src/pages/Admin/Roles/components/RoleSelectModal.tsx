@@ -67,7 +67,7 @@ export function RoleSelectModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={t('users:assign_role_title')}
+      title={t('users:form.assign_role_title')}
       footer={
         <div className="flex gap-3">
           <Button type="button" variant="outline" onClick={onClose} className="flex-1">
@@ -112,7 +112,7 @@ export function RoleSelectModal({
           <div className="p-3 rounded-lg bg-surface">
             <div className="flex items-center gap-2 mb-2">
               <Shield className="w-4 h-4 text-primary" />
-              <span className="text-sm font-medium">{t('users:roles_label')}: </span>
+              <span className="text-sm font-medium">{t('users:form.roles_label')}: </span>
             </div>
             <div className="flex flex-wrap gap-2">
               {getSelectedRoleNames().map((name, i) => (
@@ -138,12 +138,12 @@ export function RoleSelectModal({
         {/* Role Selection */}
         <div>
           <label className="block text-sm font-medium text-foreground mb-2">
-            {t('users:select_roles')}
+            {t('users:form.select_roles')}
           </label>
           <div className="space-y-2 max-h-60 overflow-y-auto">
             {roles.length === 0 ? (
               <p className="text-sm text-muted text-center py-4">
-                {t('users:empty')}
+                {t('users:list.empty')}
               </p>
             ) : (
               roles.map((role) => {
@@ -178,7 +178,7 @@ export function RoleSelectModal({
 
         {/* Selection count */}
         <p className="text-sm text-muted text-center">
-          {t('users:roles_selected', { count: selectedRoleIds.length })}
+          {t('users:form.roles_selected', { count: selectedRoleIds.length })}
         </p>
       </form>
     </Modal>

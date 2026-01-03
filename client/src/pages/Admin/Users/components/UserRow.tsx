@@ -36,7 +36,7 @@ export function UserRow({ index, style, data }: UserRowProps) {
           variant="ghost"
           size="sm"
           onClick={(e) => { e.stopPropagation(); data.onAssignRole(user); }}
-          aria-label={t('users:assign_role_title')}
+          aria-label={t('users:form.assign_role_title')}
         >
           <UserCog className="w-4 h-4" />
         </Button>
@@ -82,7 +82,7 @@ export function UserRow({ index, style, data }: UserRowProps) {
             ))}
           </div>
         ) : (
-          <span className="text-xs text-muted">{t('users:no_role')}</span>
+          <span className="text-xs text-muted">{t('users:form.no_role')}</span>
         )
       }
       meta={formatDate(user.created)}

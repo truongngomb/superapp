@@ -34,7 +34,7 @@ export function UserForm({ user, onSubmit, onClose, loading, isOpen }: UserFormP
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={t('users:edit_title')}
+      title={t('users:form.edit_title')}
       footer={
         <div className="flex gap-3">
           <Button type="button" variant="outline" onClick={onClose} className="flex-1">
@@ -70,10 +70,10 @@ export function UserForm({ user, onSubmit, onClose, loading, isOpen }: UserFormP
         )}
 
         <Input
-          label={t('users:name_label')}
+          label={t('users:form.name_label')}
           value={name}
           onChange={(e) => { setName(e.target.value); }}
-          placeholder={t('users:name_placeholder')}
+          placeholder={t('users:form.name_placeholder')}
           required
         />
 
@@ -82,7 +82,7 @@ export function UserForm({ user, onSubmit, onClose, loading, isOpen }: UserFormP
           checked={isActive}
           onChange={(checked) => { setIsActive(checked); }}
           label={t('common:active')}
-          description={t('users:active_description')}
+          description={t('users:form.active_description')}
         />
       </form>
     </Modal>
