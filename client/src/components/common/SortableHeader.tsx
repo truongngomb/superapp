@@ -71,7 +71,7 @@ export function SortBar({
   className,
 }: SortBarProps) {
   return (
-    <div className={cn('flex flex-wrap gap-1 mb-4', className)}>
+    <div className={cn('flex flex-wrap gap-1', className)}>
       {columns.map((col) => (
         <SortableHeader
           key={col.field}
