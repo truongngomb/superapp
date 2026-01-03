@@ -19,6 +19,8 @@ export interface BaseEntity {
   created: string;
   /** ISO timestamp of last update */
   updated: string;
+  /** Soft delete flag */
+  isDeleted: boolean;
 }
 
 /**

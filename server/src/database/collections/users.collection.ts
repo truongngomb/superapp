@@ -16,6 +16,7 @@ export const usersCollection: AuthCollectionSchema = {
     fileField('avatar', { maxSelect: 1 }),
     relationField('roles', 'roles', { maxSelect: 99 }),
     boolField('isActive'),
+    boolField('isDeleted'),
     autodateField('created', { onCreate: true, onUpdate: false }),
     autodateField('updated', { onCreate: true, onUpdate: true }),
   ],

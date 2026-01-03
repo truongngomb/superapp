@@ -75,14 +75,11 @@ export interface BaseEntity {
   id: string;
   createdAt: string;
   updatedAt: string;
+  /** Soft delete flag */
+  isDeleted: boolean;
 }
 
-/**
- * Entity with soft delete support
- */
-export interface SoftDeletableEntity extends BaseEntity {
-  deletedAt?: string | null;
-}
+
 
 // ============================================================================
 // Form Types

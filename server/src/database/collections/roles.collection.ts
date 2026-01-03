@@ -16,6 +16,7 @@ export const rolesCollection: BaseCollectionSchema = {
     textField('description', { min: 0, max: 0 }),
     jsonField('permissions'),
     boolField('isActive'),
+    boolField('isDeleted'),
     autodateField('created', { onCreate: true, onUpdate: false }),
     autodateField('updated', { onCreate: true, onUpdate: true }),
   ],

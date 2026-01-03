@@ -2,7 +2,7 @@
  * Activity_logs Collection
  */
 import type { BaseCollectionSchema } from '../collection.schema.js';
-import { autodateField, jsonField, relationField, textField } from '../collection.schema.js';
+import { autodateField, boolField, jsonField, relationField, textField } from '../collection.schema.js';
 
 /**
  * Activity_logs collection
@@ -18,6 +18,7 @@ export const activity_logsCollection: BaseCollectionSchema = {
     textField('recordId', { min: 1, max: 50 }),
     textField('message', { required: true, min: 1, max: 500 }),
     jsonField('details'),
+    boolField('isDeleted'),
     autodateField('created', { onCreate: true, onUpdate: false }),
   ],
 
