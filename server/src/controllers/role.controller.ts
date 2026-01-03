@@ -12,11 +12,25 @@ import { RoleCreateInput, RoleUpdateInput } from '../types/index.js';
 // =============================================================================
 
 /**
- * GET /roles - Get all roles
+ * GET /roles - Get paginated roles
  */
-export const getAll = async (_req: Request, res: Response) => {
-  const roles = await roleService.getAll();
-  res.json({ success: true, data: roles });
+export const getAll = async (req: Request, res: Response) => {
+  const { page, limit, sort, order, search, isActive } = req.query;
+  
+  // Build filter string for PocketBase
+  const filters: string[] = [];
+  if (typeof search === 'string') filters.push(`(name ~ "${search}" || description ~ "${search}")`);
+  if (isActive !== undefined) filters.push(`isActive = ${isActive === 'true' ? 'true' : 'false'}`);
+  
+  const result = await roleService.getPage({
+    page: typeof page === 'string' ? parseInt(page, 10) : undefined,
+    limit: typeof limit === 'string' ? parseInt(limit, 10) : undefined,
+    sort: sort as string,
+    order: order as 'asc' | 'desc',
+    filter: filters.length > 0 ? filters.join(' && ') : undefined
+  });
+  
+  res.json({ success: true, data: result });
 };
 
 /**

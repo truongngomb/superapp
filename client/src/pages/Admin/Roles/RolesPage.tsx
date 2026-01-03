@@ -1,12 +1,12 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { Plus, Shield, Search, RefreshCw } from 'lucide-react';
+import { Plus, Shield, Search, RefreshCw, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Button, Card, CardContent, Input, LoadingSpinner, ConfirmModal, SortBar } from '@/components/common';
+import { Button, Card, CardContent, Input, LoadingSpinner, ConfirmModal, SortBar, Pagination } from '@/components/common';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
 import type { Role, CreateRoleInput } from '@/types';
 import { cn } from '@/utils';
-import { useRoles, useSort, useDataSorting } from '@/hooks';
+import { useRoles, useSort, useDebounce } from '@/hooks';
 import { RoleForm } from './components/RoleForm';
 import { RoleRow } from './components/RoleRow';
 
@@ -20,7 +20,9 @@ export default function RolesPage() {
   const { t } = useTranslation(['roles', 'common']);
   const {
     roles,
+    pagination,
     loading,
+    isLoadingMore,
     submitting,
     deleting,
     fetchRoles,
@@ -30,6 +32,7 @@ export default function RolesPage() {
   } = useRoles();
 
   const [searchQuery, setSearchQuery] = useState('');
+  const debouncedSearchQuery = useDebounce(searchQuery, 400);
   const [editingRole, setEditingRole] = useState<Role | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -46,20 +49,17 @@ export default function RolesPage() {
   ];
 
   useEffect(() => {
-    void fetchRoles();
-  }, [fetchRoles]);
+    const params = {
+      search: debouncedSearchQuery || undefined,
+      sort: sortConfig.field,
+      order: (sortConfig.order ?? 'desc'),
+      page: 1
+    };
+    void fetchRoles(params);
+  }, [fetchRoles, debouncedSearchQuery, sortConfig]);
 
-  // Filter roles
-  const filteredRoles = useMemo(() => {
-    return roles.filter(
-      (role) =>
-        role.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (role.description?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false)
-    );
-  }, [roles, searchQuery]);
-
-  // Sort roles
-  const sortedRoles = useDataSorting(filteredRoles, sortConfig);
+  // No more frontend filtering and sorting if we use backend pagination
+  const displayRoles = roles;
 
   // Handle form submit
   const handleSubmit = async (data: CreateRoleInput) => {
@@ -121,31 +121,30 @@ export default function RolesPage() {
             onChange={(e) => {
               setSearchQuery(e.target.value);
             }}
-            placeholder={t("roles:list.search_placeholder")}
+            placeholder={t("common:search")}
             className="pl-10"
           />
         </div>
-        <Button
-          variant="outline"
-          onClick={() => {
-            void fetchRoles();
-          }}
-        >
+        <Button variant="outline" onClick={() => { void fetchRoles(); }}>
           <RefreshCw className={cn("w-5 h-5", loading && "animate-spin")} />
         </Button>
       </div>
 
-      {/* Sort Bar */}
-      <SortBar
-        columns={sortColumns}
-        currentSort={sortConfig}
-        onSort={handleSort}
-      />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+        <SortBar
+          columns={sortColumns}
+          currentSort={sortConfig}
+          onSort={handleSort}
+        />
+        <p className="text-sm text-muted">
+          {t('common:total_items', { count: pagination.total })}
+        </p>
+      </div>
 
       {/* Roles list */}
       {loading ? (
         <LoadingSpinner size="lg" text={t("common:loading")} className="py-20" />
-      ) : sortedRoles.length === 0 ? (
+      ) : displayRoles.length === 0 ? (
         <Card className="py-12 text-center">
           <CardContent>
             <Shield className="w-12 h-12 text-muted mx-auto mb-4" />
@@ -168,13 +167,13 @@ export default function RolesPage() {
         </Card>
       ) : (
         <div className="space-y-2">
-          {sortedRoles.map((role, index) => (
+          {displayRoles.map((role, index) => (
             <RoleRow
               key={role.id}
               index={index}
               style={{}}
               data={{
-                roles: sortedRoles,
+                roles: displayRoles,
                 onEdit: handleEdit,
                 onDelete: (id) => {
                   setDeleteId(id);
@@ -182,6 +181,22 @@ export default function RolesPage() {
               }}
             />
           ))}
+          
+          {/* Pagination */}
+          {pagination.totalPages > 1 && (
+            <div className="mt-6 relative">
+              {isLoadingMore && (
+                <div className="absolute inset-0 flex items-center justify-center bg-background/50 rounded-lg z-10">
+                  <Loader2 className="w-5 h-5 animate-spin text-primary" />
+                </div>
+              )}
+              <Pagination
+                currentPage={pagination.page}
+                totalPages={pagination.totalPages}
+                onPageChange={(page) => { void fetchRoles({ page }); }}
+              />
+            </div>
+          )}
         </div>
       )}
 
@@ -206,7 +221,7 @@ export default function RolesPage() {
       {/* Delete Confirm Modal */}
       <ConfirmModal
         isOpen={!!deleteId}
-        title={t("roles:delete_title")}
+        title={t("common:delete")}
         message={t("roles:delete_confirm")}
         confirmText={t("common:delete")}
         cancelText={t("common:cancel")}
@@ -222,3 +237,4 @@ export default function RolesPage() {
     </div>
   );
 }
+

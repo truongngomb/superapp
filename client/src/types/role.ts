@@ -49,6 +49,32 @@ export interface UpdateRoleInput {
 }
 
 // ============================================================================
+// Query Types
+// ============================================================================
+
+/**
+ * Role list parameters for pagination and sorting
+ */
+export interface RoleListParams {
+  page?: number;
+  limit?: number;
+  sort?: string;
+  order?: 'asc' | 'desc';
+  search?: string;
+  isActive?: boolean;
+}
+
+/**
+ * Paginated role response
+ */
+export interface PaginatedRoles {
+  items: Role[];
+  page: number;
+  totalPages: number;
+  total: number;
+}
+
+// ============================================================================
 // Permission Helpers
 // ============================================================================
 
@@ -69,3 +95,4 @@ export function hasPermission(
     allPerms.includes(PermissionAction.Manage)
   );
 }
+

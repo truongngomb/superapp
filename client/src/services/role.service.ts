@@ -4,7 +4,7 @@
  */
 
 import { api, createAbortController, API_ENDPOINTS, type RequestConfig } from '@/config';
-import type { Role, CreateRoleInput, UpdateRoleInput } from '@/types';
+import type { Role, CreateRoleInput, UpdateRoleInput, RoleListParams, PaginatedRoles } from '@/types';
 
 // ============================================================================
 // Types
@@ -30,6 +30,32 @@ export const roleService = {
     
     try {
       return await api.get<Role[]>(API_ENDPOINTS.ROLES, {
+        signal: config?.signal ?? controller.signal,
+      });
+    } finally {
+      clear();
+    }
+  },
+
+  /**
+   * Get paginated roles
+   */
+  async getPage(params?: RoleListParams, config?: ServiceConfig): Promise<PaginatedRoles> {
+    const { controller, clear } = createAbortController(config?.timeout ?? 10000);
+    
+    try {
+      const queryParams = new URLSearchParams();
+      if (params?.page) queryParams.append('page', params.page.toString());
+      if (params?.limit) queryParams.append('limit', params.limit.toString());
+      if (params?.sort) queryParams.append('sort', params.sort);
+      if (params?.order) queryParams.append('order', params.order);
+      if (params?.search) queryParams.append('search', params.search);
+      if (params?.isActive !== undefined) queryParams.append('isActive', params.isActive.toString());
+
+      const queryString = queryParams.toString();
+      const endpoint = queryString ? `${API_ENDPOINTS.ROLES}?${queryString}` : API_ENDPOINTS.ROLES;
+
+      return await api.get<PaginatedRoles>(endpoint, {
         signal: config?.signal ?? controller.signal,
       });
     } finally {
