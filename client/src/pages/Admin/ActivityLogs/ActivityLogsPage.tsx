@@ -1,20 +1,23 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { RefreshCw, Search, Shield } from 'lucide-react';
+import { RefreshCw, Search, Shield, Loader2 } from 'lucide-react';
 import { Button, Card, CardContent, Pagination, SortBar, Input, LoadingSpinner } from '@/components/common';
 import { ActivityLogTable } from './components/ActivityLogTable';
 import { activityLogService } from '@/services';
 import type { ActivityLog } from '@/types';
 import { cn, logger } from '@/utils';
-import { useSort } from '@/hooks';
+import { useSort, useDebounce } from '@/hooks';
 
 export default function ActivityLogsPage() {
   const [logs, setLogs] = useState<ActivityLog[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
+  const debouncedSearchQuery = useDebounce(searchQuery, 400);
 
   // Translations
   const { t } = useTranslation('activity_logs');
@@ -23,36 +26,54 @@ export default function ActivityLogsPage() {
   // Sorting state
   const { sortConfig, handleSort } = useSort('created', 'desc');
 
-  const fetchLogs = useCallback(async () => {
-    setLoading(true);
+  // Track last page to detect page changes
+  const lastPageRef = useRef(1);
+
+  const fetchLogs = useCallback(async (targetPage?: number) => {
+    const currentPage = targetPage ?? page;
+    const isPageChange = currentPage !== 1 && currentPage !== lastPageRef.current;
+
+    // Set appropriate loading state
+    if (isPageChange) {
+      setIsLoadingMore(true);
+    } else {
+      setLoading(true);
+    }
+
     try {
       const response = await activityLogService.getLogs({
-        page,
-        // limit: undefined, // Let backend decide default
+        page: currentPage,
         sort: sortConfig.field,
         order: sortConfig.order as 'asc' | 'desc' | undefined,
-        search: searchQuery
+        search: debouncedSearchQuery
       });
       setLogs(response.items);
       setTotalPages(response.totalPages);
+      setTotal(response.total);
+      lastPageRef.current = currentPage;
     } catch (error) {
       logger.error('ActivityLogsPage', 'Failed to fetch logs', error);
     } finally {
       setLoading(false);
+      setIsLoadingMore(false);
     }
-  }, [page, sortConfig, searchQuery]); // Re-add searchQuery dependency as it is now used
+  }, [page, sortConfig, debouncedSearchQuery]);
 
   useEffect(() => {
     setPage(1); 
-  }, [searchQuery]); 
+  }, [debouncedSearchQuery, sortConfig]); 
 
   useEffect(() => {
-    void fetchLogs();
-  }, [fetchLogs]);
+    void fetchLogs(page);
+  }, [fetchLogs, page]);
 
   const sortColumns = [
     { field: 'created', label: t('table.time') },
   ];
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
 
   return (
     <div>
@@ -85,12 +106,17 @@ export default function ActivityLogsPage() {
         </Button>
       </div>
 
-      {/* Sort Bar */}
-      <SortBar 
-        columns={sortColumns}
-        currentSort={sortConfig}
-        onSort={handleSort}
-      />
+      {/* Sort Bar + Total */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+        <SortBar 
+          columns={sortColumns}
+          currentSort={sortConfig}
+          onSort={handleSort}
+        />
+        <p className="text-sm text-muted">
+          {tCommon('total_items', { count: total })}
+        </p>
+      </div>
 
       {/* Logs Table */}
       {loading ? (
@@ -100,7 +126,7 @@ export default function ActivityLogsPage() {
           <CardContent>
             <Shield className="w-12 h-12 text-muted mx-auto mb-4" />
             <p className="text-muted">
-              {searchQuery ? tCommon('no_data') : tCommon('no_data')} 
+              {searchQuery ? t('list.empty_search') : t('list.empty')} 
             </p>
           </CardContent>
         </Card>
@@ -113,12 +139,17 @@ export default function ActivityLogsPage() {
       )}
 
       {/* Pagination */}
-      {!loading && logs.length > 0 && (
-        <div className="flex justify-end my-4">
+      {!loading && logs.length > 0 && totalPages > 1 && (
+        <div className="my-4 relative">
+          {isLoadingMore && (
+            <div className="absolute inset-0 flex items-center justify-center bg-background/50 rounded-lg z-10">
+              <Loader2 className="w-5 h-5 animate-spin text-primary" />
+            </div>
+          )}
           <Pagination
             currentPage={page}
             totalPages={totalPages}
-            onPageChange={setPage}
+            onPageChange={handlePageChange}
           />
         </div>
       )}
