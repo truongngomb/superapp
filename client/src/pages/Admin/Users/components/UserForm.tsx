@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Input, Modal, Toggle } from '@/components/common';
-import type { User } from '@/services/user.service';
+import type { User } from '@/types';
 
 interface UserFormProps {
   user: User | null;

@@ -16,3 +16,6 @@ export * from './role';
 
 // Activity Log types
 export * from './activityLog';
+
+// User types
+export * from './user';

@@ -3,7 +3,7 @@ import { Edit2, Trash2, UserCog, User as UserIcon } from 'lucide-react';
 import { Button, Badge, DataRow } from '@/components/common';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
 import { formatDate } from '@/utils';
-import type { User } from '@/services/user.service';
+import type { User } from '@/types';
 
 interface UserRowProps {
   index: number;

@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { userService, type User, type PaginatedUsers, type UserListParams } from '@/services/user.service';
+import { userService } from '@/services/user.service';
+import type { User, PaginatedUsers, UserListParams } from '@/types';
 import { useToast } from '@/context';
 import { logger } from '@/utils/logger';
 import { ApiException } from '@/config';

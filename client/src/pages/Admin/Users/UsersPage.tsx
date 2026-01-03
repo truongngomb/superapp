@@ -4,7 +4,7 @@ import { Users, Search, RefreshCw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button, Card, CardContent, Input, LoadingSpinner, ConfirmModal, SortBar } from '@/components/common';
 import { useUsers, useRoles, useSort, useDataSorting } from '@/hooks';
-import type { User } from '@/services/user.service';
+import type { User } from '@/types';
 import { cn } from '@/utils';
 import { UserRow } from './components/UserRow';
 import { UserForm } from './components/UserForm';

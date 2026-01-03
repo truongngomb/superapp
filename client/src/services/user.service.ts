@@ -5,49 +5,7 @@
 
 import { api } from '@/config';
 import { API_ENDPOINTS } from '@/config';
-
-// ============================================================================
-// Types
-// ============================================================================
-
-export interface User {
-  id: string;
-  email: string;
-  name: string;
-  avatar?: string;
-  roles?: string[];
-  roleNames?: string[];
-  isActive?: boolean;
-  created: string;
-  updated: string;
-}
-
-export interface UserUpdateInput {
-  name?: string;
-  avatar?: string;
-  emailVisibility?: boolean;
-  isActive?: boolean;
-}
-
-export interface UserRoleAssignment {
-  roleIds: string[];
-}
-
-export interface PaginatedUsers {
-  items: User[];
-  page: number;
-  limit: number;
-  total: number;
-  totalPages: number;
-}
-
-export interface UserListParams {
-  page?: number;
-  limit?: number;
-  sort?: string;
-  order?: 'asc' | 'desc';
-  filter?: string;
-}
+import type { User, UserUpdateInput, UserRoleAssignment, PaginatedUsers, UserListParams } from '@/types';
 
 // ============================================================================
 // Service
