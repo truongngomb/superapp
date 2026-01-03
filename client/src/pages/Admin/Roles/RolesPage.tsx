@@ -121,7 +121,7 @@ export default function RolesPage() {
             onChange={(e) => {
               setSearchQuery(e.target.value);
             }}
-            placeholder={t("roles:search_placeholder")}
+            placeholder={t("roles:list.search_placeholder")}
             className="pl-10"
           />
         </div>
@@ -144,13 +144,13 @@ export default function RolesPage() {
 
       {/* Roles list */}
       {loading ? (
-        <LoadingSpinner size="lg" text={t("roles:loading")} className="py-20" />
+        <LoadingSpinner size="lg" text={t("common:loading")} className="py-20" />
       ) : sortedRoles.length === 0 ? (
         <Card className="py-12 text-center">
           <CardContent>
             <Shield className="w-12 h-12 text-muted mx-auto mb-4" />
             <p className="text-muted">
-              {searchQuery ? t("roles:empty_search") : t("roles:empty")}
+              {searchQuery ? t("roles:list.empty_search") : t("roles:list.empty")}
             </p>
             {!searchQuery && (
               <PermissionGuard resource="roles" action="create">
@@ -160,7 +160,7 @@ export default function RolesPage() {
                   }}
                   className="mt-4"
                 >
-                  {t("roles:add_first")}
+                  {t("roles:list.add_first")}
                 </Button>
               </PermissionGuard>
             )}

@@ -60,7 +60,7 @@ export function RoleForm({ role, onSubmit, onClose, loading, isOpen }: RoleFormP
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={role ? t('roles:form_edit_title') : t('roles:form_add_title')}
+      title={role ? t('roles:form.edit_title') : t('roles:form.add_title')}
       size="xl"
       footer={
         <div className="flex gap-3">
@@ -75,17 +75,17 @@ export function RoleForm({ role, onSubmit, onClose, loading, isOpen }: RoleFormP
     >
       <form id="role-form" onSubmit={handleSubmit} className="space-y-4">
         <Input
-          label={t('roles:name_label')}
+          label={t('roles:form.name_label')}
           value={formData.name}
           onChange={(e) => { setFormData({ ...formData, name: e.target.value }); }}
-          placeholder={t('roles:name_placeholder')}
+          placeholder={t('roles:form.name_placeholder')}
           required
         />
         <Input
-          label={t('roles:desc_label')}
+          label={t('roles:form.desc_label')}
           value={formData.description}
           onChange={(e) => { setFormData({ ...formData, description: e.target.value }); }}
-          placeholder={t('roles:desc_placeholder')}
+          placeholder={t('roles:form.desc_placeholder')}
         />
 
         {/* Active Status Toggle */}
@@ -93,11 +93,11 @@ export function RoleForm({ role, onSubmit, onClose, loading, isOpen }: RoleFormP
           checked={formData.isActive ?? true}
           onChange={(checked) => { setFormData({ ...formData, isActive: checked }); }}
           label={t('common:active')}
-          description={t('roles:active_description')}
+          description={t('roles:form.active_description')}
         />
 
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">{t('roles:permissions_label')}</label>
+          <label className="block text-sm font-medium text-foreground mb-2">{t('roles:form.permissions_label')}</label>
           <div className="border border-border rounded-lg p-4 space-y-4 bg-background">
             {PERMISSIONS.RESOURCES.map(resource => (
               <div key={resource} className="border-b border-border pb-3 last:border-0 last:pb-0">

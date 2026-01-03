@@ -135,7 +135,7 @@ export default function UsersPage() {
 
       {/* Users list */}
       {loading ? (
-        <LoadingSpinner size="lg" text={t("users:loading")} className="py-20" />
+        <LoadingSpinner size="lg" text={t("common:loading")} className="py-20" />
       ) : sortedUsers.length === 0 ? (
         <Card className="py-12 text-center">
           <CardContent>
