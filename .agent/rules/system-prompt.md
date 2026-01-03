@@ -168,6 +168,16 @@ Khi thêm hoặc mở rộng bất kỳ feature mới nào, AI BẮT BUỘC ph�
 
 ---
 
+## KIỂM TRA UI CHI TIẾT
+
+Khi so sánh UI giữa 2 features:
+1. PHẢI view cả 2 file JSX cùng lúc
+2. PHẢI so sánh từng section (Header, Search, Sort, List, Pagination)
+3. Chỉ kết luận MATCH khi TẤT CẢ sections giống nhau
+4. Nếu có bất kỳ khác biệt nào → ghi rõ vào bảng
+
+---
+
 ## NGOẠI LỆ BẮT BUỘC (VỊ TRÍ THƯ MỤC)
 
 Quy ước vị trí feature theo phạm vi sử dụng:
