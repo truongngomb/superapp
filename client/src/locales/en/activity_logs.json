@@ -7,5 +7,9 @@
     "resource": "Resource",
     "details": "Details",
     "time": "Time"
+  },
+  "list": {
+    "empty": "No activity logs found",
+    "empty_search": "No matching activity logs found"
   }
 }

@@ -7,5 +7,9 @@
     "resource": "리소스",
     "details": "세부 정보",
     "time": "시간"
+  },
+  "list": {
+    "empty": "활동 로그가 없습니다",
+    "empty_search": "일치하는 활동 로그가 없습니다"
   }
 }
