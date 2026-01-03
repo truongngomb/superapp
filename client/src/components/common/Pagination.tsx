@@ -12,7 +12,7 @@ export function Pagination({ currentPage, totalPages, onPageChange, className }:
   if (totalPages <= 1) return null;
 
   return (
-    <div className={cn("flex items-center gap-2", className)}>
+    <div className={cn("flex items-center justify-center gap-2", className)}>
       <button
         className="inline-flex items-center justify-center w-9 h-9 p-0 rounded-md text-foreground hover:bg-muted transition-colors disabled:opacity-50 disabled:pointer-events-none"
         onClick={() => { onPageChange(Math.max(1, currentPage - 1)); }}

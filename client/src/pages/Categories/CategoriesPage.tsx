@@ -195,7 +195,7 @@ export default function CategoriesPage() {
           
           {/* Pagination */}
           {pagination.totalPages > 1 && (
-            <div className="mt-6 relative">
+            <div className="my-4 relative">
               {isLoadingMore && (
                 <div className="absolute inset-0 flex items-center justify-center bg-background/50 rounded-lg z-10">
                   <Loader2 className="w-5 h-5 animate-spin text-primary" />
