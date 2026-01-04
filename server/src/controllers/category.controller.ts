@@ -70,3 +70,12 @@ export const remove = async (req: Request, res: Response) => {
   await categoryService.delete(req.params['id'] as string, req.user?.id);
   res.status(204).send();
 };
+
+/**
+ * POST /categories/batch-delete - Batch delete categories
+ */
+export const batchDelete = async (req: Request, res: Response) => {
+  const { ids } = req.body as { ids: string[] };
+  await categoryService.deleteMany(ids, req.user?.id);
+  res.status(204).send();
+};

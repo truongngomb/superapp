@@ -35,12 +35,20 @@ export const CategoryUpdateSchema = z.object({
   isActive: z.boolean().optional(),
 });
 
+/**
+ * Schema for batch delete categories
+ */
+export const BatchDeleteSchema = z.object({
+  ids: z.array(z.string().min(1)).min(1, 'At least one ID is required').max(100, 'Maximum 100 items'),
+});
+
 // =============================================================================
 // Inferred Types
 // =============================================================================
 
 export type CategoryCreateSchemaType = z.infer<typeof CategoryCreateSchema>;
 export type CategoryUpdateSchemaType = z.infer<typeof CategoryUpdateSchema>;
+export type BatchDeleteSchemaType = z.infer<typeof BatchDeleteSchema>;
 
 // =============================================================================
 // Legacy Export (for backward compatibility)

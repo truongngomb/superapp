@@ -44,5 +44,7 @@
   "refresh": "새로 고침",
   "retry": "재시도",
   "no_data": "데이터가 없습니다",
-  "load_more": "더 보기"
+  "load_more": "더 보기",
+  "select_all": "모두 선택",
+  "delete_selected": "선택 삭제"
 }

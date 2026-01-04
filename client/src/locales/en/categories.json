@@ -18,12 +18,14 @@
     "active_label": "Active",
     "active_description": "Category is visible and available for use"
   },
+  "delete_confirm": "Are you sure you want to delete this category? This action cannot be undone.",
+  "batch_delete_confirm": "Are you sure you want to delete {{count}} categories? This action cannot be undone.",
   "toast": {
     "load_error": "Failed to load categories",
     "create_success": "Category created successfully!",
     "update_success": "Category updated successfully!",
     "delete_success": "Category deleted successfully!",
+    "batch_delete_success": "Successfully deleted {{count}} categories!",
     "error": "An error occurred"
-  },
-  "delete_confirm": "Are you sure you want to delete this category? This action cannot be undone."
+  }
 }

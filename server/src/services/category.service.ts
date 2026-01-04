@@ -83,6 +83,27 @@ class CategoryService extends BaseService<Category> {
     const { activityLogService } = await import('./activity_log.service.js');
     void activityLogService.logCRUD(actorId, 'delete', this.collectionName, id);
   }
+
+  /**
+   * Batch soft delete categories
+   */
+  async deleteMany(ids: string[], actorId?: string): Promise<void> {
+    await this.ensureDbAvailable();
+
+    // Loop through each id and soft delete
+    for (const id of ids) {
+      await pb.collection(this.collectionName).update(id, { isDeleted: true });
+      
+      // Log activity for each item
+      const { activityLogService } = await import('./activity_log.service.js');
+      void activityLogService.logCRUD(actorId, 'delete', this.collectionName, id);
+    }
+
+    // Invalidate cache once at the end
+    this.invalidateCache();
+
+    this.log.info('Batch soft deleted records', { count: ids.length, ids });
+  }
 }
 
 // =============================================================================

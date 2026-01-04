@@ -12,9 +12,11 @@ interface CategoryRowProps {
     onEdit: (category: Category) => void;
     onDelete: (id: string) => void;
   };
+  isSelected?: boolean;
+  onSelect?: (id: string, checked: boolean) => void;
 }
 
-export function CategoryRow({ index, style, data }: CategoryRowProps) {
+export function CategoryRow({ index, style, data, isSelected, onSelect }: CategoryRowProps) {
   const { t } = useTranslation();
   const category = data.categories[index];
   if (!category) return null;
@@ -53,6 +55,9 @@ export function CategoryRow({ index, style, data }: CategoryRowProps) {
       description={category.description}
       isActive={category.isActive}
       actions={actions}
+      isSelected={isSelected}
+      onSelect={onSelect ? (checked) => { onSelect(category.id, checked); } : undefined}
     />
   );
 }
+

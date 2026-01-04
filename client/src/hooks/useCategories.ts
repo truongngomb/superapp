@@ -12,6 +12,7 @@ export function useCategories() {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [batchDeleting, setBatchDeleting] = useState(false);
   const toast = useToast();
   const { t } = useTranslation('categories');
   
@@ -129,6 +130,23 @@ export function useCategories() {
     }
   };
 
+  const deleteCategories = async (ids: string[]) => {
+    setBatchDeleting(true);
+    try {
+      await categoryService.deleteMany(ids);
+      toast.success(t('toast.batch_delete_success', { count: ids.length }));
+      // Reload list after batch delete
+      await reloadCategories();
+      return true;
+    } catch (error) {
+      const message = error instanceof ApiException ? error.message : t('toast.error');
+      toast.error(message);
+      return false;
+    } finally {
+      setBatchDeleting(false);
+    }
+  };
+
   return {
     categories,
     pagination,
@@ -140,5 +158,7 @@ export function useCategories() {
     createCategory,
     updateCategory,
     deleteCategory,
+    deleteCategories,
+    batchDeleting,
   };
 }

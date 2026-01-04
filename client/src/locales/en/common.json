@@ -44,5 +44,7 @@
   "refresh": "Refresh",
   "retry": "Retry",
   "no_data": "No data found",
-  "load_more": "Load More"
+  "load_more": "Load More",
+  "select_all": "Select all",
+  "delete_selected": "Delete selected"
 }

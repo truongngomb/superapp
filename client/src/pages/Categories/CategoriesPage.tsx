@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence } from 'framer-motion';
-import { Plus, Folder, Search, RefreshCw, Loader2 } from 'lucide-react';
+import { Plus, Folder, Search, RefreshCw, Loader2, Trash2 } from 'lucide-react';
 import { Button, Card, CardContent, Input, LoadingSpinner, ConfirmModal, SortBar, Pagination } from '@/components/common';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
 import type { Category, CategoryInput } from '@/types';
@@ -30,10 +30,12 @@ export default function CategoriesPage() {
     isLoadingMore,
     submitting,
     deleting,
+    batchDeleting,
     fetchCategories,
     createCategory,
     updateCategory,
-    deleteCategory
+    deleteCategory,
+    deleteCategories
   } = useCategories();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -41,6 +43,8 @@ export default function CategoriesPage() {
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [showBatchDeleteConfirm, setShowBatchDeleteConfirm] = useState(false);
 
   // Sorting state
   const { sortConfig, handleSort } = useSort('created', 'desc');
@@ -95,6 +99,31 @@ export default function CategoriesPage() {
     setShowForm(true);
   };
 
+  // Selection handlers
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedIds(displayCategories.map(c => c.id));
+    } else {
+      setSelectedIds([]);
+    }
+  };
+
+  const handleSelectOne = (id: string, checked: boolean) => {
+    if (checked) {
+      setSelectedIds(prev => [...prev, id]);
+    } else {
+      setSelectedIds(prev => prev.filter(i => i !== id));
+    }
+  };
+
+  const handleBatchDelete = async () => {
+    const success = await deleteCategories(selectedIds);
+    if (success) {
+      setSelectedIds([]);
+      setShowBatchDeleteConfirm(false);
+    }
+  };
+
   return (
     <div>
       {/* Header */}
@@ -136,14 +165,43 @@ export default function CategoriesPage() {
       </div>
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-        <SortBar
-          columns={sortColumns}
-          currentSort={sortConfig}
-          onSort={handleSort}
-        />
-        <p className="text-sm text-muted">
-          {t('common:total_items', { count: pagination.total })}
-        </p>
+        <div className="flex items-center gap-4">
+          {displayCategories.length > 0 && (
+            <PermissionGuard resource="categories" action="delete">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={selectedIds.length === displayCategories.length && displayCategories.length > 0}
+                  onChange={(e) => { handleSelectAll(e.target.checked); }}
+                  className="w-4 h-4 rounded border-gray-300"
+                />
+                <span className="text-sm text-muted">{t('common:select_all')}</span>
+              </label>
+            </PermissionGuard>
+          )}
+          <SortBar
+            columns={sortColumns}
+            currentSort={sortConfig}
+            onSort={handleSort}
+          />
+        </div>
+        <div className="flex items-center gap-3">
+          {selectedIds.length > 0 && (
+            <PermissionGuard resource="categories" action="delete">
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={() => { setShowBatchDeleteConfirm(true); }}
+              >
+                <Trash2 className="w-4 h-4" />
+                {t('common:delete_selected')} ({selectedIds.length})
+              </Button>
+            </PermissionGuard>
+          )}
+          <p className="text-sm text-muted">
+            {t('common:total_items', { count: pagination.total })}
+          </p>
+        </div>
       </div>
 
       {/* Categories list */}
@@ -190,6 +248,8 @@ export default function CategoriesPage() {
                   setDeleteId(id);
                 },
               }}
+              isSelected={selectedIds.includes(category.id)}
+              onSelect={handleSelectOne}
             />
           ))}
           
@@ -241,6 +301,19 @@ export default function CategoriesPage() {
         onCancel={() => {
           setDeleteId(null);
         }}
+        variant="danger"
+      />
+
+      {/* Batch Delete Confirm Modal */}
+      <ConfirmModal
+        isOpen={showBatchDeleteConfirm}
+        title={t('common:delete')}
+        message={t('categories:batch_delete_confirm', { count: selectedIds.length })}
+        confirmText={t('common:delete')}
+        cancelText={t('common:cancel')}
+        loading={batchDeleting}
+        onConfirm={() => { void handleBatchDelete(); }}
+        onCancel={() => { setShowBatchDeleteConfirm(false); }}
         variant="danger"
       />
     </div>

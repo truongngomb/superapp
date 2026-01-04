@@ -14,6 +14,10 @@ interface DataRowProps {
   meta?: React.ReactNode;
   actions?: React.ReactNode;
   onClick?: () => void;
+  /** Whether this row is selected (shows checkbox) */
+  isSelected?: boolean;
+  /** Callback when selection changes */
+  onSelect?: (selected: boolean) => void;
 }
 
 export function DataRow({
@@ -27,9 +31,20 @@ export function DataRow({
   isActive,
   meta,
   actions,
-  onClick
+  onClick,
+  isSelected,
+  onSelect
 }: DataRowProps) {
   const { t } = useTranslation('common');
+
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.stopPropagation();
+    onSelect?.(e.target.checked);
+  };
+
+  const handleCheckboxClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
 
   return (
     <div style={style} className={`px-1 py-1 ${className || ''}`}>
@@ -42,6 +57,17 @@ export function DataRow({
         className="card p-4 flex flex-col md:flex-row items-start md:items-center gap-4 transition-colors hover:bg-muted/5 cursor-default"
       >
         <div className="flex items-center gap-4 w-full md:w-auto">
+          {/* Checkbox for selection */}
+          {onSelect && (
+            <input
+              type="checkbox"
+              checked={isSelected ?? false}
+              onChange={handleCheckboxChange}
+              onClick={handleCheckboxClick}
+              className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary flex-shrink-0"
+            />
+          )}
+
           {/* Icon / Avatar Area */}
           {icon && (
             <div 

@@ -6,7 +6,7 @@
 import { Router } from 'express';
 import { asyncHandler, requirePermission, validateBody } from '../middleware/index.js';
 import { categoryController } from '../controllers/index.js';
-import { CategoryCreateSchema, CategoryUpdateSchema } from '../schemas/index.js';
+import { CategoryCreateSchema, CategoryUpdateSchema, BatchDeleteSchema } from '../schemas/index.js';
 import { Resources, Actions } from '../types/index.js';
 
 export const categoriesRouter = Router();
@@ -18,12 +18,20 @@ export const categoriesRouter = Router();
 /** GET /categories - List all categories */
 categoriesRouter.get('/', asyncHandler(categoryController.getAll));
 
-/** GET /categories/:id - Get category by ID */
-categoriesRouter.get('/:id', asyncHandler(categoryController.getById));
-
 // =============================================================================
 // Protected Routes (require authentication + permission)
 // =============================================================================
+
+/** POST /categories/batch-delete - Batch delete categories */
+categoriesRouter.post(
+  '/batch-delete',
+  requirePermission(Resources.CATEGORIES, Actions.DELETE),
+  validateBody(BatchDeleteSchema),
+  asyncHandler(categoryController.batchDelete)
+);
+
+/** GET /categories/:id - Get category by ID */
+categoriesRouter.get('/:id', asyncHandler(categoryController.getById));
 
 /** POST /categories - Create new category */
 categoriesRouter.post(

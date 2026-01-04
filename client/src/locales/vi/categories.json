@@ -18,12 +18,14 @@
     "active_label": "Hoạt động",
     "active_description": "Danh mục hiển thị và có thể sử dụng"
   },
+  "delete_confirm": "Bạn có chắc chắn muốn xóa danh mục này không? Hành động này không thể hoàn tác.",
+  "batch_delete_confirm": "Bạn có chắc muốn xóa {{count}} danh mục? Hành động này không thể hoàn tác.",
   "toast": {
     "load_error": "Không thể tải danh sách danh mục",
     "create_success": "Tạo danh mục thành công!",
     "update_success": "Cập nhật danh mục thành công!",
     "delete_success": "Xóa danh mục thành công!",
+    "batch_delete_success": "Đã xóa thành công {{count}} danh mục!",
     "error": "Đã xảy ra lỗi"
-  },
-  "delete_confirm": "Bạn có chắc chắn muốn xóa danh mục này không? Hành động này không thể hoàn tác."
+  }
 }

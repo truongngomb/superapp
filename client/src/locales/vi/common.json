@@ -44,5 +44,7 @@
   "refresh": "Làm mới",
   "retry": "Thử lại",
   "no_data": "Không tìm thấy dữ liệu",
-  "load_more": "Tải thêm"
+  "load_more": "Tải thêm",
+  "select_all": "Chọn tất cả",
+  "delete_selected": "Xóa đã chọn"
 }
