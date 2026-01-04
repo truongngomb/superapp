@@ -14,6 +14,7 @@
 // Common types
 export type {
   BaseEntity,
+  MinimalEntity,
   Timestamps,
   ApiResponse,
   ApiErrorResponse,

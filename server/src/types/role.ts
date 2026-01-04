@@ -72,8 +72,6 @@ export interface Role extends BaseEntity {
   description?: string;
   /** Permissions assigned to this role */
   permissions: RolePermissions;
-  /** Whether role is active */
-  isActive?: boolean;
 }
 
 // =============================================================================

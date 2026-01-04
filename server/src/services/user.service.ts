@@ -45,7 +45,8 @@ class UserService extends BaseService<User> {
       avatar: avatarUrl,
       emailVisibility: record['emailVisibility'] as boolean | undefined,
       roles,
-      isActive: record['isActive'] as boolean | undefined,
+      isActive: (record['isActive'] as boolean | undefined) ?? true,
+      isDeleted: (record['isDeleted'] as boolean | undefined) ?? false,
       created: record['created'] as string,
       updated: record['updated'] as string,
     };

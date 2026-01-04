@@ -75,6 +75,8 @@ export interface BaseEntity {
   id: string;
   createdAt: string;
   updatedAt: string;
+  /** Active status flag */
+  isActive: boolean;
   /** Soft delete flag */
   isDeleted: boolean;
 }

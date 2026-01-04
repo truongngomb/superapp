@@ -21,7 +21,6 @@ export interface Role extends BaseEntity {
   name: string;
   description?: string;
   permissions: RolePermissions;
-  isActive?: boolean;
 }
 
 // ============================================================================

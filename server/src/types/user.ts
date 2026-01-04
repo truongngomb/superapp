@@ -22,8 +22,6 @@ export interface User extends BaseEntity {
   emailVisibility?: boolean;
   /** Reference to user's roles */
   roles?: string[];
-  /** Whether user is active */
-  isActive?: boolean;
 }
 
 // =============================================================================

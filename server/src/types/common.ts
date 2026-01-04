@@ -19,8 +19,21 @@ export interface BaseEntity {
   created: string;
   /** ISO timestamp of last update */
   updated: string;
+  /** Active status flag */
+  isActive: boolean;
   /** Soft delete flag */
   isDeleted: boolean;
+}
+
+/**
+ * Minimal entity interface for entities that only need id and created
+ * Used for entities like ActivityLog that don't need full CRUD support
+ */
+export interface MinimalEntity {
+  /** Unique identifier */
+  id: string;
+  /** ISO timestamp of creation */
+  created: string;
 }
 
 /**

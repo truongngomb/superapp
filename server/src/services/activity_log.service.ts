@@ -1,8 +1,9 @@
 import { BaseService } from './base.service.js';
 import { adminPb, ensureAdminAuth, config } from '../config/index.js';
-import type { BaseEntity } from '../types/index.js';
 
-export interface ActivityLog extends BaseEntity {
+export interface ActivityLog {
+  id: string;
+  created: string;
   user?: string;
   action: 'create' | 'update' | 'delete' | 'login' | 'logout';
   resource: string;
@@ -56,7 +57,6 @@ export class ActivityLogService extends BaseService<ActivityLog> {
       message: record['message'] as string,
       details: record['details'] as Record<string, unknown> | undefined,
       created: record['created'] as string,
-      updated: record['updated'] as string,
     };
 
     // Handle expanded user data

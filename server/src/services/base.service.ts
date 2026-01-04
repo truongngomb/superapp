@@ -7,7 +7,7 @@
 import { pb, getOrSet, invalidate, checkPocketBaseHealth, config } from '../config/index.js';
 import { NotFoundError, ServiceUnavailableError } from '../middleware/index.js';
 import { createLogger } from '../utils/index.js';
-import type { BaseEntity } from '../types/index.js';
+import type { MinimalEntity } from '../types/index.js';
 
 // =============================================================================
 // Types
@@ -59,7 +59,7 @@ export interface PaginatedResult<T> {
  * }
  * ```
  */
-export abstract class BaseService<T extends BaseEntity> {
+export abstract class BaseService<T extends MinimalEntity> {
   /** PocketBase collection name */
   protected abstract readonly collectionName: string;
   
@@ -163,7 +163,7 @@ export abstract class BaseService<T extends BaseEntity> {
   /**
    * Create new record
    */
-  async create(input: Partial<Omit<T, keyof BaseEntity>>, actorId?: string): Promise<T> {
+  async create(input: Partial<Omit<T, keyof MinimalEntity>>, actorId?: string): Promise<T> {
     await this.ensureDbAvailable();
     
     const record = await pb.collection(this.collectionName).create(input);
@@ -183,7 +183,7 @@ export abstract class BaseService<T extends BaseEntity> {
    * 
    * @throws NotFoundError if record doesn't exist
    */
-  async update(id: string, input: Partial<Omit<T, keyof BaseEntity>>, actorId?: string): Promise<T> {
+  async update(id: string, input: Partial<Omit<T, keyof MinimalEntity>>, actorId?: string): Promise<T> {
     await this.ensureDbAvailable();
     
     try {
