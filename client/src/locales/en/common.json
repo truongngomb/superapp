@@ -48,6 +48,13 @@
   "select_all": "Select all",
   "delete_selected": "Delete selected",
   "email": "Email",
+  "opacity": "Opacity",
+  "color_copied": "Copied!",
+  "copy_failed": "Copy failed",
+  "presets": "Palette",
+  "picker": "Picker",
+  "switch_to_presets": "Switch to color palette",
+  "switch_to_picker": "Switch to color picker",
   "actions_menu": {
     "change_language": "Change language"
   }

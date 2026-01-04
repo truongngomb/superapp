@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Input, Modal, Toggle } from '@/components/common';
+import { Button, ColorPicker, Input, Modal, Toggle } from '@/components/common';
 import type { Category, CategoryInput } from '@/types';
 import { IconPicker } from './IconPicker';
 
@@ -17,7 +17,7 @@ export function CategoryForm({ isOpen, category, onSubmit, onClose, loading }: C
   const [formData, setFormData] = useState<CategoryInput>({
     name: '',
     description: '',
-    color: '#3b82f6',
+    color: '#3b82f6ff',
     icon: 'folder',
     isActive: true,
   });
@@ -35,7 +35,7 @@ export function CategoryForm({ isOpen, category, onSubmit, onClose, loading }: C
       setFormData({
         name: '',
         description: '',
-        color: '#3b82f6',
+        color: '#3b82f6ff',
         icon: 'folder',
         isActive: true,
       });
@@ -81,12 +81,10 @@ export function CategoryForm({ isOpen, category, onSubmit, onClose, loading }: C
         
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-foreground">{t('categories:form.color_label')}</label>
-            <input
-              type="color"
+            <ColorPicker
+              label={t('categories:form.color_label')}
               value={formData.color}
-              onChange={(e) => { setFormData({ ...formData, color: e.target.value }); }}
-              className="w-full h-10 rounded-lg cursor-pointer bg-surface border border-muted/20 p-1"
+              onChange={(color) => { setFormData({ ...formData, color }); }}
             />
           </div>
 

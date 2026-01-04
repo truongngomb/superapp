@@ -7,7 +7,7 @@ import { z } from 'zod';
 // Common Schema Components
 // =============================================================================
 
-const hexColor = z.string().regex(/^#[0-9A-Fa-f]{6}$/, 'Invalid hex color');
+const hexColor = z.string().regex(/^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$/, 'Invalid hex color');
 
 // =============================================================================
 // Category Schemas

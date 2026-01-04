@@ -30,9 +30,9 @@ export const emailSchema = z.string().email('Invalid email address');
 export const urlSchema = z.string().url('Invalid URL');
 
 /**
- * Hex color code (#RRGGBB)
+ * Hex color code (#RRGGBB or #RRGGBBAA with alpha)
  */
-export const hexColorSchema = z.string().regex(/^#[0-9A-Fa-f]{6}$/, 'Invalid hex color');
+export const hexColorSchema = z.string().regex(/^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$/, 'Invalid hex color');
 
 // =============================================================================
 // Query Schemas

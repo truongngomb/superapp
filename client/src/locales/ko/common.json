@@ -48,6 +48,13 @@
   "select_all": "모두 선택",
   "delete_selected": "선택 삭제",
   "email": "이메일",
+  "opacity": "불투명도",
+  "color_copied": "복사됨!",
+  "copy_failed": "복사 실패",
+  "presets": "팔레트",
+  "picker": "선택기",
+  "switch_to_presets": "색상 팔레트로 전환",
+  "switch_to_picker": "색상 선택기로 전환",
   "actions_menu": {
     "change_language": "언어 변경"
   }

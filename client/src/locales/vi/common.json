@@ -48,6 +48,13 @@
   "select_all": "Chọn tất cả",
   "delete_selected": "Xóa đã chọn",
   "email": "Email",
+  "opacity": "Độ trong suốt",
+  "color_copied": "Đã copy!",
+  "copy_failed": "Copy thất bại",
+  "presets": "Bảng màu",
+  "picker": "Chọn màu",
+  "switch_to_presets": "Chuyển sang bảng màu",
+  "switch_to_picker": "Chuyển sang chọn màu",
   "actions_menu": {
     "change_language": "Thay đổi ngôn ngữ"
   }
