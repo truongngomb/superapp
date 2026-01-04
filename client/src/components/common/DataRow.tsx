@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Badge } from './Badge';
+import { Checkbox } from './Checkbox';
 
 interface DataRowProps {
   style?: React.CSSProperties;
@@ -37,13 +38,8 @@ export function DataRow({
 }: DataRowProps) {
   const { t } = useTranslation('common');
 
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.stopPropagation();
-    onSelect?.(e.target.checked);
-  };
-
-  const handleCheckboxClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleCheckboxChange = (checked: boolean) => {
+    onSelect?.(checked);
   };
 
   return (
@@ -59,12 +55,9 @@ export function DataRow({
         <div className="flex items-center gap-4 w-full md:w-auto">
           {/* Checkbox for selection */}
           {onSelect && (
-            <input
-              type="checkbox"
+            <Checkbox
               checked={isSelected ?? false}
               onChange={handleCheckboxChange}
-              onClick={handleCheckboxClick}
-              className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary flex-shrink-0"
             />
           )}
 

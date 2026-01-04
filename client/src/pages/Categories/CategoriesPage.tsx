@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence } from 'framer-motion';
 import { Plus, Folder, Search, RefreshCw, Loader2, Trash2 } from 'lucide-react';
-import { Button, Card, CardContent, Input, LoadingSpinner, ConfirmModal, SortBar, Pagination } from '@/components/common';
+import { Button, Card, CardContent, Checkbox, Input, LoadingSpinner, ConfirmModal, SortBar, Pagination } from '@/components/common';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
 import type { Category, CategoryInput } from '@/types';
 import { cn } from '@/utils';
@@ -168,15 +168,18 @@ export default function CategoriesPage() {
         <div className="flex items-center gap-4">
           {displayCategories.length > 0 && (
             <PermissionGuard resource="categories" action="delete">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={selectedIds.length === displayCategories.length && displayCategories.length > 0}
-                  onChange={(e) => { handleSelectAll(e.target.checked); }}
-                  className="w-4 h-4 rounded border-gray-300"
-                />
-                <span className="text-sm text-muted">{t('common:select_all')}</span>
-              </label>
+              <Checkbox
+                triState
+                checked={
+                  selectedIds.length === 0
+                    ? false
+                    : selectedIds.length === displayCategories.length
+                      ? true
+                      : 'indeterminate'
+                }
+                onChange={handleSelectAll}
+                label={t('common:select_all')}
+              />
             </PermissionGuard>
           )}
           <SortBar
