@@ -42,10 +42,10 @@ export default function RolesPage() {
 
   // Sortable columns configuration
   const sortColumns: Array<{ field: string; label: string }> = [
-    { field: 'name', label: t('common:name', 'Name') },
-    { field: 'isActive', label: t('common:status', 'Status') },
-    { field: 'created', label: t('common:created', 'Created') },
-    { field: 'updated', label: t('common:updated', 'Updated') },
+    { field: 'name', label: t('common:name') },
+    { field: 'isActive', label: t('common:status') },
+    { field: 'created', label: t('common:created') },
+    { field: 'updated', label: t('common:updated') },
   ];
 
   useEffect(() => {

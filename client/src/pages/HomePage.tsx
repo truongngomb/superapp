@@ -129,12 +129,12 @@ export function HomePage() {
       >
         <h2 className="text-2xl font-bold text-foreground mb-8">{t('common:tech_stack')}</h2>
         <div className="flex flex-wrap justify-center gap-3">
-          {['React 18', 'TypeScript', 'Vite', 'TailwindCSS', 'Node.js', 'Express', 'Capacitor', 'PocketBase'].map((tech) => (
+          {t('common:tech_stack.items', { defaultValue: 'React 18, TypeScript, Vite, TailwindCSS, Node.js, Express, Capacitor, PocketBase' }).split(',').map((tech) => (
             <span
-              key={tech}
+              key={tech.trim()}
               className="px-4 py-2 rounded-full bg-surface border border-border text-sm font-medium text-muted hover:text-primary hover:border-primary transition-colors"
             >
-              {tech}
+              {tech.trim()}
             </span>
           ))}
         </div>

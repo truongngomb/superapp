@@ -46,5 +46,9 @@
   "no_data": "No data found",
   "load_more": "Load More",
   "select_all": "Select all",
-  "delete_selected": "Delete selected"
+  "delete_selected": "Delete selected",
+  "email": "Email",
+  "actions_menu": {
+    "change_language": "Change language"
+  }
 }

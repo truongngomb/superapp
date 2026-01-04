@@ -21,5 +21,8 @@
       "title": "카테고리 관리",
       "description": "애플리케이션 개발을 위한 샘플 기능"
     }
+  },
+  "tech_stack": {
+    "items": "React 18, TypeScript, Vite, TailwindCSS, Node.js, Express, Capacitor, PocketBase"
   }
 }

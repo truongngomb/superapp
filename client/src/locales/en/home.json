@@ -21,5 +21,8 @@
       "title": "Category Management",
       "description": "Sample feature for application development"
     }
+  },
+  "tech_stack": {
+    "items": "React 18, TypeScript, Vite, TailwindCSS, Node.js, Express, Capacitor, PocketBase"
   }
 }

@@ -21,5 +21,8 @@
       "title": "Quản lý danh mục",
       "description": "Tính năng mẫu cho phát triển ứng dụng"
     }
+  },
+  "tech_stack": {
+    "items": "React 18, TypeScript, Vite, TailwindCSS, Node.js, Express, Capacitor, PocketBase"
   }
 }

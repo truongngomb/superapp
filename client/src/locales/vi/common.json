@@ -46,5 +46,9 @@
   "no_data": "Không tìm thấy dữ liệu",
   "load_more": "Tải thêm",
   "select_all": "Chọn tất cả",
-  "delete_selected": "Xóa đã chọn"
+  "delete_selected": "Xóa đã chọn",
+  "email": "Email",
+  "actions_menu": {
+    "change_language": "Thay đổi ngôn ngữ"
+  }
 }

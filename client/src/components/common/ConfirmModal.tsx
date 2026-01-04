@@ -5,6 +5,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertTriangle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button } from './Button';
 import { Card, CardContent } from './Card';
 
@@ -41,13 +42,17 @@ export function ConfirmModal({
   isOpen,
   title,
   message,
-  confirmText = 'Delete',
-  cancelText = 'Cancel',
+  confirmText,
+  cancelText,
   loading = false,
   onConfirm,
   onCancel,
   variant = 'danger',
 }: ConfirmModalProps) {
+  const { t } = useTranslation('common');
+  const finalConfirmText = confirmText || t('delete');
+  const finalCancelText = cancelText || t('cancel');
+
   const iconColorClass = {
     danger: 'text-red-500 bg-red-500/10',
     warning: 'text-yellow-500 bg-yellow-500/10',
@@ -97,7 +102,7 @@ export function ConfirmModal({
                       disabled={loading}
                       className="flex-1"
                     >
-                      {cancelText}
+                      {finalCancelText}
                     </Button>
                     <Button
                       type="button"
@@ -105,7 +110,7 @@ export function ConfirmModal({
                       loading={loading}
                       className={`flex-1 ${confirmButtonClass}`}
                     >
-                      {confirmText}
+                      {finalConfirmText}
                     </Button>
                   </div>
                 </div>

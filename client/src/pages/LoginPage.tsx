@@ -104,9 +104,9 @@ export function LoginPage() {
           </motion.button>
 
           <p className="text-center text-sm text-muted mt-4">
-            By signing in, you agree to our{' '}
+            {t('auth:login.terms_prefix')}{' '}
             <a href="#" className="text-primary hover:underline">
-              Terms of Service
+              {t('auth:login.terms_link')}
             </a>
           </p>
         </div>
