@@ -15,13 +15,14 @@ import { CategoryCreateInput, CategoryUpdateInput } from '../types/index.js';
  * GET /categories - Get paginated categories
  */
 export const getAll = async (req: Request, res: Response) => {
-  const { page, limit, sort, order, search, color, isActive } = req.query;
+  const { page, limit, sort, order, search, color, isActive, isDeleted } = req.query;
   
   // Build filter string for PocketBase
   const filters: string[] = [];
   if (typeof search === 'string') filters.push(`(name ~ "${search}" || description ~ "${search}")`);
   if (typeof color === 'string') filters.push(`color = "${color}"`);
   if (isActive !== undefined) filters.push(`isActive = ${isActive === 'true' ? 'true' : 'false'}`);
+  if (isDeleted !== undefined) filters.push(`isDeleted = ${isDeleted === 'true' ? 'true' : 'false'}`);
   
   const result = await categoryService.getPage({
     page: typeof page === 'string' ? parseInt(page, 10) : undefined,
@@ -61,6 +62,14 @@ export const update = async (req: Request, res: Response) => {
     req.user?.id
   );
   res.json({ success: true, data: category });
+};
+
+/**
+ * POST /categories/:id/restore - Restore soft-deleted category
+ */
+export const restore = async (req: Request, res: Response) => {
+  await categoryService.restore(req.params['id'] as string, req.user?.id);
+  res.status(200).json({ success: true });
 };
 
 /**

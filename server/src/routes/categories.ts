@@ -49,6 +49,13 @@ categoriesRouter.put(
   asyncHandler(categoryController.update)
 );
 
+/** POST /categories/:id/restore - Restore soft-deleted category */
+categoriesRouter.post(
+  '/:id/restore',
+  requirePermission(Resources.CATEGORIES, Actions.UPDATE),
+  asyncHandler(categoryController.restore)
+);
+
 /** DELETE /categories/:id - Delete category */
 categoriesRouter.delete(
   '/:id',

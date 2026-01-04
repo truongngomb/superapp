@@ -64,6 +64,7 @@ export const categoryService = {
       if (params?.search) queryParams.append('search', params.search);
       if (params?.color) queryParams.append('color', params.color);
       if (params?.isActive !== undefined) queryParams.append('isActive', params.isActive.toString());
+      if (params?.isDeleted !== undefined) queryParams.append('isDeleted', params.isDeleted.toString());
 
       const queryString = queryParams.toString();
       const endpoint = queryString ? `${API_ENDPOINTS.CATEGORIES}?${queryString}` : API_ENDPOINTS.CATEGORIES;
@@ -103,6 +104,13 @@ export const categoryService = {
    */
   async update(id: string, data: UpdateCategoryInput): Promise<Category> {
     return api.put<Category>(`${API_ENDPOINTS.CATEGORIES}/${id}`, data);
+  },
+
+  /**
+   * Restore soft-deleted category
+   */
+  async restore(id: string): Promise<void> {
+    return api.post(`${API_ENDPOINTS.CATEGORIES}/${id}/restore`);
   },
 
   /**

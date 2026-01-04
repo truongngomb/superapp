@@ -147,6 +147,23 @@ export function useCategories() {
     }
   };
 
+  const restoreCategory = async (id: string) => {
+    setSubmitting(true);
+    try {
+      await categoryService.restore(id);
+      toast.success(t('toast.restore_success', { defaultValue: 'Category restored successfully' }));
+      // Reload list after restore
+      await reloadCategories();
+      return true;
+    } catch (error) {
+      const message = error instanceof ApiException ? error.message : t('toast.error');
+      toast.error(message);
+      return false;
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return {
     categories,
     pagination,
@@ -157,6 +174,7 @@ export function useCategories() {
     fetchCategories,
     createCategory,
     updateCategory,
+    restoreCategory,
     deleteCategory,
     deleteCategories,
     batchDeleting,

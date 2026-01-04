@@ -65,6 +65,7 @@ export interface CategoryListParams {
   search?: string;
   color?: string;
   isActive?: boolean;
+  isDeleted?: boolean;
 }
 
 /**

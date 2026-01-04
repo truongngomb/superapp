@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Input, Modal, Toggle } from '@/components/common';
 import type { Category, CategoryInput } from '@/types';
+import { IconPicker } from './IconPicker';
 
 interface CategoryFormProps {
   isOpen: boolean;
@@ -51,7 +52,7 @@ export function CategoryForm({ isOpen, category, onSubmit, onClose, loading }: C
       isOpen={isOpen}
       onClose={onClose}
       title={category ? t('categories:form.edit_title') : t('categories:form.add_title')}
-      size="md"
+      size="full"
       footer={
         <div className="flex gap-3">
           <Button type="button" variant="outline" onClick={onClose} className="flex-1">
@@ -77,22 +78,37 @@ export function CategoryForm({ isOpen, category, onSubmit, onClose, loading }: C
           onChange={(e) => { setFormData({ ...formData, description: e.target.value }); }}
           placeholder={t('categories:form.desc_placeholder')}
         />
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-foreground">{t('categories:form.color_label')}</label>
+            <input
+              type="color"
+              value={formData.color}
+              onChange={(e) => { setFormData({ ...formData, color: e.target.value }); }}
+              className="w-full h-10 rounded-lg cursor-pointer bg-surface border border-muted/20 p-1"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+             <label className="text-sm font-medium text-foreground">{t('categories:form.active_label', { defaultValue: 'Status' })}</label>
+             <Toggle
+                checked={formData.isActive ?? true}
+                onChange={(checked) => { setFormData({ ...formData, isActive: checked }); }}
+                label={t('common:active')}
+                description={t('categories:form.active_description')}
+              />
+          </div>
+        </div>
+
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-foreground">{t('categories:form.color_label')}</label>
-          <input
-            type="color"
-            value={formData.color}
-            onChange={(e) => { setFormData({ ...formData, color: e.target.value }); }}
-            className="w-full h-10 rounded-lg cursor-pointer"
+          <label className="text-sm font-medium text-foreground">{t('categories:form.icon_label', { defaultValue: 'Icon' })}</label>
+          <IconPicker 
+            value={formData.icon} 
+            onChange={(icon) => { setFormData({ ...formData, icon }); }} 
+            color={formData.color}
           />
         </div>
-        {/* Active Status Toggle */}
-        <Toggle
-          checked={formData.isActive ?? true}
-          onChange={(checked) => { setFormData({ ...formData, isActive: checked }); }}
-          label={t('common:active')}
-          description={t('categories:form.active_description')}
-        />
       </form>
     </Modal>
   );

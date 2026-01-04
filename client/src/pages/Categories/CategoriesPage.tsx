@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence } from 'framer-motion';
 import { Plus, Folder, Search, RefreshCw, Loader2, Trash2 } from 'lucide-react';
-import { Button, Card, CardContent, Checkbox, Input, LoadingSpinner, ConfirmModal, SortBar, Pagination } from '@/components/common';
+import { Button, Card, CardContent, Checkbox, Input, LoadingSpinner, ConfirmModal, SortBar, Pagination, Toggle } from '@/components/common';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
 import type { Category, CategoryInput } from '@/types';
 import { cn } from '@/utils';
@@ -34,6 +34,7 @@ export default function CategoriesPage() {
     fetchCategories,
     createCategory,
     updateCategory,
+    restoreCategory,
     deleteCategory,
     deleteCategories
   } = useCategories();
@@ -43,8 +44,10 @@ export default function CategoriesPage() {
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [restoreId, setRestoreId] = useState<string | null>(null);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [showBatchDeleteConfirm, setShowBatchDeleteConfirm] = useState(false);
+  const [showArchived, setShowArchived] = useState(false);
 
   // Sorting state
   const { sortConfig, handleSort } = useSort('created', 'desc');
@@ -62,10 +65,11 @@ export default function CategoriesPage() {
       search: debouncedSearchQuery || undefined,
       sort: sortConfig.field,
       order: (sortConfig.order ?? 'desc'),
-      page: 1
+      page: 1,
+      isDeleted: showArchived || undefined
     };
     void fetchCategories(params);
-  }, [fetchCategories, debouncedSearchQuery, sortConfig]);
+  }, [fetchCategories, debouncedSearchQuery, sortConfig, showArchived]);
 
   // No more frontend filtering and sorting if we use backend pagination
   const displayCategories = categories;
@@ -187,6 +191,14 @@ export default function CategoriesPage() {
             currentSort={sortConfig}
             onSort={handleSort}
           />
+          <Toggle
+            checked={showArchived}
+            onChange={(checked: boolean) => { 
+                setShowArchived(checked);
+                setSelectedIds([]); // Clear selection when switching views
+            }}
+            label={t('common:show_archived', { defaultValue: 'Show Archived' })}
+          />
         </div>
         <div className="flex items-center gap-3">
           {selectedIds.length > 0 && (
@@ -250,6 +262,9 @@ export default function CategoriesPage() {
                 onDelete: (id) => {
                   setDeleteId(id);
                 },
+                onRestore: (id: string) => {
+                   setRestoreId(id);
+                }
               }}
               isSelected={selectedIds.includes(category.id)}
               onSelect={handleSelectOne}
@@ -305,6 +320,26 @@ export default function CategoriesPage() {
           setDeleteId(null);
         }}
         variant="danger"
+      />
+
+      {/* Restore Confirm Modal */}
+      <ConfirmModal
+        isOpen={!!restoreId}
+        title={t("common:restore", { defaultValue: 'Restore' })}
+        message={t("categories:restore_confirm", { defaultValue: 'Are you sure you want to restore this category?' })}
+        confirmText={t("common:confirm", { defaultValue: 'Confirm' })}
+        cancelText={t("common:cancel")}
+        loading={submitting}
+        onConfirm={() => {
+          if (restoreId) {
+            void restoreCategory(restoreId).then(success => {
+              if (success) setRestoreId(null);
+            });
+          }
+        }}
+        onCancel={() => {
+          setRestoreId(null);
+        }}
       />
 
       {/* Batch Delete Confirm Modal */}

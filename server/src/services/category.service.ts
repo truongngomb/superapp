@@ -18,8 +18,8 @@ class CategoryService extends BaseService<Category> {
   protected readonly collectionName = Collections.CATEGORIES;
   protected readonly cacheKey = CacheKeys.CATEGORIES;
 
-  /** Filter condition to exclude soft-deleted records */
-  private readonly activeFilter = 'isDeleted = false';
+  /** Default filter condition to exclude soft-deleted records */
+  private readonly defaultFilter = 'isDeleted = false';
 
   protected mapRecord(record: Record<string, unknown>): Category {
     return {
@@ -36,7 +36,7 @@ class CategoryService extends BaseService<Category> {
   }
 
   /**
-   * Get all categories (excludes soft-deleted)
+   * Get all categories (excludes soft-deleted by default)
    */
   async getAll(): Promise<Category[]> {
     return getOrSet(
@@ -45,7 +45,7 @@ class CategoryService extends BaseService<Category> {
         await this.ensureDbAvailable();
         const records = await pb.collection(this.collectionName).getFullList({
           sort: '-created',
-          filter: this.activeFilter,
+          filter: this.defaultFilter,
         });
         return records.map((r) => this.mapRecord(r));
       },
@@ -54,15 +54,17 @@ class CategoryService extends BaseService<Category> {
   }
 
   /**
-   * Get paginated categories (excludes soft-deleted)
+   * Get paginated categories
    */
   async getPage(options: ListOptions = {}): Promise<PaginatedResult<Category>> {
     const { filter } = options;
     
-    // Merge user filter with activeFilter
+    // If filter already contains isDeleted, don't append defaultFilter
+    const hasIsDeletedFilter = filter?.includes('isDeleted');
+    
     const combinedFilter = filter 
-      ? `(${filter}) && ${this.activeFilter}`
-      : this.activeFilter;
+      ? (hasIsDeletedFilter ? filter : `(${filter}) && ${this.defaultFilter}`)
+      : this.defaultFilter;
 
     return super.getPage({ ...options, filter: combinedFilter });
   }
@@ -82,6 +84,22 @@ class CategoryService extends BaseService<Category> {
     // Log activity
     const { activityLogService } = await import('./activity_log.service.js');
     void activityLogService.logCRUD(actorId, 'delete', this.collectionName, id);
+  }
+
+  /**
+   * Restore soft-deleted category
+   */
+  async restore(id: string, actorId?: string): Promise<void> {
+    await this.ensureDbAvailable();
+
+    await pb.collection(this.collectionName).update(id, { isDeleted: false });
+    this.invalidateCache();
+
+    this.log.info('Restored soft-deleted record', { id });
+
+    // Log activity
+    const { activityLogService } = await import('./activity_log.service.js');
+    void activityLogService.logCRUD(actorId, 'update', this.collectionName, id, { restore: true });
   }
 
   /**
