@@ -34,6 +34,7 @@ export {
   requirePermission,
   requireAnyPermission,
   requireAllPermissions,
+  hasPermission,
 } from './rbac.js';
 
 // Validation

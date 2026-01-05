@@ -156,7 +156,7 @@ export type AsyncValueCallback<T> = (value: T) => Promise<void>;
  */
 export enum PermissionAction {
   Create = 'create',
-  Read = 'read',
+  View = 'view',
   Update = 'update',
   Delete = 'delete',
   Manage = 'manage',

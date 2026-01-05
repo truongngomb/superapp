@@ -191,14 +191,16 @@ export default function CategoriesPage() {
             currentSort={sortConfig}
             onSort={handleSort}
           />
-          <Toggle
-            checked={showArchived}
-            onChange={(checked: boolean) => { 
-                setShowArchived(checked);
-                setSelectedIds([]); // Clear selection when switching views
-            }}
-            label={t('common:show_archived', { defaultValue: 'Show Archived' })}
-          />
+          <PermissionGuard resource="categories" action="manage">
+            <Toggle
+              checked={showArchived}
+              onChange={(checked: boolean) => { 
+                  setShowArchived(checked);
+                  setSelectedIds([]); // Clear selection when switching views
+              }}
+              label={t('common:show_archived', { defaultValue: 'Show Archived' })}
+            />
+          </PermissionGuard>
         </div>
         <div className="flex items-center gap-3">
           {selectedIds.length > 0 && (

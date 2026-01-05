@@ -23,7 +23,8 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
   { 
     path: '/categories', 
     labelKey: 'categories', 
-    icon: Folder 
+    icon: Folder,
+    permission: { resource: 'categories', action: 'view' }
   },
   { 
     path: '/admin/dashboard', 

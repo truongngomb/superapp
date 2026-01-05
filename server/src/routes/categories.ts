@@ -16,7 +16,11 @@ export const categoriesRouter = Router();
 // =============================================================================
 
 /** GET /categories - List all categories */
-categoriesRouter.get('/', asyncHandler(categoryController.getAll));
+categoriesRouter.get(
+  '/',
+  requirePermission(Resources.CATEGORIES, Actions.VIEW),
+  asyncHandler(categoryController.getAll)
+);
 
 // =============================================================================
 // Protected Routes (require authentication + permission)

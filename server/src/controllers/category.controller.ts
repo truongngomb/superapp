@@ -5,7 +5,8 @@
  */
 import { Request, Response } from 'express';
 import { categoryService } from '../services/index.js';
-import { CategoryCreateInput, CategoryUpdateInput } from '../types/index.js';
+import { CategoryCreateInput, CategoryUpdateInput, Resources, Actions } from '../types/index.js';
+import { hasPermission, ForbiddenError } from '../middleware/index.js';
 
 // =============================================================================
 // Handlers
@@ -16,6 +17,15 @@ import { CategoryCreateInput, CategoryUpdateInput } from '../types/index.js';
  */
 export const getAll = async (req: Request, res: Response) => {
   const { page, limit, sort, order, search, color, isActive, isDeleted } = req.query;
+
+  // Security: Restricted access to trashed items (isDeleted=true)
+  // Only admins or users with 'manage' permission can view deleted items
+  if (isDeleted === 'true') {
+    const canManage = hasPermission(req.user?.permissions || {}, Resources.CATEGORIES, Actions.MANAGE);
+    if (!canManage) {
+      throw new ForbiddenError('You do not have permission to view deleted categories');
+    }
+  }
   
   // Build filter string for PocketBase
   const filters: string[] = [];

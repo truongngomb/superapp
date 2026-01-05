@@ -53,9 +53,9 @@ export const requirePermission = (resource: Resource, action: Action) => {
     }
 
     // Check permissions
-    const hasPermission = checkPermission(permissions, resource, action);
+    const isGranted = hasPermission(permissions, resource, action);
 
-    if (!hasPermission) {
+    if (!isGranted) {
       if (config.isDevelopment) {
         logger.debug('RBAC', 'Permission denied', { resource, action, user: user.id });
       }
@@ -71,7 +71,7 @@ export const requirePermission = (resource: Resource, action: Action) => {
 /**
  * Check if permissions object grants access to resource + action
  */
-function checkPermission(
+export function hasPermission(
   permissions: Record<string, string[]>,
   resource: Resource,
   action: Action
@@ -123,7 +123,7 @@ export const requireAnyPermission = (
 
     const userPerms = user.permissions;
     const hasAny = permissions.some(([resource, action]) =>
-      checkPermission(userPerms, resource, action)
+      hasPermission(userPerms, resource, action)
     );
 
     if (!hasAny) {
@@ -157,7 +157,7 @@ export const requireAllPermissions = (
 
     const userPerms = user.permissions;
     const hasAll = permissions.every(([resource, action]) =>
-      checkPermission(userPerms, resource, action)
+      hasPermission(userPerms, resource, action)
     );
 
     if (!hasAll) {

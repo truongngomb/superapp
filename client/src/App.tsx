@@ -87,9 +87,14 @@ export function App() {
                 <Route
                   path="categories"
                   element={
-                    <Suspense fallback={<PageLoader />}>
-                      <CategoriesPage />
-                    </Suspense>
+                    <ProtectedRoute
+                      resource={PermissionResource.Categories}
+                      action={PermissionAction.View}
+                    >
+                      <Suspense fallback={<PageLoader />}>
+                        <CategoriesPage />
+                      </Suspense>
+                    </ProtectedRoute>
                   }
                 />
                 
@@ -111,7 +116,7 @@ export function App() {
                   element={
                     <ProtectedRoute 
                       resource={PermissionResource.Users} 
-                      action={PermissionAction.Read}
+                      action={PermissionAction.View}
                     >
                       <Suspense fallback={<PageLoader />}>
                         <AdminLayout />
@@ -142,7 +147,7 @@ export function App() {
                     element={
                       <ProtectedRoute 
                         resource={PermissionResource.Roles} 
-                        action={PermissionAction.Read}
+                        action={PermissionAction.View}
                       >
                         <Suspense fallback={<PageLoader />}>
                           <RolesPage />
@@ -155,7 +160,7 @@ export function App() {
                     element={
                       <ProtectedRoute 
                         resource={PermissionResource.Roles} 
-                        action={PermissionAction.Read}
+                        action={PermissionAction.View}
                       >
                         <Suspense fallback={<PageLoader />}>
                           <ActivityLogsPage />
