@@ -16,9 +16,15 @@ import { createLogger } from '../utils/index.js';
 const log = createLogger('AuthController');
 
 const COOKIE_NAME = 'pb_auth';
+/**
+ * Cookie security options:
+ * - httpOnly: Prevents XSS attacks from accessing the cookie via JavaScript
+ * - secure: Only send cookie over HTTPS (enabled in production only to allow local HTTP dev)
+ * - sameSite: Prevents CSRF attacks by restricting cross-site cookie sending
+ */
 const COOKIE_OPTIONS = {
   httpOnly: true,
-  secure: config.isProduction,
+  secure: config.isProduction, // HTTPS required in production
   sameSite: 'lax' as const,
 };
 

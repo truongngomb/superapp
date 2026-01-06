@@ -35,7 +35,11 @@ categoriesRouter.post(
 );
 
 /** GET /categories/:id - Get category by ID */
-categoriesRouter.get('/:id', asyncHandler(categoryController.getById));
+categoriesRouter.get(
+  '/:id',
+  requirePermission(Resources.CATEGORIES, Actions.VIEW),
+  asyncHandler(categoryController.getById)
+);
 
 /** POST /categories - Create new category */
 categoriesRouter.post(

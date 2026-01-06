@@ -5,6 +5,7 @@ import { Router } from 'express';
 import { activityLogService } from '../services/index.js';
 import { asyncHandler, authenticate, requirePermission } from '../middleware/index.js';
 import { Resources, Actions } from '../types/index.js';
+import { sanitizePocketBaseFilter } from '../utils/index.js';
 
 const router = Router();
 
@@ -20,9 +21,10 @@ router.get('/', authenticate, requirePermission(Resources.ROLES, Actions.VIEW), 
 
   let filter = '';
   if (search) {
-    // Filter by message, resource, or user name
-    // Note: PocketBase filter syntax
-    filter = `message ~ "${search}" || resource ~ "${search}" || action ~ "${search}"`;
+    // Sanitize input to prevent PocketBase filter injection
+    const sanitizedSearch = sanitizePocketBaseFilter(search);
+    // Filter by message, resource, or action
+    filter = `message ~ "${sanitizedSearch}" || resource ~ "${sanitizedSearch}" || action ~ "${sanitizedSearch}"`;
   }
   
   const result = await activityLogService.getPage({
