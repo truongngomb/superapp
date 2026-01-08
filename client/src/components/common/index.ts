@@ -31,5 +31,9 @@ export { ProtectedRoute } from './ProtectedRoute';
 export { AuthGuard } from './AuthGuard';
 export { GuestGuard } from './GuestGuard';
 
+// Fallback Components
+export { PageLoader } from './PageLoader';
+export { NotFoundPage } from './NotFoundPage';
+
 // Permission Hooks (re-exported from hooks folder)
 export { usePermission, usePermissions } from '@/hooks/usePermission';

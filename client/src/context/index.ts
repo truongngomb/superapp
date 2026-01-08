@@ -2,7 +2,8 @@
  * Context Module Exports
  */
 
-export { AuthProvider, AuthContext, type AuthContextType } from './auth';
+export { AuthProvider } from './AuthProvider';
+export { AuthContext, type AuthContextType } from './AuthContext';
 export { ThemeProvider } from './ThemeContext';
 export { useTheme } from './useTheme';
 export { ToastProvider } from './ToastContext';
