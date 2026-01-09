@@ -2,9 +2,9 @@
  * Base Service
  * 
  * Abstract base class for PocketBase collection services.
- * Provides CRUD operations with caching and error handling.
+ * Provides CRUD operations with caching, soft delete support, and batch operations.
  */
-import { pb, getOrSet, invalidate, checkPocketBaseHealth, config } from '../config/index.js';
+import { adminPb, getOrSet, invalidate, checkPocketBaseHealth, ensureAdminAuth, config } from '../config/index.js';
 import { NotFoundError, ServiceUnavailableError } from '../middleware/index.js';
 import { createLogger } from '../utils/index.js';
 import type { MinimalEntity } from '../types/index.js';
@@ -45,15 +45,24 @@ export interface PaginatedResult<T> {
 /**
  * Abstract base service for PocketBase collections
  * 
- * @template T - Entity type (must extend BaseEntity)
+ * @template T - Entity type (must extend MinimalEntity)
+ * 
+ * Features:
+ * - CRUD operations with caching
+ * - Optional soft delete support
+ * - Batch operations (deleteMany, updateMany)
+ * - Default filter support
+ * - Activity logging
  * 
  * @example
  * ```typescript
- * class UserService extends BaseService<User> {
- *   protected collectionName = 'users';
- *   protected cacheKey = 'users';
+ * class CategoryService extends BaseService<Category> {
+ *   protected collectionName = 'categories';
+ *   protected cacheKey = 'categories';
+ *   protected softDelete = true;
+ *   protected defaultFilter = 'isDeleted = false';
  *   
- *   protected mapRecord(record: Record<string, unknown>): User {
+ *   protected mapRecord(record: Record<string, unknown>): Category {
  *     return { id: record.id, name: record.name, ... };
  *   }
  * }
@@ -69,8 +78,21 @@ export abstract class BaseService<T extends MinimalEntity> {
   /** Cache TTL in seconds (default: 5 minutes) */
   protected cacheTtl = 300;
 
+  /** Default filter to apply to all queries (e.g., 'isDeleted = false') */
+  protected readonly defaultFilter?: string;
+
   /** Scoped logger for this service */
   protected readonly log = createLogger(this.constructor.name);
+
+  /** Access to PocketBase client (authenticated as admin) */
+  protected get db() {
+    return adminPb;
+  }
+
+  /** Shorthand for db.collection(this.collectionName) */
+  protected get collection() {
+    return this.db.collection(this.collectionName);
+  }
 
   // ===========================================================================
   // Abstract Methods
@@ -88,14 +110,16 @@ export abstract class BaseService<T extends MinimalEntity> {
 
   /**
    * Get all records (cached), sorted by created date descending
+   * Applies defaultFilter if defined
    */
   async getAll(): Promise<T[]> {
     return getOrSet(
       this.cacheKey,
       async () => {
         await this.ensureDbAvailable();
-        const records = await pb.collection(this.collectionName).getFullList({
-          sort: '-created', // Default sort by newest first
+        const records = await this.collection.getFullList({
+          sort: '-created',
+          filter: this.defaultFilter || '',
         });
         return records.map((r) => this.mapRecord(r));
       },
@@ -105,18 +129,18 @@ export abstract class BaseService<T extends MinimalEntity> {
 
   /**
    * Get paginated records
+   * Combines defaultFilter with user filter
    */
   async getPage(options: ListOptions = {}): Promise<PaginatedResult<T>> {
-    const { page = 1, limit = config.itemsPerPage, sort, order = 'asc', filter } = options;
+    const { page = 1, limit = config.itemsPerPage, sort, order = 'asc', filter, expand } = options;
     
     await this.ensureDbAvailable();
     
     const sortStr = sort ? `${order === 'desc' ? '-' : ''}${sort}` : '-created';
-    
-    const result = await pb.collection(this.collectionName).getList(page, limit, {
+    const result = await this.collection.getList(page, limit, {
       sort: sortStr,
-      filter: filter || '',
-      expand: options.expand || '',
+      filter: this.combineFilters(filter),
+      expand: expand || '',
     });
 
     return {
@@ -137,10 +161,30 @@ export abstract class BaseService<T extends MinimalEntity> {
     await this.ensureDbAvailable();
     
     try {
-      const record = await pb.collection(this.collectionName).getOne(id);
+      const record = await this.collection.getOne(id);
       return this.mapRecord(record);
     } catch {
       throw new NotFoundError(`${this.collectionName} with id '${id}' not found`);
+    }
+  }
+
+  /**
+   * Get first record matching a field value
+   * 
+   * @returns Record or null if not found
+   */
+  async getFirstByField(field: string, value: unknown): Promise<T | null> {
+    await this.ensureDbAvailable();
+    
+    try {
+      const filterStr = typeof value === 'string' 
+        ? `${field} = "${value}"` 
+        : `${field} = ${String(value)}`;
+      
+      const record = await this.collection.getFirstListItem(this.combineFilters(filterStr));
+      return this.mapRecord(record);
+    } catch {
+      return null;
     }
   }
 
@@ -156,6 +200,15 @@ export abstract class BaseService<T extends MinimalEntity> {
     }
   }
 
+  /**
+   * Count records matching filter
+   */
+  async count(filter?: string): Promise<number> {
+    await this.ensureDbAvailable();
+    const result = await this.collection.getList(1, 1, { filter: this.combineFilters(filter) });
+    return result.totalItems;
+  }
+
   // ===========================================================================
   // Write Operations
   // ===========================================================================
@@ -165,16 +218,10 @@ export abstract class BaseService<T extends MinimalEntity> {
    */
   async create(input: Partial<Omit<T, keyof MinimalEntity>>, actorId?: string): Promise<T> {
     await this.ensureDbAvailable();
-    
-    const record = await pb.collection(this.collectionName).create(input);
+    const record = await this.collection.create(input);
     this.invalidateCache();
-    
     this.log.info('Created record', { id: record.id });
-
-    // Log activity
-    const { activityLogService } = await import('./activity_log.service.js');
-    void activityLogService.logCRUD(actorId, 'create', this.collectionName, record.id, { data: input });
-
+    this.logActivity(actorId, 'create', record.id, { data: input });
     return this.mapRecord(record);
   }
 
@@ -187,15 +234,10 @@ export abstract class BaseService<T extends MinimalEntity> {
     await this.ensureDbAvailable();
     
     try {
-      const record = await pb.collection(this.collectionName).update(id, input);
+      const record = await this.collection.update(id, input);
       this.invalidateCache();
-      
       this.log.info('Updated record', { id });
-
-      // Log activity
-      const { activityLogService } = await import('./activity_log.service.js');
-      void activityLogService.logCRUD(actorId, 'update', this.collectionName, id, { data: input });
-
+      this.logActivity(actorId, 'update', id, { data: input });
       return this.mapRecord(record);
     } catch (error) {
       if (error instanceof NotFoundError) throw error;
@@ -204,30 +246,134 @@ export abstract class BaseService<T extends MinimalEntity> {
   }
 
   /**
-   * Delete record
-   * 
-   * @throws NotFoundError if record doesn't exist
+   * Update multiple records in parallel
+   */
+  async updateMany(ids: string[], input: Partial<Omit<T, keyof MinimalEntity>>, actorId?: string): Promise<void> {
+    await this.ensureDbAvailable();
+    await Promise.all(ids.map(async (id) => {
+      await this.collection.update(id, input);
+      this.logActivity(actorId, 'update', id, { data: input });
+    }));
+    this.invalidateCache();
+    this.log.info('Batch updated records', { count: ids.length, ids });
+  }
+
+  /**
+   * Soft delete record (set isDeleted = true)
+   * Record remains in database but excluded by defaultFilter
    */
   async delete(id: string, actorId?: string): Promise<void> {
     await this.ensureDbAvailable();
-    
-    try {
-      await pb.collection(this.collectionName).delete(id);
-      this.invalidateCache();
-      
-      this.log.info('Deleted record', { id });
+    await this.collection.update(id, { isDeleted: true });
+    this.invalidateCache();
+    this.log.info('Soft deleted record', { id });
+    this.logActivity(actorId, 'delete', id);
+  }
 
-      // Log activity
-      const { activityLogService } = await import('./activity_log.service.js');
-      void activityLogService.logCRUD(actorId, 'delete', this.collectionName, id);
+  /**
+   * Hard delete record (permanently remove from database)
+   * @throws NotFoundError if record doesn't exist
+   */
+  async hardDelete(id: string, actorId?: string): Promise<void> {
+    await this.ensureDbAvailable();
+    try {
+      await this.collection.delete(id);
+      this.invalidateCache();
+      this.log.info('Hard deleted record', { id });
+      this.logActivity(actorId, 'delete', id, { permanent: true });
     } catch {
       throw new NotFoundError(`${this.collectionName} with id '${id}' not found`);
     }
   }
 
-  // ===========================================================================
-  // Protected Helpers
-  // ===========================================================================
+  /**
+   * Soft delete multiple records in parallel
+   */
+  async deleteMany(ids: string[], actorId?: string): Promise<void> {
+    await this.ensureDbAvailable();
+    await Promise.all(ids.map(async (id) => {
+      await this.collection.update(id, { isDeleted: true });
+      this.logActivity(actorId, 'delete', id);
+    }));
+    this.invalidateCache();
+    this.log.info('Batch soft deleted records', { count: ids.length, ids });
+  }
+
+  /**
+   * Hard delete multiple records in parallel
+   */
+  async hardDeleteMany(ids: string[], actorId?: string): Promise<void> {
+    await this.ensureDbAvailable();
+    await Promise.all(ids.map(async (id) => {
+      await this.collection.delete(id);
+      this.logActivity(actorId, 'delete', id, { permanent: true });
+    }));
+    this.invalidateCache();
+    this.log.info('Batch hard deleted records', { count: ids.length, ids });
+  }
+
+  /**
+   * Restore soft-deleted record
+   */
+  async restore(id: string, actorId?: string): Promise<void> {
+    await this.ensureDbAvailable();
+    await this.collection.update(id, { isDeleted: false });
+    this.invalidateCache();
+    this.log.info('Restored soft-deleted record', { id });
+    this.logActivity(actorId, 'update', id, { restore: true });
+  }
+
+  /**
+   * Restore multiple soft-deleted records in parallel
+   */
+  async restoreMany(ids: string[], actorId?: string): Promise<void> {
+    await this.ensureDbAvailable();
+    await Promise.all(ids.map(async (id) => {
+      await this.collection.update(id, { isDeleted: false });
+      this.logActivity(actorId, 'update', id, { restore: true });
+    }));
+    this.invalidateCache();
+    this.log.info('Batch restored records', { count: ids.length, ids });
+  }
+
+
+  /**
+   * Log activity (fire-and-forget)
+   * Uses dynamic import to avoid circular dependency
+   */
+  protected logActivity(
+    actorId: string | undefined,
+    action: 'create' | 'update' | 'delete',
+    recordId: string,
+    details?: Record<string, unknown>
+  ): void {
+    void (async () => {
+      const { activityLogService } = await import('./activity_log.service.js');
+      await activityLogService.logCRUD(actorId, action, this.collectionName, recordId, details);
+    })();
+  }
+
+  /**
+   * Combine user filter with default filter
+   */
+  protected combineFilters(userFilter?: string): string {
+    if (!this.defaultFilter) {
+      return userFilter || '';
+    }
+    
+    if (!userFilter) {
+      return this.defaultFilter;
+    }
+    
+    // Check if user filter already contains the default filter field
+    // to avoid duplicate conditions
+    const defaultField = this.defaultFilter.split('=')[0]?.trim();
+    if (defaultField && userFilter.includes(defaultField)) {
+      return userFilter;
+    }
+    
+    return `(${userFilter}) && ${this.defaultFilter}`;
+  }
 
   /**
    * Ensure database is available
@@ -238,6 +384,8 @@ export abstract class BaseService<T extends MinimalEntity> {
     if (!available) {
       throw new ServiceUnavailableError('Database is currently unavailable');
     }
+    // Ensure adminPb is authenticated as superuser
+    await ensureAdminAuth();
   }
 
   /**
@@ -247,3 +395,4 @@ export abstract class BaseService<T extends MinimalEntity> {
     invalidate(this.cacheKey);
   }
 }
+

@@ -16,8 +16,6 @@ import { logger } from '../utils/index.js';
  * Configured with URL from environment variables
  */
 export const pb = new PocketBase(config.pocketbaseUrl);
-
-// Disable auto-cancellation for concurrent requests
 pb.autoCancellation(false);
 
 /**

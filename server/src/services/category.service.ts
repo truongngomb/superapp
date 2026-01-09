@@ -2,9 +2,10 @@
  * Category Service
  * 
  * Handles CRUD operations for categories with soft delete support.
+ * Extends BaseService for all common operations.
  */
-import { BaseService, type ListOptions, type PaginatedResult } from './base.service.js';
-import { Collections, CacheKeys, pb, getOrSet } from '../config/index.js';
+import { BaseService } from './base.service.js';
+import { Collections, CacheKeys } from '../config/index.js';
 import type { Category } from '../types/index.js';
 
 // =============================================================================
@@ -13,13 +14,14 @@ import type { Category } from '../types/index.js';
 
 /**
  * Service for managing categories with soft delete support
+ * Uses BaseService soft delete feature
  */
 class CategoryService extends BaseService<Category> {
   protected readonly collectionName = Collections.CATEGORIES;
   protected readonly cacheKey = CacheKeys.CATEGORIES;
 
-  /** Default filter condition to exclude soft-deleted records */
-  private readonly defaultFilter = 'isDeleted = false';
+  /** Exclude soft-deleted records by default */
+  protected readonly defaultFilter = 'isDeleted = false';
 
   protected mapRecord(record: Record<string, unknown>): Category {
     return {
@@ -34,94 +36,6 @@ class CategoryService extends BaseService<Category> {
       updated: record['updated'] as string,
     };
   }
-
-  /**
-   * Get all categories (excludes soft-deleted by default)
-   */
-  async getAll(): Promise<Category[]> {
-    return getOrSet(
-      this.cacheKey,
-      async () => {
-        await this.ensureDbAvailable();
-        const records = await pb.collection(this.collectionName).getFullList({
-          sort: '-created',
-          filter: this.defaultFilter,
-        });
-        return records.map((r) => this.mapRecord(r));
-      },
-      this.cacheTtl
-    );
-  }
-
-  /**
-   * Get paginated categories
-   */
-  async getPage(options: ListOptions = {}): Promise<PaginatedResult<Category>> {
-    const { filter } = options;
-    
-    // If filter already contains isDeleted, don't append defaultFilter
-    const hasIsDeletedFilter = filter?.includes('isDeleted');
-    
-    const combinedFilter = filter 
-      ? (hasIsDeletedFilter ? filter : `(${filter}) && ${this.defaultFilter}`)
-      : this.defaultFilter;
-
-    return super.getPage({ ...options, filter: combinedFilter });
-  }
-
-  /**
-   * Soft delete category (sets isDeleted = true instead of removing)
-   */
-  async delete(id: string, actorId?: string): Promise<void> {
-    await this.ensureDbAvailable();
-
-    // Use update to set isDeleted = true (soft delete)
-    await pb.collection(this.collectionName).update(id, { isDeleted: true });
-    this.invalidateCache();
-
-    this.log.info('Soft deleted record', { id });
-
-    // Log activity
-    const { activityLogService } = await import('./activity_log.service.js');
-    void activityLogService.logCRUD(actorId, 'delete', this.collectionName, id);
-  }
-
-  /**
-   * Restore soft-deleted category
-   */
-  async restore(id: string, actorId?: string): Promise<void> {
-    await this.ensureDbAvailable();
-
-    await pb.collection(this.collectionName).update(id, { isDeleted: false });
-    this.invalidateCache();
-
-    this.log.info('Restored soft-deleted record', { id });
-
-    // Log activity
-    const { activityLogService } = await import('./activity_log.service.js');
-    void activityLogService.logCRUD(actorId, 'update', this.collectionName, id, { restore: true });
-  }
-
-  /**
-   * Batch soft delete categories
-   */
-  async deleteMany(ids: string[], actorId?: string): Promise<void> {
-    await this.ensureDbAvailable();
-
-    // Loop through each id and soft delete
-    for (const id of ids) {
-      await pb.collection(this.collectionName).update(id, { isDeleted: true });
-      
-      // Log activity for each item
-      const { activityLogService } = await import('./activity_log.service.js');
-      void activityLogService.logCRUD(actorId, 'delete', this.collectionName, id);
-    }
-
-    // Invalidate cache once at the end
-    this.invalidateCache();
-
-    this.log.info('Batch soft deleted records', { count: ids.length, ids });
-  }
 }
 
 // =============================================================================
@@ -129,4 +43,3 @@ class CategoryService extends BaseService<Category> {
 // =============================================================================
 
 export const categoryService = new CategoryService();
-

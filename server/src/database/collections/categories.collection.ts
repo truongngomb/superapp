@@ -26,9 +26,9 @@ export const categoriesCollection: BaseCollectionSchema = {
     'CREATE UNIQUE INDEX `idx_categories_name` ON `categories` (`name`)',
   ],
 
-  listRule: '',
-  viewRule: '@request.auth.id != ""',
-  createRule: '@request.auth.id != ""',
-  updateRule: '@request.auth.id != ""',
-  deleteRule: '@request.auth.id != ""',
+  listRule: null,
+  viewRule: null,
+  createRule: null,
+  updateRule: null,
+  deleteRule: null,
 };
