@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RefreshCw, Search, Shield, Loader2 } from 'lucide-react';
-import { Button, Card, CardContent, Pagination, SortBar, Input, LoadingSpinner } from '@/components/common';
+import { Button, Card, CardContent, Pagination, SortBar, Input, LoadingSpinner, PermissionGuard } from '@/components/common';
 import { ActivityLogTable } from './components/ActivityLogTable';
 import { activityLogService } from '@/services';
 import type { ActivityLog } from '@/types';
@@ -20,8 +20,7 @@ export default function ActivityLogsPage() {
   const debouncedSearchQuery = useDebounce(searchQuery, 400);
 
   // Translations
-  const { t } = useTranslation('activity_logs');
-  const { t: tCommon } = useTranslation('common');
+  const { t } = useTranslation(['activity_logs', 'common']);
   
   // Sorting state
   const { sortConfig, handleSort } = useSort('created', 'desc');
@@ -41,7 +40,7 @@ export default function ActivityLogsPage() {
     }
 
     try {
-      const response = await activityLogService.getLogs({
+      const response = await activityLogService.getPage({
         page: currentPage,
         sort: sortConfig.field,
         order: sortConfig.order as 'asc' | 'desc' | undefined,
@@ -76,83 +75,85 @@ export default function ActivityLogsPage() {
   };
 
   return (
-    <div>
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-            {t('title')}
-          </h1>
-          <p className="text-muted mt-1">{t('description')}</p>
+    <PermissionGuard resource="activity_logs" action="view">
+      <div>
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+              {t('title')}
+            </h1>
+            <p className="text-muted mt-1">{t('subtitle')}</p>
+          </div>
         </div>
-      </div>
 
-      {/* Search and filters */}
-      <div className="flex gap-3 mb-4">
-        <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" />
-          <Input
-            value={searchQuery}
-            onChange={(e) => { setSearchQuery(e.target.value); }}
-            placeholder={tCommon('search')}
-            className="pl-10"
+        {/* Search and filters */}
+        <div className="flex gap-3 mb-4">
+          <div className="flex-1 relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" />
+            <Input
+              value={searchQuery}
+              onChange={(e) => { setSearchQuery(e.target.value); }}
+              placeholder={t('common:search')}
+              className="pl-10"
+            />
+          </div>
+          <Button 
+            variant="outline" 
+            onClick={() => { void fetchLogs(); }}
+          >
+            <RefreshCw className={cn("w-5 h-5", loading && "animate-spin")} />
+          </Button>
+        </div>
+
+        {/* Sort Bar + Total */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+          <SortBar 
+            columns={sortColumns}
+            currentSort={sortConfig}
+            onSort={handleSort}
           />
+          <p className="text-sm text-muted">
+            {t('common:total_items', { count: total })}
+          </p>
         </div>
-        <Button 
-          variant="outline" 
-          onClick={() => { void fetchLogs(); }}
-        >
-          <RefreshCw className={cn("w-5 h-5", loading && "animate-spin")} />
-        </Button>
+
+        {/* Logs Table */}
+        {loading ? (
+          <LoadingSpinner size="lg" text={t('common:loading')} className="py-20" />
+        ) : logs.length === 0 ? (
+          <Card className="py-12 text-center">
+            <CardContent>
+              <Shield className="w-12 h-12 text-muted mx-auto mb-4" />
+              <p className="text-muted">
+                {searchQuery ? t('list.empty_search') : t('list.empty')} 
+              </p>
+            </CardContent>
+          </Card>
+        ) : (
+          <Card>
+            <CardContent className="p-0">
+              <ActivityLogTable logs={logs} loading={loading} />
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Pagination */}
+        {!loading && logs.length > 0 && totalPages > 1 && (
+          <div className="my-4 relative">
+            {isLoadingMore && (
+              <div className="absolute inset-0 flex items-center justify-center bg-background/50 rounded-lg z-10">
+                <Loader2 className="w-5 h-5 animate-spin text-primary" />
+              </div>
+            )}
+            <Pagination
+              currentPage={page}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          </div>
+        )}
       </div>
-
-      {/* Sort Bar + Total */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-        <SortBar 
-          columns={sortColumns}
-          currentSort={sortConfig}
-          onSort={handleSort}
-        />
-        <p className="text-sm text-muted">
-          {tCommon('total_items', { count: total })}
-        </p>
-      </div>
-
-      {/* Logs Table */}
-      {loading ? (
-        <LoadingSpinner size="lg" text={tCommon('loading')} className="py-20" />
-      ) : logs.length === 0 ? (
-        <Card className="py-12 text-center">
-          <CardContent>
-            <Shield className="w-12 h-12 text-muted mx-auto mb-4" />
-            <p className="text-muted">
-              {searchQuery ? t('list.empty_search') : t('list.empty')} 
-            </p>
-          </CardContent>
-        </Card>
-      ) : (
-        <Card>
-          <CardContent className="p-0">
-            <ActivityLogTable logs={logs} loading={loading} />
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Pagination */}
-      {!loading && logs.length > 0 && totalPages > 1 && (
-        <div className="my-4 relative">
-          {isLoadingMore && (
-            <div className="absolute inset-0 flex items-center justify-center bg-background/50 rounded-lg z-10">
-              <Loader2 className="w-5 h-5 animate-spin text-primary" />
-            </div>
-          )}
-          <Pagination
-            currentPage={page}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
-        </div>
-      )}
-    </div>
+    </PermissionGuard>
   );
 }
