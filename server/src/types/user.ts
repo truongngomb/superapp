@@ -20,8 +20,10 @@ export interface User extends BaseEntity {
   avatar?: string;
   /** Whether email is verified */
   emailVisibility?: boolean;
-  /** Reference to user's roles */
+  /** Reference to user's roles (IDs) */
   roles?: string[];
+  /** Expanded role names (only when expand='roles') */
+  roleNames?: string[];
 }
 
 // =============================================================================

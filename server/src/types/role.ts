@@ -10,7 +10,7 @@ import type { BaseEntity, CreateInput, UpdateInput } from './common.js';
 /**
  * Available resources in the system
  */
-export type Resource = 'categories' | 'users' | 'roles' | 'all';
+export type Resource = 'categories' | 'users' | 'roles' | 'activity_logs' | 'all';
 
 /**
  * Available actions on resources
@@ -24,6 +24,7 @@ export const Resources = {
   CATEGORIES: 'categories',
   USERS: 'users',
   ROLES: 'roles',
+  ACTIVITY_LOGS: 'activity_logs',
   ALL: 'all',
 } as const;
 

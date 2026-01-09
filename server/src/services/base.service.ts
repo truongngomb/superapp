@@ -81,6 +81,9 @@ export abstract class BaseService<T extends MinimalEntity> {
   /** Default filter to apply to all queries (e.g., 'isDeleted = false') */
   protected readonly defaultFilter?: string;
 
+  /** Default expand for relations (e.g., 'user' or 'user,category'). Empty = no expand */
+  protected readonly defaultExpand?: string;
+
   /** Scoped logger for this service */
   protected readonly log = createLogger(this.constructor.name);
 
@@ -120,6 +123,7 @@ export abstract class BaseService<T extends MinimalEntity> {
         const records = await this.collection.getFullList({
           sort: '-created',
           filter: this.defaultFilter || '',
+          expand: this.defaultExpand || '',
         });
         return records.map((r) => this.mapRecord(r));
       },
@@ -140,7 +144,7 @@ export abstract class BaseService<T extends MinimalEntity> {
     const result = await this.collection.getList(page, limit, {
       sort: sortStr,
       filter: this.combineFilters(filter),
-      expand: expand || '',
+      expand: expand || this.defaultExpand || '',
     });
 
     return {
@@ -215,29 +219,32 @@ export abstract class BaseService<T extends MinimalEntity> {
 
   /**
    * Create new record
+   * @param input - Data to create
+   * @param actorId - User performing the action (for logging)
+   * @param skipLog - Skip activity logging (use for ActivityLogService to avoid infinite loop)
    */
-  async create(input: Partial<Omit<T, keyof MinimalEntity>>, actorId?: string): Promise<T> {
+  async create(input: Partial<Omit<T, keyof MinimalEntity>>, actorId?: string, skipLog = false): Promise<T> {
     await this.ensureDbAvailable();
     const record = await this.collection.create(input);
     this.invalidateCache();
     this.log.info('Created record', { id: record.id });
-    this.logActivity(actorId, 'create', record.id, { data: input });
+    if (!skipLog) this.logActivity(actorId, 'create', record.id, { data: input });
     return this.mapRecord(record);
   }
 
   /**
    * Update existing record
-   * 
+   * @param skipLog - Skip activity logging
    * @throws NotFoundError if record doesn't exist
    */
-  async update(id: string, input: Partial<Omit<T, keyof MinimalEntity>>, actorId?: string): Promise<T> {
+  async update(id: string, input: Partial<Omit<T, keyof MinimalEntity>>, actorId?: string, skipLog = false): Promise<T> {
     await this.ensureDbAvailable();
     
     try {
       const record = await this.collection.update(id, input);
       this.invalidateCache();
       this.log.info('Updated record', { id });
-      this.logActivity(actorId, 'update', id, { data: input });
+      if (!skipLog) this.logActivity(actorId, 'update', id, { data: input });
       return this.mapRecord(record);
     } catch (error) {
       if (error instanceof NotFoundError) throw error;
@@ -261,13 +268,14 @@ export abstract class BaseService<T extends MinimalEntity> {
   /**
    * Soft delete record (set isDeleted = true)
    * Record remains in database but excluded by defaultFilter
+   * @param skipLog - Skip activity logging
    */
-  async delete(id: string, actorId?: string): Promise<void> {
+  async delete(id: string, actorId?: string, skipLog = false): Promise<void> {
     await this.ensureDbAvailable();
     await this.collection.update(id, { isDeleted: true });
     this.invalidateCache();
     this.log.info('Soft deleted record', { id });
-    this.logActivity(actorId, 'delete', id);
+    if (!skipLog) this.logActivity(actorId, 'delete', id);
   }
 
   /**
