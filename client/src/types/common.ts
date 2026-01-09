@@ -73,8 +73,8 @@ export interface SearchParams extends PaginationParams {
  */
 export interface BaseEntity {
   id: string;
-  createdAt: string;
-  updatedAt: string;
+  created: string;
+  updated: string;
   /** Active status flag */
   isActive: boolean;
   /** Soft delete flag */
@@ -170,4 +170,5 @@ export enum PermissionResource {
   Categories = 'categories',
   Roles = 'roles',
   Users = 'users',
+  ActivityLogs = 'activity_logs',
 }

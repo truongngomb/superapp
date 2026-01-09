@@ -15,3 +15,4 @@ export * as authController from './auth.controller.js';
 export * as categoryController from './category.controller.js';
 export * as roleController from './role.controller.js';
 export * as userController from './user.controller.js';
+export * as activityLogController from './activity_log.controller.js';

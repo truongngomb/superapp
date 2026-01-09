@@ -17,7 +17,7 @@ import type { UserUpdateInput, UserRoleAssignment } from '../types/index.js';
 export const getAll = async (req: Request, res: Response) => {
   const { page, limit, sort, order, filter } = req.query;
   
-  const users = await userService.getUsers({
+  const users = await userService.getPage({
     page: page ? Number(page) : undefined,
     limit: limit ? Number(limit) : undefined,
     sort: sort as string | undefined,
@@ -32,7 +32,7 @@ export const getAll = async (req: Request, res: Response) => {
  * GET /users/:id - Get user by ID with roles info
  */
 export const getById = async (req: Request, res: Response) => {
-  const user = await userService.getUserWithRoles(req.params['id'] as string);
+  const user = await userService.getById(req.params['id'] as string);
   res.json({ success: true, data: user });
 };
 
@@ -63,7 +63,8 @@ export const remove = async (req: Request, res: Response) => {
 export const assignRoles = async (req: Request, res: Response) => {
   const user = await userService.assignRoles(
     req.params['id'] as string,
-    req.body as UserRoleAssignment
+    req.body as UserRoleAssignment,
+    req.user?.id
   );
   res.json({ success: true, data: user });
 };
@@ -74,7 +75,8 @@ export const assignRoles = async (req: Request, res: Response) => {
 export const addRole = async (req: Request, res: Response) => {
   const user = await userService.addRole(
     req.params['id'] as string,
-    req.params['roleId'] as string
+    req.params['roleId'] as string,
+    req.user?.id
   );
   res.json({ success: true, data: user });
 };
@@ -85,7 +87,8 @@ export const addRole = async (req: Request, res: Response) => {
 export const removeRole = async (req: Request, res: Response) => {
   const user = await userService.removeRole(
     req.params['id'] as string,
-    req.params['roleId'] as string
+    req.params['roleId'] as string,
+    req.user?.id
   );
   res.json({ success: true, data: user });
 };
@@ -94,7 +97,7 @@ export const removeRole = async (req: Request, res: Response) => {
  * DELETE /users/:id/roles - Remove all roles from user
  */
 export const removeAllRoles = async (req: Request, res: Response) => {
-  const user = await userService.removeAllRoles(req.params['id'] as string);
+  const user = await userService.removeAllRoles(req.params['id'] as string, req.user?.id);
   res.json({ success: true, data: user });
 };
 
@@ -109,7 +112,7 @@ export const getMe = async (req: Request, res: Response) => {
     return;
   }
   
-  const user = await userService.getUserWithRoles(userId);
+  const user = await userService.getById(userId);
   res.json({ success: true, data: user });
 };
 

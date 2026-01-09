@@ -21,8 +21,8 @@ export interface AuthUser {
   avatar?: string;
   verified?: boolean;
   permissions?: PermissionMap;
-  createdAt?: string;
-  updatedAt?: string;
+  created?: string;
+  updated?: string;
 }
 
 // ============================================================================
