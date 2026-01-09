@@ -53,3 +53,9 @@ export type {
   UserRoleAssignment,
 } from './user.js';
 
+// Activity Log types
+export type {
+  ActivityLogAction,
+  ActivityLog,
+  ActivityLogInput,
+} from './activity_log.js';

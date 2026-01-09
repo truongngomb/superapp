@@ -26,8 +26,8 @@ export const activity_logsCollection: BaseCollectionSchema = {
     'CREATE INDEX `idx_activity_logs_user` ON `activity_logs` (`user`)',
   ],
 
-  listRule: '@request.auth.roles.name ?= "Admin"',
-  viewRule: '@request.auth.roles.name ?= "Admin"',
+  listRule: null,
+  viewRule: null,
   createRule: null,
   updateRule: null,
   deleteRule: null,

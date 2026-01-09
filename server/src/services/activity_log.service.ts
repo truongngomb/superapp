@@ -1,35 +1,14 @@
 import { BaseService } from './base.service.js';
-import { adminPb, ensureAdminAuth, config } from '../config/index.js';
+import { Collections, CacheKeys, config } from '../config/index.js';
+import type { ActivityLog, ActivityLogInput } from '../types/index.js';
 
-export interface ActivityLog {
-  id: string;
-  created: string;
-  user?: string;
-  action: 'create' | 'update' | 'delete' | 'login' | 'logout';
-  resource: string;
-  recordId?: string;
-  message: string;
-  details?: Record<string, unknown>;
-  expand?: {
-    user?: {
-      name: string;
-      avatar: string;
-    };
-  };
-}
-
-export interface ActivityLogInput {
-  user?: string;
-  action: 'create' | 'update' | 'delete' | 'login' | 'logout';
-  resource: string;
-  recordId?: string;
-  message: string;
-  details?: Record<string, unknown>;
-}
+// Re-export types for backwards compatibility
+export type { ActivityLog, ActivityLogInput };
 
 export class ActivityLogService extends BaseService<ActivityLog> {
-  protected readonly collectionName = 'activity_logs';
-  protected readonly cacheKey = 'activity_logs';
+  protected readonly collectionName = Collections.ACTIVITY_LOGS;
+  protected readonly cacheKey = CacheKeys.ACTIVITY_LOGS;
+  protected readonly defaultExpand = 'user';
 
   protected mapRecord(record: Record<string, unknown>): ActivityLog {
     return ActivityLogService.transformRecord(record);
@@ -78,15 +57,7 @@ export class ActivityLogService extends BaseService<ActivityLog> {
     return log;
   }
 
-  /**
-   * Get paginated activity logs with expanded user details
-   */
-  async getPage(options: import('./base.service.js').ListOptions = {}): Promise<import('./base.service.js').PaginatedResult<ActivityLog>> {
-    return super.getPage({
-      ...options,
-      expand: 'user',
-    });
-  }
+  // getPage() is inherited from BaseService with defaultExpand = 'user'
 
   /**
    * Sanitize log details to remove sensitive information
@@ -122,20 +93,15 @@ export class ActivityLogService extends BaseService<ActivityLog> {
   }
 
   /**
-   * Log an activity to the database
+   * Log an activity to the database (uses BaseService.create with skipLog=true)
    */
   async createLog(data: ActivityLogInput): Promise<void> {
     try {
-      await ensureAdminAuth();
       const sanitizedData = {
         ...data,
         details: this.sanitizeDetails(data.details),
       };
-      await adminPb.collection(this.collectionName).create(sanitizedData);
-      this.log.info(`Activity logged: ${data.action} on ${data.resource}`, {
-        userId: data.user,
-        recordId: data.recordId
-      });
+      await this.create(sanitizedData as Partial<Omit<ActivityLog, 'id' | 'created'>>, undefined, true);
     } catch (error) {
       this.log.error('Failed to create activity log:', error);
     }

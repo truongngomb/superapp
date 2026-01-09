@@ -40,6 +40,7 @@ export const CacheKeys = {
   CATEGORIES: 'categories',
   ROLES: 'roles',
   USERS: 'users',
+  ACTIVITY_LOGS: 'activity_logs',
   USER_PERMISSIONS: (userId: string) => `user:${userId}:permissions`,
 } as const;
 
