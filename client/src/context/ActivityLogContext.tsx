@@ -31,7 +31,7 @@ export const ActivityLogProvider: React.FC<{ children: React.ReactNode }> = ({ c
         setIsLoading(true);
       }
 
-      const result = await activityLogService.getLogs({
+      const result = await activityLogService.getPage({
         page: targetPage,
         limit,
         sort: 'created',
