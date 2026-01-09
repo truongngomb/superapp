@@ -170,23 +170,27 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
             {isDark ? <Sun className={ICON_CLASS} /> : <Moon className={ICON_CLASS} />}
           </motion.button>
 
-          {/* Notifications */}
-          <div className="relative">
-            <motion.button
-              type="button"
-              whileTap={{ scale: 0.95 }}
-              onClick={() => { setIsNotificationsOpen(true); }}
-              className={ICON_BUTTON_CLASS}
-              aria-label={t('toggle_notifications', 'Thông báo')}
-            >
-              <Bell className={ICON_CLASS} />
-              {unreadCount > 0 && (
-                <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow-sm ring-2 ring-background">
-                  {unreadCount > 9 ? '9+' : unreadCount}
-                </span>
-              )}
-            </motion.button>
-          </div>
+          {/* Notifications */ }
+          {
+            isAuthenticated && (
+              <div className="relative">
+                <motion.button
+                  type="button"
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => { setIsNotificationsOpen(true); }}
+                  className={ICON_BUTTON_CLASS}
+                  aria-label={t('toggle_notifications', 'Thông báo')}
+                >
+                  <Bell className={ICON_CLASS} />
+                  {unreadCount > 0 && (
+                    <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow-sm ring-2 ring-background">
+                      {unreadCount > 9 ? '9+' : unreadCount}
+                    </span>
+                  )}
+                </motion.button>
+              </div>
+            )
+          }
 
           {/* Auth section */}
           {isAuthenticated && user ? (

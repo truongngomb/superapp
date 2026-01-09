@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useEffect, useRef, useCallback } from 'react';
 import { logger } from '@/utils';
 
+import { useAuth } from '@/hooks';
+
 interface RealtimeContextType {
   isConnected: boolean;
   subscribe: (event: string, callback: (data: unknown) => void) => () => void;
@@ -9,6 +11,7 @@ interface RealtimeContextType {
 const RealtimeContext = createContext<RealtimeContextType | null>(null);
 
 export const RealtimeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isAuthenticated } = useAuth();
   const [isConnected, setIsConnected] = React.useState(false);
   const eventSourceRef = useRef<EventSource | null>(null);
   const subscribersRef = useRef<Map<string, Set<(data: unknown) => void>>>(new Map());
@@ -24,7 +27,22 @@ export const RealtimeProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   // Connect to SSE
   useEffect(() => {
+    // Only connect if user is authenticated
+    if (!isAuthenticated) {
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close();
+        eventSourceRef.current = null;
+        setIsConnected(false);
+      }
+      return;
+    }
+
+    let isActive = true;
+
     const connect = () => {
+      // Prevent multiple connections
+      if (eventSourceRef.current?.readyState === EventSource.OPEN) return eventSourceRef.current;
+      
       const es = new EventSource('/api/realtime/events', { withCredentials: true });
       eventSourceRef.current = es;
 
@@ -56,8 +74,10 @@ export const RealtimeProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setIsConnected(false);
         eventSourceRef.current = null;
         
-        // Retry connection after delay
-        setTimeout(connect, 5000);
+        // Retry connection after delay ONLY if this effect is still active
+        if (isActive) {
+          setTimeout(connect, 5000);
+        }
       };
 
       return es;
@@ -66,9 +86,10 @@ export const RealtimeProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const es = connect();
 
     return () => {
+      isActive = false;
       es.close();
     };
-  }, [handleEvent]);
+  }, [handleEvent, isAuthenticated]);
 
   // Optimized subscribe that triggers listener attachment if connected
   const subscribe = useCallback((event: string, callback: (data: unknown) => void) => {

@@ -4,7 +4,10 @@ import type { ActivityLog } from '@/types';
 import { logger } from '@/utils';
 import { ActivityLogContext } from './ActivityLogContext.base';
 import { useRealtime } from './RealtimeContext';
+import { useAuth } from '@/hooks';
+
 export const ActivityLogProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isAuthenticated } = useAuth();
   const [logs, setLogs] = useState<ActivityLog[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -58,6 +61,12 @@ export const ActivityLogProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const { subscribe } = useRealtime();
 
   useEffect(() => {
+    if (!isAuthenticated) {
+      setLogs([]);
+      setUnreadCount(0);
+      return;
+    }
+
     void fetchLogs({ page: 1 });
 
     const unsubscribe = subscribe('activity_log', (data) => {
@@ -79,7 +88,7 @@ export const ActivityLogProvider: React.FC<{ children: React.ReactNode }> = ({ c
     return () => {
         unsubscribe();
     };
-  }, [fetchLogs, subscribe]);
+  }, [fetchLogs, subscribe, isAuthenticated]);
 
   const resetUnreadCount = useCallback(() => {
     setUnreadCount(0);
