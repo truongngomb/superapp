@@ -1,6 +1,6 @@
 {
   "title": "Activity Logs",
-  "description": "View and audit system activities",
+  "subtitle": "View and audit system activities",
   "table": {
     "user": "User",
     "action": "Action",

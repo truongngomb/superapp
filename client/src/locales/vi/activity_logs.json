@@ -1,6 +1,6 @@
 {
   "title": "Nhật ký hoạt động",
-  "description": "Xem và kiểm tra các hoạt động hệ thống",
+  "subtitle": "Xem và kiểm tra các hoạt động hệ thống",
   "table": {
     "user": "Người dùng",
     "action": "Hành động",

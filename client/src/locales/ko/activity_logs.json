@@ -1,6 +1,6 @@
 {
   "title": "활동 로그",
-  "description": "시스템 활동 보기 및 감사",
+  "subtitle": "시스템 활동 보기 및 감사",
   "table": {
     "user": "사용자",
     "action": "작업",
