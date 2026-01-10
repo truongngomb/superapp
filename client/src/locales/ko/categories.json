@@ -43,5 +43,15 @@
     "batch_status_success": "{{count}}개의 카테고리 상태가 업데이트되었습니다!",
     "batch_restore_success": "{{count}}개의 카테고리가 성공적으로 복구되었습니다!",
     "error": "오류가 발생했습니다"
+  },
+  "view_mode": {
+    "list": "목록 보기",
+    "table": "테이블 보기"
+  },
+  "export": {
+    "button": "Excel 내보내기",
+    "exporting": "내보내는 중...",
+    "success": "내보내기 성공!",
+    "error": "내보내기 실패"
   }
 }

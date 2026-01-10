@@ -11,6 +11,7 @@
   "error": "오류",
   "success": "성공",
   "name": "이름",
+  "order": "순번",
   "status": "상태",
   "created": "생성일",
   "updated": "수정일",

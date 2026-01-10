@@ -43,5 +43,15 @@
     "batch_status_success": "Đã cập nhật trạng thái cho {{count}} danh mục!",
     "batch_restore_success": "Đã khôi phục {{count}} danh mục thành công!",
     "error": "Đã xảy ra lỗi"
+  },
+  "view_mode": {
+    "list": "Dạng danh sách",
+    "table": "Dạng bảng"
+  },
+  "export": {
+    "button": "Xuất Excel",
+    "exporting": "Đang xuất...",
+    "success": "Xuất file thành công!",
+    "error": "Xuất file thất bại"
   }
 }

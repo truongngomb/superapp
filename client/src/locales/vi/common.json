@@ -11,6 +11,7 @@
   "error": "Lỗi",
   "success": "Thành công",
   "name": "Tên",
+  "order": "Thứ tự",
   "status": "Trạng thái",
   "created": "Ngày tạo",
   "updated": "Cập nhật",

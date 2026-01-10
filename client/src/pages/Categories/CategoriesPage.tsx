@@ -1,18 +1,43 @@
-import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { AnimatePresence } from 'framer-motion';
-import { Plus, Folder, Search, RefreshCw, Loader2, Trash2 } from 'lucide-react';
-import { Button, Card, CardContent, Checkbox, Input, LoadingSpinner, ConfirmModal, SortBar, Pagination, Toggle } from '@/components/common';
-import { PermissionGuard } from '@/components/common/PermissionGuard';
-import type { Category, CreateCategoryInput } from '@/types';
-import { cn } from '@/utils';
-import { useCategories, useSort, useDebounce } from '@/hooks';
-import { CategoryForm } from './components/CategoryForm';
-import { CategoryRow } from './components/CategoryRow';
+import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { AnimatePresence } from "framer-motion";
+import {
+  Plus,
+  Folder,
+  Search,
+  RefreshCw,
+  Loader2,
+  Trash2,
+  FileSpreadsheet,
+} from "lucide-react";
+import {
+  Button,
+  Card,
+  CardContent,
+  Checkbox,
+  Input,
+  LoadingSpinner,
+  ConfirmModal,
+  SortBar,
+  Pagination,
+  Toggle,
+  ViewSwitcher,
+  type ViewMode,
+} from "@/components/common";
+import { PermissionGuard } from "@/components/common/PermissionGuard";
+import type { Category, CreateCategoryInput } from "@/types";
+import { cn, getStorageItem, setStorageItem } from "@/utils";
+import { STORAGE_KEYS } from "@/config";
+import { useCategories, useSort, useDebounce } from "@/hooks";
+import { useExcelExport } from "@/hooks/useExcelExport";
+import { categoryService } from "@/services/category.service";
+import { CategoryForm } from "./components/CategoryForm";
+import { CategoryRow } from "./components/CategoryRow";
+import { CategoryTable } from "./components/CategoryTable";
 
 /**
  * CategoriesPage Component
- * 
+ *
  * Manages product categories including:
  * - Listing categories with virtualization
  * - Creating new categories
@@ -20,9 +45,11 @@ import { CategoryRow } from './components/CategoryRow';
  * - Deleting categories
  * - Searching/Filtering
  * - Sorting by columns
+ * - Table/List view switching
+ * - Excel export
  */
 export default function CategoriesPage() {
-  const { t } = useTranslation(['categories', 'common']);
+  const { t } = useTranslation(["categories", "common"]);
   const {
     categories,
     pagination,
@@ -38,10 +65,10 @@ export default function CategoriesPage() {
     deleteCategory,
     deleteCategories,
     updateCategoriesStatus,
-    restoreCategories
+    restoreCategories,
   } = useCategories();
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearchQuery = useDebounce(searchQuery, 400); // 400ms debounce
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [showForm, setShowForm] = useState(false);
@@ -50,27 +77,81 @@ export default function CategoriesPage() {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [showBatchDeleteConfirm, setShowBatchDeleteConfirm] = useState(false);
   const [showBatchRestoreConfirm, setShowBatchRestoreConfirm] = useState(false);
-  const [batchStatusConfig, setBatchStatusConfig] = useState<{ isOpen: boolean; isActive: boolean } | null>(null);
+  const [batchStatusConfig, setBatchStatusConfig] = useState<{
+    isOpen: boolean;
+    isActive: boolean;
+  } | null>(null);
   const [showArchived, setShowArchived] = useState(false);
 
+  // View mode state (persisted to localStorage)
+  const [viewMode, setViewMode] = useState<ViewMode>(() => {
+    return (
+      getStorageItem<ViewMode>(STORAGE_KEYS.CATEGORIES_VIEW_MODE) || "list"
+    );
+  });
+
+  // Export state
+  const [exporting, setExporting] = useState(false);
+
+  // Excel export hook
+  const { exportToExcel } = useExcelExport<Category>({
+    fileNamePrefix: "categories",
+    sheetName: t("categories:title"),
+    columns: [
+      { key: "#", header: t("common:order", { defaultValue: "#" }), width: 8 },
+      { key: "name", header: t("common:name"), width: 25 },
+      {
+        key: "description",
+        header: t("categories:form.desc_label"),
+        width: 40,
+      },
+      { key: "color", header: t("categories:form.color_label"), width: 15 },
+      { key: "icon", header: "Icon", width: 15 },
+      { key: "isActive", header: t("common:status"), width: 12 },
+    ],
+  });
+
+  // Handle view mode change
+  const handleViewModeChange = (mode: ViewMode) => {
+    setViewMode(mode);
+    setStorageItem(STORAGE_KEYS.CATEGORIES_VIEW_MODE, mode);
+  };
+
+  // Handle export
+  const handleExport = async () => {
+    setExporting(true);
+    try {
+      // Fetch all data with current filters/sort
+      const allData = await categoryService.getAllForExport({
+        search: debouncedSearchQuery || undefined,
+        sort: sortConfig.field,
+        order: sortConfig.order ?? "desc",
+        isDeleted: showArchived || undefined,
+      });
+      await exportToExcel(allData);
+    } finally {
+      setExporting(false);
+    }
+  };
+
   // Sorting state
-  const { sortConfig, handleSort } = useSort('created', 'desc');
+  const { sortConfig, handleSort } = useSort("created", "desc");
 
   // Sortable columns configuration
   const sortColumns: Array<{ field: string; label: string }> = [
-    { field: 'name', label: t('common:name', 'Name') },
-    { field: 'isActive', label: t('common:status', 'Status') },
-    { field: 'created', label: t('common:created', 'Created') },
-    { field: 'updated', label: t('common:updated', 'Updated') },
+    { field: "name", label: t("common:name", "Name") },
+    { field: "isActive", label: t("common:status", "Status") },
+    { field: "created", label: t("common:created", "Created") },
+    { field: "updated", label: t("common:updated", "Updated") },
   ];
 
   useEffect(() => {
     const params = {
       search: debouncedSearchQuery || undefined,
       sort: sortConfig.field,
-      order: (sortConfig.order ?? 'desc'),
+      order: sortConfig.order ?? "desc",
       page: 1,
-      isDeleted: showArchived || undefined
+      isDeleted: showArchived || undefined,
     };
     void fetchCategories(params);
   }, [fetchCategories, debouncedSearchQuery, sortConfig, showArchived]);
@@ -109,22 +190,21 @@ export default function CategoriesPage() {
 
   // Handle duplicate
   const handleDuplicate = (category: Category) => {
-    const suffix = t('categories:form.copy_suffix');
+    const suffix = t("categories:form.copy_suffix");
     const duplicated: Category = {
       ...category,
-      id: '', // Will be generated by backend
-      name: `${category.name}${typeof suffix === 'string' ? suffix : ''}`,
+      id: "", // Will be generated by backend
+      name: `${category.name}${typeof suffix === "string" ? suffix : ""}`,
       isActive: true, // Default to active for new items
     };
     setEditingCategory(duplicated);
     setShowForm(true);
   };
 
-
   // Selection handlers
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedIds(displayCategories.map(c => c.id));
+      setSelectedIds(displayCategories.map((c) => c.id));
     } else {
       setSelectedIds([]);
     }
@@ -132,9 +212,9 @@ export default function CategoriesPage() {
 
   const handleSelectOne = (id: string, checked: boolean) => {
     if (checked) {
-      setSelectedIds(prev => [...prev, id]);
+      setSelectedIds((prev) => [...prev, id]);
     } else {
-      setSelectedIds(prev => prev.filter(i => i !== id));
+      setSelectedIds((prev) => prev.filter((i) => i !== id));
     }
   };
 
@@ -162,21 +242,39 @@ export default function CategoriesPage() {
     }
   };
 
-  const hasDeletedSelected = selectedIds.some(id => 
-    displayCategories.find(c => c.id === id)?.isDeleted
+  const hasDeletedSelected = selectedIds.some(
+    (id) => displayCategories.find((c) => c.id === id)?.isDeleted
   );
-
-
 
   return (
     <div>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-            {t("categories:title")}
-          </h1>
-          <p className="text-muted mt-1">{t("categories:subtitle")}</p>
+        <div className="flex items-start gap-3">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+              {t("categories:title")}
+            </h1>
+            <p className="text-muted mt-1">{t("categories:subtitle")}</p>
+          </div>
+          <PermissionGuard resource="categories" action="view">
+            <button
+              type="button"
+              onClick={() => {
+                void handleExport();
+              }}
+              disabled={exporting || displayCategories.length === 0}
+              className="p-2 rounded-lg hover:bg-[#217346]/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              title={t("common:export", { defaultValue: "Export Excel" })}
+              aria-label={t("common:export", { defaultValue: "Export Excel" })}
+            >
+              {exporting ? (
+                <Loader2 className="w-6 h-6 animate-spin text-[#217346]" />
+              ) : (
+                <FileSpreadsheet className="w-6 h-6 text-[#217346]" />
+              )}
+            </button>
+          </PermissionGuard>
         </div>
         <PermissionGuard resource="categories" action="create">
           <Button
@@ -203,7 +301,12 @@ export default function CategoriesPage() {
             className="pl-10"
           />
         </div>
-        <Button variant="outline" onClick={() => { void fetchCategories(); }}>
+        <Button
+          variant="outline"
+          onClick={() => {
+            void fetchCategories();
+          }}
+        >
           <RefreshCw className={cn("w-5 h-5", loading && "animate-spin")} />
         </Button>
       </div>
@@ -218,11 +321,11 @@ export default function CategoriesPage() {
                   selectedIds.length === 0
                     ? false
                     : selectedIds.length === displayCategories.length
-                      ? true
-                      : 'indeterminate'
+                    ? true
+                    : "indeterminate"
                 }
                 onChange={handleSelectAll}
-                label={t('common:select_all')}
+                label={t("common:select_all")}
               />
             </PermissionGuard>
           )}
@@ -231,14 +334,17 @@ export default function CategoriesPage() {
             currentSort={sortConfig}
             onSort={handleSort}
           />
+          <ViewSwitcher value={viewMode} onChange={handleViewModeChange} />
           <PermissionGuard resource="categories" action="manage">
             <Toggle
               checked={showArchived}
-              onChange={(checked: boolean) => { 
-                  setShowArchived(checked);
-                  setSelectedIds([]); // Clear selection when switching views
+              onChange={(checked: boolean) => {
+                setShowArchived(checked);
+                setSelectedIds([]); // Clear selection when switching views
               }}
-              label={t('common:show_archived', { defaultValue: 'Show Archived' })}
+              label={t("common:show_archived", {
+                defaultValue: "Show Archived",
+              })}
             />
           </PermissionGuard>
         </div>
@@ -248,10 +354,13 @@ export default function CategoriesPage() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => { setShowBatchRestoreConfirm(true); }}
+                onClick={() => {
+                  setShowBatchRestoreConfirm(true);
+                }}
               >
                 <RefreshCw className="w-4 h-4" />
-                {t('common:restore', { defaultValue: 'Restore' })} ({selectedIds.length})
+                {t("common:restore", { defaultValue: "Restore" })} (
+                {selectedIds.length})
               </Button>
             </PermissionGuard>
           )}
@@ -260,10 +369,12 @@ export default function CategoriesPage() {
               <Button
                 variant="danger"
                 size="sm"
-                onClick={() => { setShowBatchDeleteConfirm(true); }}
+                onClick={() => {
+                  setShowBatchDeleteConfirm(true);
+                }}
               >
                 <Trash2 className="w-4 h-4" />
-                {t('common:delete_selected')} ({selectedIds.length})
+                {t("common:delete_selected")} ({selectedIds.length})
               </Button>
             </PermissionGuard>
           )}
@@ -274,23 +385,27 @@ export default function CategoriesPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => { setBatchStatusConfig({ isOpen: true, isActive: true }); }}
+                    onClick={() => {
+                      setBatchStatusConfig({ isOpen: true, isActive: true });
+                    }}
                   >
-                    {t('activate_selected')} ({selectedIds.length})
+                    {t("activate_selected")} ({selectedIds.length})
                   </Button>
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => { setBatchStatusConfig({ isOpen: true, isActive: false }); }}
+                    onClick={() => {
+                      setBatchStatusConfig({ isOpen: true, isActive: false });
+                    }}
                   >
-                    {t('deactivate_selected')} ({selectedIds.length})
+                    {t("deactivate_selected")} ({selectedIds.length})
                   </Button>
                 </>
               )}
             </PermissionGuard>
           )}
           <p className="text-sm text-muted">
-            {t('common:total_items', { count: pagination.total })}
+            {t("common:total_items", { count: pagination.total })}
           </p>
         </div>
       </div>
@@ -327,27 +442,48 @@ export default function CategoriesPage() {
         </Card>
       ) : (
         <div className="space-y-2">
-          {displayCategories.map((category, index) => (
-            <CategoryRow
-              key={category.id}
-              index={index}
-              style={{}}
-              data={{
-                categories: displayCategories,
-                onEdit: handleEdit,
-                onDelete: (id) => {
-                  setDeleteId(id);
-                },
-                onRestore: (id: string) => {
-                   setRestoreId(id);
-                },
-                onDuplicate: handleDuplicate
-              }}
-              isSelected={selectedIds.includes(category.id)}
-              onSelect={handleSelectOne}
-            />
-          ))}
-          
+          {viewMode === "table" ? (
+            <Card>
+              <CardContent className="p-0">
+                <CategoryTable
+                  categories={displayCategories}
+                  selectedIds={selectedIds}
+                  onSelectAll={handleSelectAll}
+                  onSelectOne={handleSelectOne}
+                  onEdit={handleEdit}
+                  onDelete={(id) => {
+                    setDeleteId(id);
+                  }}
+                  onRestore={(id) => {
+                    setRestoreId(id);
+                  }}
+                  onDuplicate={handleDuplicate}
+                />
+              </CardContent>
+            </Card>
+          ) : (
+            displayCategories.map((category, index) => (
+              <CategoryRow
+                key={category.id}
+                index={index}
+                style={{}}
+                data={{
+                  categories: displayCategories,
+                  onEdit: handleEdit,
+                  onDelete: (id) => {
+                    setDeleteId(id);
+                  },
+                  onRestore: (id: string) => {
+                    setRestoreId(id);
+                  },
+                  onDuplicate: handleDuplicate,
+                }}
+                isSelected={selectedIds.includes(category.id)}
+                onSelect={handleSelectOne}
+              />
+            ))
+          )}
+
           {/* Pagination */}
           {pagination.totalPages > 1 && (
             <div className="my-4 relative">
@@ -359,7 +495,9 @@ export default function CategoriesPage() {
               <Pagination
                 currentPage={pagination.page}
                 totalPages={pagination.totalPages}
-                onPageChange={(page) => { void fetchCategories({ page }); }}
+                onPageChange={(page) => {
+                  void fetchCategories({ page });
+                }}
               />
             </div>
           )}
@@ -372,7 +510,9 @@ export default function CategoriesPage() {
           <CategoryForm
             isOpen={showForm}
             category={editingCategory}
-            onSubmit={(data) => { void handleSubmit(data); }}
+            onSubmit={(data) => {
+              void handleSubmit(data);
+            }}
             onClose={() => {
               setShowForm(false);
               setEditingCategory(null);
@@ -387,8 +527,8 @@ export default function CategoriesPage() {
         isOpen={!!deleteId}
         title={t("common:delete")}
         message={
-          displayCategories.find(c => c.id === deleteId)?.isDeleted 
-            ? t("categories:hard_delete_confirm") 
+          displayCategories.find((c) => c.id === deleteId)?.isDeleted
+            ? t("categories:hard_delete_confirm")
             : t("categories:delete_confirm")
         }
         confirmText={t("common:delete")}
@@ -406,14 +546,16 @@ export default function CategoriesPage() {
       {/* Restore Confirm Modal */}
       <ConfirmModal
         isOpen={!!restoreId}
-        title={t("common:restore", { defaultValue: 'Restore' })}
-        message={t("categories:restore_confirm", { defaultValue: 'Are you sure you want to restore this category?' })}
-        confirmText={t("common:confirm", { defaultValue: 'Confirm' })}
+        title={t("common:restore", { defaultValue: "Restore" })}
+        message={t("categories:restore_confirm", {
+          defaultValue: "Are you sure you want to restore this category?",
+        })}
+        confirmText={t("common:confirm", { defaultValue: "Confirm" })}
         cancelText={t("common:cancel")}
         loading={submitting}
         onConfirm={() => {
           if (restoreId) {
-            void restoreCategory(restoreId).then(success => {
+            void restoreCategory(restoreId).then((success) => {
               if (success) setRestoreId(null);
             });
           }
@@ -426,17 +568,25 @@ export default function CategoriesPage() {
       {/* Batch Delete Confirm Modal */}
       <ConfirmModal
         isOpen={showBatchDeleteConfirm}
-        title={t('common:delete')}
+        title={t("common:delete")}
         message={
           hasDeletedSelected
-            ? t('categories:batch_hard_delete_confirm', { count: selectedIds.length })
-            : t('categories:batch_delete_confirm', { count: selectedIds.length })
+            ? t("categories:batch_hard_delete_confirm", {
+                count: selectedIds.length,
+              })
+            : t("categories:batch_delete_confirm", {
+                count: selectedIds.length,
+              })
         }
-        confirmText={t('common:delete')}
-        cancelText={t('common:cancel')}
+        confirmText={t("common:delete")}
+        cancelText={t("common:cancel")}
         loading={batchDeleting}
-        onConfirm={() => { void handleBatchDelete(); }}
-        onCancel={() => { setShowBatchDeleteConfirm(false); }}
+        onConfirm={() => {
+          void handleBatchDelete();
+        }}
+        onCancel={() => {
+          setShowBatchDeleteConfirm(false);
+        }}
         variant="danger"
       />
 
@@ -444,15 +594,18 @@ export default function CategoriesPage() {
       <ConfirmModal
         isOpen={!!batchStatusConfig?.isOpen}
         title={t("common:confirm")}
-        message={t("batch_status_confirm", { 
-          count: selectedIds.length, 
-          action: batchStatusConfig?.isActive ? t("actions.activate") : t("actions.deactivate") 
+        message={t("batch_status_confirm", {
+          count: selectedIds.length,
+          action: batchStatusConfig?.isActive
+            ? t("actions.activate")
+            : t("actions.deactivate"),
         })}
         confirmText={t("common:confirm")}
         cancelText={t("common:cancel")}
         loading={submitting}
         onConfirm={() => {
-          if (batchStatusConfig) void handleBatchStatusUpdate(batchStatusConfig.isActive);
+          if (batchStatusConfig)
+            void handleBatchStatusUpdate(batchStatusConfig.isActive);
         }}
         onCancel={() => {
           setBatchStatusConfig(null);
@@ -462,16 +615,21 @@ export default function CategoriesPage() {
       {/* Batch Restore Confirm Modal */}
       <ConfirmModal
         isOpen={showBatchRestoreConfirm}
-        title={t("common:restore", { defaultValue: 'Restore' })}
-        message={t('categories:batch_restore_confirm', { 
+        title={t("common:restore", { defaultValue: "Restore" })}
+        message={t("categories:batch_restore_confirm", {
           count: selectedIds.length,
-          defaultValue: 'Are you sure you want to restore {{count}} categories?' 
+          defaultValue:
+            "Are you sure you want to restore {{count}} categories?",
         })}
         confirmText={t("common:confirm")}
         cancelText={t("common:cancel")}
         loading={submitting}
-        onConfirm={() => { void handleBatchRestore(); }}
-        onCancel={() => { setShowBatchRestoreConfirm(false); }}
+        onConfirm={() => {
+          void handleBatchRestore();
+        }}
+        onCancel={() => {
+          setShowBatchRestoreConfirm(false);
+        }}
       />
     </div>
   );

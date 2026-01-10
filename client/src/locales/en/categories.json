@@ -43,5 +43,15 @@
     "batch_status_success": "Successfully updated status for {{count}} categories!",
     "batch_restore_success": "Successfully restored {{count}} categories!",
     "error": "An error occurred"
+  },
+  "view_mode": {
+    "list": "List view",
+    "table": "Table view"
+  },
+  "export": {
+    "button": "Export Excel",
+    "exporting": "Exporting...",
+    "success": "Export successful!",
+    "error": "Export failed"
   }
 }

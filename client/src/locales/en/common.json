@@ -11,6 +11,7 @@
   "error": "Error",
   "success": "Success",
   "name": "Name",
+  "order": "Order",
   "status": "Status",
   "created": "Created At",
   "updated": "Updated At",
