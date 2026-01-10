@@ -42,6 +42,7 @@ export const STORAGE_KEYS = {
   THEME: 'theme',
   AUTH_TOKEN: 'auth_token',
   USER_PREFERENCES: 'user_preferences',
+  CATEGORIES_VIEW_MODE: 'categories_view_mode',
 } as const;
 
 // Theme
