@@ -1,6 +1,6 @@
 import { ChevronUp, ChevronDown, ChevronsUpDown } from 'lucide-react';
 import { cn } from '@/utils';
-import type { SortConfig } from '@/hooks/useSort';
+import type { SortConfig, SortColumn } from '@/types';
 
 interface SortableHeaderProps {
   label: string;
@@ -53,7 +53,7 @@ export function SortableHeader({
 }
 
 interface SortBarProps {
-  columns: Array<{ field: string; label: string }>;
+  columns: SortColumn[];
   currentSort: SortConfig;
   onSort: (field: string) => void;
   className?: string;

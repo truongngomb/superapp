@@ -18,14 +18,14 @@ import {
   Input,
   LoadingSpinner,
   ConfirmModal,
-  SortBar,
+  SortPopup,
   Pagination,
   Toggle,
   ViewSwitcher,
   type ViewMode,
 } from "@/components/common";
 import { PermissionGuard } from "@/components/common/PermissionGuard";
-import type { Category, CreateCategoryInput } from "@/types";
+import type { Category, CreateCategoryInput, SortColumn } from "@/types";
 import { cn, getStorageItem, setStorageItem } from "@/utils";
 import { STORAGE_KEYS } from "@/config";
 import { useCategories, useSort, useDebounce } from "@/hooks";
@@ -134,11 +134,13 @@ export default function CategoriesPage() {
     }
   };
 
-  // Sorting state
-  const { sortConfig, handleSort } = useSort("created", "desc");
+  // Sorting state (persisted to localStorage)
+  const { sortConfig, handleSort } = useSort("created", "desc", {
+    storageKey: STORAGE_KEYS.CATEGORIES_SORT,
+  });
 
   // Sortable columns configuration
-  const sortColumns: Array<{ field: string; label: string }> = [
+  const sortColumns: SortColumn[] = [
     { field: "name", label: t("common:name", "Name") },
     { field: "isActive", label: t("common:status", "Status") },
     { field: "created", label: t("common:created", "Created") },
@@ -301,6 +303,11 @@ export default function CategoriesPage() {
             className="pl-10"
           />
         </div>
+        <SortPopup
+          columns={sortColumns}
+          currentSort={sortConfig}
+          onSort={handleSort}
+        />
         <Button
           variant="outline"
           onClick={() => {
@@ -329,11 +336,6 @@ export default function CategoriesPage() {
               />
             </PermissionGuard>
           )}
-          <SortBar
-            columns={sortColumns}
-            currentSort={sortConfig}
-            onSort={handleSort}
-          />
           <ViewSwitcher value={viewMode} onChange={handleViewModeChange} />
           <PermissionGuard resource="categories" action="manage">
             <Toggle

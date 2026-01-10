@@ -21,6 +21,7 @@ export { Modal } from './Modal';
 export { Badge } from './Badge';
 export { DataRow } from './DataRow';
 export { SortBar } from './SortableHeader';
+export { SortPopup } from './SortPopup';
 export { Pagination } from './Pagination';
 export { ViewSwitcher } from './ViewSwitcher';
 export type { ViewMode } from './ViewSwitcher';

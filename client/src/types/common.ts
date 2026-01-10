@@ -109,6 +109,27 @@ export interface ValidationResult {
 // ============================================================================
 
 /**
+ * Sort order direction
+ */
+export type SortOrder = 'asc' | 'desc' | null;
+
+/**
+ * Sort configuration for lists/tables
+ */
+export interface SortConfig {
+  field: string;
+  order: SortOrder;
+}
+
+/**
+ * Sort column definition
+ */
+export interface SortColumn {
+  field: string;
+  label: string;
+}
+
+/**
  * Loading states
  */
 export type LoadingState = 'idle' | 'loading' | 'success' | 'error';
