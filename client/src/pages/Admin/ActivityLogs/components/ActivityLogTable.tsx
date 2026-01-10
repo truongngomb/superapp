@@ -7,29 +7,11 @@ import { cn, getDateLocale } from '@/utils';
 
 interface ActivityLogTableProps {
   logs: ActivityLog[];
-  loading: boolean;
 }
 
-export function ActivityLogTable({ logs, loading }: ActivityLogTableProps) {
+export function ActivityLogTable({ logs }: ActivityLogTableProps) {
   const { t, i18n } = useTranslation('activity_logs');
   const { t: tCommon } = useTranslation('common');
-
-  if (loading) {
-    return (
-        <div className="w-full rounded-md border border-border">
-          <div className="h-12 border-b border-border bg-muted/50" />
-            {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="h-16 border-b border-border px-4 flex items-center gap-4 animate-pulse">
-                    <div className="w-8 h-8 rounded-full bg-muted" />
-                    <div className="flex-1 space-y-2">
-                        <div className="h-4 w-1/4 bg-muted rounded" />
-                        <div className="h-3 w-1/2 bg-muted rounded" />
-                    </div>
-                </div>
-            ))}
-        </div>
-    );
-  }
 
   return (
     <div className="w-full overflow-auto rounded-lg border border-border bg-card shadow-sm">

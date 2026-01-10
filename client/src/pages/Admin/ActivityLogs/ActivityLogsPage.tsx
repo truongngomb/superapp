@@ -133,7 +133,7 @@ export default function ActivityLogsPage() {
         ) : (
           <Card>
             <CardContent className="p-0">
-              <ActivityLogTable logs={logs} loading={loading} />
+              <ActivityLogTable logs={logs} />
             </CardContent>
           </Card>
         )}
