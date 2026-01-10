@@ -59,11 +59,19 @@ export type {
 
 // User schemas
 export {
+  UserCreateSchema,
   UserUpdateSchema,
+  UserBatchDeleteSchema,
+  UserBatchUpdateStatusSchema,
+  UserBatchRestoreSchema,
   UserRoleAssignmentSchema,
 } from './user.schema.js';
 export type {
+  UserCreateSchemaType,
   UserUpdateSchemaType,
+  UserBatchDeleteSchemaType,
+  UserBatchUpdateStatusSchemaType,
+  UserBatchRestoreSchemaType,
   UserRoleAssignmentSchemaType,
 } from './user.schema.js';
 

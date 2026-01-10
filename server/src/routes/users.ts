@@ -1,12 +1,14 @@
-/**
- * User Routes
- * 
- * RESTful endpoints for user management.
- */
 import { Router } from 'express';
-import { asyncHandler, requireAuth, requirePermission, validateBody } from '../middleware/index.js';
+import { asyncHandler, requireAuth, requirePermission, validateBody, batchOperationLimit } from '../middleware/index.js';
 import { userController } from '../controllers/index.js';
-import { UserUpdateSchema, UserRoleAssignmentSchema } from '../schemas/index.js';
+import { 
+  UserCreateSchema, 
+  UserUpdateSchema, 
+  UserBatchDeleteSchema, 
+  UserBatchUpdateStatusSchema, 
+  UserBatchRestoreSchema, 
+  UserRoleAssignmentSchema 
+} from '../schemas/index.js';
 import { Resources, Actions } from '../types/index.js';
 
 export const usersRouter = Router();
@@ -41,6 +43,48 @@ usersRouter.get(
   asyncHandler(userController.getAll)
 );
 
+/** GET /users/export - Export users */
+usersRouter.get(
+  '/export',
+  requirePermission(Resources.USERS, Actions.VIEW),
+  asyncHandler(userController.getAllForExport)
+);
+
+/** POST / - Create new user */
+usersRouter.post(
+  '/',
+  requirePermission(Resources.USERS, Actions.CREATE),
+  validateBody(UserCreateSchema),
+  asyncHandler(userController.create)
+);
+
+/** POST /batch-delete - Batch delete users */
+usersRouter.post(
+  '/batch-delete',
+  batchOperationLimit,
+  requirePermission(Resources.USERS, Actions.DELETE),
+  validateBody(UserBatchDeleteSchema),
+  asyncHandler(userController.batchDelete)
+);
+
+/** POST /batch-status - Batch update status */
+usersRouter.post(
+  '/batch-status',
+  batchOperationLimit,
+  requirePermission(Resources.USERS, Actions.UPDATE),
+  validateBody(UserBatchUpdateStatusSchema),
+  asyncHandler(userController.batchUpdateStatus)
+);
+
+/** POST /batch-restore - Batch restore users */
+usersRouter.post(
+  '/batch-restore',
+  batchOperationLimit,
+  requirePermission(Resources.USERS, Actions.UPDATE),
+  validateBody(UserBatchRestoreSchema),
+  asyncHandler(userController.batchRestore)
+);
+
 /** GET /users/:id - Get user by ID */
 usersRouter.get(
   '/:id',
@@ -54,6 +98,13 @@ usersRouter.put(
   requirePermission(Resources.USERS, Actions.UPDATE),
   validateBody(UserUpdateSchema),
   asyncHandler(userController.update)
+);
+
+/** POST /users/:id/restore - Restore soft-deleted user */
+usersRouter.post(
+  '/:id/restore',
+  requirePermission(Resources.USERS, Actions.UPDATE),
+  asyncHandler(userController.restore)
 );
 
 /** DELETE /users/:id - Delete user */

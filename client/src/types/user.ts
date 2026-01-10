@@ -1,29 +1,31 @@
-/**
- * User Types
- */
-
-// ============================================================================
-// Entity
-// ============================================================================
+import { BaseEntity } from './common';
 
 /**
  * User entity from API
  */
-export interface User {
-  id: string;
+export interface User extends BaseEntity {
   email: string;
   name: string;
   avatar?: string;
   roles?: string[];
   roleNames?: string[];
-  isActive?: boolean;
-  created: string;
-  updated: string;
 }
 
 // ============================================================================
 // Input/DTO Types
 // ============================================================================
+
+/**
+ * Create user input
+ */
+export interface UserCreateInput {
+  email: string;
+  name: string;
+  password?: string;
+  passwordConfirm?: string;
+  isActive?: boolean;
+  roles?: string[];
+}
 
 /**
  * Update user input
@@ -33,6 +35,7 @@ export interface UserUpdateInput {
   avatar?: string;
   emailVisibility?: boolean;
   isActive?: boolean;
+  roles?: string[];
 }
 
 /**
@@ -66,4 +69,6 @@ export interface UserListParams {
   sort?: string;
   order?: 'asc' | 'desc';
   search?: string;
+  isActive?: boolean;
+  isDeleted?: boolean;
 }

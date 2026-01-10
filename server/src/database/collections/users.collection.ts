@@ -26,11 +26,11 @@ export const usersCollection: AuthCollectionSchema = {
     'CREATE UNIQUE INDEX `idx_email__pb_users_auth_` ON `users` (`email`) WHERE `email` != \'\'',
   ],
 
-  listRule: 'id = @request.auth.id || @request.auth.roles.name ?= "Admin"',
-  viewRule: 'id = @request.auth.id || @request.auth.roles.name ?= "Admin"',
-  createRule: '@request.auth.roles.name ?= "Admin"',
-  updateRule: 'id = @request.auth.id || @request.auth.roles.name ?= "Admin"',
-  deleteRule: 'id = @request.auth.id || @request.auth.roles.name ?= "Admin"',
+  listRule: null,
+  viewRule: null,
+  createRule: null,
+  updateRule: null,
+  deleteRule: null,
 
   passwordAuth: {
     enabled: true,

@@ -75,6 +75,18 @@ export interface AuthResult {
 // =============================================================================
 
 /**
+ * Input for creating a new user (admin only)
+ */
+export interface UserCreateInput {
+  email: string;
+  name: string;
+  password?: string;
+  passwordConfirm?: string;
+  isActive?: boolean;
+  roles?: string[];
+}
+
+/**
  * Input for updating a user profile
  */
 export interface UserUpdateInput {

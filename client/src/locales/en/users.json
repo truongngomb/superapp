@@ -21,12 +21,30 @@
     "select_roles": "Select roles",
     "roles_selected": "{{count}} role(s) selected",
     "created_at": "Joined",
-    "delete_title": "Delete User"
+    "delete_title": "Delete User",
+    "create_title": "Create User",
+    "is_active_label": "Active Status"
   },
+  "activate_selected": "Activate",
+  "deactivate_selected": "Deactivate",
+  "actions": {
+    "activate": "activate",
+    "deactivate": "deactivate"
+  },
+  "restore_confirm": "Are you sure you want to restore this user?",
+  "batch_delete_confirm": "Are you sure you want to delete {{count}} selected user(s)?",
+  "batch_restore_confirm": "Are you sure you want to restore {{count}} selected user(s)?",
+  "batch_status_confirm": "Are you sure you want to {{action}} {{count}} selected user(s)?",
   "toast": {
     "load_error": "Failed to load users",
+    "create_success": "User created successfully!",
     "update_success": "User updated successfully!",
+    "restore_success": "User restored successfully!",
     "delete_success": "User deleted successfully!",
+    "delete_batch_success": "Successfully deleted {{count}} user(s)",
+    "restore_batch_success": "Successfully restored {{count}} user(s)",
+    "update_batch_success": "Successfully updated status for {{count}} user(s)",
+    "export_error": "Failed to export users",
     "assign_role_success": "Role assigned successfully!",
     "assign_roles_success": "Roles assigned successfully!",
     "remove_role_success": "Role removed successfully!",

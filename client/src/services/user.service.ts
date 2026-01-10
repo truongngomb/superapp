@@ -5,7 +5,7 @@
 
 import { api, createAbortController, API_ENDPOINTS, type RequestConfig } from '@/config';
 
-import type { User, UserUpdateInput, UserRoleAssignment, PaginatedUsers, UserListParams } from '@/types';
+import type { User, UserCreateInput, UserUpdateInput, UserRoleAssignment, PaginatedUsers, UserListParams } from '@/types';
 
 
 // ============================================================================
@@ -27,7 +27,7 @@ export const userService = {
   /**
    * Get paginated list of users
    */
-  async getUsers(params?: UserListParams, config?: ServiceConfig): Promise<PaginatedUsers> {
+  async getPage(params?: UserListParams, config?: ServiceConfig): Promise<PaginatedUsers> {
     const { controller, clear } = createAbortController(config?.timeout ?? 10000);
     
     try {
@@ -38,6 +38,8 @@ export const userService = {
       if (params?.sort) searchParams.append('sort', params.sort);
       if (params?.order) searchParams.append('order', params.order);
       if (params?.search) searchParams.append('search', params.search);
+      if (params?.isActive !== undefined) searchParams.append('isActive', String(params.isActive));
+      if (params?.isDeleted !== undefined) searchParams.append('isDeleted', String(params.isDeleted));
       
       const query = searchParams.toString();
       const endpoint = query 
@@ -53,31 +55,71 @@ export const userService = {
   },
 
   /**
+   * Get all users for export (no pagination)
+   */
+  async getAllForExport(params?: Omit<UserListParams, 'page' | 'limit'>, config?: ServiceConfig): Promise<User[]> {
+    const { controller, clear } = createAbortController(config?.timeout ?? 10000);
+    
+    try {
+      const searchParams = new URLSearchParams();
+      
+      if (params?.sort) searchParams.append('sort', params.sort);
+      if (params?.order) searchParams.append('order', params.order);
+      if (params?.search) searchParams.append('search', params.search);
+      if (params?.isActive !== undefined) searchParams.append('isActive', String(params.isActive));
+      if (params?.isDeleted !== undefined) searchParams.append('isDeleted', String(params.isDeleted));
+      
+      const query = searchParams.toString();
+      const endpoint = `${API_ENDPOINTS.USERS}/export${query ? `?${query}` : ''}`;
+      
+      return await api.get<User[]>(endpoint, {
+        signal: config?.signal ?? controller.signal,
+      });
+    } finally {
+      clear();
+    }
+  },
+
+  /**
    * Get user by ID with roles info
    */
   async getUserById(id: string): Promise<User> {
-    return api.get<User>(`${API_ENDPOINTS.USERS}/${id}`);
+    return await api.get<User>(`${API_ENDPOINTS.USERS}/${id}`);
+  },
+
+  /**
+   * Create new user
+   */
+  async create(data: UserCreateInput): Promise<User> {
+    return await api.post<User>(API_ENDPOINTS.USERS, data);
   },
 
   /**
    * Get current user profile
    */
   async getMe(): Promise<User> {
-    return api.get<User>(`${API_ENDPOINTS.USERS}/me`);
+    return await api.get<User>(`${API_ENDPOINTS.USERS}/me`);
   },
 
   /**
    * Update user profile
    */
   async updateUser(id: string, data: UserUpdateInput): Promise<User> {
-    return api.put<User>(`${API_ENDPOINTS.USERS}/${id}`, data);
+    return await api.put<User>(`${API_ENDPOINTS.USERS}/${id}`, data);
   },
 
   /**
    * Update current user's profile
    */
   async updateMe(data: UserUpdateInput): Promise<User> {
-    return api.put<User>(`${API_ENDPOINTS.USERS}/me`, data);
+    return await api.put<User>(`${API_ENDPOINTS.USERS}/me`, data);
+  },
+
+  /**
+   * Restore user
+   */
+  async restoreUser(id: string): Promise<void> {
+    await api.post(`${API_ENDPOINTS.USERS}/${id}/restore`);
   },
 
   /**
@@ -88,10 +130,31 @@ export const userService = {
   },
 
   /**
+   * Batch delete users
+   */
+  async deleteMany(ids: string[]): Promise<void> {
+    await api.post(`${API_ENDPOINTS.USERS}/batch-delete`, { ids });
+  },
+
+  /**
+   * Batch update status
+   */
+  async batchUpdateStatus(ids: string[], isActive: boolean): Promise<void> {
+    await api.post(`${API_ENDPOINTS.USERS}/batch-status`, { ids, isActive });
+  },
+
+  /**
+   * Batch restore users
+   */
+  async restoreMany(ids: string[]): Promise<void> {
+    await api.post(`${API_ENDPOINTS.USERS}/batch-restore`, { ids });
+  },
+
+  /**
    * Assign roles to user (replaces all existing roles)
    */
   async assignRoles(userId: string, roleIds: string[]): Promise<User> {
-    return api.put<User>(
+    return await api.put<User>(
       `${API_ENDPOINTS.USERS}/${userId}/roles`,
       { roleIds } as UserRoleAssignment
     );
@@ -101,20 +164,20 @@ export const userService = {
    * Add a single role to user (keeps existing roles)
    */
   async addRole(userId: string, roleId: string): Promise<User> {
-    return api.post<User>(`${API_ENDPOINTS.USERS}/${userId}/roles/${roleId}`);
+    return await api.post<User>(`${API_ENDPOINTS.USERS}/${userId}/roles/${roleId}`);
   },
 
   /**
    * Remove a specific role from user
    */
   async removeRole(userId: string, roleId: string): Promise<User> {
-    return api.delete<User>(`${API_ENDPOINTS.USERS}/${userId}/roles/${roleId}`);
+    return await api.delete<User>(`${API_ENDPOINTS.USERS}/${userId}/roles/${roleId}`);
   },
 
   /**
    * Remove all roles from user
    */
   async removeAllRoles(userId: string): Promise<User> {
-    return api.delete<User>(`${API_ENDPOINTS.USERS}/${userId}/roles`);
+    return await api.delete<User>(`${API_ENDPOINTS.USERS}/${userId}/roles`);
   },
 };

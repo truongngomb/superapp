@@ -1,19 +1,45 @@
 import { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { Users, Search, RefreshCw, Loader2 } from 'lucide-react';
+import { 
+  Users, 
+  Search, 
+  RefreshCw, 
+  Loader2, 
+  Plus, 
+  Trash2, 
+  FileSpreadsheet 
+} from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Button, Card, CardContent, Input, LoadingSpinner, ConfirmModal, SortBar, Pagination } from '@/components/common';
+import { 
+  Button, 
+  Card, 
+  CardContent, 
+  Input, 
+  LoadingSpinner, 
+  ConfirmModal, 
+  SortPopup, 
+  Pagination, 
+  Checkbox, 
+  Toggle, 
+  ViewSwitcher,
+  type ViewMode 
+} from '@/components/common';
+import { PermissionGuard } from '@/components/common/PermissionGuard';
 import { useUsers, useRoles, useSort, useDebounce } from '@/hooks';
-import type { User } from '@/types';
-import { cn } from '@/utils';
+import type { User, SortColumn, UserCreateInput, UserUpdateInput } from '@/types';
+import { cn, getStorageItem, setStorageItem } from '@/utils';
+import { STORAGE_KEYS } from '@/config';
+import { useExcelExport } from '@/hooks/useExcelExport';
 import { UserRow } from './components/UserRow';
 import { UserForm } from './components/UserForm';
+import { UserTable } from './components/UserTable';
 import { RoleSelectModal } from '@/pages/Admin/Roles/components/RoleSelectModal';
 
 /**
  * UsersPage Component
  * 
  * Administrative interface for managing users and their roles.
+ * Aligned with Category Management SSoT.
  */
 export default function UsersPage() {
   const { t } = useTranslation(['users', 'common']);
@@ -24,9 +50,17 @@ export default function UsersPage() {
     isLoadingMore,
     submitting,
     deleting,
+    batchDeleting,
+    exporting,
     fetchUsers,
+    createUser,
     updateUser,
+    restoreUser,
     deleteUser,
+    deleteUsers,
+    restoreUsers,
+    updateUsersStatus,
+    getAllForExport,
     assignRoles,
   } = useUsers();
 
@@ -35,14 +69,61 @@ export default function UsersPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const debouncedSearchQuery = useDebounce(searchQuery, 400);
   const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [showForm, setShowForm] = useState(false);
   const [assigningUser, setAssigningUser] = useState<User | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [restoreId, setRestoreId] = useState<string | null>(null);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [showBatchDeleteConfirm, setShowBatchDeleteConfirm] = useState(false);
+  const [showBatchRestoreConfirm, setShowBatchRestoreConfirm] = useState(false);
+  const [batchStatusConfig, setBatchStatusConfig] = useState<{
+    isOpen: boolean;
+    isActive: boolean;
+  } | null>(null);
+  const [showArchived, setShowArchived] = useState(false);
 
-  // Sorting state
-  const { sortConfig, handleSort } = useSort('created', 'desc');
+  // View mode state (persisted)
+  const [viewMode, setViewMode] = useState<ViewMode>(() => {
+    return getStorageItem<ViewMode>(STORAGE_KEYS.USERS_VIEW_MODE) || 'list';
+  });
+
+  // Handle view mode change
+  const handleViewModeChange = (mode: ViewMode) => {
+    setViewMode(mode);
+    setStorageItem(STORAGE_KEYS.USERS_VIEW_MODE, mode);
+  };
+
+  // Sorting state (persisted)
+  const { sortConfig, handleSort } = useSort('created', 'desc', {
+    storageKey: STORAGE_KEYS.USERS_SORT,
+  });
+
+  // Excel export hook
+  const { exportToExcel } = useExcelExport<User>({
+    fileNamePrefix: 'users',
+    sheetName: t('users:title'),
+    columns: [
+      { key: '#', header: '#', width: 8 },
+      { key: 'name', header: t('common:name'), width: 25 },
+      { key: 'email', header: t('common:email'), width: 30 },
+      { key: 'roleNames', header: t('users:form.role_label'), width: 20 },
+      { key: 'isActive', header: t('common:status'), width: 12 },
+      { key: 'created', header: t('common:created'), width: 15 },
+    ],
+  });
+
+  const handleExport = async () => {
+    const allData = await getAllForExport({
+      search: debouncedSearchQuery || undefined,
+      sort: sortConfig.field,
+      order: sortConfig.order ?? 'desc',
+      isDeleted: showArchived || undefined,
+    });
+    await exportToExcel(allData);
+  };
 
   // Sortable columns configuration
-  const sortColumns: Array<{ field: string; label: string }> = [
+  const sortColumns: SortColumn[] = [
     { field: 'name', label: t('common:name') },
     { field: 'email', label: t('common:email') },
     { field: 'isActive', label: t('common:status') },
@@ -55,20 +136,26 @@ export default function UsersPage() {
       search: debouncedSearchQuery || undefined,
       sort: sortConfig.field,
       order: (sortConfig.order ?? 'desc'),
-      page: 1
+      page: 1,
+      isDeleted: showArchived || undefined,
     };
     void fetchUsers(params);
     void fetchRoles();
-  }, [fetchUsers, fetchRoles, debouncedSearchQuery, sortConfig]);
+  }, [fetchUsers, fetchRoles, debouncedSearchQuery, sortConfig, showArchived]);
 
-  // Display users directly from backend (already filtered and sorted)
   const displayUsers = users;
 
-  // Handle edit user submit
-  const handleEditSubmit = async (data: { name: string; isActive?: boolean }) => {
-    if (!editingUser) return;
-    const success = await updateUser(editingUser.id, data);
+  // Handle form submit
+  const handleFormSubmit = async (data: UserCreateInput | UserUpdateInput) => {
+    let success = false;
+    if (editingUser?.id) {
+      success = await updateUser(editingUser.id, data as UserUpdateInput);
+    } else {
+      success = await createUser(data as UserCreateInput);
+    }
+
     if (success) {
+      setShowForm(false);
       setEditingUser(null);
     }
   };
@@ -90,16 +177,89 @@ export default function UsersPage() {
     }
   };
 
+  // Selection handlers
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedIds(displayUsers.map(u => u.id));
+    } else {
+      setSelectedIds([]);
+    }
+  };
+
+  const handleSelectOne = (id: string, checked: boolean) => {
+    if (checked) {
+      setSelectedIds(prev => [...prev, id]);
+    } else {
+      setSelectedIds(prev => prev.filter(i => i !== id));
+    }
+  };
+
+  const handleBatchDelete = async () => {
+    const success = await deleteUsers(selectedIds);
+    if (success) {
+      setSelectedIds([]);
+      setShowBatchDeleteConfirm(false);
+    }
+  };
+
+  const handleBatchStatusUpdate = async (isActive: boolean) => {
+    const success = await updateUsersStatus(selectedIds, isActive);
+    if (success) {
+      setSelectedIds([]);
+      setBatchStatusConfig(null);
+    }
+  };
+
+  const handleBatchRestore = async () => {
+    const success = await restoreUsers(selectedIds);
+    if (success) {
+      setSelectedIds([]);
+      setShowBatchRestoreConfirm(false);
+    }
+  };
+
+  const hasDeletedSelected = selectedIds.some(
+    id => displayUsers.find(u => u.id === id)?.isDeleted
+  );
+
   return (
     <div>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-            {t("users:title")}
-          </h1>
-          <p className="text-muted mt-1">{t("users:subtitle")}</p>
+        <div className="flex items-start gap-3">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+              {t("users:title")}
+            </h1>
+            <p className="text-muted mt-1">{t("users:subtitle")}</p>
+          </div>
+          <PermissionGuard resource="users" action="view">
+            <button
+              type="button"
+              onClick={() => { void handleExport(); }}
+              disabled={exporting || displayUsers.length === 0}
+              className="p-2 rounded-lg hover:bg-[#217346]/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              title={t("common:export_excel")}
+            >
+              {exporting ? (
+                <Loader2 className="w-6 h-6 animate-spin text-[#217346]" />
+              ) : (
+                <FileSpreadsheet className="w-6 h-6 text-[#217346]" />
+              )}
+            </button>
+          </PermissionGuard>
         </div>
+        <PermissionGuard resource="users" action="create">
+          <Button
+            onClick={() => {
+              setEditingUser(null);
+              setShowForm(true);
+            }}
+          >
+            <Plus className="w-5 h-5" />
+            {t("common:add")}
+          </Button>
+        </PermissionGuard>
       </div>
 
       {/* Search and filters */}
@@ -111,10 +271,15 @@ export default function UsersPage() {
             onChange={(e) => {
               setSearchQuery(e.target.value);
             }}
-            placeholder={t("users:list.search_placeholder")}
+            placeholder={t("common:search")}
             className="pl-10"
           />
         </div>
+        <SortPopup
+          columns={sortColumns}
+          currentSort={sortConfig}
+          onSort={handleSort}
+        />
         <Button
           variant="outline"
           onClick={() => {
@@ -126,14 +291,88 @@ export default function UsersPage() {
       </div>
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-        <SortBar
-          columns={sortColumns}
-          currentSort={sortConfig}
-          onSort={handleSort}
-        />
-        <p className="text-sm text-muted">
-          {t('common:total_items', { count: pagination.total })}
-        </p>
+        <div className="flex items-center gap-4">
+          {displayUsers.length > 0 && (
+            <PermissionGuard resource="users" action="delete">
+              <div className="p-3 bg-surface rounded-lg">
+                <Checkbox
+                  triState
+                  checked={
+                    selectedIds.length === 0
+                      ? false
+                      : selectedIds.length === displayUsers.length
+                      ? true
+                      : "indeterminate"
+                  }
+                  onChange={(checked: boolean) => { handleSelectAll(checked); }}
+                  label={t("common:select_all")}
+                />
+              </div>
+            </PermissionGuard>
+          )}
+          <ViewSwitcher value={viewMode} onChange={handleViewModeChange} />
+          <PermissionGuard resource="users" action="manage">
+            <Toggle
+              checked={showArchived}
+              onChange={(checked) => {
+                setShowArchived(checked);
+                setSelectedIds([]);
+              }}
+              label={t("common:show_archived")}
+            />
+          </PermissionGuard>
+        </div>
+        <div className="flex items-center gap-3">
+          {selectedIds.length > 0 && showArchived && (
+            <PermissionGuard resource="users" action="update">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => { setShowBatchRestoreConfirm(true); }}
+              >
+                <RefreshCw className="w-4 h-4" />
+                {t("common:restore")} ({selectedIds.length})
+              </Button>
+            </PermissionGuard>
+          )}
+          {selectedIds.length > 0 && (
+            <PermissionGuard resource="users" action="delete">
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={() => { setShowBatchDeleteConfirm(true); }}
+              >
+                <Trash2 className="w-4 h-4" />
+                {t("common:delete_selected")} ({selectedIds.length})
+              </Button>
+            </PermissionGuard>
+          )}
+          {selectedIds.length > 0 && (
+            <PermissionGuard resource="users" action="update">
+              {!hasDeletedSelected && (
+                <>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => { setBatchStatusConfig({ isOpen: true, isActive: true }); }}
+                  >
+                    {t("activate_selected")} ({selectedIds.length})
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => { setBatchStatusConfig({ isOpen: true, isActive: false }); }}
+                  >
+                    {t("deactivate_selected")} ({selectedIds.length})
+                  </Button>
+                </>
+              )}
+            </PermissionGuard>
+          )}
+          <p className="text-sm text-muted">
+            {t('common:total_items', { count: pagination.total })}
+          </p>
+        </div>
       </div>
 
       {/* Users list */}
@@ -150,25 +389,57 @@ export default function UsersPage() {
         </Card>
       ) : (
         <div className="space-y-2">
-          {displayUsers.map((user, index) => (
-            <UserRow
-              key={user.id}
-              index={index}
-              style={{}}
-              data={{
-                users: displayUsers,
-                onEdit: (u) => {
-                  setEditingUser(u);
-                },
-                onAssignRole: (u) => {
-                  setAssigningUser(u);
-                },
-                onDelete: (id) => {
-                  setDeleteId(id);
-                },
-              }}
-            />
-          ))}
+          {viewMode === 'table' ? (
+            <Card>
+              <CardContent className="p-0">
+                <UserTable
+                  users={displayUsers}
+                  selectedIds={selectedIds}
+                  onSelectAll={handleSelectAll}
+                  onSelectOne={handleSelectOne}
+                  onEdit={(u) => {
+                    setEditingUser(u);
+                    setShowForm(true);
+                  }}
+                  onAssignRole={(u) => {
+                    setAssigningUser(u);
+                  }}
+                  onDelete={(id) => {
+                    setDeleteId(id);
+                  }}
+                  onRestore={(id) => {
+                    setRestoreId(id);
+                  }}
+                />
+              </CardContent>
+            </Card>
+          ) : (
+            displayUsers.map((user, index) => (
+              <UserRow
+                key={user.id}
+                index={index}
+                style={{}}
+                data={{
+                  users: displayUsers,
+                  onEdit: (u) => {
+                    setEditingUser(u);
+                    setShowForm(true);
+                  },
+                  onAssignRole: (u) => {
+                    setAssigningUser(u);
+                  },
+                  onDelete: (id) => {
+                    setDeleteId(id);
+                  },
+                  onRestore: (id) => {
+                    setRestoreId(id);
+                  },
+                }}
+                isSelected={selectedIds.includes(user.id)}
+                onSelect={handleSelectOne}
+              />
+            ))
+          )}
 
           {/* Pagination */}
           {pagination.totalPages > 1 && (
@@ -188,16 +459,15 @@ export default function UsersPage() {
         </div>
       )}
 
-      {/* Edit User Modal */}
+      {/* User Form Modal (Create/Edit) */}
       <AnimatePresence>
-        {editingUser && (
+        {showForm && (
           <UserForm
-            isOpen={!!editingUser}
+            isOpen={showForm}
             user={editingUser}
-            onSubmit={(data) => {
-              void handleEditSubmit(data);
-            }}
+            onSubmit={(data) => { void handleFormSubmit(data); }}
             onClose={() => {
+              setShowForm(false);
               setEditingUser(null);
             }}
             loading={submitting}
@@ -212,9 +482,7 @@ export default function UsersPage() {
             isOpen={!!assigningUser}
             user={assigningUser}
             roles={roles}
-            onAssign={(roleIds) => {
-              void handleAssignRoles(roleIds);
-            }}
+            onAssign={(roleIds) => { void handleAssignRoles(roleIds); }}
             onClose={() => {
               setAssigningUser(null);
             }}
@@ -226,7 +494,7 @@ export default function UsersPage() {
       {/* Delete Confirm Modal */}
       <ConfirmModal
         isOpen={!!deleteId}
-        title={t("users:form.delete_title")}
+        title={t("common:delete")}
         message={t("users:delete_confirm")}
         confirmText={t("common:delete")}
         cancelText={t("common:cancel")}
@@ -238,6 +506,70 @@ export default function UsersPage() {
           setDeleteId(null);
         }}
         variant="danger"
+      />
+
+      {/* Restore Confirm Modal */}
+      <ConfirmModal
+        isOpen={!!restoreId}
+        title={t("common:restore")}
+        message={t("users:restore_confirm")}
+        confirmText={t("common:confirm")}
+        cancelText={t("common:cancel")}
+        loading={submitting}
+        onConfirm={() => {
+          if (restoreId) {
+            void restoreUser(restoreId).then(success => {
+              if (success) setRestoreId(null);
+            });
+          }
+        }}
+        onCancel={() => {
+          setRestoreId(null);
+        }}
+      />
+
+      {/* Batch Delete Confirm Modal */}
+      <ConfirmModal
+        isOpen={showBatchDeleteConfirm}
+        title={t("common:batch_delete_title")}
+        message={t("batch_delete_confirm", { count: selectedIds.length })}
+        confirmText={t("common:delete")}
+        cancelText={t("common:cancel")}
+        loading={batchDeleting}
+        onConfirm={() => { void handleBatchDelete(); }}
+        onCancel={() => { setShowBatchDeleteConfirm(false); }}
+        variant="danger"
+      />
+
+      {/* Batch Status Update Confirm Modal */}
+      <ConfirmModal
+        isOpen={!!batchStatusConfig?.isOpen}
+        title={t("common:confirm")}
+        message={t("batch_status_confirm", {
+          count: selectedIds.length,
+          action: batchStatusConfig?.isActive
+            ? t("actions.activate")
+            : t("actions.deactivate"),
+        })}
+        confirmText={t("common:confirm")}
+        cancelText={t("common:cancel")}
+        loading={submitting}
+        onConfirm={() => {
+          if (batchStatusConfig) void handleBatchStatusUpdate(batchStatusConfig.isActive);
+        }}
+        onCancel={() => { setBatchStatusConfig(null); }}
+      />
+
+      {/* Batch Restore Confirm Modal */}
+      <ConfirmModal
+        isOpen={showBatchRestoreConfirm}
+        title={t("common:batch_restore_title")}
+        message={t("batch_restore_confirm", { count: selectedIds.length })}
+        confirmText={t("common:confirm")}
+        cancelText={t("common:cancel")}
+        loading={submitting}
+        onConfirm={() => { void handleBatchRestore(); }}
+        onCancel={() => { setShowBatchRestoreConfirm(false); }}
       />
     </div>
   );

@@ -25,6 +25,7 @@ export type UserWithRoles = User;
 class UserService extends BaseService<User> {
   protected readonly collectionName = Collections.USERS;
   protected readonly cacheKey = CacheKeys.USERS;
+  protected readonly defaultFilter = 'isDeleted = false';
   protected readonly defaultExpand = 'roles';
 
   protected mapRecord(record: Record<string, unknown>): User {

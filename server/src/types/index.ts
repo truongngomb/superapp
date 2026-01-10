@@ -49,6 +49,7 @@ export type {
   AuthUser,
   UserSession,
   AuthResult,
+  UserCreateInput,
   UserUpdateInput,
   UserRoleAssignment,
 } from './user.js';

@@ -21,15 +21,33 @@
     "select_roles": "Chọn các vai trò",
     "roles_selected": "Đã chọn {{count}} vai trò",
     "created_at": "Ngày tham gia",
-    "delete_title": "Xóa Người dùng"
+    "delete_title": "Xóa Người dùng",
+    "create_title": "Thêm Người dùng",
+    "is_active_label": "Trạng thái hoạt động"
   },
   "toast": {
     "load_error": "Không thể tải danh sách người dùng",
+    "create_success": "Thêm người dùng thành công!",
     "update_success": "Cập nhật người dùng thành công!",
+    "restore_success": "Khôi phục người dùng thành công!",
     "delete_success": "Xóa người dùng thành công!",
+    "delete_batch_success": "Đã xóa thành công {{count}} người dùng",
+    "restore_batch_success": "Đã khôi phục thành công {{count}} người dùng",
+    "update_batch_success": "Đã cập nhật trạng thái cho {{count}} người dùng",
+    "export_error": "Không thể xuất danh sách người dùng",
     "assign_role_success": "Gán vai trò thành công!",
     "assign_roles_success": "Gán các vai trò thành công!",
     "remove_role_success": "Xóa vai trò thành công!",
     "error": "Đã xảy ra lỗi"
+  },
+  "restore_confirm": "Bạn có chắc chắn muốn khôi phục người dùng này không?",
+  "activate_selected": "Bật",
+  "deactivate_selected": "Tắt",
+  "batch_delete_confirm": "Bạn có chắc muốn chuyển {{count}} người dùng đã chọn vào danh sách xóa (mềm)?",
+  "batch_restore_confirm": "Bạn có chắc muốn khôi phục {{count}} người dùng đã chọn?",
+  "batch_status_confirm": "Bạn có chắc muốn {{action}} {{count}} người dùng đã chọn?",
+  "actions": {
+    "activate": "bật",
+    "deactivate": "tắt"
   }
 }
