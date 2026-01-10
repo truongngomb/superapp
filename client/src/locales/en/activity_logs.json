@@ -11,5 +11,15 @@
   "list": {
     "empty": "No activity logs found",
     "empty_search": "No matching activity logs found"
+  },
+  "toast": {
+    "load_error": "Failed to load activity logs",
+    "error": "An error occurred"
+  },
+  "export": {
+    "button": "Export Excel",
+    "exporting": "Exporting...",
+    "success": "Export successful!",
+    "error": "Export failed"
   }
 }

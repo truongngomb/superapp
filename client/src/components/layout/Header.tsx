@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { LogOut, Menu, Moon, Sun, User, X } from 'lucide-react';
 import { cn } from '@/utils';
-import { useAuth, useActivityLogs } from '@/hooks';
+import { useAuth, useActivityLogContext } from '@/hooks';
 import { useTheme } from '@/context';
 import { LanguageSwitcher } from '../common/LanguageSwitcher';
 import { PermissionGuard } from '../common/PermissionGuard';
@@ -112,7 +112,7 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
   const { user, isAuthenticated, logout } = useAuth();
   const { isDark, toggleTheme } = useTheme();
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-  const { unreadCount } = useActivityLogs();
+  const { unreadCount } = useActivityLogContext();
 
   const handleLogout = useCallback(() => {
     void logout()

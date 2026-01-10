@@ -11,5 +11,15 @@
   "list": {
     "empty": "Không có nhật ký hoạt động",
     "empty_search": "Không tìm thấy nhật ký phù hợp"
+  },
+  "toast": {
+    "load_error": "Không thể tải nhật ký hoạt động",
+    "error": "Đã xảy ra lỗi"
+  },
+  "export": {
+    "button": "Xuất Excel",
+    "exporting": "Đang xuất...",
+    "success": "Xuất file thành công!",
+    "error": "Xuất file thất bại"
   }
 }

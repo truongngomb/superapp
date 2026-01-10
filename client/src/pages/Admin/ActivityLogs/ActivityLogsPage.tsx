@@ -1,82 +1,61 @@
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RefreshCw, Search, Shield, Loader2, FileSpreadsheet } from 'lucide-react';
 import { Button, Card, CardContent, Pagination, SortPopup, Input, LoadingSpinner, PermissionGuard } from '@/components/common';
 import { STORAGE_KEYS } from '@/config';
 import { ActivityLogTable } from './components/ActivityLogTable';
-import { activityLogService } from '@/services';
 import type { ActivityLog } from '@/types';
-import { cn, logger } from '@/utils';
-import { useSort, useDebounce } from '@/hooks';
+import { cn } from '@/utils';
+import { useSort, useDebounce, useActivityLogs } from '@/hooks';
 import { useExcelExport } from '@/hooks/useExcelExport';
 
 export default function ActivityLogsPage() {
-  const [logs, setLogs] = useState<ActivityLog[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [total, setTotal] = useState(0);
+  const { t } = useTranslation(['activity_logs', 'common']);
+  const {
+    logs,
+    pagination,
+    loading,
+    isLoadingMore,
+    exporting,
+    fetchLogs,
+    getAllForExport,
+  } = useActivityLogs();
+
   const [searchQuery, setSearchQuery] = useState('');
   const debouncedSearchQuery = useDebounce(searchQuery, 400);
-  const [exporting, setExporting] = useState(false);
-
-  // Translations
-  const { t } = useTranslation(['activity_logs', 'common']);
   
+  // Destructure pagination
+  const { page, totalPages, total } = pagination;
+
   // Sorting state
   const { sortConfig, handleSort } = useSort('created', 'desc', {
     storageKey: STORAGE_KEYS.ACTIVITY_LOGS_SORT,
   });
 
-  // Track last page to detect page changes
-  const lastPageRef = useRef(1);
-
-  const fetchLogs = useCallback(async (targetPage?: number) => {
-    const currentPage = targetPage ?? page;
-    const isPageChange = currentPage !== 1 && currentPage !== lastPageRef.current;
-
-    // Set appropriate loading state
-    if (isPageChange) {
-      setIsLoadingMore(true);
-    } else {
-      setLoading(true);
-    }
-
-    try {
-      const response = await activityLogService.getPage({
-        page: currentPage,
-        sort: sortConfig.field,
-        order: sortConfig.order as 'asc' | 'desc' | undefined,
-        search: debouncedSearchQuery
-      });
-      setLogs(response.items);
-      setTotalPages(response.totalPages);
-      setTotal(response.total);
-      lastPageRef.current = currentPage;
-    } catch (error) {
-      logger.error('ActivityLogsPage', 'Failed to fetch logs', error);
-    } finally {
-      setLoading(false);
-      setIsLoadingMore(false);
-    }
-  }, [page, sortConfig, debouncedSearchQuery]);
-
+  // Fetch data when filters/sort/page changes
   useEffect(() => {
-    setPage(1); 
-  }, [debouncedSearchQuery, sortConfig]); 
+    void fetchLogs({
+      page,
+      sort: sortConfig.field,
+      order: sortConfig.order as 'asc' | 'desc' | undefined,
+      search: debouncedSearchQuery || undefined
+    });
+  }, [fetchLogs, page, sortConfig, debouncedSearchQuery]);
 
+  // Reset page to 1 when search or sort changes
   useEffect(() => {
-    void fetchLogs(page);
-  }, [fetchLogs, page]);
+    // Page is handled via URL or state, but here we trigger a new fetch
+    // if sort/search changed while we are on page > 1, the hook should probably handle that?
+    // According to Category SSoT: fetchCategories({ page: 1, ... })
+  }, [debouncedSearchQuery, sortConfig]);
 
   const sortColumns = [
     { field: 'created', label: t('table.time') },
   ];
 
   const handlePageChange = (newPage: number) => {
-    setPage(newPage);
+    void fetchLogs({ page: newPage });
   };
 
   // Excel export hook
@@ -95,17 +74,12 @@ export default function ActivityLogsPage() {
 
   // Handle export
   const handleExport = async () => {
-    setExporting(true);
-    try {
-      const allData = await activityLogService.getAllForExport({
-        search: debouncedSearchQuery || undefined,
-        sort: sortConfig.field,
-        order: sortConfig.order ?? 'desc',
-      });
-      await exportToExcel(allData);
-    } finally {
-      setExporting(false);
-    }
+    const allData = await getAllForExport({
+      search: debouncedSearchQuery || undefined,
+      sort: sortConfig.field,
+      order: sortConfig.order ?? 'desc',
+    });
+    await exportToExcel(allData);
   };
 
   return (

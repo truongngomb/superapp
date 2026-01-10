@@ -6,7 +6,7 @@ import React, { useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Bell, BellOff, X, RefreshCw } from 'lucide-react';
-import { useActivityLogs, useOnClickOutside } from '@/hooks';
+import { useActivityLogContext, useOnClickOutside } from '@/hooks';
 import { ActivityLogItem } from './ActivityLogItem';
 import { Button } from '@/components/common';
 import { cn } from '@/utils';
@@ -20,7 +20,7 @@ interface NotificationCenterProps {
 export const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const { t } = useTranslation(['notifications', 'common']);
-  const { logs, isLoading, error, refetch, resetUnreadCount, loadMore, hasMore, isLoadingMore } = useActivityLogs(20);
+  const { logs, isLoading, error, refetch, resetUnreadCount, loadMore, hasMore, isLoadingMore } = useActivityLogContext();
   
   const containerRef = useRef<HTMLDivElement>(null);
   useOnClickOutside(containerRef, () => {

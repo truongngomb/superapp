@@ -2,9 +2,9 @@
 description: FEATURE CONSISTENCY CHECK - Kiểm tra đồng nhất feature với Category Management (SSoT)
 ---
 
-=== FEATURE CONSISTENCY CHECK — ANTIGRAVITY (COMPREHENSIVE) ===
+=== FEATURE CONSISTENCY CHECK ===
 
-Vai trò: AI Agent CHỈ kiểm tra đồng nhất feature, KHÔNG viết code, KHÔNG đề xuất.
+Vai trò: Kiểm tra đồng nhất feature, không code/đề xuất.
 
 Luật:
 - Chỉ dựa trên code TỒN TẠI + SYSTEM PROMPT
@@ -12,11 +12,11 @@ Luật:
 - Không thấy → ghi: "Không tồn tại trong codebase"
 - Không đủ dữ liệu → DỪNG và trả đúng thông báo hệ thống
 
-Tham chiếu bắt buộc: Category Management (Single Source of Truth)
+Tham chiếu bắt buộc: Category Management (SSoT)
 Không tìm thấy Category Management → DỪNG NGAY
 
 ==================================================================
-DANH SÁCH FILES THAM CHIẾU (Category Management)
+FILES THAM CHIẾU (Category Management)
 ==================================================================
 
 ### Frontend (client/src/)
@@ -41,7 +41,7 @@ DANH SÁCH FILES THAM CHIẾU (Category Management)
 - database/collections/categories.collection.ts
 
 ==================================================================
-I. KIỂM TRA UI / UX (BẮT BUỘC)
+I. KIỂM TRA UI / UX
 ==================================================================
 
 So sánh từng phần UI với SSoT:
@@ -56,8 +56,8 @@ So sánh từng phần UI với SSoT:
 - [ ] Search input với `useDebounce` (400ms)
 - [ ] Search icon (lucide-react)
 - [ ] Placeholder với i18n key: `common:search`
-- [ ] SortPopup component (popup với sort options)
-- [ ] Refresh button với loading spin
+- [ ] SortPopup component (nằm cùng hàng flex với Search)
+- [ ] Refresh button với loading spin (nằm cùng hàng flex với Search)
 
 ### 3. List controls section
 - [ ] PermissionGuard cho Checkbox "Select All" với action="delete"
@@ -115,7 +115,7 @@ III. KIỂM TRA HOOKS
 ==================================================================
 
 ### Hook structure (use{Feature}s.ts)
-- [ ] State: items[], loading, isLoadingMore, submitting, deleting, batchDeleting
+- [ ] State: items[], loading, isLoadingMore, submitting, deleting, batchDeleting, exporting
 - [ ] Pagination state: { page, totalPages, total }
 - [ ] lastParamsRef cho params persistence
 - [ ] isReloading ref để tránh loop
@@ -130,6 +130,7 @@ III. KIỂM TRA HOOKS
 - [ ] update{Feature}sStatus (batch)
 - [ ] restore{Feature}
 - [ ] restore{Feature}s (batch)
+- [ ] getAllForExport (params) - fetch all data for excel
 
 ### Error handling pattern
 - [ ] try-catch với ApiException check
@@ -146,6 +147,7 @@ III. KIỂM TRA HOOKS
 - [ ] fileNamePrefix: "{feature}"
 - [ ] sheetName: t("{feature}:title")
 - [ ] columns config với key, header, width
+- [ ] Hỗ trợ nested keys với dot notation (e.g. 'expand.user.name')
 
 ==================================================================
 IV. KIỂM TRA SERVICE (Frontend)
@@ -167,6 +169,7 @@ IV. KIỂM TRA SERVICE (Frontend)
 - [ ] batchUpdateStatus(ids, isActive) → POST /batch-status
 - [ ] restore(id) → POST /{id}/restore
 - [ ] restoreMany(ids) → POST /batch-restore
+- [ ] getAllForExport(params, config) → GET /export
 
 ==================================================================
 V. KIỂM TRA TYPES
@@ -214,6 +217,7 @@ VI. KIỂM TRA ROUTES (Backend)
 - [ ] POST /batch-delete → batchDelete
 - [ ] POST /batch-status → batchUpdateStatus
 - [ ] POST /batch-restore → batchRestore
+- [ ] GET /export → getAllForExport
 
 ### Rate limiting
 - [ ] batchOperationLimit cho /batch-* endpoints
@@ -231,6 +235,7 @@ VII. KIỂM TRA CONTROLLER (Backend)
 - [ ] create/update: Body được validate bởi middleware
 - [ ] remove: Check isDeleted để quyết định soft/hard delete
 - [ ] batchDelete: Promise.all với try-catch per item
+- [ ] getAllForExport: Fetch all data không phân trang với filters/sort
 
 ### Security checks
 - [ ] isDeleted=true → require 'manage' permission
