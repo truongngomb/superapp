@@ -315,18 +315,20 @@ export default function CategoriesPage() {
         <div className="flex items-center gap-4">
           {displayCategories.length > 0 && (
             <PermissionGuard resource="categories" action="delete">
-              <Checkbox
-                triState
-                checked={
-                  selectedIds.length === 0
-                    ? false
-                    : selectedIds.length === displayCategories.length
-                    ? true
-                    : "indeterminate"
-                }
-                onChange={handleSelectAll}
-                label={t("common:select_all")}
-              />
+              <div className="p-3 bg-surface rounded-lg">
+                <Checkbox
+                  triState
+                  checked={
+                    selectedIds.length === 0
+                      ? false
+                      : selectedIds.length === displayCategories.length
+                      ? true
+                      : "indeterminate"
+                  }
+                  onChange={handleSelectAll}
+                  label={t("common:select_all")}
+                />
+              </div>
             </PermissionGuard>
           )}
           <ViewSwitcher value={viewMode} onChange={handleViewModeChange} />
