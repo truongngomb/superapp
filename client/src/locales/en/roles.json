@@ -27,6 +27,31 @@
     "create_success": "Role created successfully!",
     "update_success": "Role updated successfully!",
     "delete_success": "Role deleted successfully!",
+    "hard_delete_success": "Role permanently deleted successfully!",
+    "batch_delete_success": "Successfully deleted {{count}} roles",
+    "batch_hard_delete_success": "Successfully permanently deleted {{count}} roles",
+    "batch_restore_success": "Successfully restored {{count}} roles",
+    "batch_status_success": "Successfully updated status for {{count}} roles",
+    "restore_success": "Role restored successfully",
     "error": "An error occurred"
+  },
+  "batch_delete_confirm": "Are you sure you want to delete {{count}} roles?",
+  "batch_restore_confirm": "Are you sure you want to restore {{count}} roles?",
+  "batch_status_confirm": "Are you sure you want to {{action}} {{count}} roles?",
+  "restore_confirm": "Are you sure you want to restore this role?",
+  "hard_delete_confirm": "Are you sure you want to permanently delete this role? This action cannot be undone.",
+  "actions": {
+    "activate": "Activate",
+    "deactivate": "Deactivate"
+  },
+  "view_mode": {
+    "list": "List view",
+    "table": "Table view"
+  },
+  "export": {
+    "button": "Export Excel",
+    "exporting": "Exporting...",
+    "success": "Export successful!",
+    "error": "Export failed"
   }
 }

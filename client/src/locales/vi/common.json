@@ -59,5 +59,14 @@
   "switch_to_picker": "Chuyển sang chọn màu",
   "actions_menu": {
     "change_language": "Thay đổi ngôn ngữ"
-  }
+  },
+  "restore": "Khôi phục",
+  "trash": "Thùng rác",
+  "view_active": "Xem danh sách",
+  "export_excel": "Xuất Excel",
+  "copy": "Sao chép",
+  "empty_trash": "Thùng rác trống",
+  "selected_items": "Đã chọn {{count}} mục",
+  "batch_delete_title": "Xóa các mục đã chọn",
+  "batch_restore_title": "Khôi phục các mục đã chọn"
 }

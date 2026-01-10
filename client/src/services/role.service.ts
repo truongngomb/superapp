@@ -51,6 +51,7 @@ export const roleService = {
       if (params?.order) queryParams.append('order', params.order);
       if (params?.search) queryParams.append('search', params.search);
       if (params?.isActive !== undefined) queryParams.append('isActive', params.isActive.toString());
+      if (params?.isDeleted !== undefined) queryParams.append('isDeleted', params.isDeleted.toString());
 
       const queryString = queryParams.toString();
       const endpoint = queryString ? `${API_ENDPOINTS.ROLES}?${queryString}` : API_ENDPOINTS.ROLES;
@@ -104,5 +105,54 @@ export const roleService = {
    */
   async duplicate(id: string, newName: string): Promise<Role> {
     return api.post<Role>(`${API_ENDPOINTS.ROLES}/${id}/duplicate`, { name: newName });
+  },
+
+  /**
+   * Delete multiple roles
+   */
+  async deleteMany(ids: string[]): Promise<boolean> {
+    await api.post(`${API_ENDPOINTS.ROLES}/batch-delete`, { ids });
+    return true;
+  },
+
+  /**
+   * Update status for multiple roles
+   */
+  async updateStatusMany(ids: string[], isActive: boolean): Promise<boolean> {
+    await api.post(`${API_ENDPOINTS.ROLES}/batch-status`, { ids, isActive });
+    return true;
+  },
+
+  /**
+   * Restore a role
+   */
+  async restore(id: string): Promise<boolean> {
+    await api.post(`${API_ENDPOINTS.ROLES}/${id}/restore`);
+    return true;
+  },
+
+  /**
+   * Restore multiple roles
+   */
+  async restoreMany(ids: string[]): Promise<boolean> {
+    await api.post(`${API_ENDPOINTS.ROLES}/batch-restore`, { ids });
+    return true;
+  },
+
+  /**
+   * Get all roles for export
+   */
+  async getAllForExport(params?: RoleListParams): Promise<Role[]> {
+    const queryParams = new URLSearchParams();
+    if (params?.sort) queryParams.append('sort', params.sort);
+    if (params?.order) queryParams.append('order', params.order);
+    if (params?.search) queryParams.append('search', params.search);
+    if (params?.isActive !== undefined) queryParams.append('isActive', params.isActive.toString());
+    if (params?.isDeleted !== undefined) queryParams.append('isDeleted', params.isDeleted.toString());
+
+    const queryString = queryParams.toString();
+    const endpoint = queryString ? `${API_ENDPOINTS.ROLES}/export?${queryString}` : `${API_ENDPOINTS.ROLES}/export`;
+
+    return api.get<Role[]>(endpoint);
   },
 };

@@ -12,6 +12,8 @@ export function useRoles() {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [batchDeleting, setBatchDeleting] = useState(false);
+  const [exporting, setExporting] = useState(false);
   const toast = useToast();
   const { t } = useTranslation('roles');
   
@@ -129,6 +131,92 @@ export function useRoles() {
     }
   };
 
+  const deleteRoles = async (ids: string[]) => {
+    setBatchDeleting(true);
+    try {
+      const hasDeleted = ids.some(id => roles.find(r => r.id === id)?.isDeleted);
+      await roleService.deleteMany(ids);
+      
+      const successMessage = hasDeleted
+        ? t('toast.batch_hard_delete_success', { count: ids.length, defaultValue: 'Successfully permanently deleted {{count}} roles' })
+        : t('toast.batch_delete_success', { count: ids.length, defaultValue: 'Successfully deleted {{count}} roles' });
+
+      toast.success(successMessage);
+      // Reload list after delete
+      await reloadRoles();
+      return true;
+    } catch (error) {
+      const message = error instanceof ApiException ? error.message : t('toast.error');
+      toast.error(message);
+      return false;
+    } finally {
+      setBatchDeleting(false);
+    }
+  };
+
+  const updateRolesStatus = async (ids: string[], isActive: boolean) => {
+    setSubmitting(true);
+    try {
+      await roleService.updateStatusMany(ids, isActive);
+      toast.success(t('toast.batch_status_success', { count: ids.length, defaultValue: 'Successfully updated status for {{count}} roles' }));
+      await reloadRoles();
+      return true;
+    } catch (error) {
+      const message = error instanceof ApiException ? error.message : t('toast.error');
+      toast.error(message);
+      return false;
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const restoreRole = async (id: string) => {
+    setSubmitting(true);
+    try {
+      await roleService.restore(id);
+      toast.success(t('toast.restore_success', { defaultValue: 'Role restored successfully' }));
+      // Reload list after restore
+      await reloadRoles();
+      return true;
+    } catch (error) {
+      const message = error instanceof ApiException ? error.message : t('toast.error');
+      toast.error(message);
+      return false;
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const restoreRoles = async (ids: string[]) => {
+    setSubmitting(true);
+    try {
+      await roleService.restoreMany(ids);
+      toast.success(t('toast.batch_restore_success', { count: ids.length, defaultValue: 'Successfully restored {{count}} roles' }));
+      await reloadRoles();
+      return true;
+    } catch (error) {
+      const message = error instanceof ApiException ? error.message : t('toast.error');
+      toast.error(message);
+      return false;
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const getAllForExport = async (params?: RoleListParams) => {
+    setExporting(true);
+    try {
+      return await roleService.getAllForExport(params);
+    } catch (error) {
+      const message = error instanceof ApiException ? error.message : t('toast.load_error');
+      toast.error(message);
+      logger.warn('useRoles', 'Failed to get roles for export:', error);
+      return [];
+    } finally {
+      setExporting(false);
+    }
+  };
+
   return {
     roles,
     pagination,
@@ -136,10 +224,17 @@ export function useRoles() {
     isLoadingMore,
     submitting,
     deleting,
+    batchDeleting,
+    exporting,
     fetchRoles,
     createRole,
     updateRole,
     deleteRole,
+    deleteRoles,
+    updateRolesStatus,
+    restoreRole,
+    restoreRoles,
+    getAllForExport,
   };
 }
 

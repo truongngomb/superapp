@@ -59,5 +59,14 @@
   "switch_to_picker": "색상 선택기로 전환",
   "actions_menu": {
     "change_language": "언어 변경"
-  }
+  },
+  "restore": "복구",
+  "trash": "휴지통",
+  "view_active": "활성 항목 보기",
+  "export_excel": "엑셀 내보내기",
+  "copy": "복사",
+  "empty_trash": "휴지통이 비었습니다",
+  "selected_items": "{{count}}개 선택됨",
+  "batch_delete_title": "선택한 항목 삭제",
+  "batch_restore_title": "선택한 항목 복구"
 }

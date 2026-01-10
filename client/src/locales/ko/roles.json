@@ -27,6 +27,31 @@
     "create_success": "역할이 생성되었습니다!",
     "update_success": "역할이 수정되었습니다!",
     "delete_success": "역할이 삭제되었습니다!",
+    "hard_delete_success": "역할이 영구적으로 삭제되었습니다!",
+    "batch_delete_success": "{{count}}개의 역할이 삭제되었습니다",
+    "batch_hard_delete_success": "{{count}}개의 역할이 영구적으로 삭제되었습니다",
+    "batch_restore_success": "{{count}}개의 역할이 복구되었습니다",
+    "batch_status_success": "{{count}}개의 역할 상태가 업데이트되었습니다",
+    "restore_success": "역할이 복구되었습니다",
     "error": "오류가 발생했습니다"
+  },
+  "batch_delete_confirm": "선택한 {{count}}개의 역할을 삭제 하시겠습니까?",
+  "batch_restore_confirm": "선택한 {{count}}개의 역할을 복구 하시겠습니까?",
+  "batch_status_confirm": "선택한 {{count}}개의 역할을 {{action}} 하시겠습니까?",
+  "restore_confirm": "이 역할을 복구 하시겠습니까?",
+  "hard_delete_confirm": "이 역할을 영구적으로 삭제 하시겠습니까? 이 작업은 취소할 수 없습니다.",
+  "actions": {
+    "activate": "활성화",
+    "deactivate": "비활성화"
+  },
+  "view_mode": {
+    "list": "목록 보기",
+    "table": "테이블 보기"
+  },
+  "export": {
+    "button": "엑셀 내보내기",
+    "exporting": "내보내는 중...",
+    "success": "내보내기 성공!",
+    "error": "내보내기 실패"
   }
 }

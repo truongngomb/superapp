@@ -59,5 +59,14 @@
   "switch_to_picker": "Switch to color picker",
   "actions_menu": {
     "change_language": "Change language"
-  }
+  },
+  "restore": "Restore",
+  "trash": "Trash",
+  "view_active": "View Active",
+  "export_excel": "Export Excel",
+  "copy": "Copy",
+  "empty_trash": "Trash is empty",
+  "selected_items": "{{count}} selected",
+  "batch_delete_title": "Delete Selected Items",
+  "batch_restore_title": "Restore Selected Items"
 }

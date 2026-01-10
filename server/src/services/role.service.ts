@@ -18,6 +18,9 @@ class RoleService extends BaseService<Role> {
   protected readonly collectionName = Collections.ROLES;
   protected readonly cacheKey = CacheKeys.ROLES;
 
+  /** Exclude soft-deleted records by default */
+  protected readonly defaultFilter = 'isDeleted = false';
+
   protected mapRecord(record: Record<string, unknown>): Role {
     return {
       id: record['id'] as string,
@@ -29,6 +32,13 @@ class RoleService extends BaseService<Role> {
       created: record['created'] as string,
       updated: record['updated'] as string,
     };
+  }
+
+  /**
+   * Update status for multiple roles
+   */
+  async updateStatusMany(ids: string[], isActive: boolean, userId?: string): Promise<void> {
+    return super.updateMany(ids, { isActive }, userId);
   }
 }
 

@@ -25,9 +25,9 @@ export const rolesCollection: BaseCollectionSchema = {
     'CREATE UNIQUE INDEX `idx_YFklELIcJE` ON `roles` (`name`)',
   ],
 
-  listRule: '@request.auth.roles.name ?= "Admin"',
-  viewRule: '@request.auth.id != ""',
-  createRule: '@request.auth.roles.name ?= "Admin"',
-  updateRule: '@request.auth.roles.name ?= "Admin"',
-  deleteRule: '@request.auth.roles.name ?= "Admin"',
+  listRule: null,
+  viewRule: null,
+  createRule: null,
+  updateRule: null,
+  deleteRule: null,
 };

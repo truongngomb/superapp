@@ -61,6 +61,7 @@ export interface RoleListParams {
   order?: 'asc' | 'desc';
   search?: string;
   isActive?: boolean;
+  isDeleted?: boolean;
 }
 
 /**
