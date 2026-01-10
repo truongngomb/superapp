@@ -1,7 +1,8 @@
 import { useTranslation } from 'react-i18next';
-import { Edit2, Trash2, RotateCcw } from 'lucide-react';
+import { Edit2, Trash2, RotateCcw, Copy } from 'lucide-react';
 import { Button, DataRow } from '@/components/common';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
+import { cn } from '@/utils';
 import type { Category } from '@/types';
 import { CATEGORY_ICONS, type CategoryIcon } from './icons';
 
@@ -13,6 +14,7 @@ interface CategoryRowProps {
     onEdit: (category: Category) => void;
     onDelete: (id: string) => void;
     onRestore?: (id: string) => void;
+    onDuplicate?: (category: Category) => void;
   };
   isSelected?: boolean;
   onSelect?: (id: string, checked: boolean) => void;
@@ -40,6 +42,19 @@ export function CategoryRow({ index, style, data, isSelected, onSelect }: Catego
           </Button>
         </PermissionGuard>
       )}
+
+      {!category.isDeleted && data.onDuplicate && (
+        <PermissionGuard resource="categories" action="create">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={(e) => { e.stopPropagation(); data.onDuplicate?.(category); }}
+            aria-label={t('duplicate', { defaultValue: 'Duplicate' })}
+          >
+            <Copy className="w-4 h-4 text-blue-500" />
+          </Button>
+        </PermissionGuard>
+      )}
       
       {category.isDeleted && data.onRestore && (
         <PermissionGuard resource="categories" action="update">
@@ -59,18 +74,16 @@ export function CategoryRow({ index, style, data, isSelected, onSelect }: Catego
         </PermissionGuard>
       )}
 
-      {!category.isDeleted && (
-        <PermissionGuard resource="categories" action="delete">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={(e) => { e.stopPropagation(); data.onDelete(category.id); }}
-            aria-label={t('delete')}
-          >
-            <Trash2 className="w-4 h-4 text-red-500" />
-          </Button>
-        </PermissionGuard>
-      )}
+      <PermissionGuard resource="categories" action="delete">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={(e) => { e.stopPropagation(); data.onDelete(category.id); }}
+          aria-label={t('delete')}
+        >
+          <Trash2 className={cn("w-4 h-4", category.isDeleted ? "text-red-700" : "text-red-500")} />
+        </Button>
+      </PermissionGuard>
     </>
   );
 

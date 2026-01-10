@@ -126,4 +126,18 @@ export const categoryService = {
   async deleteMany(ids: string[]): Promise<void> {
     return api.post(`${API_ENDPOINTS.CATEGORIES}/batch-delete`, { ids });
   },
+
+  /**
+   * Batch update categories status
+   */
+  async batchUpdateStatus(ids: string[], isActive: boolean): Promise<void> {
+    return api.post(`${API_ENDPOINTS.CATEGORIES}/batch-status`, { ids, isActive });
+  },
+
+  /**
+   * Batch restore categories
+   */
+  async restoreMany(ids: string[]): Promise<void> {
+    return api.post(`${API_ENDPOINTS.CATEGORIES}/batch-restore`, { ids });
+  },
 };

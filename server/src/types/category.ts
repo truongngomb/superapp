@@ -36,8 +36,3 @@ export type CategoryCreateInput = CreateInput<Category> & { isActive?: boolean }
  * Input for updating an existing category
  */
 export type CategoryUpdateInput = UpdateInput<Category> & { isActive?: boolean };
-
-/**
- * @deprecated Use CategoryCreateInput instead
- */
-export type CategoryInput = CategoryCreateInput;

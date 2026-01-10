@@ -16,16 +16,32 @@
     "desc_placeholder": "Nhập mô tả",
     "color_label": "Màu sắc",
     "active_label": "Hoạt động",
-    "active_description": "Danh mục hiển thị và có thể sử dụng"
+    "active_description": "Danh mục hiển thị và có thể sử dụng",
+    "copy_suffix": " (Bản sao)"
   },
-  "delete_confirm": "Bạn có chắc chắn muốn xóa danh mục này không? Hành động này không thể hoàn tác.",
-  "batch_delete_confirm": "Bạn có chắc muốn xóa {{count}} danh mục? Hành động này không thể hoàn tác.",
+  "restore_confirm": "Bạn có chắc chắn muốn khôi phục danh mục này không?",
+  "activate_selected": "Bật",
+  "deactivate_selected": "Tắt",
+  "batch_status_confirm": "Bạn có chắc muốn {{action}} {{count}} danh mục đã chọn?",
+  "actions": {
+    "activate": "bật",
+    "deactivate": "tắt"
+  },
+  "delete_confirm": "Bạn có chắc muốn chuyển danh mục này vào Thùng rác?",
+  "hard_delete_confirm": "Bạn có chắc muốn xóa VĨNH VIỄN danh mục này? Hành động này không thể hoàn tác.",
+  "batch_delete_confirm": "Bạn có chắc muốn chuyển {{count}} danh mục vào Thùng rác?",
+  "batch_hard_delete_confirm": "Bạn có chắc muốn xóa VĨNH VIỄN {{count}} danh mục đã chọn? Hành động này không thể hoàn tác.",
+  "batch_restore_confirm": "Bạn có chắc muốn khôi phục {{count}} danh mục đã chọn?",
   "toast": {
     "load_error": "Không thể tải danh sách danh mục",
     "create_success": "Tạo danh mục thành công!",
     "update_success": "Cập nhật danh mục thành công!",
-    "delete_success": "Xóa danh mục thành công!",
-    "batch_delete_success": "Đã xóa thành công {{count}} danh mục!",
+    "delete_success": "Đã chuyển vào Thùng rác!",
+    "hard_delete_success": "Đã xóa vĩnh viễn danh mục!",
+    "batch_delete_success": "Đã chuyển {{count}} danh mục vào Thùng rác!",
+    "batch_hard_delete_success": "Đã xóa vĩnh viễn {{count}} danh mục!",
+    "batch_status_success": "Đã cập nhật trạng thái cho {{count}} danh mục!",
+    "batch_restore_success": "Đã khôi phục {{count}} danh mục thành công!",
     "error": "Đã xảy ra lỗi"
   }
 }

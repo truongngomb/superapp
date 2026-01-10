@@ -45,11 +45,6 @@ export interface UpdateCategoryInput {
   isActive?: boolean;
 }
 
-/**
- * Alias for backward compatibility
- */
-export type CategoryInput = CreateCategoryInput;
-
 // ============================================================================
 // Query Types
 // ============================================================================

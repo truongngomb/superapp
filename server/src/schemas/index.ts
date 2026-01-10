@@ -34,12 +34,16 @@ export {
   CategoryCreateSchema,
   CategoryUpdateSchema,
   BatchDeleteSchema,
+  BatchUpdateStatusSchema,
+  BatchRestoreSchema,
   CategorySchemas,
 } from './category.schema.js';
 export type {
   CategoryCreateSchemaType,
   CategoryUpdateSchemaType,
   BatchDeleteSchemaType,
+  BatchUpdateStatusSchemaType,
+  BatchRestoreSchemaType,
 } from './category.schema.js';
 
 // Role schemas

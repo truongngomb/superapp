@@ -16,16 +16,32 @@
     "desc_placeholder": "Enter description",
     "color_label": "Color",
     "active_label": "Active",
-    "active_description": "Category is visible and available for use"
+    "active_description": "Category is visible and available for use",
+    "copy_suffix": " (Copy)"
   },
-  "delete_confirm": "Are you sure you want to delete this category? This action cannot be undone.",
-  "batch_delete_confirm": "Are you sure you want to delete {{count}} categories? This action cannot be undone.",
+  "restore_confirm": "Are you sure you want to restore this category?",
+  "activate_selected": "Activate",
+  "deactivate_selected": "Deactivate",
+  "batch_status_confirm": "Are you sure you want to {{action}} {{count}} selected categories?",
+  "actions": {
+    "activate": "activate",
+    "deactivate": "deactivate"
+  },
+  "delete_confirm": "Are you sure you want to move this category to Trash?",
+  "hard_delete_confirm": "Are you sure you want to PERMANENTLY delete this category? This action cannot be undone.",
+  "batch_delete_confirm": "Are you sure you want to move {{count}} categories to Trash?",
+  "batch_hard_delete_confirm": "Are you sure you want to PERMANENTLY delete {{count}} selected categories? This action cannot be undone.",
+  "batch_restore_confirm": "Are you sure you want to restore {{count}} selected categories?",
   "toast": {
     "load_error": "Failed to load categories",
     "create_success": "Category created successfully!",
     "update_success": "Category updated successfully!",
-    "delete_success": "Category deleted successfully!",
-    "batch_delete_success": "Successfully deleted {{count}} categories!",
+    "delete_success": "Moved to Trash successfully!",
+    "hard_delete_success": "Permanently deleted category!",
+    "batch_delete_success": "Moved {{count}} categories to Trash!",
+    "batch_hard_delete_success": "Permanently deleted {{count}} categories!",
+    "batch_status_success": "Successfully updated status for {{count}} categories!",
+    "batch_restore_success": "Successfully restored {{count}} categories!",
     "error": "An error occurred"
   }
 }

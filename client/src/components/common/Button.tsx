@@ -20,7 +20,7 @@ const variantStyles: Record<ButtonVariant, string> = {
   secondary: 'bg-secondary text-white hover:bg-secondary-600 active:bg-secondary-700',
   outline: 'border-2 border-primary text-primary hover:bg-primary hover:text-white',
   ghost: 'text-foreground hover:bg-surface',
-  danger: 'bg-red-500 text-white hover:bg-red-600 active:bg-red-700',
+  danger: 'border-2 border-red-500 bg-red-500 text-white hover:bg-red-600 active:bg-red-700',
 };
 
 const sizeStyles: Record<ButtonSize, string> = {

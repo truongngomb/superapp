@@ -2,7 +2,7 @@ import { useState, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { categoryService } from '@/services';
 import { useToast } from '@/context';
-import type { Category, CategoryInput, CategoryListParams } from '@/types';
+import type { Category, CreateCategoryInput, CategoryListParams } from '@/types';
 import { logger } from '@/utils/logger';
 import { ApiException } from '@/config';
 
@@ -79,7 +79,7 @@ export function useCategories() {
     }
   };
 
-  const createCategory = async (data: CategoryInput) => {
+  const createCategory = async (data: CreateCategoryInput) => {
     setSubmitting(true);
     try {
       await categoryService.create(data);
@@ -96,7 +96,7 @@ export function useCategories() {
     }
   };
 
-  const updateCategory = async (id: string, data: CategoryInput) => {
+  const updateCategory = async (id: string, data: CreateCategoryInput) => {
     setSubmitting(true);
     try {
       await categoryService.update(id, data);
@@ -116,8 +116,14 @@ export function useCategories() {
   const deleteCategory = async (id: string) => {
     setDeleting(true);
     try {
+      const category = categories.find(c => c.id === id);
       await categoryService.delete(id);
-      toast.success(t('toast.delete_success'));
+      
+      const successMessage = category?.isDeleted 
+        ? t('toast.hard_delete_success') 
+        : t('toast.delete_success');
+      
+      toast.success(successMessage);
       // Reload list after delete
       await reloadCategories();
       return true;
@@ -133,9 +139,15 @@ export function useCategories() {
   const deleteCategories = async (ids: string[]) => {
     setBatchDeleting(true);
     try {
+      const hasDeleted = ids.some(id => categories.find(c => c.id === id)?.isDeleted);
       await categoryService.deleteMany(ids);
-      toast.success(t('toast.batch_delete_success', { count: ids.length }));
-      // Reload list after batch delete
+      
+      const successMessage = hasDeleted
+        ? t('toast.batch_hard_delete_success', { count: ids.length })
+        : t('toast.batch_delete_success', { count: ids.length });
+
+      toast.success(successMessage);
+      // Reload list after delete
       await reloadCategories();
       return true;
     } catch (error) {
@@ -147,12 +159,49 @@ export function useCategories() {
     }
   };
 
+  const updateCategoriesStatus = async (ids: string[], isActive: boolean) => {
+    setSubmitting(true);
+    try {
+      // Assuming categoryService has a batchUpdateStatus or we use a custom fetch
+      // For now, let's use the explicit endpoint we added to Backend
+      await categoryService.batchUpdateStatus(ids, isActive);
+      toast.success(t('toast.batch_status_success', { count: ids.length }));
+      await reloadCategories();
+      return true;
+    } catch (error) {
+      const message = error instanceof ApiException ? error.message : t('toast.error');
+      toast.error(message);
+      return false;
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+
   const restoreCategory = async (id: string) => {
     setSubmitting(true);
     try {
       await categoryService.restore(id);
       toast.success(t('toast.restore_success', { defaultValue: 'Category restored successfully' }));
       // Reload list after restore
+      await reloadCategories();
+      return true;
+    } catch (error) {
+      const message = error instanceof ApiException ? error.message : t('toast.error');
+      toast.error(message);
+      return false;
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+
+
+  const restoreCategories = async (ids: string[]) => {
+    setSubmitting(true);
+    try {
+      await categoryService.restoreMany(ids);
+      toast.success(t('toast.batch_restore_success', { count: ids.length, defaultValue: 'Successfully restored {{count}} categories' }));
       await reloadCategories();
       return true;
     } catch (error) {
@@ -175,8 +224,10 @@ export function useCategories() {
     createCategory,
     updateCategory,
     restoreCategory,
+    restoreCategories,
     deleteCategory,
     deleteCategories,
+    updateCategoriesStatus,
     batchDeleting,
   };
 }

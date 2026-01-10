@@ -1,20 +1,20 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, ColorPicker, Input, Modal, Toggle } from '@/components/common';
-import type { Category, CategoryInput } from '@/types';
+import type { Category, CreateCategoryInput } from '@/types';
 import { IconPicker } from './IconPicker';
 
 interface CategoryFormProps {
   isOpen: boolean;
   category: Category | null;
-  onSubmit: (data: CategoryInput) => void;
+  onSubmit: (data: CreateCategoryInput) => void;
   onClose: () => void;
   loading: boolean;
 }
 
 export function CategoryForm({ isOpen, category, onSubmit, onClose, loading }: CategoryFormProps) {
   const { t } = useTranslation(['categories', 'common']);
-  const [formData, setFormData] = useState<CategoryInput>({
+  const [formData, setFormData] = useState<CreateCategoryInput>({
     name: '',
     description: '',
     color: '#3b82f6ff',

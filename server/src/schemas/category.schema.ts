@@ -42,6 +42,22 @@ export const BatchDeleteSchema = z.object({
   ids: z.array(z.string().min(1)).min(1, 'At least one ID is required').max(100, 'Maximum 100 items'),
 });
 
+/**
+ * Schema for batch update status
+ */
+export const BatchUpdateStatusSchema = z.object({
+  ids: z.array(z.string().min(1)).min(1, 'At least one ID is required').max(100, 'Maximum 100 items'),
+  isActive: z.boolean(),
+});
+
+/**
+ * Schema for batch restore categories
+ */
+export const BatchRestoreSchema = z.object({
+  ids: z.array(z.string().min(1)).min(1, 'At least one ID is required').max(100, 'Maximum 100 items'),
+});
+
+
 // =============================================================================
 // Inferred Types
 // =============================================================================
@@ -49,6 +65,8 @@ export const BatchDeleteSchema = z.object({
 export type CategoryCreateSchemaType = z.infer<typeof CategoryCreateSchema>;
 export type CategoryUpdateSchemaType = z.infer<typeof CategoryUpdateSchema>;
 export type BatchDeleteSchemaType = z.infer<typeof BatchDeleteSchema>;
+export type BatchUpdateStatusSchemaType = z.infer<typeof BatchUpdateStatusSchema>;
+export type BatchRestoreSchemaType = z.infer<typeof BatchRestoreSchema>;
 
 // =============================================================================
 // Legacy Export (for backward compatibility)

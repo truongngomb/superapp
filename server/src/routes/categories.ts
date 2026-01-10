@@ -6,7 +6,7 @@
 import { Router } from 'express';
 import { asyncHandler, requirePermission, validateBody } from '../middleware/index.js';
 import { categoryController } from '../controllers/index.js';
-import { CategoryCreateSchema, CategoryUpdateSchema, BatchDeleteSchema } from '../schemas/index.js';
+import { CategoryCreateSchema, CategoryUpdateSchema, BatchDeleteSchema, BatchUpdateStatusSchema, BatchRestoreSchema } from '../schemas/index.js';
 import { Resources, Actions } from '../types/index.js';
 
 export const categoriesRouter = Router();
@@ -33,6 +33,23 @@ categoriesRouter.post(
   validateBody(BatchDeleteSchema),
   asyncHandler(categoryController.batchDelete)
 );
+
+/** POST /categories/batch-status - Batch update status */
+categoriesRouter.post(
+  '/batch-status',
+  requirePermission(Resources.CATEGORIES, Actions.UPDATE),
+  validateBody(BatchUpdateStatusSchema),
+  asyncHandler(categoryController.batchUpdateStatus)
+);
+
+/** POST /categories/batch-restore - Batch restore categories */
+categoriesRouter.post(
+  '/batch-restore',
+  requirePermission(Resources.CATEGORIES, Actions.UPDATE),
+  validateBody(BatchRestoreSchema),
+  asyncHandler(categoryController.batchRestore)
+);
+
 
 /** GET /categories/:id - Get category by ID */
 categoriesRouter.get(
