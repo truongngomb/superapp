@@ -7,6 +7,7 @@ import { Request, Response, NextFunction } from 'express';
 import { categoryService } from '../services/index.js';
 import { CategoryCreateInput, CategoryUpdateInput, Resources, Actions } from '../types/index.js';
 import { hasPermission, ForbiddenError } from '../middleware/index.js';
+import { logger } from '../utils/index.js';
 
 // =============================================================================
 // Handlers
@@ -122,8 +123,8 @@ export const batchDelete = async (req: Request, res: Response, _next: NextFuncti
         await categoryService.delete(id, req.user?.id);
       }
     } catch (error) {
-      // Ignore if not found during batch
-      console.error(`Failed to delete category ${id}:`, error);
+      // Ignore if not found during batch, but log for debugging
+      logger.warn('CategoryController', `Batch delete failed for category ${id}`, { error });
     }
   }));
   

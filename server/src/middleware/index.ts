@@ -51,3 +51,10 @@ export {
   validate,
   validators,
 } from './validate.js';
+
+// Rate Limiting
+export {
+  rateLimit,
+  batchOperationLimit,
+  standardRateLimit,
+} from './rateLimit.js';

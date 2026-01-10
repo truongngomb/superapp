@@ -181,9 +181,14 @@ export abstract class BaseService<T extends MinimalEntity> {
     await this.ensureDbAvailable();
     
     try {
-      const filterStr = typeof value === 'string' 
-        ? `${field} = "${value}"` 
-        : `${field} = ${String(value)}`;
+      let filterStr: string;
+      if (typeof value === 'string') {
+        // Escape special characters to prevent filter injection
+        const escaped = value.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+        filterStr = `${field} = "${escaped}"`;
+      } else {
+        filterStr = `${field} = ${String(value)}`;
+      }
       
       const record = await this.collection.getFirstListItem(this.combineFilters(filterStr));
       return this.mapRecord(record);

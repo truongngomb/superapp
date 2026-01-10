@@ -4,7 +4,7 @@
  * RESTful endpoints for category management.
  */
 import { Router } from 'express';
-import { asyncHandler, requirePermission, validateBody } from '../middleware/index.js';
+import { asyncHandler, requirePermission, validateBody, batchOperationLimit } from '../middleware/index.js';
 import { categoryController } from '../controllers/index.js';
 import { CategoryCreateSchema, CategoryUpdateSchema, BatchDeleteSchema, BatchUpdateStatusSchema, BatchRestoreSchema } from '../schemas/index.js';
 import { Resources, Actions } from '../types/index.js';
@@ -29,6 +29,7 @@ categoriesRouter.get(
 /** POST /categories/batch-delete - Batch delete categories */
 categoriesRouter.post(
   '/batch-delete',
+  batchOperationLimit,
   requirePermission(Resources.CATEGORIES, Actions.DELETE),
   validateBody(BatchDeleteSchema),
   asyncHandler(categoryController.batchDelete)
@@ -37,6 +38,7 @@ categoriesRouter.post(
 /** POST /categories/batch-status - Batch update status */
 categoriesRouter.post(
   '/batch-status',
+  batchOperationLimit,
   requirePermission(Resources.CATEGORIES, Actions.UPDATE),
   validateBody(BatchUpdateStatusSchema),
   asyncHandler(categoryController.batchUpdateStatus)
@@ -45,6 +47,7 @@ categoriesRouter.post(
 /** POST /categories/batch-restore - Batch restore categories */
 categoriesRouter.post(
   '/batch-restore',
+  batchOperationLimit,
   requirePermission(Resources.CATEGORIES, Actions.UPDATE),
   validateBody(BatchRestoreSchema),
   asyncHandler(categoryController.batchRestore)
