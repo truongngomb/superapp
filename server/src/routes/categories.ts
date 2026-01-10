@@ -22,6 +22,13 @@ categoriesRouter.get(
   asyncHandler(categoryController.getAll)
 );
 
+/** GET /categories/export - Get all categories for export (no pagination) */
+categoriesRouter.get(
+  '/export',
+  requirePermission(Resources.CATEGORIES, Actions.VIEW),
+  asyncHandler(categoryController.getAllForExport)
+);
+
 // =============================================================================
 // Protected Routes (require authentication + permission)
 // =============================================================================

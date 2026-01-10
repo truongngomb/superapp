@@ -54,6 +54,41 @@ export const getAll = async (req: Request, res: Response, _next: NextFunction) =
 };
 
 /**
+ * GET /categories/export - Get all categories for export (no pagination)
+ */
+export const getAllForExport = async (req: Request, res: Response, _next: NextFunction) => {
+  const { sort, order, search, color, isActive, isDeleted } = req.query;
+
+  // Security: Restricted access to trashed items (isDeleted=true)
+  if (isDeleted === 'true') {
+    const canManage = hasPermission(req.user?.permissions || {}, Resources.CATEGORIES, Actions.MANAGE);
+    if (!canManage) {
+      throw new ForbiddenError('You do not have permission to view deleted categories');
+    }
+  }
+  
+  // Build filter string for PocketBase
+  const filters: string[] = [];
+  if (typeof search === 'string' && search.trim()) {
+    const sanitized = search.replace(/["%\\]/g, '');
+    filters.push(`(name ~ "${sanitized}" || description ~ "${sanitized}")`);
+  }
+  if (typeof color === 'string' && /^#[0-9A-Fa-f]{6,8}$/.test(color)) {
+    filters.push(`color = "${color}"`);
+  }
+  if (isActive !== undefined) filters.push(`isActive = ${isActive === 'true' ? 'true' : 'false'}`);
+  if (isDeleted !== undefined) filters.push(`isDeleted = ${isDeleted === 'true' ? 'true' : 'false'}`);
+  
+  const result = await categoryService.getAllFiltered({
+    sort: sort as string,
+    order: order as 'asc' | 'desc',
+    filter: filters.length > 0 ? filters.join(' && ') : undefined
+  });
+  
+  res.json({ success: true, data: result });
+};
+
+/**
  * GET /categories/:id - Get category by ID
  */
 export const getById = async (req: Request, res: Response, _next: NextFunction) => {

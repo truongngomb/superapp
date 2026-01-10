@@ -132,6 +132,25 @@ export abstract class BaseService<T extends MinimalEntity> {
   }
 
   /**
+   * Get all records with custom filter and sort (no cache, for export)
+   * @param options - Filter and sort options
+   */
+  async getAllFiltered(options: Omit<ListOptions, 'page' | 'limit'> = {}): Promise<T[]> {
+    const { sort, order = 'desc', filter, expand } = options;
+    
+    await this.ensureDbAvailable();
+    
+    const sortStr = sort ? `${order === 'desc' ? '-' : ''}${sort}` : '-created';
+    const records = await this.collection.getFullList({
+      sort: sortStr,
+      filter: this.combineFilters(filter),
+      expand: expand || this.defaultExpand || '',
+    });
+    
+    return records.map((r) => this.mapRecord(r));
+  }
+
+  /**
    * Get paginated records
    * Combines defaultFilter with user filter
    */

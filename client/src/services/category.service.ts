@@ -140,4 +140,32 @@ export const categoryService = {
   async restoreMany(ids: string[]): Promise<void> {
     return api.post(`${API_ENDPOINTS.CATEGORIES}/batch-restore`, { ids });
   },
+
+  /**
+   * Get all categories for export (no pagination)
+   */
+  async getAllForExport(params?: CategoryListParams, config?: ServiceConfig): Promise<Category[]> {
+    const { controller, clear } = createAbortController(config?.timeout ?? 30000);
+    
+    try {
+      const queryParams = new URLSearchParams();
+      if (params?.sort) queryParams.append('sort', params.sort);
+      if (params?.order) queryParams.append('order', params.order);
+      if (params?.search) queryParams.append('search', params.search);
+      if (params?.color) queryParams.append('color', params.color);
+      if (params?.isActive !== undefined) queryParams.append('isActive', params.isActive.toString());
+      if (params?.isDeleted !== undefined) queryParams.append('isDeleted', params.isDeleted.toString());
+
+      const queryString = queryParams.toString();
+      const endpoint = queryString 
+        ? `${API_ENDPOINTS.CATEGORIES}/export?${queryString}` 
+        : `${API_ENDPOINTS.CATEGORIES}/export`;
+
+      return await api.get<Category[]>(endpoint, {
+        signal: config?.signal ?? controller.signal,
+      });
+    } finally {
+      clear();
+    }
+  },
 };
