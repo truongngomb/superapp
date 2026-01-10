@@ -1,13 +1,15 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { RefreshCw, Search, Shield, Loader2 } from 'lucide-react';
-import { Button, Card, CardContent, Pagination, SortBar, Input, LoadingSpinner, PermissionGuard } from '@/components/common';
+import { RefreshCw, Search, Shield, Loader2, FileSpreadsheet } from 'lucide-react';
+import { Button, Card, CardContent, Pagination, SortPopup, Input, LoadingSpinner, PermissionGuard } from '@/components/common';
+import { STORAGE_KEYS } from '@/config';
 import { ActivityLogTable } from './components/ActivityLogTable';
 import { activityLogService } from '@/services';
 import type { ActivityLog } from '@/types';
 import { cn, logger } from '@/utils';
 import { useSort, useDebounce } from '@/hooks';
+import { useExcelExport } from '@/hooks/useExcelExport';
 
 export default function ActivityLogsPage() {
   const [logs, setLogs] = useState<ActivityLog[]>([]);
@@ -18,12 +20,15 @@ export default function ActivityLogsPage() {
   const [total, setTotal] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const debouncedSearchQuery = useDebounce(searchQuery, 400);
+  const [exporting, setExporting] = useState(false);
 
   // Translations
   const { t } = useTranslation(['activity_logs', 'common']);
   
   // Sorting state
-  const { sortConfig, handleSort } = useSort('created', 'desc');
+  const { sortConfig, handleSort } = useSort('created', 'desc', {
+    storageKey: STORAGE_KEYS.ACTIVITY_LOGS_SORT,
+  });
 
   // Track last page to detect page changes
   const lastPageRef = useRef(1);
@@ -74,16 +79,63 @@ export default function ActivityLogsPage() {
     setPage(newPage);
   };
 
+  // Excel export hook
+  const { exportToExcel } = useExcelExport<ActivityLog>({
+    fileNamePrefix: 'activity_logs',
+    sheetName: t('title'),
+    columns: [
+      { key: '#', header: t('common:order', { defaultValue: '#' }), width: 8 },
+      { key: 'expand.user.name', header: t('table.user'), width: 20 },
+      { key: 'action', header: t('table.action'), width: 12 },
+      { key: 'resource', header: t('table.resource'), width: 15 },
+      { key: 'message', header: t('table.details'), width: 40 },
+      { key: 'created', header: t('table.time'), width: 20 },
+    ],
+  });
+
+  // Handle export
+  const handleExport = async () => {
+    setExporting(true);
+    try {
+      const allData = await activityLogService.getAllForExport({
+        search: debouncedSearchQuery || undefined,
+        sort: sortConfig.field,
+        order: sortConfig.order ?? 'desc',
+      });
+      await exportToExcel(allData);
+    } finally {
+      setExporting(false);
+    }
+  };
+
   return (
     <PermissionGuard resource="activity_logs" action="view">
       <div>
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-              {t('title')}
-            </h1>
-            <p className="text-muted mt-1">{t('subtitle')}</p>
+          <div className="flex items-start gap-3">
+            <div>
+              <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+                {t('title')}
+              </h1>
+              <p className="text-muted mt-1">{t('subtitle')}</p>
+            </div>
+            <PermissionGuard resource="activity_logs" action="view">
+              <button
+                type="button"
+                onClick={() => { void handleExport(); }}
+                disabled={exporting || logs.length === 0}
+                className="p-2 rounded-lg hover:bg-[#217346]/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                title={t('common:export', { defaultValue: 'Export Excel' })}
+                aria-label={t('common:export', { defaultValue: 'Export Excel' })}
+              >
+                {exporting ? (
+                  <Loader2 className="w-6 h-6 animate-spin text-[#217346]" />
+                ) : (
+                  <FileSpreadsheet className="w-6 h-6 text-[#217346]" />
+                )}
+              </button>
+            </PermissionGuard>
           </div>
         </div>
 
@@ -98,6 +150,11 @@ export default function ActivityLogsPage() {
               className="pl-10"
             />
           </div>
+          <SortPopup
+            columns={sortColumns}
+            currentSort={sortConfig}
+            onSort={handleSort}
+          />
           <Button 
             variant="outline" 
             onClick={() => { void fetchLogs(); }}
@@ -106,13 +163,8 @@ export default function ActivityLogsPage() {
           </Button>
         </div>
 
-        {/* Sort Bar + Total */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-          <SortBar 
-            columns={sortColumns}
-            currentSort={sortConfig}
-            onSort={handleSort}
-          />
+        {/* Total items */}
+        <div className="flex items-center justify-end mb-4">
           <p className="text-sm text-muted">
             {t('common:total_items', { count: total })}
           </p>

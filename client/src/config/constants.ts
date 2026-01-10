@@ -44,6 +44,7 @@ export const STORAGE_KEYS = {
   USER_PREFERENCES: 'user_preferences',
   CATEGORIES_VIEW_MODE: 'categories_view_mode',
   CATEGORIES_SORT: 'categories_sort',
+  ACTIVITY_LOGS_SORT: 'activity_logs_sort',
 } as const;
 
 // Theme

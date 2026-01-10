@@ -10,7 +10,8 @@ import { saveAs } from 'file-saver';
 import { useToast } from '@/context/useToast';
 
 interface ExportColumn<T> {
-  key: keyof T | '#';
+  /** Property key - supports dot notation for nested properties (e.g. 'expand.user.name') */
+  key: keyof T | '#' | (string & {});
   header: string;
   width?: number;
 }
@@ -81,13 +82,25 @@ export function useExcelExport<T extends object>(
             rowData['#'] = index + 1;
             return;
           }
+          // Get value - support nested keys with dot notation (e.g. 'expand.user.name')
+          const keyStr = String(col.key);
+          let value: unknown;
           
-          const value = item[col.key];
+          if (keyStr.includes('.')) {
+            // Handle nested property path
+            value = keyStr.split('.').reduce<unknown>(
+              (obj, key) => (obj && typeof obj === 'object' ? (obj as Record<string, unknown>)[key] : undefined),
+              item
+            );
+          } else {
+            value = (item as Record<string, unknown>)[keyStr];
+          }
+          
           // Convert boolean to localized string
           if (typeof value === 'boolean') {
-            rowData[String(col.key)] = value ? t('active') : t('inactive');
+            rowData[keyStr] = value ? t('active') : t('inactive');
           } else {
-            rowData[String(col.key)] = value;
+            rowData[keyStr] = value ?? '';
           }
         });
         worksheet.addRow(rowData);

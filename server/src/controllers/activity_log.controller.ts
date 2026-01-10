@@ -47,3 +47,33 @@ export const getAll = async (req: Request, res: Response) => {
   
   res.json({ success: true, data: result });
 };
+
+/**
+ * GET /activity-logs/export - Get all activity logs for export (no pagination)
+ */
+export const getAllForExport = async (req: Request, res: Response) => {
+  // Security: Check for view permission explicitly in handler
+  const canView = hasPermission(req.user?.permissions || {}, Resources.ACTIVITY_LOGS, Actions.VIEW);
+  if (!canView) {
+    throw new ForbiddenError('You do not have permission to view activity logs');
+  }
+
+  const sort = req.query['sort'] as string | undefined;
+  const order = req.query['order'] as 'asc' | 'desc' | undefined;
+  const search = req.query['search'] as string | undefined;
+
+  let filter = '';
+  if (search) {
+    // Sanitize input to prevent PocketBase filter injection
+    const sanitizedSearch = sanitizePocketBaseFilter(search);
+    filter = `message ~ "${sanitizedSearch}" || resource ~ "${sanitizedSearch}" || action ~ "${sanitizedSearch}"`;
+  }
+  
+  const result = await activityLogService.getAllFiltered({
+    sort,
+    order,
+    filter: filter || undefined,
+  });
+  
+  res.json({ success: true, data: result });
+};

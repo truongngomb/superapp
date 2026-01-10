@@ -13,6 +13,7 @@ export function useCategories() {
   const [submitting, setSubmitting] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [batchDeleting, setBatchDeleting] = useState(false);
+  const [exporting, setExporting] = useState(false);
   const toast = useToast();
   const { t } = useTranslation('categories');
   
@@ -213,6 +214,20 @@ export function useCategories() {
     }
   };
 
+  const getAllForExport = async (params?: CategoryListParams) => {
+    setExporting(true);
+    try {
+      return await categoryService.getAllForExport(params);
+    } catch (error) {
+      const message = error instanceof ApiException ? error.message : t('toast.load_error');
+      toast.error(message);
+      logger.warn('useCategories', 'Failed to get categories for export:', error);
+      return [];
+    } finally {
+      setExporting(false);
+    }
+  };
+
   return {
     categories,
     pagination,
@@ -229,5 +244,7 @@ export function useCategories() {
     deleteCategories,
     updateCategoriesStatus,
     batchDeleting,
+    exporting,
+    getAllForExport,
   };
 }

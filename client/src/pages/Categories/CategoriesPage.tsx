@@ -30,7 +30,6 @@ import { cn, getStorageItem, setStorageItem } from "@/utils";
 import { STORAGE_KEYS } from "@/config";
 import { useCategories, useSort, useDebounce } from "@/hooks";
 import { useExcelExport } from "@/hooks/useExcelExport";
-import { categoryService } from "@/services/category.service";
 import { CategoryForm } from "./components/CategoryForm";
 import { CategoryRow } from "./components/CategoryRow";
 import { CategoryTable } from "./components/CategoryTable";
@@ -66,6 +65,8 @@ export default function CategoriesPage() {
     deleteCategories,
     updateCategoriesStatus,
     restoreCategories,
+    exporting,
+    getAllForExport,
   } = useCategories();
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -89,9 +90,6 @@ export default function CategoriesPage() {
       getStorageItem<ViewMode>(STORAGE_KEYS.CATEGORIES_VIEW_MODE) || "list"
     );
   });
-
-  // Export state
-  const [exporting, setExporting] = useState(false);
 
   // Excel export hook
   const { exportToExcel } = useExcelExport<Category>({
@@ -119,19 +117,14 @@ export default function CategoriesPage() {
 
   // Handle export
   const handleExport = async () => {
-    setExporting(true);
-    try {
-      // Fetch all data with current filters/sort
-      const allData = await categoryService.getAllForExport({
-        search: debouncedSearchQuery || undefined,
-        sort: sortConfig.field,
-        order: sortConfig.order ?? "desc",
-        isDeleted: showArchived || undefined,
-      });
-      await exportToExcel(allData);
-    } finally {
-      setExporting(false);
-    }
+    // Fetch all data with current filters/sort via hook
+    const allData = await getAllForExport({
+      search: debouncedSearchQuery || undefined,
+      sort: sortConfig.field,
+      order: sortConfig.order ?? "desc",
+      isDeleted: showArchived || undefined,
+    });
+    await exportToExcel(allData);
   };
 
   // Sorting state (persisted to localStorage)

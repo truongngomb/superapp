@@ -14,6 +14,14 @@ export const activityLogsRouter = Router();
 // Protected Routes (require authentication + permission)
 // =============================================================================
 
+/** GET /activity-logs/export - Get all activity logs for export (no pagination) */
+activityLogsRouter.get(
+  '/export',
+  authenticate,
+  requirePermission(Resources.ACTIVITY_LOGS, Actions.VIEW),
+  asyncHandler(activityLogController.getAllForExport)
+);
+
 /** GET /activity-logs - List all activity logs (Admin only) */
 activityLogsRouter.get(
   '/',
