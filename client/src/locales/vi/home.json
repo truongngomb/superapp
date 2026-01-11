@@ -5,24 +5,56 @@
     "description": "Ứng dụng mẫu cho phát triển nhóm. Xây dựng với React, TypeScript, Vite và Node.js Express."
   },
   "features": {
+    "dashboard": {
+      "title": "Bảng điều khiển Admin",
+      "description": "Giám sát hệ thống thời gian thực với CPU, RAM, Disk và thống kê tổng quan nhanh"
+    },
+    "user_mgmt": {
+      "title": "Quản lý người dùng",
+      "description": "CRUD người dùng hoàn chỉnh với xóa mềm, thao tác hàng loạt và xuất Excel"
+    },
+    "role_mgmt": {
+      "title": "Quản lý vai trò",
+      "description": "Phân quyền linh hoạt dựa trên vai trò với quyền hạn chi tiết"
+    },
+    "category_mgmt": {
+      "title": "Quản lý danh mục",
+      "description": "Tính năng tham chiếu với CRUD đầy đủ, lưu trữ, khôi phục và xuất dữ liệu"
+    },
+    "activity_logs": {
+      "title": "Nhật ký hoạt động",
+      "description": "Theo dõi mọi hành động người dùng với bộ lọc, tìm kiếm và xuất lịch sử kiểm tra"
+    },
+    "i18n": {
+      "title": "Hỗ trợ đa ngôn ngữ",
+      "description": "Hỗ trợ i18n đầy đủ cho Tiếng Anh, Tiếng Việt và Tiếng Hàn với react-i18next"
+    },
+    "export": {
+      "title": "Xuất dữ liệu",
+      "description": "Xuất dữ liệu ra Excel với cột tùy chỉnh sử dụng ExcelJS"
+    },
     "performance": {
       "title": "Hiệu suất cao",
       "description": "Tối ưu hóa với Vite và React 18 cho trải nghiệm mượt mà"
     },
     "security": {
       "title": "Bảo mật",
-      "description": "Tích hợp các tiêu chuẩn bảo mật OWASP và Helmet"
+      "description": "Tích hợp tiêu chuẩn bảo mật OWASP, Helmet và route guards"
     },
     "cross_platform": {
       "title": "Đa nền tảng",
-      "description": "Chạy trên Web, Android và iOS với Capacitor"
-    },
-    "category_mgmt": {
-      "title": "Quản lý danh mục",
-      "description": "Tính năng mẫu cho phát triển ứng dụng"
+      "description": "Chạy trên Web, Android và iOS với Capacitor và hỗ trợ PWA"
     }
   },
   "tech_stack": {
-    "items": "React 18, TypeScript, Vite, TailwindCSS, Node.js, Express, Capacitor, PocketBase"
+    "title": "Công nghệ sử dụng",
+    "frontend": "Frontend",
+    "backend": "Backend",
+    "mobile": "Mobile & PWA",
+    "items": "React 18, TypeScript, Vite, TailwindCSS, Framer Motion, Node.js, Express, PocketBase, Zod, Capacitor, PWA"
+  },
+  "footer": {
+    "license": "Giấy phép MIT",
+    "rights": "Bảo lưu mọi quyền."
   }
 }

@@ -5,24 +5,56 @@
     "description": "Template application for team development. Built with React, TypeScript, Vite, and Node.js Express."
   },
   "features": {
+    "dashboard": {
+      "title": "Admin Dashboard",
+      "description": "Real-time system monitoring with CPU, RAM, Disk usage and quick statistics overview"
+    },
+    "user_mgmt": {
+      "title": "User Management",
+      "description": "Complete user CRUD with soft delete, batch operations, and Excel export"
+    },
+    "role_mgmt": {
+      "title": "Role Management",
+      "description": "Flexible role-based access control with granular permissions"
+    },
+    "category_mgmt": {
+      "title": "Category Management",
+      "description": "Reference feature with full CRUD, archive, restore, and export functionality"
+    },
+    "activity_logs": {
+      "title": "Activity Logs",
+      "description": "Track all user actions with filtering, search, and audit trail export"
+    },
+    "i18n": {
+      "title": "Multi-language Support",
+      "description": "Full i18n support for English, Vietnamese, and Korean with react-i18next"
+    },
+    "export": {
+      "title": "Data Export",
+      "description": "Export data to Excel with customizable columns using ExcelJS"
+    },
     "performance": {
       "title": "High Performance",
       "description": "Optimized with Vite and React 18 for a smooth experience"
     },
     "security": {
       "title": "Security",
-      "description": "Integrated with OWASP security standards and Helmet"
+      "description": "Integrated with OWASP security standards, Helmet, and route guards"
     },
     "cross_platform": {
       "title": "Cross-Platform",
-      "description": "Runs on Web, Android, and iOS with Capacitor"
-    },
-    "category_mgmt": {
-      "title": "Category Management",
-      "description": "Sample feature for application development"
+      "description": "Runs on Web, Android, and iOS with Capacitor and PWA support"
     }
   },
   "tech_stack": {
-    "items": "React 18, TypeScript, Vite, TailwindCSS, Node.js, Express, Capacitor, PocketBase"
+    "title": "Technology Stack",
+    "frontend": "Frontend",
+    "backend": "Backend",
+    "mobile": "Mobile & PWA",
+    "items": "React 18, TypeScript, Vite, TailwindCSS, Framer Motion, Node.js, Express, PocketBase, Zod, Capacitor, PWA"
+  },
+  "footer": {
+    "license": "MIT License",
+    "rights": "All rights reserved."
   }
 }

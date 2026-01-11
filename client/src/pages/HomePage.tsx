@@ -1,29 +1,39 @@
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Folder, Zap, Shield, Smartphone } from 'lucide-react';
+import { ArrowRight, Folder, Smartphone, Users, UserCog, LayoutDashboard, Languages, Zap } from 'lucide-react';
 import { Button } from '@/components/common';
 
 const features = [
   {
-    icon: Zap,
-    titleKey: 'home:features.performance.title',
-    descKey: 'home:features.performance.description',
+    icon: LayoutDashboard,
+    titleKey: 'home:features.dashboard.title',
+    descKey: 'home:features.dashboard.description',
   },
   {
-    icon: Shield,
-    titleKey: 'home:features.security.title',
-    descKey: 'home:features.security.description',
+    icon: Users,
+    titleKey: 'home:features.user_mgmt.title',
+    descKey: 'home:features.user_mgmt.description',
   },
   {
-    icon: Smartphone,
-    titleKey: 'home:features.cross_platform.title',
-    descKey: 'home:features.cross_platform.description',
+    icon: UserCog,
+    titleKey: 'home:features.role_mgmt.title',
+    descKey: 'home:features.role_mgmt.description',
   },
   {
     icon: Folder,
     titleKey: 'home:features.category_mgmt.title',
     descKey: 'home:features.category_mgmt.description',
+  },
+  {
+    icon: Languages,
+    titleKey: 'home:features.i18n.title',
+    descKey: 'home:features.i18n.description',
+  },
+  {
+    icon: Smartphone,
+    titleKey: 'home:features.cross_platform.title',
+    descKey: 'home:features.cross_platform.description',
   },
 ] as const;
 
@@ -79,7 +89,7 @@ export function HomePage() {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link to="/categories">
+          <Link to="/admin">
             <Button size="lg" className="w-full sm:w-auto">
               {t('common:get_started')}
               <ArrowRight className="w-5 h-5 ml-1" />
@@ -96,7 +106,7 @@ export function HomePage() {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="grid grid-cols-1 md:grid-cols-2 gap-6 py-12"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-12"
       >
         {features.map((feature) => {
           const Icon = feature.icon;
@@ -104,7 +114,7 @@ export function HomePage() {
             <motion.div
               key={feature.titleKey}
               variants={itemVariants}
-              className="card-hover p-6"
+              className="card-hover p-5"
             >
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mb-4">
                 <Icon className="w-6 h-6 text-primary" />
@@ -112,7 +122,7 @@ export function HomePage() {
               <h3 className="text-lg font-semibold text-foreground mb-2">
                 {t(feature.titleKey)}
               </h3>
-              <p className="text-muted">
+              <p className="text-sm text-muted">
                 {t(feature.descKey)}
               </p>
             </motion.div>
@@ -125,20 +135,106 @@ export function HomePage() {
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
-        className="py-12 text-center"
+        className="py-12"
       >
-        <h2 className="text-2xl font-bold text-foreground mb-8">{t('common:tech_stack')}</h2>
-        <div className="flex flex-wrap justify-center gap-3">
-          {t('common:tech_stack.items', { defaultValue: 'React 18, TypeScript, Vite, TailwindCSS, Node.js, Express, Capacitor, PocketBase' }).split(',').map((tech) => (
-            <span
-              key={tech.trim()}
-              className="px-4 py-2 rounded-full bg-surface border border-border text-sm font-medium text-muted hover:text-primary hover:border-primary transition-colors"
-            >
-              {tech.trim()}
-            </span>
-          ))}
+        <h2 className="text-2xl font-bold text-foreground mb-8 text-center">
+          {t('home:tech_stack.title')}
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Frontend */}
+          <div className="card-hover p-6 text-center">
+            <h3 className="text-lg font-semibold text-primary mb-4">
+              {t('home:tech_stack.frontend')}
+            </h3>
+            <div className="flex flex-wrap justify-center gap-2">
+              {['React 18', 'TypeScript', 'Vite', 'TailwindCSS', 'Framer Motion'].map((tech) => (
+                <span
+                  key={tech}
+                  className="px-3 py-1.5 rounded-full bg-primary/10 text-xs font-medium text-foreground"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Backend */}
+          <div className="card-hover p-6 text-center">
+            <h3 className="text-lg font-semibold text-secondary mb-4">
+              {t('home:tech_stack.backend')}
+            </h3>
+            <div className="flex flex-wrap justify-center gap-2">
+              {['Node.js', 'Express', 'PocketBase', 'Zod', 'NodeCache'].map((tech) => (
+                <span
+                  key={tech}
+                  className="px-3 py-1.5 rounded-full bg-secondary/10 text-xs font-medium text-foreground"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Mobile & PWA */}
+          <div className="card-hover p-6 text-center">
+            <h3 className="text-lg font-semibold text-accent mb-4">
+              {t('home:tech_stack.mobile')}
+            </h3>
+            <div className="flex flex-wrap justify-center gap-2">
+              {['Capacitor', 'Android', 'iOS', 'PWA'].map((tech) => (
+                <span
+                  key={tech}
+                  className="px-3 py-1.5 rounded-full bg-accent/10 text-xs font-medium text-foreground"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
       </motion.section>
+
+      {/* Footer */}
+      <motion.footer
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        className="py-8 mt-8 border-t border-border"
+      >
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted">
+          <div className="flex items-center gap-2">
+            <span className="text-gradient font-semibold">SuperApp</span>
+            <span>v1.0.0</span>
+          </div>
+          
+          <div className="flex items-center gap-6">
+            <a
+              href="https://github.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-primary transition-colors"
+            >
+              GitHub
+            </a>
+            <a
+              href="#"
+              className="hover:text-primary transition-colors"
+            >
+              {t('common:documentation')}
+            </a>
+            <a
+              href="#"
+              className="hover:text-primary transition-colors"
+            >
+              {t('home:footer.license')}
+            </a>
+          </div>
+
+          <div className="text-center md:text-right">
+            <p>© {new Date().getFullYear()} SuperApp. {t('home:footer.rights')}</p>
+          </div>
+        </div>
+      </motion.footer>
     </div>
   );
 }
