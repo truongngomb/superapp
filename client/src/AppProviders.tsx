@@ -10,6 +10,7 @@ import {
   ThemeProvider,
   ToastProvider,
   RealtimeProvider,
+  SettingsProvider,
 } from '@/context';
 import { ActivityLogProvider } from '@/context/ActivityLogContext';
 
@@ -25,13 +26,15 @@ export function AppProviders({ children }: AppProvidersProps) {
   return (
     <ThemeProvider>
       <ToastProvider>
-        <AuthProvider>
-          <RealtimeProvider>
-            <ActivityLogProvider>
-              {children}
-            </ActivityLogProvider>
-          </RealtimeProvider>
-        </AuthProvider>
+        <SettingsProvider>
+          <AuthProvider>
+            <RealtimeProvider>
+              <ActivityLogProvider>
+                {children}
+              </ActivityLogProvider>
+            </RealtimeProvider>
+          </AuthProvider>
+        </SettingsProvider>
       </ToastProvider>
     </ThemeProvider>
   );

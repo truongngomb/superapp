@@ -4,6 +4,8 @@
 
 export { AuthProvider } from './AuthProvider';
 export { AuthContext, type AuthContextType } from './AuthContext';
+export * from './SettingsContext';
+export * from './ActivityLogContext';
 export { ThemeProvider } from './ThemeContext';
 export { useTheme } from './useTheme';
 export { ToastProvider } from './ToastContext';

@@ -26,8 +26,16 @@ export function MainLayout() {
 
     // 2. Check page specific
     const path = location.pathname;
-    if (path === '/' && layoutConfig.pages.home) return layoutConfig.pages.home as LayoutMode;
-    if (path.startsWith('/categories') && layoutConfig.pages.categories) return layoutConfig.pages.categories as LayoutMode;
+    
+    // Find best match (longest prefix)
+    const pageOverrides = layoutConfig.pages || {};
+    const sortedPaths = Object.keys(pageOverrides).sort((a, b) => b.length - a.length);
+    
+    for (const p of sortedPaths) {
+      if (path === p || path.startsWith(`${p}/`)) {
+        return pageOverrides[p] as LayoutMode;
+      }
+    }
 
     // 3. Global default
     return layoutConfig.global as LayoutMode;
