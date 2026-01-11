@@ -129,6 +129,49 @@ export class ActivityLogService extends BaseService<ActivityLog> {
       details,
     });
   }
+  /**
+   * Delete logs older than specific days
+   * @param days Number of days to keep
+   * @returns Number of deleted logs (approximate, as PocketBase doesn't return count on delete)
+   */
+  async pruneOldLogs(days: number): Promise<void> {
+    const date = new Date();
+    date.setDate(date.getDate() - days);
+    const filterDate = date.toISOString().replace('T', ' '); // Format: "2023-01-01 00:00:00.000Z"
+
+    // PocketBase SDK doesn't support bulk delete by filter directly in one call typically
+    // We fetch IDs first then delete them in batch (or loop if batch not supported well)
+    // However, for simplicity and performance on small scale, we iterate.
+    // Optimal way for PB: Use batch delete if available or loop.
+    
+    try {
+      // 1. Fetch old logs
+      const records = await this.db.collection(this.collectionName).getFullList({
+        filter: `created < "${filterDate}"`,
+        fields: 'id',
+      });
+
+      if (records.length === 0) return;
+
+      // 2. Delete iteratively (SDK batch support varies)
+      // Note: For massive amounts of logs, consider a backend command or raw SQL if possible.
+      // Here we use a safe concurrent-limit approach via Promise.all if supported,
+      // but simple loop is safer for stability on some PB versions/limits.
+      
+      for (const record of records) {
+         try {
+           await this.db.collection(this.collectionName).delete(record.id);
+         } catch {
+           // Ignore individual delete failures to proceed
+         }
+      }
+      
+      this.log.info(`Pruned ${String(records.length)} logs older than ${String(days)} days`);
+    } catch (error) {
+      this.log.error('Failed to prune logs:', error as Error);
+      throw error;
+    }
+  }
 }
 
 export const activityLogService = new ActivityLogService();

@@ -6,6 +6,12 @@
     "roles": "역할 리소스",
     "general": "일반"
   },
+  "general": {
+    "title": "시스템 유지 관리",
+    "description": "일반 시스템 상태 및 유지 관리",
+    "maintenance_mode": "유지 관리 모드",
+    "maintenance_mode_desc": "포털에 대한 모든 비 관리자 액세스 차단"
+  },
   "layout": {
     "title": "레이아웃 설정",
     "description": "특정 페이지 또는 전체 시스템의 레이아웃 스타일 사용자 정의",
@@ -39,6 +45,28 @@
   },
   "messages": {
     "save_success": "설정이 성공적으로 저장되었습니다",
-    "save_error": "설정 저장에 실패했습니다"
+    "save_error": "설정 저장에 실패했습니다",
+    "prune_success": "로그가 성공적으로 정리되었습니다",
+    "prune_error": "로그 정리 실패",
+    "clear_cache_success": "캐시가 성공적으로 지워졌습니다",
+    "clear_cache_error": "캐시 지우기 실패"
+  },
+  "utilities": {
+    "title": "시스템 유틸리티",
+    "description": "시스템 유지 관리를 위한 관리 도구",
+    "prune_logs": "활동 로그 정리",
+    "prune_logs_desc": "오래된 활동 로그를 삭제하여 공간 확보",
+    "days_placeholder": "보존 기간 선택",
+    "days_30": "30일보다 오래된 로그 삭제",
+    "days_60": "60일보다 오래된 로그 삭제",
+    "days_90": "90일보다 오래된 로그 삭제",
+    "prune_button": "로그 정리",
+    "clear_cache": "시스템 캐시 지우기",
+    "clear_cache_desc": "서버 측 캐시를 지워 구성 새로 고침",
+    "clear_cache_button": "캐시 지우기",
+    "prune_confirm_title": "로그 정리",
+    "prune_confirm_message": "{{days}}일보다 오래된 로그를 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.",
+    "clear_cache_confirm_title": "캐시 지우기",
+    "clear_cache_confirm_message": "시스템 캐시를 지우시겠습니까? 이 작업은 일시적으로 성능에 영향을 줄 수 있습니다."
   }
 }

@@ -79,8 +79,13 @@
   "switch_to_presets": "색상 팔레트로 전환",
   "switch_to_picker": "색상 선택기로 전환",
   "actions_menu": {
-    "change_language": "언어 변경",
-    "reset": "초기화"
+    "remove_success": "성공적으로 삭제되었습니다",
+    "remove_error": "삭제 실패"
+  },
+  "maintenance": {
+    "title": "시스템 점검 중",
+    "message": "서비스 개선을 위해 정기 점검을 진행 중입니다. 잠시 후 다시 확인해 주세요.",
+    "retry": "다시 시도"
   },
   "restore": "복구",
   "trash": "휴지통",

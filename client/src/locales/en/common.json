@@ -43,6 +43,8 @@
     "system_load": "System Load",
     "server_load": "Server Load",
     "memory": "Memory",
+    "remove_success": "Successfully removed",
+    "remove_error": "Failed to remove",
     "system_memory": "System Memory",
     "server_memory": "Server Memory",
     "disk": "Disk",

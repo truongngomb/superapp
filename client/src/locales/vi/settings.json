@@ -6,6 +6,12 @@
     "roles": "Tài nguyên Role",
     "general": "Chung"
   },
+  "general": {
+    "title": "Bảo trì hệ thống",
+    "description": "Sức khỏe hệ thống và bảo trì chung",
+    "maintenance_mode": "Chế độ bảo trì",
+    "maintenance_mode_desc": "Chặn tất cả quyền truy cập cổng thông tin của người không phải là quản trị viên"
+  },
   "layout": {
     "title": "Cấu hình Giao diện",
     "description": "Tuỳ chỉnh kiểu giao diện cho từng trang hoặc toàn bộ hệ thống",
@@ -39,6 +45,28 @@
   },
   "messages": {
     "save_success": "Đã lưu cấu hình thành công",
-    "save_error": "Lỗi khi lưu cấu hình"
+    "save_error": "Lỗi khi lưu cấu hình",
+    "prune_success": "Đã dọn dẹp nhật ký thành công",
+    "prune_error": "Lỗi khi dọn dẹp nhật ký",
+    "clear_cache_success": "Đã xóa cache hệ thống thành công",
+    "clear_cache_error": "Lỗi khi xóa cache"
+  },
+  "utilities": {
+    "title": "Tiện ích hệ thống",
+    "description": "Các công cụ quản trị bảo trì hệ thống",
+    "prune_logs": "Dọn dẹp nhật ký hoạt động",
+    "prune_logs_desc": "Xóa các nhật ký cũ để giải phóng dung lượng",
+    "days_placeholder": "Chọn thời gian lưu trữ",
+    "days_30": "Xóa cũ hơn 30 ngày",
+    "days_60": "Xóa cũ hơn 60 ngày",
+    "days_90": "Xóa cũ hơn 90 ngày",
+    "prune_button": "Dọn dẹp",
+    "clear_cache": "Xóa Cache hệ thống",
+    "clear_cache_desc": "Xóa cache server để làm mới cấu hình",
+    "clear_cache_button": "Xóa Cache",
+    "prune_confirm_title": "Dọn dẹp nhật ký",
+    "prune_confirm_message": "Bạn có chắc chắn muốn xóa nhật ký cũ hơn {{days}} ngày không? Hành động này không thể hoàn tác.",
+    "clear_cache_confirm_title": "Xóa Cache",
+    "clear_cache_confirm_message": "Bạn có chắc chắn muốn xóa cache hệ thống không? Điều này có thể ảnh hưởng tạm thời đến hiệu suất."
   }
 }

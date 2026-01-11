@@ -7,6 +7,7 @@
 import { BrowserRouter } from 'react-router-dom';
 import { AppProviders } from './AppProviders';
 import { AppRoutes } from './AppRoutes';
+import { MaintenanceOverlay } from './components/common';
 
 // ============================================================================
 // App Component
@@ -16,6 +17,7 @@ export function App() {
   return (
     <AppProviders>
       <BrowserRouter>
+        <MaintenanceOverlay />
         <AppRoutes />
       </BrowserRouter>
     </AppProviders>

@@ -4,7 +4,7 @@
  */
 
 import { useCallback, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { LogOut, Menu, Moon, Sun, User, X } from 'lucide-react';
@@ -109,7 +109,7 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
   const { t } = useTranslation(['common', 'users', 'roles', 'categories', 'home', 'auth']);
   /* Hook extracts */
   const location = useLocation();
-  const navigate = useNavigate();
+  // navigate removed as we use window.location.href for logout
   const { user, isAuthenticated, logout, isLoading } = useAuth();
   const { isDark, toggleTheme } = useTheme();
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
@@ -118,8 +118,11 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
   const handleLogout = useCallback(() => {
     void logout()
       .catch(() => { /* Ignore logout errors */ })
-      .then(() => { void navigate('/'); });
-  }, [logout, navigate]);
+      .finally(() => {
+        // Force full reload to verify maintenance status (for Guest)
+        window.location.href = '/';
+      });
+  }, [logout]);
 
   const isLinkActive = useCallback((link: typeof NAVIGATION_ITEMS[number]) => {
     if (link.matchPrefix) {

@@ -90,3 +90,32 @@ export const getSystemStats = async (_req: Request, res: Response) => {
     res.status(500).json({ message: 'Failed to fetch system stats' });
   }
 };
+
+export const pruneLogs = async (req: Request, res: Response) => {
+  try {
+    const { days } = req.body as { days: unknown };
+    if (!days || (typeof days !== 'number')) {
+      return res.status(400).json({ message: 'Invalid days parameter' });
+    }
+
+    // Dynamic import to avoid circular dependency issues if any
+    const { activityLogService } = await import('../services/activity_log.service.js');
+    await activityLogService.pruneOldLogs(Number(days));
+
+    res.json({ success: true, message: `Logs older than ${days} days pruned` });
+  } catch (error) {
+    logger.error('System', 'Failed to prune logs', error);
+    res.status(500).json({ message: 'Failed to prune logs' });
+  }
+};
+
+export const clearCache = async (_req: Request, res: Response) => {
+  try {
+    cache.flushAll();
+    logger.info('System', 'System cache cleared by admin');
+    res.json({ success: true, message: 'System cache cleared successfully' });
+  } catch (error) {
+    logger.error('System', 'Failed to clear cache', error);
+    res.status(500).json({ message: 'Failed to clear cache' });
+  }
+};

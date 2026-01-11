@@ -9,6 +9,13 @@
   "actions": "Thao tác",
   "confirm": "Xác nhận",
   "error": "Lỗi",
+  "remove_success": "Đã xóa thành công",
+  "remove_error": "Lỗi khi xóa",
+  "maintenance": {
+    "title": "Hệ thống đang bảo trì",
+    "message": "Chúng tôi đang thực hiện bảo trì định kỳ để nâng cấp dịch vụ. Vui lòng quay lại sau.",
+    "retry": "Thử lại"
+  },
   "success": "Thành công",
   "name": "Tên",
   "order": "#",

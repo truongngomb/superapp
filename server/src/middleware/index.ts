@@ -27,7 +27,8 @@ export {
 } from './errorHandler.js';
 
 // Authentication
-export { authenticate, requireAuth } from './auth.js';
+export * from './auth.js';
+export * from './maintenance.js';
 
 // RBAC
 export {

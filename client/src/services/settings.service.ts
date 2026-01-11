@@ -35,4 +35,12 @@ export const settingsService = {
   async update(key: string, value: unknown): Promise<void> {
     await api.post('/settings', { key, value });
   },
+
+  async pruneLogs(days: number): Promise<void> {
+    await api.post('/system/logs/prune', { days });
+  },
+
+  async clearCache(): Promise<void> {
+    await api.post('/system/cache/clear');
+  },
 };

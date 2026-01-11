@@ -221,6 +221,11 @@ async function request<T>(
       } else if (error instanceof ApiException) {
         lastError = error;
         
+        // Handle Maintenance Mode (503)
+        if (error.status === 503) {
+          window.dispatchEvent(new Event('maintenance_mode_event'));
+        }
+        
         // Only retry on retryable errors
         if (!isRetryableError(error.status)) {
           throw error;

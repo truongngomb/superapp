@@ -10,7 +10,7 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 
 import { config, cache } from './config/index.js';
-import { authenticate, errorHandler, NotFoundError } from './middleware/index.js';
+import { authenticate, checkMaintenanceMode, errorHandler, NotFoundError } from './middleware/index.js';
 import { authRouter, categoriesRouter, rolesRouter, usersRouter, activityLogsRouter, realtimeRouter, systemRouter, settingsRouter } from './routes/index.js';
 
 // =============================================================================
@@ -54,6 +54,7 @@ function createApp(): Express {
   // =========================================================================
   
   app.use(authenticate);
+  app.use(checkMaintenanceMode);
 
   // =========================================================================
   // API Routes

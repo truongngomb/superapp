@@ -6,6 +6,12 @@
     "roles": "Role Resources",
     "general": "General"
   },
+  "general": {
+    "title": "System Maintenance",
+    "description": "General system health and maintenance",
+    "maintenance_mode": "Maintenance Mode",
+    "maintenance_mode_desc": "Block all non-admin access to the portal"
+  },
   "layout": {
     "title": "Layout Configuration",
     "description": "Customize layout styles for specific pages or the entire system",
@@ -39,6 +45,28 @@
   },
   "messages": {
     "save_success": "Settings saved successfully",
-    "save_error": "Failed to save settings"
+    "save_error": "Failed to save settings",
+    "prune_success": "Logs pruned successfully",
+    "prune_error": "Failed to prune logs",
+    "clear_cache_success": "Cache cleared successfully",
+    "clear_cache_error": "Failed to clear cache"
+  },
+  "utilities": {
+    "title": "System Utilities",
+    "description": "Administrative tools for system maintenance",
+    "prune_logs": "Prune Activity Logs",
+    "prune_logs_desc": "Delete old activity logs to free up space",
+    "days_placeholder": "Select retention period",
+    "days_30": "Delete older than 30 days",
+    "days_60": "Delete older than 60 days",
+    "days_90": "Delete older than 90 days",
+    "prune_button": "Prune Logs",
+    "clear_cache": "Clear System Cache",
+    "clear_cache_desc": "Clear server-side cache to refresh configurations",
+    "clear_cache_button": "Clear Cache",
+    "prune_confirm_title": "Prune Logs",
+    "prune_confirm_message": "Are you sure you want to delete logs older than {{days}} days? This action cannot be undone.",
+    "clear_cache_confirm_title": "Clear Cache",
+    "clear_cache_confirm_message": "Are you sure you want to clear the system cache? This may temporarily impact performance."
   }
 }

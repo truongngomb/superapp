@@ -4,7 +4,7 @@
  */
 
 import { useState, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { 
   LogOut, 
@@ -29,7 +29,7 @@ interface ModernHeaderProps {
 
 export function ModernHeader({ onMenuToggle, menuOpen }: ModernHeaderProps) {
   const { t } = useTranslation(['common', 'auth']);
-  const navigate = useNavigate();
+  // navigate removed as we use window.location.href for logout
   const { user, isAuthenticated, logout } = useAuth();
   const { isDark, toggleTheme } = useTheme();
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
@@ -39,8 +39,11 @@ export function ModernHeader({ onMenuToggle, menuOpen }: ModernHeaderProps) {
   const handleLogout = useCallback(() => {
     void logout()
       .catch(() => {})
-      .then(() => { void navigate('/'); });
-  }, [logout, navigate]);
+      .finally(() => {
+        // Force full reload to verify maintenance status (for Guest)
+        window.location.href = '/';
+      });
+  }, [logout]);
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
