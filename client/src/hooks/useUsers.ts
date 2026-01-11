@@ -147,7 +147,7 @@ export function useUsers() {
     setBatchDeleting(true);
     try {
       await userService.deleteMany(ids);
-      toast.success(t('users:toast.delete_batch_success', { count: ids.length }));
+      toast.success(t('users:toast.batch_delete_success', { count: ids.length }));
       await reloadUsers();
       return true;
     } catch (error) {
@@ -163,7 +163,7 @@ export function useUsers() {
     setSubmitting(true);
     try {
       await userService.restoreMany(ids);
-      toast.success(t('users:toast.restore_batch_success', { count: ids.length }));
+      toast.success(t('users:toast.batch_restore_success', { count: ids.length }));
       await reloadUsers();
       return true;
     } catch (error) {
@@ -179,7 +179,7 @@ export function useUsers() {
     setSubmitting(true);
     try {
       await userService.batchUpdateStatus(ids, isActive);
-      toast.success(t('users:toast.update_batch_success', { count: ids.length }));
+      toast.success(t('users:toast.batch_status_success', { count: ids.length }));
       await reloadUsers();
       return true;
     } catch (error) {

@@ -21,28 +21,29 @@
     "active_description": "Allow users with this role to access the system"
   },
   "delete_title": "Delete Role",
-  "delete_confirm": "Are you sure you want to delete this role? This action cannot be undone.",
+  "delete_confirm": "Are you sure you want to move this role to Trash?",
+  "hard_delete_confirm": "Are you sure you want to PERMANENTLY delete this role? This action cannot be undone.",
   "toast": {
     "load_error": "Failed to load roles",
     "create_success": "Role created successfully!",
     "update_success": "Role updated successfully!",
-    "delete_success": "Role deleted successfully!",
-    "hard_delete_success": "Role permanently deleted successfully!",
-    "batch_delete_success": "Successfully deleted {{count}} roles",
-    "batch_hard_delete_success": "Successfully permanently deleted {{count}} roles",
-    "batch_restore_success": "Successfully restored {{count}} roles",
-    "batch_status_success": "Successfully updated status for {{count}} roles",
-    "restore_success": "Role restored successfully",
+    "delete_success": "Moved to Trash successfully!",
+    "hard_delete_success": "Permanently deleted role!",
+    "batch_delete_success": "Moved {{count}} roles to Trash!",
+    "batch_hard_delete_success": "Permanently deleted {{count}} roles!",
+    "batch_restore_success": "Successfully restored {{count}} roles!",
+    "batch_status_success": "Successfully updated status for {{count}} roles!",
+    "restore_success": "Role restored successfully!",
     "error": "An error occurred"
   },
-  "batch_delete_confirm": "Are you sure you want to delete {{count}} roles?",
-  "batch_restore_confirm": "Are you sure you want to restore {{count}} roles?",
-  "batch_status_confirm": "Are you sure you want to {{action}} {{count}} roles?",
+  "batch_delete_confirm": "Are you sure you want to move {{count}} roles to Trash?",
+  "batch_hard_delete_confirm": "Are you sure you want to PERMANENTLY delete {{count}} selected roles? This action cannot be undone.",
+  "batch_restore_confirm": "Are you sure you want to restore {{count}} selected roles?",
+  "batch_status_confirm": "Are you sure you want to {{action}} {{count}} selected roles?",
   "restore_confirm": "Are you sure you want to restore this role?",
-  "hard_delete_confirm": "Are you sure you want to permanently delete this role? This action cannot be undone.",
   "actions": {
-    "activate": "Activate",
-    "deactivate": "Deactivate"
+    "activate": "activate",
+    "deactivate": "deactivate"
   },
   "view_mode": {
     "list": "List view",

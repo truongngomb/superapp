@@ -4,6 +4,7 @@
  */
 
 import { STORAGE_KEYS } from '@/config';
+import { logger } from './logger';
 
 // ============================================================================
 // Types
@@ -71,7 +72,7 @@ export function setStorageItem<T extends Record<string, unknown> | string | numb
     
     storage.setItem(key, JSON.stringify(item));
   } catch (error) {
-    console.error('Failed to save to storage:', error);
+    logger.warn('Storage', 'Failed to save to storage:', error);
   }
 }
 

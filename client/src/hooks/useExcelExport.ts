@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver';
 import { useToast } from '@/context/useToast';
+import { logger } from '@/utils';
 
 interface ExportColumn<T> {
   /** Property key - supports dot notation for nested properties (e.g. 'expand.user.name') */
@@ -126,7 +127,7 @@ export function useExcelExport<T extends object>(
 
       toast.success(t('export_success', { defaultValue: 'Export successful!' }));
     } catch (error) {
-      console.error('Export failed:', error);
+      logger.warn('useExcelExport', 'Export failed:', error);
       toast.error(t('export_error', { defaultValue: 'Export failed' }));
     } finally {
       setExporting(false);

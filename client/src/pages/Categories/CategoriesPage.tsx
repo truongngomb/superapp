@@ -315,7 +315,7 @@ export default function CategoriesPage() {
         <div className="flex items-center gap-4">
           {displayCategories.length > 0 && (
             <PermissionGuard resource="categories" action="delete">
-              <div className="p-3 bg-surface rounded-lg">
+              <div className="flex items-center p-3 bg-surface rounded-lg">
                 <Checkbox
                   triState
                   checked={

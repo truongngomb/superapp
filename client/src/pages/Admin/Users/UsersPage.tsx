@@ -294,7 +294,7 @@ export default function UsersPage() {
         <div className="flex items-center gap-4">
           {displayUsers.length > 0 && (
             <PermissionGuard resource="users" action="delete">
-              <div className="p-3 bg-surface rounded-lg">
+              <div className="flex items-center p-3 bg-surface rounded-lg">
                 <Checkbox
                   triState
                   checked={

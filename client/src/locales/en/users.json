@@ -1,7 +1,8 @@
 {
   "title": "User Management",
   "subtitle": "Manage users and their roles",
-  "delete_confirm": "Are you sure you want to delete this user? This action cannot be undone.",
+  "delete_confirm": "Are you sure you want to move this user to Trash?",
+  "hard_delete_confirm": "Are you sure you want to PERMANENTLY delete this user? This action cannot be undone.",
   "list": {
     "search_placeholder": "Search users...",
     "empty": "No users found",
@@ -32,7 +33,8 @@
     "deactivate": "deactivate"
   },
   "restore_confirm": "Are you sure you want to restore this user?",
-  "batch_delete_confirm": "Are you sure you want to delete {{count}} selected user(s)?",
+  "batch_delete_confirm": "Are you sure you want to move {{count}} user(s) to Trash?",
+  "batch_hard_delete_confirm": "Are you sure you want to PERMANENTLY delete {{count}} selected user(s)? This action cannot be undone.",
   "batch_restore_confirm": "Are you sure you want to restore {{count}} selected user(s)?",
   "batch_status_confirm": "Are you sure you want to {{action}} {{count}} selected user(s)?",
   "toast": {
@@ -40,10 +42,12 @@
     "create_success": "User created successfully!",
     "update_success": "User updated successfully!",
     "restore_success": "User restored successfully!",
-    "delete_success": "User deleted successfully!",
-    "delete_batch_success": "Successfully deleted {{count}} user(s)",
-    "restore_batch_success": "Successfully restored {{count}} user(s)",
-    "update_batch_success": "Successfully updated status for {{count}} user(s)",
+    "delete_success": "Moved to Trash successfully!",
+    "hard_delete_success": "Permanently deleted user!",
+    "batch_delete_success": "Moved {{count}} user(s) to Trash!",
+    "batch_hard_delete_success": "Permanently deleted {{count}} user(s)!",
+    "batch_restore_success": "Successfully restored {{count}} user(s)!",
+    "batch_status_success": "Successfully updated status for {{count}} user(s)!",
     "export_error": "Failed to export users",
     "assign_role_success": "Role assigned successfully!",
     "assign_roles_success": "Roles assigned successfully!",

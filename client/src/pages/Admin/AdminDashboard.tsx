@@ -9,8 +9,8 @@ import { Users, Shield, FolderTree, Activity, TrendingUp, Clock } from 'lucide-r
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Card, CardContent, LoadingSpinner } from '@/components/common';
-import { roleService, userService, categoryService } from '@/services';
-import { formatDateTime } from '@/utils';
+import { roleService, userService, categoryService, activityLogService } from '@/services';
+import { formatDateTime, logger } from '@/utils';
 
 // ============================================================================
 // Types
@@ -20,6 +20,7 @@ interface DashboardStats {
   users: number;
   roles: number;
   categories: number;
+  activityLogs: number;
 }
 
 interface QuickLink {
@@ -36,25 +37,27 @@ interface QuickLink {
 
 export default function AdminDashboard() {
   const { t } = useTranslation(['common']);
-  const [stats, setStats] = useState<DashboardStats>({ users: 0, roles: 0, categories: 0 });
+  const [stats, setStats] = useState<DashboardStats>({ users: 0, roles: 0, categories: 0, activityLogs: 0 });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const [usersRes, rolesRes, categoriesRes] = await Promise.all([
-          userService.getUsers({ limit: 1 }),
-          roleService.getAll(),
-          categoryService.getAll(),
+        const [usersRes, rolesRes, categoriesRes, activityLogsRes] = await Promise.all([
+          userService.getPage({ limit: 1 }),
+          roleService.getPage({ limit: 1 }),
+          categoryService.getPage({ limit: 1 }),
+          activityLogService.getPage({ limit: 1 }),
         ]);
 
         setStats({
           users: usersRes.total,
-          roles: rolesRes.length,
-          categories: categoriesRes.length,
+          roles: rolesRes.total,
+          categories: categoriesRes.total,
+          activityLogs: activityLogsRes.total,
         });
-      } catch (error) {
-        console.error('Failed to fetch dashboard stats:', error);
+      } catch {
+        logger.warn('AdminDashboard', 'Failed to fetch dashboard stats');
       } finally {
         setLoading(false);
       }
@@ -63,29 +66,6 @@ export default function AdminDashboard() {
     void fetchStats();
   }, []);
 
-  const statCards = [
-    {
-      label: t('users'),
-      value: stats.users,
-      icon: <Users className="w-6 h-6" />,
-      color: 'from-blue-500 to-blue-600',
-      link: '/admin/users',
-    },
-    {
-      label: t('roles'),
-      value: stats.roles,
-      icon: <Shield className="w-6 h-6" />,
-      color: 'from-purple-500 to-purple-600',
-      link: '/admin/roles',
-    },
-    {
-      label: t('categories'),
-      value: stats.categories,
-      icon: <FolderTree className="w-6 h-6" />,
-      color: 'from-emerald-500 to-emerald-600',
-      link: '/categories',
-    },
-  ];
 
   const quickLinks: QuickLink[] = [
     {
@@ -121,34 +101,106 @@ export default function AdminDashboard() {
         </p>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {statCards.map((stat, index) => (
-          <motion.div
-            key={stat.label}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-          >
-            <Link to={stat.link}>
-              <Card className="hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer overflow-hidden">
-                <CardContent className="p-0">
-                  <div className="flex items-center gap-4 p-5">
-                    <div className={`p-3 rounded-xl bg-gradient-to-br ${stat.color} text-white shadow-lg`}>
-                      {stat.icon}
+      {/* User & Access Section */}
+      <div>
+        <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+          <Shield className="w-5 h-5" />
+          {t('admin_dashboard.user_access', { defaultValue: 'User & Access Control' })}
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {[
+            {
+              label: t('users'),
+              value: stats.users,
+              icon: <Users className="w-6 h-6" />,
+              color: 'from-blue-500 to-blue-600',
+              link: '/admin/users',
+            },
+            {
+              label: t('roles'),
+              value: stats.roles,
+              icon: <Shield className="w-6 h-6" />,
+              color: 'from-purple-500 to-purple-600',
+              link: '/admin/roles',
+            },
+          ].map((stat, index) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+            >
+              <Link to={stat.link}>
+                <Card className="hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer overflow-hidden">
+                  <CardContent className="p-0">
+                    <div className="flex items-center gap-4 p-5">
+                      <div className={`p-3 rounded-xl bg-gradient-to-br ${stat.color} text-white shadow-lg`}>
+                        {stat.icon}
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm text-muted">{stat.label}</p>
+                        <p className="text-3xl font-bold text-foreground">{stat.value}</p>
+                      </div>
+                      <TrendingUp className="w-5 h-5 text-muted" />
                     </div>
-                    <div className="flex-1">
-                      <p className="text-sm text-muted">{stat.label}</p>
-                      <p className="text-3xl font-bold text-foreground">{stat.value}</p>
+                    <div className={`h-1 bg-gradient-to-r ${stat.color}`} />
+                  </CardContent>
+                </Card>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      {/* Content & System Section */}
+      <div>
+        <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+          <FolderTree className="w-5 h-5" />
+          {t('admin_dashboard.content_system', { defaultValue: 'Content & System' })}
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {[
+            {
+              label: t('categories'),
+              value: stats.categories,
+              icon: <FolderTree className="w-6 h-6" />,
+              color: 'from-emerald-500 to-emerald-600',
+              link: '/categories',
+            },
+            {
+              label: t('activity_logs'),
+              value: stats.activityLogs,
+              icon: <Activity className="w-6 h-6" />,
+              color: 'from-amber-500 to-amber-600',
+              link: '/admin/activity-logs',
+            },
+          ].map((stat, index) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 + index * 0.1 }}
+            >
+              <Link to={stat.link}>
+                <Card className="hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer overflow-hidden">
+                  <CardContent className="p-0">
+                    <div className="flex items-center gap-4 p-5">
+                      <div className={`p-3 rounded-xl bg-gradient-to-br ${stat.color} text-white shadow-lg`}>
+                        {stat.icon}
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm text-muted">{stat.label}</p>
+                        <p className="text-3xl font-bold text-foreground">{stat.value}</p>
+                      </div>
+                      <TrendingUp className="w-5 h-5 text-muted" />
                     </div>
-                    <TrendingUp className="w-5 h-5 text-muted" />
-                  </div>
-                  <div className={`h-1 bg-gradient-to-r ${stat.color}`} />
-                </CardContent>
-              </Card>
-            </Link>
-          </motion.div>
-        ))}
+                    <div className={`h-1 bg-gradient-to-r ${stat.color}`} />
+                  </CardContent>
+                </Card>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
       </div>
 
       {/* Quick Actions */}

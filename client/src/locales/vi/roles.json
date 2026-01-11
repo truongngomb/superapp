@@ -21,28 +21,29 @@
     "active_description": "Cho phép người dùng với role này truy cập hệ thống"
   },
   "delete_title": "Xóa Vai trò",
-  "delete_confirm": "Bạn có chắc chắn muốn xóa vai trò này không? Hành động này không thể hoàn tác.",
+  "delete_confirm": "Bạn có chắc muốn chuyển vai trò này vào Thùng rác?",
+  "hard_delete_confirm": "Bạn có chắc muốn xóa VĨNH VIỄN vai trò này? Hành động này không thể hoàn tác.",
   "toast": {
     "load_error": "Không thể tải danh sách role",
     "create_success": "Tạo role thành công!",
     "update_success": "Cập nhật role thành công!",
-    "delete_success": "Xóa role thành công!",
-    "hard_delete_success": "Xóa vĩnh viễn role thành công!",
-    "batch_delete_success": "Đã xóa {{count}} role thành công",
-    "batch_hard_delete_success": "Đã xóa vĩnh viễn {{count}} role thành công",
-    "batch_restore_success": "Đã khôi phục {{count}} role thành công",
-    "batch_status_success": "Đã cập nhật trạng thái cho {{count}} role thành công",
-    "restore_success": "Khôi phục role thành công",
+    "delete_success": "Đã chuyển vào Thùng rác!",
+    "hard_delete_success": "Đã xóa vĩnh viễn role!",
+    "batch_delete_success": "Đã chuyển {{count}} role vào Thùng rác!",
+    "batch_hard_delete_success": "Đã xóa vĩnh viễn {{count}} role!",
+    "batch_restore_success": "Đã khôi phục {{count}} role thành công!",
+    "batch_status_success": "Đã cập nhật trạng thái cho {{count}} role!",
+    "restore_success": "Khôi phục role thành công!",
     "error": "Đã xảy ra lỗi"
   },
-  "batch_delete_confirm": "Bạn có chắc chắn muốn xóa {{count}} vai trò đã chọn?",
-  "batch_restore_confirm": "Bạn có chắc chắn muốn khôi phục {{count}} vai trò đã chọn?",
-  "batch_status_confirm": "Bạn có chắc chắn muốn {{action}} {{count}} vai trò đã chọn?",
+  "batch_delete_confirm": "Bạn có chắc muốn chuyển {{count}} vai trò vào Thùng rác?",
+  "batch_hard_delete_confirm": "Bạn có chắc muốn xóa VĨNH VIỄN {{count}} vai trò đã chọn? Hành động này không thể hoàn tác.",
+  "batch_restore_confirm": "Bạn có chắc muốn khôi phục {{count}} vai trò đã chọn?",
+  "batch_status_confirm": "Bạn có chắc muốn {{action}} {{count}} vai trò đã chọn?",
   "restore_confirm": "Bạn có chắc chắn muốn khôi phục vai trò này?",
-  "hard_delete_confirm": "Bạn có chắc chắn muốn xóa vĩnh viễn vai trò này? Hành động này không thể hoàn tác.",
   "actions": {
-    "activate": "Kích hoạt",
-    "deactivate": "Hủy kích hoạt"
+    "activate": "bật",
+    "deactivate": "tắt"
   },
   "view_mode": {
     "list": "Xem danh sách",
