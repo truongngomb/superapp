@@ -166,7 +166,7 @@ export default function ActivityLogsPage() {
 
         {/* Pagination */}
         {!loading && logs.length > 0 && totalPages > 1 && (
-          <div className="my-4 relative">
+          <div className="mt-4 relative">
             {isLoadingMore && (
               <div className="absolute inset-0 flex items-center justify-center bg-background/50 rounded-lg z-10">
                 <Loader2 className="w-5 h-5 animate-spin text-primary" />

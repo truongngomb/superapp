@@ -29,7 +29,7 @@ export function MainLayout() {
       <Sidebar open={sidebarOpen} onClose={closeSidebar} />
 
       <main className="max-w-7xl mx-auto px-4 py-6 safe-area-bottom">
-        <div className="mb-6">
+        <div className="pb-6">
           <Outlet />
         </div>
       </main>

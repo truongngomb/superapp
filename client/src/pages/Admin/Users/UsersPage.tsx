@@ -306,6 +306,7 @@ export default function UsersPage() {
                   }
                   onChange={(checked: boolean) => { handleSelectAll(checked); }}
                   label={t("common:select_all")}
+                  hideLabelOnMobile
                 />
               </div>
             </PermissionGuard>
@@ -319,6 +320,7 @@ export default function UsersPage() {
                 setSelectedIds([]);
               }}
               label={t("common:show_archived")}
+              hideLabelOnMobile
             />
           </PermissionGuard>
         </div>
@@ -443,7 +445,7 @@ export default function UsersPage() {
 
           {/* Pagination */}
           {pagination.totalPages > 1 && (
-            <div className="my-4 relative">
+            <div className="mt-4 relative">
               {isLoadingMore && (
                 <div className="absolute inset-0 flex items-center justify-center bg-background/50 rounded-lg z-10">
                   <Loader2 className="w-5 h-5 animate-spin text-primary" />

@@ -18,6 +18,8 @@ interface CheckboxProps {
   triState?: boolean;
   /** Optional label text */
   label?: string;
+  /** Hide label on mobile screens (portrait view) */
+  hideLabelOnMobile?: boolean;
   /** Disable the checkbox */
   disabled?: boolean;
   /** Additional class names */
@@ -39,6 +41,7 @@ export function Checkbox({
   onChange,
   triState = false,
   label,
+  hideLabelOnMobile = false,
   disabled = false,
   className,
   size = 'md',
@@ -97,7 +100,10 @@ export function Checkbox({
         )}
       />
       {label && (
-        <span className="text-foreground text-sm">
+        <span className={cn(
+          'text-foreground text-sm',
+          hideLabelOnMobile && 'hidden sm:inline'
+        )}>
           {label}
         </span>
       )}
