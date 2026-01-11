@@ -54,7 +54,7 @@ export function UserTable({
             <th className="p-4 text-sm font-semibold text-muted tracking-wider">
               {t('users:form.role_label')}
             </th>
-            <th className="p-4 text-sm font-semibold text-muted tracking-wider">
+            <th className="w-32 p-4 text-sm font-semibold text-muted tracking-wider">
               {t('common:status')}
             </th>
             <th className="p-4 text-sm font-semibold text-muted tracking-wider hidden md:table-cell">

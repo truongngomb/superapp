@@ -49,7 +49,7 @@ export function RoleTable({
             <th className="h-12 px-4 text-left font-medium hidden lg:table-cell">
               {t('roles:form.permissions_label')}
             </th>
-            <th className="w-24 h-12 px-4 text-left font-medium">
+            <th className="w-32 h-12 px-4 text-left font-medium">
               {t('common:status')}
             </th>
             <th className="w-32 h-12 px-4 text-right font-medium">

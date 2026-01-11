@@ -48,7 +48,7 @@ export function CategoryTable({
             <th className="h-12 px-4 text-left font-medium hidden md:table-cell">
               {t('categories:form.desc_label')}
             </th>
-            <th className="w-24 h-12 px-4 text-left font-medium">
+            <th className="w-32 h-12 px-4 text-left font-medium">
               {t('common:status')}
             </th>
             <th className="w-32 h-12 px-4 text-right font-medium">
