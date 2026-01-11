@@ -18,3 +18,4 @@ export { usersRouter } from './users.js';
 export { activityLogsRouter } from './activity_logs.js';
 export { default as systemRouter } from './system.js';
 export { realtimeRouter } from './realtime.js';
+export { settingsRouter } from './settings.js';

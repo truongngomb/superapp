@@ -1,0 +1,38 @@
+{
+  "title": "시스템 설정",
+  "subtitle": "전역 시스템 구성 관리",
+  "tabs": {
+    "layout": "레이아웃",
+    "roles": "역할 리소스",
+    "general": "일반"
+  },
+  "layout": {
+    "title": "레이아웃 설정",
+    "description": "특정 페이지 또는 전체 시스템의 레이아웃 스타일 사용자 정의",
+    "global_layout": "전역 레이아웃",
+    "page_specific": "페이지별 레이아웃",
+    "home_page": "홈 페이지",
+    "category_page": "카테고리 페이지",
+    "modes": {
+      "standard": "표준 레이아웃 (이전)",
+      "modern": "현대식 레이아웃 (신규)"
+    }
+  },
+  "roles": {
+    "title": "역할 리소스",
+    "description": "권한 시스템에 사용 가능한 리소스 구성",
+    "add_resource": "리소스 추가",
+    "resource_name": "리소스 이름",
+    "resource_placeholder": "예: 제품, 주문...",
+    "empty": "추가된 리소스가 없습니다"
+  },
+  "actions": {
+    "save": "설정 저장",
+    "saving": "저장 중...",
+    "reset": "기본값으로 재설정"
+  },
+  "messages": {
+    "save_success": "설정이 성공적으로 저장되었습니다",
+    "save_error": "설정 저장에 실패했습니다"
+  }
+}

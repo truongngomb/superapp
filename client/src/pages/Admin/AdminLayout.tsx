@@ -4,7 +4,7 @@
  */
 
 import { NavLink, Outlet } from 'react-router-dom';
-import { Users, Shield, LayoutDashboard, FileClock } from 'lucide-react';
+import { Users, Shield, LayoutDashboard, FileClock, Settings } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/utils';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
@@ -33,6 +33,12 @@ export default function AdminLayout() {
       icon: <LayoutDashboard className="w-4 h-4" />,
       label: t('admin_dashboard.dashboard'),
       resource: 'dashboard',
+    },
+    {
+      to: '/admin/settings',
+      icon: <Settings className="w-4 h-4" />,
+      label: t('settings'),
+      resource: 'all',
     },
     {
       to: '/admin/users',

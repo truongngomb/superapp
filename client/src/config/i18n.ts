@@ -16,8 +16,9 @@ import authEn from '../locales/en/auth.json';
 import categoriesEn from '../locales/en/categories.json';
 import rolesEn from '../locales/en/roles.json';
 import usersEn from '../locales/en/users.json';
-import activityLogsEn from '../locales/en/activity_logs.json';
+import activityLogsEn from '../locales/en/common.json';
 import notificationsEn from '../locales/en/notifications.json';
+import settingsEn from '../locales/en/settings.json';
 
 // Import translation files - Vietnamese
 import commonVi from '../locales/vi/common.json';
@@ -28,6 +29,7 @@ import rolesVi from '../locales/vi/roles.json';
 import usersVi from '../locales/vi/users.json';
 import activityLogsVi from '../locales/vi/activity_logs.json';
 import notificationsVi from '../locales/vi/notifications.json';
+import settingsVi from '../locales/vi/settings.json';
 
 // Import translation files - Korean
 import commonKo from '../locales/ko/common.json';
@@ -38,6 +40,7 @@ import rolesKo from '../locales/ko/roles.json';
 import usersKo from '../locales/ko/users.json';
 import activityLogsKo from '../locales/ko/activity_logs.json';
 import notificationsKo from '../locales/ko/notifications.json';
+import settingsKo from '../locales/ko/settings.json';
 
 // Configure resources
 export const resources = {
@@ -50,6 +53,7 @@ export const resources = {
     users: usersEn,
     activity_logs: activityLogsEn,
     notifications: notificationsEn,
+    settings: settingsEn,
   },
   vi: {
     common: commonVi,
@@ -60,6 +64,7 @@ export const resources = {
     users: usersVi,
     activity_logs: activityLogsVi,
     notifications: notificationsVi,
+    settings: settingsVi,
   },
   ko: {
     common: commonKo,
@@ -70,6 +75,7 @@ export const resources = {
     users: usersKo,
     activity_logs: activityLogsKo,
     notifications: notificationsKo,
+    settings: settingsKo,
   },
 } as const;
 
@@ -90,7 +96,7 @@ void i18n
   .init({
     resources,
     defaultNS: 'common',
-    ns: ['common', 'home', 'auth', 'categories', 'roles', 'users', 'activity_logs', 'notifications'],
+    ns: ['common', 'home', 'auth', 'categories', 'roles', 'users', 'activity_logs', 'notifications', 'settings'],
     fallbackLng: 'en', // Default language if detection fails
     supportedLngs: ['en', 'vi', 'ko'],
     

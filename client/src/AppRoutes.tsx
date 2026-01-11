@@ -28,6 +28,9 @@ const AdminLayout = lazy(() => import('@/pages/Admin/AdminLayout'));
 const ActivityLogsPage = lazy(
   () => import('@/pages/Admin/ActivityLogs/ActivityLogsPage')
 );
+const SystemSettingsPage = lazy(
+  () => import('@/pages/Admin/SystemSettings/SystemSettingsPage')
+);
 
 // ============================================================================
 // Helper Components
@@ -104,6 +107,19 @@ export function AppRoutes() {
               >
                 <LazyPage>
                   <AdminDashboard />
+                </LazyPage>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="settings"
+            element={
+              <ProtectedRoute
+                resource={PermissionResource.All}
+                action={PermissionAction.Manage}
+              >
+                <LazyPage>
+                  <SystemSettingsPage />
                 </LazyPage>
               </ProtectedRoute>
             }

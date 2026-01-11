@@ -1,45 +1,37 @@
-/**
- * Main Layout Component
- * Root layout that manages layout selection (Standard vs Modern)
- */
-
-import { useState } from 'react';
-import { LayoutTemplate } from 'lucide-react';
-import { Button } from '@/components/common';
-import { getStorageItem, setStorageItem } from '@/utils';
+import { useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
+import { getStorageItem } from '@/utils';
 import { STORAGE_KEYS } from '@/config';
 import { StandardLayout } from './StandardLayout';
 import { ModernLayout } from './ModernLayout';
+import { useSettings } from '@/hooks';
 
 type LayoutMode = 'standard' | 'modern';
 
 export function MainLayout() {
-  const [layoutMode, setLayoutMode] = useState<LayoutMode>(() => {
-    return getStorageItem<LayoutMode>(STORAGE_KEYS.LAYOUT_MODE) || 'standard';
-  });
+  const { settings, getSettingValue } = useSettings();
+  const location = useLocation();
 
-  const toggleLayout = () => {
-    const newMode = layoutMode === 'standard' ? 'modern' : 'standard';
-    setLayoutMode(newMode);
-    setStorageItem(STORAGE_KEYS.LAYOUT_MODE, newMode);
-  };
+  const layoutMode = useMemo(() => {
+    // 1. Check localStorage for manual override (legacy/dev)
+    const storedMode = getStorageItem<LayoutMode>(STORAGE_KEYS.LAYOUT_MODE);
+    if (storedMode) return storedMode;
 
-  return (
-    <>
-      {layoutMode === 'modern' ? <ModernLayout /> : <StandardLayout />}
-      
-      {/* Layout Switcher Floating Button */}
-      <div className="fixed bottom-4 right-4 z-50">
-        <Button
-          onClick={toggleLayout}
-          size="sm"
-          className="rounded-full shadow-lg opacity-80 hover:opacity-100 transition-opacity"
-          title={`Switch to ${layoutMode === 'standard' ? 'Modern' : 'Standard'} Layout`}
-        >
-          <LayoutTemplate className="w-4 h-4 mr-2" />
-          {layoutMode === 'standard' ? 'New Layout' : 'Old Layout'}
-        </Button>
-      </div>
-    </>
-  );
+    if (settings.length === 0) return 'standard';
+
+    const layoutConfig = getSettingValue('layout_config', {
+      global: 'standard',
+      pages: {} as Record<string, string>
+    });
+
+    // 2. Check page specific
+    const path = location.pathname;
+    if (path === '/' && layoutConfig.pages.home) return layoutConfig.pages.home as LayoutMode;
+    if (path.startsWith('/categories') && layoutConfig.pages.categories) return layoutConfig.pages.categories as LayoutMode;
+
+    // 3. Global default
+    return layoutConfig.global as LayoutMode;
+  }, [settings, getSettingValue, location.pathname]);
+
+  return layoutMode === 'modern' ? <ModernLayout /> : <StandardLayout />;
 }

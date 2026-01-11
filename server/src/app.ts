@@ -11,7 +11,7 @@ import cookieParser from 'cookie-parser';
 
 import { config, cache } from './config/index.js';
 import { authenticate, errorHandler, NotFoundError } from './middleware/index.js';
-import { authRouter, categoriesRouter, rolesRouter, usersRouter, activityLogsRouter, realtimeRouter, systemRouter } from './routes/index.js';
+import { authRouter, categoriesRouter, rolesRouter, usersRouter, activityLogsRouter, realtimeRouter, systemRouter, settingsRouter } from './routes/index.js';
 
 // =============================================================================
 // App Factory
@@ -66,6 +66,7 @@ function createApp(): Express {
   app.use('/api/activity-logs', activityLogsRouter);
   app.use('/api/realtime', realtimeRouter);
   app.use('/api/system', systemRouter);
+  app.use('/api/settings', settingsRouter);
 
   // =========================================================================
   // Health Check

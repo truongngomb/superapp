@@ -6,7 +6,7 @@
  */
 import 'dotenv/config';
 import { z } from 'zod';
-import { logger } from '../utils/index.js';
+import { logger } from '../utils/logger.js';
 
 // =============================================================================
 // Environment Schema Definition
