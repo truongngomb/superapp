@@ -89,5 +89,11 @@
   "empty_trash": "휴지통이 비었습니다",
   "selected_items": "{{count}}개 선택됨",
   "batch_delete_title": "선택한 항목 삭제",
-  "batch_restore_title": "선택한 항목 복구"
+  "batch_restore_title": "선택한 항목 복구",
+  "pagination": {
+    "first_page": "첫 페이지",
+    "previous_page": "이전 페이지",
+    "next_page": "다음 페이지",
+    "last_page": "마지막 페이지"
+  }
 }

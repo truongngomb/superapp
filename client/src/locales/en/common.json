@@ -89,5 +89,11 @@
   "empty_trash": "Trash is empty",
   "selected_items": "{{count}} selected",
   "batch_delete_title": "Delete Selected Items",
-  "batch_restore_title": "Restore Selected Items"
+  "batch_restore_title": "Restore Selected Items",
+  "pagination": {
+    "first_page": "First page",
+    "previous_page": "Previous page",
+    "next_page": "Next page",
+    "last_page": "Last page"
+  }
 }
