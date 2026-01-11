@@ -7,6 +7,20 @@
 - **[client/](client/README.md)**: Frontend application (React, TS, Vite, Capacitor).
 - **[server/](server/README.md)**: Backend application (Node.js, Express, PocketBase).
 
+## ✨ Features
+
+- **Authentication**: Google OAuth, session management
+- **Role-Based Access Control (RBAC)**: Permission-based authorization
+- **User Management**: CRUD with role assignment
+- **Role Management**: Permissions configuration
+- **Category Management**: Single Source of Truth (SSoT) pattern
+- **Activity Logs**: Audit trail for all actions
+- **Internationalization**: 3 languages (EN, VI, KO)
+- **Responsive UI**: Mobile-first with responsive components
+- **Dark/Light Theme**: System and manual toggle
+- **Excel Export**: Data export functionality
+- **Soft Delete**: Trash/Archive with restore capability
+
 ## 🚀 Quick Start
 
 ### 1. Setup
@@ -35,6 +49,7 @@ npm run dev
 
 - **Frontend**: http://localhost:5173
 - **Backend**: http://localhost:3001
+- **PocketBase Admin**: http://localhost:8090/_/
 
 ## 🛠️ Main Commands
 
@@ -58,6 +73,14 @@ npm run android:open  # Open Android Studio
 npm run ios:open      # Open Xcode
 npm run cap:sync      # Sync Capacitor
 ```
+
+## 🔒 Security
+
+- Helmet for HTTP security headers
+- CORS configuration
+- Rate limiting for batch operations
+- Permission-based access control
+- Soft delete for data safety
 
 ## 📄 License
 
