@@ -7,7 +7,6 @@
 import { type ReactNode, type ReactElement } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks';
-import { LoadingSpinner } from './LoadingSpinner';
 
 // ============================================================================
 // Types
@@ -42,7 +41,7 @@ export function AuthGuard({
   children,
   redirectTo = '/login',
   loadingFallback,
-}: AuthGuardProps): ReactElement {
+}: AuthGuardProps): ReactNode {
   const { isAuthenticated, isLoading } = useAuth();
   const location = useLocation();
 
@@ -51,11 +50,7 @@ export function AuthGuard({
     if (loadingFallback) {
       return loadingFallback as ReactElement;
     }
-    return (
-      <div className="flex items-center justify-center min-h-[50vh]">
-        <LoadingSpinner size="lg" text="Checking authentication..." />
-      </div>
-    );
+      return null;
   }
 
   // Redirect if not authenticated

@@ -24,6 +24,7 @@ export { SortBar } from './SortableHeader';
 export { SortPopup } from './SortPopup';
 export { Pagination } from './Pagination';
 export { ViewSwitcher } from './ViewSwitcher';
+export { Skeleton } from './Skeleton';
 export type { ViewMode } from './ViewSwitcher';
 
 // Permission Components
