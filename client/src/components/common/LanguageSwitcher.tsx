@@ -14,7 +14,11 @@ type LangCode = keyof typeof LANGUAGES;
 const LANG_ORDER: LangCode[] = ['vi', 'en', 'ko'];
 const DEFAULT_LANG: LangCode = 'en';
 
-export function LanguageSwitcher() {
+interface LanguageSwitcherProps {
+  className?: string;
+}
+
+export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
   const { i18n, t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -54,7 +58,7 @@ export function LanguageSwitcher() {
         type="button"
         whileTap={{ scale: 0.95 }}
         onClick={() => { setIsOpen(!isOpen); }}
-        className="p-2 rounded-lg hover:bg-surface transition-colors flex items-center gap-1"
+        className={`p-2 rounded-lg transition-colors flex items-center gap-1 ${className || 'hover:bg-surface'}`}
         aria-label={t('actions_menu.change_language')}
         aria-expanded={isOpen}
         aria-haspopup="listbox"

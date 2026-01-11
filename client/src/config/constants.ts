@@ -50,6 +50,7 @@ export const STORAGE_KEYS = {
   ROLES_VIEW_MODE: 'roles_view_mode',
   ROLES_SORT: 'roles_sort',
   ACTIVITY_LOGS_SORT: 'activity_logs_sort',
+  LAYOUT_MODE: 'layout_mode',
 } as const;
 
 // Theme

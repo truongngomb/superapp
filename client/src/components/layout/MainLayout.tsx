@@ -1,38 +1,45 @@
 /**
  * Main Layout Component
- * Root layout with header, sidebar, and main content area
+ * Root layout that manages layout selection (Standard vs Modern)
  */
 
-import { Outlet } from 'react-router-dom';
-import { useState, useCallback } from 'react';
-import { Header } from './Header';
-import { Sidebar } from './Sidebar';
+import { useState } from 'react';
+import { LayoutTemplate } from 'lucide-react';
+import { Button } from '@/components/common';
+import { getStorageItem, setStorageItem } from '@/utils';
+import { STORAGE_KEYS } from '@/config';
+import { StandardLayout } from './StandardLayout';
+import { ModernLayout } from './ModernLayout';
 
-// ============================================================================
-// Component
-// ============================================================================
+type LayoutMode = 'standard' | 'modern';
 
 export function MainLayout() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [layoutMode, setLayoutMode] = useState<LayoutMode>(() => {
+    return getStorageItem<LayoutMode>(STORAGE_KEYS.LAYOUT_MODE) || 'standard';
+  });
 
-  const toggleSidebar = useCallback(() => {
-    setSidebarOpen((prev) => !prev);
-  }, []);
-
-  const closeSidebar = useCallback(() => {
-    setSidebarOpen(false);
-  }, []);
+  const toggleLayout = () => {
+    const newMode = layoutMode === 'standard' ? 'modern' : 'standard';
+    setLayoutMode(newMode);
+    setStorageItem(STORAGE_KEYS.LAYOUT_MODE, newMode);
+  };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header onMenuToggle={toggleSidebar} menuOpen={sidebarOpen} />
-      <Sidebar open={sidebarOpen} onClose={closeSidebar} />
-
-      <main className="max-w-7xl mx-auto px-4 py-6 safe-area-bottom">
-        <div className="pb-6">
-          <Outlet />
-        </div>
-      </main>
-    </div>
+    <>
+      {layoutMode === 'modern' ? <ModernLayout /> : <StandardLayout />}
+      
+      {/* Layout Switcher Floating Button */}
+      <div className="fixed bottom-4 right-4 z-50">
+        <Button
+          onClick={toggleLayout}
+          size="sm"
+          className="rounded-full shadow-lg opacity-80 hover:opacity-100 transition-opacity"
+          title={`Switch to ${layoutMode === 'standard' ? 'Modern' : 'Standard'} Layout`}
+        >
+          <LayoutTemplate className="w-4 h-4 mr-2" />
+          {layoutMode === 'standard' ? 'New Layout' : 'Old Layout'}
+        </Button>
+      </div>
+    </>
   );
 }
