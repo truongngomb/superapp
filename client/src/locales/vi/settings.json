@@ -14,19 +14,25 @@
     "home_page": "Trang chủ",
     "category_page": "Trang danh mục",
     "modes": {
-      "standard": "Giao diện Tiêu chuẩn (Cũ)",
-      "modern": "Giao diện Hiện đại (Mới)"
-    }
+      "standard": "Giao diện Chuẩn",
+      "modern": "Giao diện Hiện đại",
+      "default": "Mặc định"
+    },
+    "resource": "Tài nguyên quản lý",
+    "select_resource": "Chọn tài nguyên...",
+    "mode": "Giao diện",
+    "empty": "Chưa có cấu hình tùy chỉnh nào"
   },
   "roles": {
     "title": "Tài nguyên Role",
     "description": "Cấu hình các tài nguyên có sẵn để phân quyền trong hệ thống",
     "add_resource": "Thêm tài nguyên",
     "resource_name": "Tên tài nguyên",
-    "resource_placeholder": "Ví dụ: products, orders...",
+    "resource_placeholder": "Ví dụ: example_resource...",
     "empty": "Chưa có tài nguyên bổ sung nào"
   },
   "actions": {
+    "add": "Thêm",
     "save": "Lưu cấu hình",
     "saving": "Đang lưu...",
     "reset": "Mặc định"

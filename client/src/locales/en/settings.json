@@ -14,19 +14,25 @@
     "home_page": "Home Page",
     "category_page": "Category Page",
     "modes": {
-      "standard": "Standard Layout (Old)",
-      "modern": "Modern Layout (New)"
-    }
+      "standard": "Standard Layout",
+      "modern": "Modern Layout",
+      "default": "Default"
+    },
+    "resource": "Managed Resource",
+    "select_resource": "Select resource...",
+    "mode": "Mode",
+    "empty": "No custom layouts configured"
   },
   "roles": {
     "title": "Role Resources",
     "description": "Configure available resources for the permission system",
     "add_resource": "Add Resource",
     "resource_name": "Resource Name",
-    "resource_placeholder": "e.g., products, orders...",
+    "resource_placeholder": "e.g., example_resource...",
     "empty": "No additional resources configured"
   },
   "actions": {
+    "add": "Add",
     "save": "Save Configuration",
     "saving": "Saving...",
     "reset": "Reset to Default"

@@ -14,19 +14,25 @@
     "home_page": "홈 페이지",
     "category_page": "카테고리 페이지",
     "modes": {
-      "standard": "표준 레이아웃 (이전)",
-      "modern": "현대식 레이아웃 (신규)"
-    }
+      "standard": "표준 레이아웃",
+      "modern": "현대식 레이아웃",
+      "default": "기본값"
+    },
+    "resource": "관리 리소스",
+    "select_resource": "리소스 선택...",
+    "mode": "모드",
+    "empty": "구성된 사용자 정의 레이아웃이 없습니다"
   },
   "roles": {
     "title": "역할 리소스",
     "description": "권한 시스템에 사용 가능한 리소스 구성",
     "add_resource": "리소스 추가",
     "resource_name": "리소스 이름",
-    "resource_placeholder": "예: 제품, 주문...",
+    "resource_placeholder": "예: example_resource...",
     "empty": "추가된 리소스가 없습니다"
   },
   "actions": {
+    "add": "추가",
     "save": "설정 저장",
     "saving": "저장 중...",
     "reset": "기본값으로 재설정"
