@@ -4,6 +4,7 @@ import { AlertCircle, Settings as SettingsIcon, Trash2, Database, Zap } from 'lu
 import { Card, CardHeader, CardContent, Toggle, Button, ConfirmModal } from '@/components/common';
 import { useSettings, useToast } from '@/hooks';
 import { settingsService } from '@/services/settings.service';
+import { BackupManager } from './BackupManager';
 
 export function GeneralSettings() {
   const { t } = useTranslation(['settings', 'common']);
@@ -188,6 +189,9 @@ export function GeneralSettings() {
         </CardContent>
       </Card>
 
+      {/* Backup Manager */}
+      <BackupManager />
+      
       <ConfirmModal
         isOpen={confirmState.isOpen}
         onCancel={() => {

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { PageLoader } from '@/components/common';
 import { useSettings } from '@/hooks';
@@ -12,7 +13,32 @@ import { GeneralSettings } from './components/GeneralSettings';
 export default function SystemSettingsPage() {
   const { t } = useTranslation(['settings', 'common']);
   const { settings, loading, submitting, updateSetting, getSettingValue } = useSettings();
-  const [activeTab, setActiveTab] = useState<Tab>('layout');
+  
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Determine active tab from URL hash
+  const getActiveTab = (): Tab => {
+    const hash = location.hash.replace('#', '');
+    const validTabs: Tab[] = ['layout', 'roles', 'general'];
+    if (validTabs.includes(hash as Tab)) {
+      return hash as Tab;
+    }
+    return 'layout';
+  };
+
+  const activeTab = getActiveTab();
+
+  // Handle default hash
+  useEffect(() => {
+    if (!location.hash) {
+      void navigate('#layout', { replace: true });
+    }
+  }, [location.hash, navigate]);
+
+  const handleTabChange = (tab: Tab) => {
+    void navigate(`#${tab}`);
+  };
 
   // Local state for buffered changes
   const [layoutConfig, setLayoutConfig] = useState<{
@@ -127,7 +153,7 @@ export default function SystemSettingsPage() {
       </div>
 
       {/* Tabs */}
-      <SettingsTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+      <SettingsTabs activeTab={activeTab} setActiveTab={handleTabChange} />
 
       {/* Content */}
       <div className="mt-6">

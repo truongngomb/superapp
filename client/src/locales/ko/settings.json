@@ -68,5 +68,28 @@
     "prune_confirm_message": "{{days}}일보다 오래된 로그를 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.",
     "clear_cache_confirm_title": "캐시 지우기",
     "clear_cache_confirm_message": "시스템 캐시를 지우시겠습니까? 이 작업은 일시적으로 성능에 영향을 줄 수 있습니다."
+  },
+  "backup": {
+    "title": "백업 및 복원",
+    "description": "시스템 데이터 백업 관리",
+    "create": "백업 생성",
+    "filename": "파일 이름",
+    "size": "크기",
+    "date": "생성 날짜",
+    "actions": "작업",
+    "empty": "백업이 없습니다",
+    "download": "다운로드",
+    "restore": "복원",
+    "delete": "삭제",
+    "create_success": "백업이 성공적으로 생성되었습니다",
+    "create_error": "백업 생성 실패",
+    "restore_success": "시스템이 성공적으로 복원되었습니다",
+    "restore_error": "백업 복원 실패",
+    "delete_success": "백업이 성공적으로 삭제되었습니다",
+    "delete_error": "백업 삭제 실패",
+    "restore_confirm_title": "복원 확인",
+    "restore_confirm_message": "'{{name}}'을(를) 복원하시겠습니까? 현재 데이터가 덮어쓰여집니다. 이 작업은 취소할 수 없습니다.",
+    "delete_confirm_title": "백업 삭제",
+    "delete_confirm_message": "백업 '{{name}}'을(를) 삭제하시겠습니까?"
   }
 }

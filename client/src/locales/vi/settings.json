@@ -68,5 +68,28 @@
     "prune_confirm_message": "Bạn có chắc chắn muốn xóa nhật ký cũ hơn {{days}} ngày không? Hành động này không thể hoàn tác.",
     "clear_cache_confirm_title": "Xóa Cache",
     "clear_cache_confirm_message": "Bạn có chắc chắn muốn xóa cache hệ thống không? Điều này có thể ảnh hưởng tạm thời đến hiệu suất."
+  },
+  "backup": {
+    "title": "Sao lưu & Khôi phục",
+    "description": "Quản lý sao lưu dữ liệu hệ thống",
+    "create": "Tạo sao lưu",
+    "filename": "Tên file",
+    "size": "Kích thước",
+    "date": "Ngày tạo",
+    "actions": "Thao tác",
+    "empty": "Không có bản sao lưu nào",
+    "download": "Tải xuống",
+    "restore": "Khôi phục",
+    "delete": "Xóa",
+    "create_success": "Đã tạo bản sao lưu thành công",
+    "create_error": "Lỗi khi tạo sao lưu",
+    "restore_success": "Đã khôi phục hệ thống thành công",
+    "restore_error": "Lỗi khi khôi phục dữ liệu",
+    "delete_success": "Đã xóa bản sao lưu thành công",
+    "delete_error": "Lỗi khi xóa bản sao lưu",
+    "restore_confirm_title": "Xác nhận Khôi phục",
+    "restore_confirm_message": "Bạn có chắc chắn muốn khôi phục '{{name}}'? Dữ liệu hiện tại sẽ bị GHI ĐÈ. Hành động này không thể hoàn tác.",
+    "delete_confirm_title": "Xóa Sao lưu",
+    "delete_confirm_message": "Bạn có chắc chắn muốn xóa bản sao lưu '{{name}}'?"
   }
 }

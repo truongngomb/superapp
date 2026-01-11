@@ -68,5 +68,28 @@
     "prune_confirm_message": "Are you sure you want to delete logs older than {{days}} days? This action cannot be undone.",
     "clear_cache_confirm_title": "Clear Cache",
     "clear_cache_confirm_message": "Are you sure you want to clear the system cache? This may temporarily impact performance."
+  },
+  "backup": {
+    "title": "Backup & Restore",
+    "description": "Manage system data backups",
+    "create": "Create Backup",
+    "filename": "Filename",
+    "size": "Size",
+    "date": "Date Created",
+    "actions": "Actions",
+    "empty": "No backups found",
+    "download": "Download",
+    "restore": "Restore",
+    "delete": "Delete",
+    "create_success": "Backup created successfully",
+    "create_error": "Failed to create backup",
+    "restore_success": "System restored successfully",
+    "restore_error": "Failed to restore backup",
+    "delete_success": "Backup deleted successfully",
+    "delete_error": "Failed to delete backup",
+    "restore_confirm_title": "Confirm Restore",
+    "restore_confirm_message": "Are you sure you want to restore '{{name}}'? Current data will be OVERWRITTEN. This cannot be undone.",
+    "delete_confirm_title": "Delete Backup",
+    "delete_confirm_message": "Are you sure you want to delete backup '{{name}}'?"
   }
 }
