@@ -10,13 +10,13 @@ import {
   Trash2,
   FileSpreadsheet,
 } from "lucide-react";
+import { motion as framerMotion } from "framer-motion";
 import {
   Button,
   Card,
   CardContent,
   Checkbox,
   Input,
-  LoadingSpinner,
   ConfirmModal,
   SortPopup,
   Pagination,
@@ -33,6 +33,8 @@ import { useExcelExport } from "@/hooks/useExcelExport";
 import { CategoryForm } from "./components/CategoryForm";
 import { CategoryRow } from "./components/CategoryRow";
 import { CategoryTable } from "./components/CategoryTable";
+import { CategorySkeleton } from "./components/CategorySkeleton";
+import { CategoryTableSkeleton } from "./components/CategoryTableSkeleton";
 
 /**
  * CategoriesPage Component
@@ -413,13 +415,24 @@ export default function CategoriesPage() {
       </div>
 
       {/* Categories list */}
-      {loading ? (
-        <LoadingSpinner
-          size="lg"
-          text={t("common:loading")}
-          className="py-20"
-        />
-      ) : displayCategories.length === 0 ? (
+      <framerMotion.div
+        key={loading ? "loading" : "content"}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }}
+      >
+        {loading ? (
+          viewMode === "table" ? (
+            <CategoryTableSkeleton />
+          ) : (
+            <div className="space-y-0.5">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <CategorySkeleton key={i} />
+              ))}
+            </div>
+          )
+        ) : displayCategories.length === 0 ? (
         <Card className="py-12 text-center">
           <CardContent>
             <Folder className="w-12 h-12 text-muted mx-auto mb-4" />
@@ -505,6 +518,7 @@ export default function CategoriesPage() {
           )}
         </div>
       )}
+      </framerMotion.div>
 
       {/* Form modal */}
       <AnimatePresence>
