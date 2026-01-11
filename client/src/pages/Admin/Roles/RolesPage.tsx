@@ -15,7 +15,6 @@ import {
   Card,
   CardContent,
   Input,
-  LoadingSpinner,
   ConfirmModal,
   SortPopup,
   Pagination,
@@ -33,6 +32,8 @@ import { useExcelExport } from "@/hooks/useExcelExport";
 import { RoleForm } from "./components/RoleForm";
 import { RoleRow } from "./components/RoleRow";
 import { RoleTable } from "./components/RoleTable";
+import { RoleTableSkeleton } from "./components/RoleTableSkeleton";
+import { RoleRowSkeleton } from "./components/RoleRowSkeleton";
 
 export default function RolesPage() {
   const { t } = useTranslation(["roles", "common"]);
@@ -78,6 +79,7 @@ export default function RolesPage() {
   const [showFormModal, setShowFormModal] = useState(false);
   const [editingRole, setEditingRole] = useState<Role | undefined>(undefined);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   // Sort configuration
   const { sortConfig, handleSort } = useSort("created", "desc", {
@@ -282,16 +284,17 @@ export default function RolesPage() {
         <Button
           variant="outline"
           onClick={() => {
+            setIsRefreshing(true);
             void fetchRoles({
               page: 1,
               sort: sortConfig.field,
               order: sortConfig.order ?? undefined,
               search: searchTerm,
               isDeleted: showArchived,
-            });
+            }).finally(() => { setIsRefreshing(false); });
           }}
         >
-          <RefreshCw className={cn("w-5 h-5", loading && "animate-spin")} />
+          <RefreshCw className={cn("w-5 h-5", (loading || isRefreshing) && "animate-spin")} />
         </Button>
       </div>
 
@@ -390,10 +393,16 @@ export default function RolesPage() {
       </div>
 
       {/* Main Content */}
-      {loading && !isLoadingMore ? (
-        <div className="flex justify-center p-8">
-          <LoadingSpinner size="lg" text={t("roles:loading")} />
-        </div>
+      {(loading && roles.length === 0) || isRefreshing ? (
+        viewMode === "table" ? (
+          <RoleTableSkeleton />
+        ) : (
+          <div className="grid gap-4">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <RoleRowSkeleton key={i} />
+            ))}
+          </div>
+        )
       ) : roles.length === 0 ? (
         <Card className="bg-muted/50 border-dashed">
           <CardContent className="flex flex-col items-center justify-center p-12 text-center">
@@ -452,6 +461,7 @@ export default function RolesPage() {
             <RoleTable
               roles={roles}
               selectedIds={canSelect ? selectedIds : []}
+              currentPage={pagination.page}
               onSelectAll={canSelect ? handleSelectAll : undefined}
               onSelectOne={canSelect ? handleSelectOne : undefined}
               onEdit={(r) => {

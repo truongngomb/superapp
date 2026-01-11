@@ -2,9 +2,10 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RefreshCw, Search, Shield, Loader2, FileSpreadsheet } from 'lucide-react';
-import { Button, Card, CardContent, Pagination, SortPopup, Input, LoadingSpinner, PermissionGuard } from '@/components/common';
+import { Button, Card, CardContent, Pagination, SortPopup, Input, PermissionGuard } from '@/components/common';
 import { STORAGE_KEYS } from '@/config';
 import { ActivityLogTable } from './components/ActivityLogTable';
+import { ActivityLogTableSkeleton } from './components/ActivityLogTableSkeleton';
 import type { ActivityLog } from '@/types';
 import { cn } from '@/utils';
 import { useSort, useDebounce, useActivityLogs } from '@/hooks';
@@ -23,6 +24,7 @@ export default function ActivityLogsPage() {
   } = useActivityLogs();
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const debouncedSearchQuery = useDebounce(searchQuery, 400);
   
   // Destructure pagination
@@ -131,9 +133,12 @@ export default function ActivityLogsPage() {
           />
           <Button 
             variant="outline" 
-            onClick={() => { void fetchLogs(); }}
+            onClick={() => {
+              setIsRefreshing(true);
+              void fetchLogs().finally(() => { setIsRefreshing(false); });
+            }}
           >
-            <RefreshCw className={cn("w-5 h-5", loading && "animate-spin")} />
+            <RefreshCw className={cn("w-5 h-5", (loading || isRefreshing) && "animate-spin")} />
           </Button>
         </div>
 
@@ -145,8 +150,8 @@ export default function ActivityLogsPage() {
         </div>
 
         {/* Logs Table */}
-        {loading ? (
-          <LoadingSpinner size="lg" text={t('common:loading')} className="py-20" />
+        {(loading && logs.length === 0) || isRefreshing ? (
+          <ActivityLogTableSkeleton />
         ) : logs.length === 0 ? (
           <Card className="py-12 text-center">
             <CardContent>
@@ -159,7 +164,7 @@ export default function ActivityLogsPage() {
         ) : (
           <Card>
             <CardContent className="p-0">
-              <ActivityLogTable logs={logs} />
+              <ActivityLogTable logs={logs} currentPage={page} />
             </CardContent>
           </Card>
         )}

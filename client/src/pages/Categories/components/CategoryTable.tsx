@@ -9,6 +9,8 @@ import { CATEGORY_ICONS, type CategoryIcon } from './icons';
 interface CategoryTableProps {
   categories: Category[];
   selectedIds: string[];
+  currentPage?: number;
+  perPage?: number;
   /** When undefined, checkbox column is hidden */
   onSelectAll?: (checked: boolean) => void;
   /** When undefined, row checkboxes are hidden */
@@ -27,6 +29,8 @@ interface CategoryTableProps {
 export function CategoryTable({
   categories,
   selectedIds,
+  currentPage = 1,
+  perPage = 10,
   onSelectOne,
   onEdit,
   onDelete,
@@ -41,6 +45,9 @@ export function CategoryTable({
         <thead className="bg-background text-muted-foreground">
           <tr>
             <th className="w-12 h-12 px-4 text-left">&nbsp;</th>
+            <th className="w-12 h-12 px-4 text-center font-medium">
+              {t('common:order')}
+            </th>
             <th className="w-12 h-12 px-4 text-left">&nbsp;</th>
             <th className="h-12 px-4 text-left font-medium">
               {t('common:name')}
@@ -57,9 +64,10 @@ export function CategoryTable({
           </tr>
         </thead>
         <tbody>
-          {categories.map((category) => {
+          {categories.map((category, index) => {
             const IconComponent = (CATEGORY_ICONS[category.icon] || CATEGORY_ICONS.folder) as CategoryIcon;
             const isSelected = selectedIds.includes(category.id);
+            const orderNumber = (currentPage - 1) * perPage + index + 1;
 
             return (
               <tr
@@ -76,6 +84,9 @@ export function CategoryTable({
                       onChange={(checked) => { onSelectOne(category.id, checked); }}
                     />
                   )}
+                </td>
+                <td className="p-4 align-middle text-center text-muted-foreground">
+                  {orderNumber}
                 </td>
                 <td className="p-4 align-middle">
                   <div

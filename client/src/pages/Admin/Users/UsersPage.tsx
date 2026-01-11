@@ -15,7 +15,6 @@ import {
   Card, 
   CardContent, 
   Input, 
-  LoadingSpinner, 
   ConfirmModal, 
   SortPopup, 
   Pagination, 
@@ -24,6 +23,8 @@ import {
   ViewSwitcher,
   type ViewMode 
 } from '@/components/common';
+import { UserTableSkeleton } from './components/UserTableSkeleton';
+import { UserRowSkeleton } from './components/UserRowSkeleton';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
 import { useUsers, useRoles, useSort, useDebounce, useAuth } from '@/hooks';
 import type { User, SortColumn, UserCreateInput, UserUpdateInput } from '@/types';
@@ -86,6 +87,7 @@ export default function UsersPage() {
     isActive: boolean;
   } | null>(null);
   const [showArchived, setShowArchived] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   // View mode state (persisted)
   const [viewMode, setViewMode] = useState<ViewMode>(() => {
@@ -288,10 +290,11 @@ export default function UsersPage() {
         <Button
           variant="outline"
           onClick={() => {
-            void fetchUsers();
+            setIsRefreshing(true);
+            void fetchUsers().finally(() => { setIsRefreshing(false); });
           }}
         >
-          <RefreshCw className={cn("w-5 h-5", loading && "animate-spin")} />
+          <RefreshCw className={cn("w-5 h-5", (loading || isRefreshing) && "animate-spin")} />
         </Button>
       </div>
 
@@ -381,8 +384,20 @@ export default function UsersPage() {
       </div>
 
       {/* Users list */}
-      {loading ? (
-        <LoadingSpinner size="lg" text={t("common:loading")} className="py-20" />
+      {(loading && displayUsers.length === 0) || isRefreshing ? (
+        viewMode === 'table' ? (
+          <Card>
+            <CardContent className="p-0">
+              <UserTableSkeleton />
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="space-y-2">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <UserRowSkeleton key={i} />
+            ))}
+          </div>
+        )
       ) : displayUsers.length === 0 ? (
         <Card className="py-12 text-center">
           <CardContent>
@@ -400,6 +415,7 @@ export default function UsersPage() {
                 <UserTable
                   users={displayUsers}
                   selectedIds={canSelect ? selectedIds : []}
+                  currentPage={pagination.page}
                   onSelectAll={canSelect ? handleSelectAll : undefined}
                   onSelectOne={canSelect ? handleSelectOne : undefined}
                   onEdit={(u) => {

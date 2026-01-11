@@ -90,6 +90,7 @@ export default function CategoriesPage() {
     isActive: boolean;
   } | null>(null);
   const [showArchived, setShowArchived] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   // View mode state (persisted to localStorage)
   const [viewMode, setViewMode] = useState<ViewMode>(() => {
@@ -311,10 +312,11 @@ export default function CategoriesPage() {
         <Button
           variant="outline"
           onClick={() => {
-            void fetchCategories();
+            setIsRefreshing(true);
+            void fetchCategories().finally(() => { setIsRefreshing(false); });
           }}
         >
-          <RefreshCw className={cn("w-5 h-5", loading && "animate-spin")} />
+          <RefreshCw className={cn("w-5 h-5", (loading || isRefreshing) && "animate-spin")} />
         </Button>
       </div>
 
@@ -422,7 +424,7 @@ export default function CategoriesPage() {
         exit={{ opacity: 0 }}
         transition={{ duration: 0.2 }}
       >
-        {loading ? (
+        {(loading && categories.length === 0) || isRefreshing ? (
           viewMode === "table" ? (
             <CategoryTableSkeleton />
           ) : (
@@ -463,6 +465,7 @@ export default function CategoriesPage() {
                 <CategoryTable
                   categories={displayCategories}
                   selectedIds={canSelect ? selectedIds : []}
+                  currentPage={pagination.page}
                   onSelectAll={canSelect ? handleSelectAll : undefined}
                   onSelectOne={canSelect ? handleSelectOne : undefined}
                   onEdit={handleEdit}

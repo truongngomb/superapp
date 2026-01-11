@@ -8,6 +8,8 @@ import type { Role } from '@/types';
 interface RoleTableProps {
   roles: Role[];
   selectedIds: string[];
+  currentPage?: number;
+  perPage?: number;
   /** When undefined, checkbox column is hidden */
   onSelectAll?: (checked: boolean) => void;
   /** When undefined, row checkboxes are hidden */
@@ -26,6 +28,8 @@ interface RoleTableProps {
 export function RoleTable({
   roles,
   selectedIds,
+  currentPage = 1,
+  perPage = 10,
   onSelectOne,
   onEdit,
   onDelete,
@@ -40,6 +44,9 @@ export function RoleTable({
         <thead className="bg-background text-muted-foreground">
           <tr>
             <th className="w-12 h-12 px-4 text-left">&nbsp;</th>
+            <th className="w-12 h-12 px-4 text-center font-medium">
+              {t('common:order')}
+            </th>
             <th className="h-12 px-4 text-left font-medium">
               {t('common:name')}
             </th>
@@ -58,11 +65,12 @@ export function RoleTable({
           </tr>
         </thead>
         <tbody>
-          {roles.map((role) => {
+          {roles.map((role, index) => {
             const isSelected = selectedIds.includes(role.id);
             const permissionsCount = Object.entries(role.permissions)
               .filter(([, actions]) => actions.length > 0)
               .length;
+            const orderNumber = (currentPage - 1) * perPage + index + 1;
 
             return (
               <tr
@@ -79,6 +87,9 @@ export function RoleTable({
                       onChange={(checked) => { onSelectOne(role.id, checked); }}
                     />
                   )}
+                </td>
+                <td className="p-4 align-middle text-center text-muted-foreground">
+                  {orderNumber}
                 </td>
                 <td className="p-4 align-middle">
                   <span className="font-medium text-foreground">{role.name}</span>

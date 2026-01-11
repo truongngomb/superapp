@@ -9,6 +9,8 @@ import { cn } from '@/utils';
 interface UserTableProps {
   users: User[];
   selectedIds: string[];
+  currentPage?: number;
+  perPage?: number;
   /** When undefined, checkbox column is hidden */
   onSelectAll?: (checked: boolean) => void;
   /** When undefined, row checkboxes are hidden */
@@ -22,6 +24,8 @@ interface UserTableProps {
 export function UserTable({
   users,
   selectedIds,
+  currentPage = 1,
+  perPage = 10,
   onSelectAll,
   onSelectOne,
   onEdit,
@@ -48,6 +52,9 @@ export function UserTable({
                 />
               )}
             </th>
+            <th className="w-12 p-4 text-center text-sm font-semibold text-muted tracking-wider">
+              {t('common:order')}
+            </th>
             <th className="p-4 text-sm font-semibold text-muted tracking-wider">
               {t('common:users')}
             </th>
@@ -66,7 +73,9 @@ export function UserTable({
           </tr>
         </thead>
         <tbody className="divide-y divide-border/50">
-          {users.map((user) => (
+          {users.map((user, index) => {
+            const orderNumber = (currentPage - 1) * perPage + index + 1;
+            return (
             <tr 
               key={user.id} 
               className={cn(
@@ -81,6 +90,9 @@ export function UserTable({
                     onChange={(checked) => { onSelectOne(user.id, checked); }}
                   />
                 )}
+              </td>
+              <td className="p-4 text-center text-muted-foreground">
+                {orderNumber}
               </td>
               <td className="p-4">
                 <div className="flex items-center gap-3">
@@ -178,7 +190,7 @@ export function UserTable({
                 </div>
               </td>
             </tr>
-          ))}
+          );})}
         </tbody>
       </table>
     </div>
