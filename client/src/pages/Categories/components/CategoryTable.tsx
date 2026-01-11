@@ -9,8 +9,10 @@ import { CATEGORY_ICONS, type CategoryIcon } from './icons';
 interface CategoryTableProps {
   categories: Category[];
   selectedIds: string[];
-  onSelectAll: (checked: boolean) => void;
-  onSelectOne: (id: string, checked: boolean) => void;
+  /** When undefined, checkbox column is hidden */
+  onSelectAll?: (checked: boolean) => void;
+  /** When undefined, row checkboxes are hidden */
+  onSelectOne?: (id: string, checked: boolean) => void;
   onEdit: (category: Category) => void;
   onDelete: (id: string) => void;
   onRestore?: (id: string) => void;
@@ -68,12 +70,12 @@ export function CategoryTable({
                 )}
               >
                 <td className="p-4 align-middle">
-                  <PermissionGuard resource="categories" action="delete">
+                  {onSelectOne && (
                     <Checkbox
                       checked={isSelected}
                       onChange={(checked) => { onSelectOne(category.id, checked); }}
                     />
-                  </PermissionGuard>
+                  )}
                 </td>
                 <td className="p-4 align-middle">
                   <div

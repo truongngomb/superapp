@@ -32,7 +32,7 @@ export default function AdminLayout() {
       to: '/admin/dashboard',
       icon: <LayoutDashboard className="w-4 h-4" />,
       label: t('admin_dashboard.dashboard'),
-      resource: 'users', // Everyone with admin access can see dashboard
+      resource: 'dashboard',
     },
     {
       to: '/admin/users',
@@ -50,7 +50,7 @@ export default function AdminLayout() {
       to: '/admin/activity-logs',
       icon: <FileClock className="w-4 h-4" />,
       label: t('activity_logs'),
-      resource: 'roles',
+      resource: 'activity_logs',
     },
   ];
 
@@ -59,7 +59,7 @@ export default function AdminLayout() {
       {/* Sub Navigation Tabs */}
       <nav className="flex gap-1 p-1 bg-muted/30 rounded-lg w-fit">
         {navItems.map((item) => (
-          <PermissionGuard key={item.to} resource={item.resource} action="read">
+          <PermissionGuard key={item.to} resource={item.resource} action="view">
             <NavLink
               to={item.to}
               className={({ isActive }) =>

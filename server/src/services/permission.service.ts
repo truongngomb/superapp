@@ -4,7 +4,7 @@
  * Handles fetching user permissions based on their roles.
  * Supports multiple roles per user with permission merging (union).
  */
-import { Collections, pb, checkPocketBaseHealth, config } from '../config/index.js';
+import { Collections, adminPb, checkPocketBaseHealth, config, cache, ensureAdminAuth } from '../config/index.js';
 import type { RolePermissions } from '../types/index.js';
 import { createLogger } from '../utils/index.js';
 
@@ -37,8 +37,11 @@ class PermissionService {
     }
 
     try {
+      // Ensure adminPb is authenticated before querying
+      await ensureAdminAuth();
+      
       // Fetch User with expanded 'roles' relation (multiple)
-      const user = await pb.collection(Collections.USERS).getOne(userId, {
+      const user = await adminPb.collection(Collections.USERS).getOne(userId, {
         expand: 'roles',
         requestKey: null,
       });
@@ -104,6 +107,65 @@ class PermissionService {
       return {};
     }
   }
+  /**
+   * Get permissions for the Public role (for guest users)
+   * 
+   * Fetches the "Public" role from database and returns its permissions.
+   * Results are cached for 60 seconds to minimize database queries.
+   * 
+   * @returns RolePermissions for the Public role, or empty object if not found
+   */
+  async getPublicRolePermissions(): Promise<RolePermissions> {
+    const cacheKey = 'public_role_permissions';
+    const cached = cache.get<RolePermissions>(cacheKey);
+    if (cached) return cached;
+
+    const pbAvailable = await checkPocketBaseHealth();
+    if (!pbAvailable) {
+      log.warn('Database unavailable, returning empty public permissions');
+      return {};
+    }
+
+    try {
+      // Ensure adminPb is authenticated before querying
+      await ensureAdminAuth();
+      
+      const publicRole = await adminPb.collection(Collections.ROLES)
+        .getFirstListItem('name = "Public" && isActive = true && isDeleted = false', {
+          requestKey: null,
+        });
+
+      let permissions = publicRole['permissions'] as unknown;
+
+      // Handle potential string serialization from PocketBase
+      if (typeof permissions === 'string') {
+        try {
+          permissions = JSON.parse(permissions) as unknown;
+        } catch {
+          log.error('Failed to parse Public role permissions JSON');
+          return {};
+        }
+      }
+
+      if (!permissions || typeof permissions !== 'object') {
+        return {};
+      }
+
+      const rolePerms = permissions as RolePermissions;
+
+      // Cache for 60 seconds
+      cache.set(cacheKey, rolePerms, 60);
+
+      if (config.isDevelopment) {
+        log.debug('Public role permissions:', rolePerms);
+      }
+
+      return rolePerms;
+    } catch (error) {
+      log.debug('Failed to fetch Public role permissions (role may not exist)', error);
+      return {};
+    }
+  }
 }
 
 // =============================================================================
@@ -114,3 +176,6 @@ export const permissionService = new PermissionService();
 
 /** @deprecated Use permissionService.getUserPermissions instead */
 export const getUserPermissions = permissionService.getUserPermissions.bind(permissionService);
+
+/** Get permissions for the Public role (guest users) */
+export const getPublicRolePermissions = permissionService.getPublicRolePermissions.bind(permissionService);

@@ -4,7 +4,7 @@
  * Handles CRUD operations for user roles.
  */
 import { BaseService } from './base.service.js';
-import { Collections, CacheKeys } from '../config/index.js';
+import { Collections, CacheKeys, cache } from '../config/index.js';
 import type { Role, RolePermissions } from '../types/index.js';
 
 // =============================================================================
@@ -32,6 +32,17 @@ class RoleService extends BaseService<Role> {
       created: record['created'] as string,
       updated: record['updated'] as string,
     };
+  }
+
+  /**
+   * Override to also invalidate public role permissions cache
+   * This ensures guest users get updated permissions without server restart
+   */
+  protected override invalidateCache(): void {
+    super.invalidateCache();
+    // Also invalidate public role permissions cache
+    cache.del('public_role_permissions');
+    this.log.debug('Invalidated public_role_permissions cache');
   }
 
   /**

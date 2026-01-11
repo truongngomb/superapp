@@ -28,7 +28,7 @@ import { PermissionGuard } from "@/components/common/PermissionGuard";
 import type { Category, CreateCategoryInput, SortColumn } from "@/types";
 import { cn, getStorageItem, setStorageItem } from "@/utils";
 import { STORAGE_KEYS } from "@/config";
-import { useCategories, useSort, useDebounce } from "@/hooks";
+import { useCategories, useSort, useDebounce, useAuth } from "@/hooks";
 import { useExcelExport } from "@/hooks/useExcelExport";
 import { CategoryForm } from "./components/CategoryForm";
 import { CategoryRow } from "./components/CategoryRow";
@@ -68,6 +68,11 @@ export default function CategoriesPage() {
     exporting,
     getAllForExport,
   } = useCategories();
+
+  const { checkPermission } = useAuth();
+  const canDelete = checkPermission('categories', 'delete');
+  const canUpdate = checkPermission('categories', 'update');
+  const canSelect = canDelete || canUpdate;
 
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearchQuery = useDebounce(searchQuery, 400); // 400ms debounce
@@ -313,24 +318,22 @@ export default function CategoriesPage() {
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
         <div className="flex items-center gap-4">
-          {displayCategories.length > 0 && (
-            <PermissionGuard resource="categories" action="delete">
-              <div className="flex items-center p-3 bg-surface rounded-lg">
-                <Checkbox
-                  triState
-                  checked={
-                    selectedIds.length === 0
-                      ? false
-                      : selectedIds.length === displayCategories.length
-                      ? true
-                      : "indeterminate"
-                  }
-                  onChange={handleSelectAll}
-                  label={t("common:select_all")}
-                  hideLabelOnMobile
-                />
-              </div>
-            </PermissionGuard>
+          {displayCategories.length > 0 && canSelect && (
+            <div className="flex items-center p-3 bg-surface rounded-lg">
+              <Checkbox
+                triState
+                checked={
+                  selectedIds.length === 0
+                    ? false
+                    : selectedIds.length === displayCategories.length
+                    ? true
+                    : "indeterminate"
+                }
+                onChange={handleSelectAll}
+                label={t("common:select_all")}
+                hideLabelOnMobile
+              />
+            </div>
           )}
           <ViewSwitcher value={viewMode} onChange={handleViewModeChange} />
           <PermissionGuard resource="categories" action="manage">
@@ -446,9 +449,9 @@ export default function CategoriesPage() {
               <CardContent className="p-0">
                 <CategoryTable
                   categories={displayCategories}
-                  selectedIds={selectedIds}
-                  onSelectAll={handleSelectAll}
-                  onSelectOne={handleSelectOne}
+                  selectedIds={canSelect ? selectedIds : []}
+                  onSelectAll={canSelect ? handleSelectAll : undefined}
+                  onSelectOne={canSelect ? handleSelectOne : undefined}
                   onEdit={handleEdit}
                   onDelete={(id) => {
                     setDeleteId(id);
@@ -478,7 +481,7 @@ export default function CategoriesPage() {
                   onDuplicate: handleDuplicate,
                 }}
                 isSelected={selectedIds.includes(category.id)}
-                onSelect={handleSelectOne}
+                onSelect={canSelect ? handleSelectOne : undefined}
               />
             ))
           )}

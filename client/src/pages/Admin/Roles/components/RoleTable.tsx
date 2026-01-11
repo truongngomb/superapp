@@ -8,8 +8,10 @@ import type { Role } from '@/types';
 interface RoleTableProps {
   roles: Role[];
   selectedIds: string[];
-  onSelectAll: (checked: boolean) => void;
-  onSelectOne: (id: string, checked: boolean) => void;
+  /** When undefined, checkbox column is hidden */
+  onSelectAll?: (checked: boolean) => void;
+  /** When undefined, row checkboxes are hidden */
+  onSelectOne?: (id: string, checked: boolean) => void;
   onEdit: (role: Role) => void;
   onDelete: (id: string) => void;
   onRestore?: (id: string) => void;
@@ -71,12 +73,12 @@ export function RoleTable({
                 )}
               >
                 <td className="p-4 align-middle">
-                  <PermissionGuard resource="roles" action="delete">
+                  {onSelectOne && (
                     <Checkbox
                       checked={isSelected}
                       onChange={(checked) => { onSelectOne(role.id, checked); }}
                     />
-                  </PermissionGuard>
+                  )}
                 </td>
                 <td className="p-4 align-middle">
                   <span className="font-medium text-foreground">{role.name}</span>

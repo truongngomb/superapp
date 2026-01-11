@@ -37,6 +37,12 @@ interface ProtectedRouteProps {
 /**
  * Route protection guard that checks authentication and permissions
  * 
+ * If resource/action is specified, checks permission FIRST.
+ * This allows guest users with Public role permissions to access pages.
+ * Only redirects to login if:
+ * - No permission specified AND not authenticated, OR
+ * - Permission specified but not granted AND not authenticated
+ * 
  * @example
  * ```tsx
  * // Require authentication only
@@ -46,10 +52,10 @@ interface ProtectedRouteProps {
  *   </ProtectedRoute>
  * } />
  * 
- * // Require specific permission
- * <Route path="/admin/roles" element={
- *   <ProtectedRoute resource="roles" action="view">
- *     <RolesPage />
+ * // Require specific permission (guest users with Public role can access if permitted)
+ * <Route path="/categories" element={
+ *   <ProtectedRoute resource="categories" action="view">
+ *     <CategoriesPage />
  *   </ProtectedRoute>
  * } />
  * ```
@@ -77,22 +83,30 @@ export function ProtectedRoute({
     );
   }
 
-  // Redirect to login if not authenticated
-  if (!isAuthenticated) {
-    // Save the attempted URL for redirect after login
-    return <Navigate to={redirectTo} state={{ from: location }} replace />;
-  }
-
-  // Check permission if resource and action are specified
+  // Check permission first (supports guest users with Public role permissions)
   if (resource && action) {
     const hasPermission = checkPermission(resource, action);
     
-    if (!hasPermission) {
-      if (forbiddenFallback) {
-        return forbiddenFallback as ReactElement;
-      }
-      return <ForbiddenPage />;
+    if (hasPermission) {
+      // Permission granted - allow access (even for guest users)
+      return children as ReactElement;
     }
+    
+    // No permission - redirect to login if not authenticated
+    if (!isAuthenticated) {
+      return <Navigate to={redirectTo} state={{ from: location }} replace />;
+    }
+    
+    // Authenticated but no permission - show forbidden
+    if (forbiddenFallback) {
+      return forbiddenFallback as ReactElement;
+    }
+    return <ForbiddenPage />;
+  }
+
+  // No permission check required - require authentication
+  if (!isAuthenticated) {
+    return <Navigate to={redirectTo} state={{ from: location }} replace />;
   }
 
   // Access granted

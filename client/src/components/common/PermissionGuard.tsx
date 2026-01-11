@@ -31,6 +31,9 @@ interface PermissionGuardProps {
 /**
  * Guard component that checks user permissions
  * 
+ * Supports guest users with Public role permissions.
+ * If requireAuth is true but guest has the required permission, access is granted.
+ * 
  * @example
  * ```tsx
  * <PermissionGuard resource="categories" action="create">
@@ -52,16 +55,21 @@ export function PermissionGuard({
     return null;
   }
 
-  // Check authentication requirement
-  if (requireAuth && !isAuthenticated) {
-    return fallback as ReactElement | null;
-  }
+  // Check permission first (supports guest users with Public role permissions)
+  const hasPermission = checkPermission(resource, action);
 
-  // Check permission
-  if (checkPermission(resource, action)) {
+  if (hasPermission) {
+    // Permission granted - show content (even for guest users)
     return children as ReactElement;
   }
 
+  // No permission - check if we need authentication
+  if (requireAuth && !isAuthenticated) {
+    // Not authenticated and no permission from Public role
+    return fallback as ReactElement | null;
+  }
+
+  // Authenticated but no permission
   return fallback as ReactElement | null;
 }
 

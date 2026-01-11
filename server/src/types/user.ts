@@ -43,6 +43,8 @@ export interface AuthUser {
   roles?: string[];
   /** Resolved permissions from role */
   permissions: RolePermissions;
+  /** Whether this is a guest user (with Public role permissions) */
+  isGuest?: boolean;
 }
 
 /**

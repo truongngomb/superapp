@@ -30,7 +30,7 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
     path: '/admin/dashboard', 
     labelKey: 'admin', 
     icon: Settings,
-    permission: { resource: 'users', action: 'read' },
+    permission: { resource: 'dashboard', action: 'view' },
     matchPrefix: true
   }
 ] as const;

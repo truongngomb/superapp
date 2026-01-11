@@ -5,7 +5,7 @@
  */
 import { Request, Response, NextFunction } from 'express';
 import { pb } from '../config/database.js';
-import { getUserPermissions } from '../services/permission.service.js';
+import { getUserPermissions, getPublicRolePermissions } from '../services/permission.service.js';
 import { AuthUser, User } from '../types/index.js';
 import { UnauthorizedError } from './errorHandler.js';
 import { logger } from '../utils/index.js';
@@ -37,6 +37,7 @@ const COOKIE_NAME = 'pb_auth';
  * Authentication middleware - populates req.user
  * 
  * Does not block the request if unauthenticated.
+ * For guest users (no token), assigns permissions from "Public" role if exists.
  * Use `requireAuth` to block unauthenticated requests.
  * 
  * Cookie contains only JWT token (optimized).
@@ -49,6 +50,21 @@ export const authenticate = async (
   const token = req.cookies[COOKIE_NAME] as string | undefined;
 
   if (!token || typeof token !== 'string') {
+    // Guest user - try to assign Public role permissions
+    try {
+      const guestPermissions = await getPublicRolePermissions();
+      if (Object.keys(guestPermissions).length > 0) {
+        req.user = {
+          id: 'guest',
+          email: '',
+          roles: [],
+          permissions: guestPermissions,
+          isGuest: true,
+        };
+      }
+    } catch (error) {
+      logger.warn('AuthMiddleware', 'Failed to get public permissions:', error);
+    }
     next(); return;
   }
 

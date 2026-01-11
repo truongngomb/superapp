@@ -23,6 +23,8 @@ export interface AuthUser {
   permissions?: PermissionMap;
   created?: string;
   updated?: string;
+  /** Whether this is a guest user (with Public role permissions) */
+  isGuest?: boolean;
 }
 
 // ============================================================================

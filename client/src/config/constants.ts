@@ -82,6 +82,6 @@ export const BREAKPOINTS = {
 
 // RBAC Constants
 export const PERMISSIONS = {
-  RESOURCES: ['categories', 'users', 'roles', 'all'] as const,
+  RESOURCES: ['categories', 'users', 'roles', 'activity_logs', 'dashboard', 'all'] as const,
   ACTIONS: ['view', 'create', 'update', 'delete', 'manage'] as const,
 } as const;

@@ -89,31 +89,36 @@ export function AppRoutes() {
         <Route
           path="admin"
           element={
-            <ProtectedRoute
-              resource={PermissionResource.Users}
-              action={PermissionAction.View}
-            >
-              <LazyPage>
-                <AdminLayout />
-              </LazyPage>
-            </ProtectedRoute>
+            <LazyPage>
+              <AdminLayout />
+            </LazyPage>
           }
         >
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route
             path="dashboard"
             element={
-              <LazyPage>
-                <AdminDashboard />
-              </LazyPage>
+              <ProtectedRoute
+                resource={PermissionResource.Dashboard}
+                action={PermissionAction.View}
+              >
+                <LazyPage>
+                  <AdminDashboard />
+                </LazyPage>
+              </ProtectedRoute>
             }
           />
           <Route
             path="users"
             element={
-              <LazyPage>
-                <UsersPage />
-              </LazyPage>
+              <ProtectedRoute
+                resource={PermissionResource.Users}
+                action={PermissionAction.View}
+              >
+                <LazyPage>
+                  <UsersPage />
+                </LazyPage>
+              </ProtectedRoute>
             }
           />
           <Route

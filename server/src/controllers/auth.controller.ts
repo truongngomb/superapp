@@ -90,8 +90,29 @@ export const handleGoogleCallback = async (req: Request, res: Response) => {
 
 /**
  * GET /auth/me - Get current authenticated user session
+ * 
+ * For guest users (no token), returns permissions from "Public" role if available.
+ * This allows frontend to check permissions before requiring login.
  */
 export const getMe = async (req: Request, res: Response) => {
+  // If req.user exists and is a guest user (assigned by authenticate middleware)
+  if (req.user?.isGuest) {
+    return res.json({
+      success: true,
+      data: {
+        user: {
+          id: 'guest',
+          email: '',
+          name: 'Guest',
+          avatar: null,
+          permissions: req.user.permissions,
+          isGuest: true,
+        },
+        isAuthenticated: false,
+      },
+    });
+  }
+
   const token = req.cookies[COOKIE_NAME] as string | undefined;
 
   if (!token) {

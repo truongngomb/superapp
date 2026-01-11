@@ -25,7 +25,7 @@ import {
   type ViewMode 
 } from '@/components/common';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
-import { useUsers, useRoles, useSort, useDebounce } from '@/hooks';
+import { useUsers, useRoles, useSort, useDebounce, useAuth } from '@/hooks';
 import type { User, SortColumn, UserCreateInput, UserUpdateInput } from '@/types';
 import { cn, getStorageItem, setStorageItem } from '@/utils';
 import { STORAGE_KEYS } from '@/config';
@@ -63,6 +63,11 @@ export default function UsersPage() {
     getAllForExport,
     assignRoles,
   } = useUsers();
+
+  const { checkPermission } = useAuth();
+  const canDelete = checkPermission('users', 'delete');
+  const canUpdate = checkPermission('users', 'update');
+  const canSelect = canDelete || canUpdate;
 
   const { roles, fetchRoles } = useRoles();
 
@@ -292,24 +297,22 @@ export default function UsersPage() {
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
         <div className="flex items-center gap-4">
-          {displayUsers.length > 0 && (
-            <PermissionGuard resource="users" action="delete">
-              <div className="flex items-center p-3 bg-surface rounded-lg">
-                <Checkbox
-                  triState
-                  checked={
-                    selectedIds.length === 0
-                      ? false
-                      : selectedIds.length === displayUsers.length
-                      ? true
-                      : "indeterminate"
-                  }
-                  onChange={(checked: boolean) => { handleSelectAll(checked); }}
-                  label={t("common:select_all")}
-                  hideLabelOnMobile
-                />
-              </div>
-            </PermissionGuard>
+          {displayUsers.length > 0 && canSelect && (
+            <div className="flex items-center p-3 bg-surface rounded-lg">
+              <Checkbox
+                triState
+                checked={
+                  selectedIds.length === 0
+                    ? false
+                    : selectedIds.length === displayUsers.length
+                    ? true
+                    : "indeterminate"
+                }
+                onChange={(checked: boolean) => { handleSelectAll(checked); }}
+                label={t("common:select_all")}
+                hideLabelOnMobile
+              />
+            </div>
           )}
           <ViewSwitcher value={viewMode} onChange={handleViewModeChange} />
           <PermissionGuard resource="users" action="manage">
@@ -396,9 +399,9 @@ export default function UsersPage() {
               <CardContent className="p-0">
                 <UserTable
                   users={displayUsers}
-                  selectedIds={selectedIds}
-                  onSelectAll={handleSelectAll}
-                  onSelectOne={handleSelectOne}
+                  selectedIds={canSelect ? selectedIds : []}
+                  onSelectAll={canSelect ? handleSelectAll : undefined}
+                  onSelectOne={canSelect ? handleSelectOne : undefined}
                   onEdit={(u) => {
                     setEditingUser(u);
                     setShowForm(true);
@@ -438,7 +441,7 @@ export default function UsersPage() {
                   },
                 }}
                 isSelected={selectedIds.includes(user.id)}
-                onSelect={handleSelectOne}
+                onSelect={canSelect ? handleSelectOne : undefined}
               />
             ))
           )}

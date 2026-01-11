@@ -36,7 +36,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setError(null);
       const response = await authService.getCurrentUser();
       
-      setUser(response.isAuthenticated ? response.user : null);
+      // Set user even for guest (with permissions from Public role)
+      // Guest users have user object with isGuest=true
+      if (response.user) {
+        setUser(response.user);
+      } else {
+        setUser(null);
+      }
     } catch (err) {
       logger.error('AuthContext', 'Failed to check auth:', err);
       
@@ -70,9 +76,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
     } catch (err) {
       logger.error('AuthContext', 'Logout failed:', err);
     } finally {
-      setUser(null);
+      // Refresh auth state to load guest permissions
+      await checkAuth();
     }
-  }, []);
+  }, [checkAuth]);
 
   // Refresh user data
   const refreshUser = useCallback(async () => {
@@ -85,12 +92,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, []);
 
   // Check permission
+  // Now works for both authenticated users and guest users with Public role permissions
   const checkPermission = useCallback(
     (resource: string, action: string): boolean => {
-      if (!user?.permissions) return false;
+      // Guest users can have permissions from Public role
+      const permissions = user?.permissions;
+      if (!permissions) return false;
 
-      const resourcePerms = user.permissions[resource] || [];
-      const allPerms = user.permissions[PermissionResource.All] || [];
+      const resourcePerms = permissions[resource] || [];
+      const allPerms = permissions[PermissionResource.All] || [];
 
       return (
         resourcePerms.includes(action) ||
@@ -102,10 +112,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
   );
 
   // Memoize context value
+  // isAuthenticated is false for guest users (user.isGuest = true)
   const value = useMemo<AuthContextType>(
     () => ({
       user,
-      isAuthenticated: !!user,
+      isAuthenticated: !!user && !user.isGuest,
       isLoading,
       error,
       loginWithGoogle,

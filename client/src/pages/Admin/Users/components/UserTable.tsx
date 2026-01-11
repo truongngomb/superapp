@@ -9,8 +9,10 @@ import { cn } from '@/utils';
 interface UserTableProps {
   users: User[];
   selectedIds: string[];
-  onSelectAll: (checked: boolean) => void;
-  onSelectOne: (id: string, checked: boolean) => void;
+  /** When undefined, checkbox column is hidden */
+  onSelectAll?: (checked: boolean) => void;
+  /** When undefined, row checkboxes are hidden */
+  onSelectOne?: (id: string, checked: boolean) => void;
   onEdit: (user: User) => void;
   onAssignRole: (user: User) => void;
   onDelete: (id: string) => void;
@@ -38,13 +40,13 @@ export function UserTable({
         <thead>
           <tr className="border-b border-border/50 bg-muted/30">
             <th className="p-4 w-10">
-              <PermissionGuard resource="users" action="delete">
+              {onSelectAll && (
                 <Checkbox
                   checked={allSelected}
                   triState={isIndeterminate}
-                  onChange={onSelectAll}
+                  onChange={(checked) => { onSelectAll(checked); }}
                 />
-              </PermissionGuard>
+              )}
             </th>
             <th className="p-4 text-sm font-semibold text-muted tracking-wider">
               {t('common:users')}
@@ -73,12 +75,12 @@ export function UserTable({
               )}
             >
               <td className="p-4">
-                <PermissionGuard resource="users" action="delete">
+                {onSelectOne && (
                   <Checkbox
                     checked={selectedIds.includes(user.id)}
                     onChange={(checked) => { onSelectOne(user.id, checked); }}
                   />
-                </PermissionGuard>
+                )}
               </td>
               <td className="p-4">
                 <div className="flex items-center gap-3">

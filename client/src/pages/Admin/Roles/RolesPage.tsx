@@ -28,7 +28,7 @@ import { PermissionGuard } from "@/components/common/PermissionGuard";
 import type { Role, SortColumn } from "@/types";
 import { cn, getStorageItem, setStorageItem } from "@/utils";
 import { STORAGE_KEYS } from "@/config";
-import { useRoles, useSort, useDebounce } from "@/hooks";
+import { useRoles, useSort, useDebounce, useAuth } from "@/hooks";
 import { useExcelExport } from "@/hooks/useExcelExport";
 import { RoleForm } from "./components/RoleForm";
 import { RoleRow } from "./components/RoleRow";
@@ -55,6 +55,11 @@ export default function RolesPage() {
     getAllForExport,
     exporting,
   } = useRoles();
+
+  const { checkPermission } = useAuth();
+  const canDelete = checkPermission('roles', 'delete');
+  const canUpdate = checkPermission('roles', 'update');
+  const canSelect = canDelete || canUpdate;
 
   const [viewMode, setViewMode] = useState<ViewMode>(
     () => getStorageItem<ViewMode>(STORAGE_KEYS.ROLES_VIEW_MODE) || "list"
@@ -292,23 +297,21 @@ export default function RolesPage() {
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
         <div className="flex items-center gap-4">
-          {roles.length > 0 && (
-            <PermissionGuard resource="roles" action="delete">
-              <div className="flex items-center p-3 bg-surface rounded-lg">
-                <Checkbox
-                  checked={
-                    selectedIds.length === 0
-                      ? false
-                      : selectedIds.length === roles.length
-                      ? true
-                      : "indeterminate"
-                  }
-                  onChange={handleSelectAll}
-                  label={t("common:select_all")}
-                  hideLabelOnMobile
-                />
-              </div>
-            </PermissionGuard>
+          {roles.length > 0 && canSelect && (
+            <div className="flex items-center p-3 bg-surface rounded-lg">
+              <Checkbox
+                checked={
+                  selectedIds.length === 0
+                    ? false
+                    : selectedIds.length === roles.length
+                    ? true
+                    : "indeterminate"
+                }
+                onChange={handleSelectAll}
+                label={t("common:select_all")}
+                hideLabelOnMobile
+              />
+            </div>
           )}
           <ViewSwitcher value={viewMode} onChange={handleViewModeChange} />
           <PermissionGuard resource="roles" action="manage">
@@ -441,16 +444,16 @@ export default function RolesPage() {
                     onDuplicate: (role) => { void handleDuplicate(role); },
                   }}
                   isSelected={selectedIds.includes(role.id)}
-                  onSelect={handleSelectOne}
+                  onSelect={canSelect ? handleSelectOne : undefined}
                 />
               ))}
             </div>
           ) : (
             <RoleTable
               roles={roles}
-              selectedIds={selectedIds}
-              onSelectAll={handleSelectAll}
-              onSelectOne={handleSelectOne}
+              selectedIds={canSelect ? selectedIds : []}
+              onSelectAll={canSelect ? handleSelectAll : undefined}
+              onSelectOne={canSelect ? handleSelectOne : undefined}
               onEdit={(r) => {
                 setEditingRole(r);
                 setShowFormModal(true);
