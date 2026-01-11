@@ -3,8 +3,8 @@
  * The original/classic layout with header, mobile sidebar, and main content area
  */
 
-import { Outlet } from 'react-router-dom';
-import { useState, useCallback } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
+import { useState, useCallback, useEffect } from 'react';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 
@@ -14,6 +14,11 @@ import { Sidebar } from './Sidebar';
 
 export function StandardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   const toggleSidebar = useCallback(() => {
     setSidebarOpen((prev) => !prev);

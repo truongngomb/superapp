@@ -3,13 +3,21 @@
  * Layout with top header and fixed desktop sidebar
  */
 
-import { Outlet } from 'react-router-dom';
-import { useState, useCallback } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { ModernHeader } from './ModernHeader';
 import { ModernSidebar } from './ModernSidebar';
 
 export function ModernLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const mainRef = useRef<HTMLElement>(null);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (mainRef.current) {
+      mainRef.current.scrollTo(0, 0);
+    }
+  }, [location.pathname]);
 
   const toggleSidebar = useCallback(() => {
     setSidebarOpen((prev) => !prev);
@@ -26,7 +34,7 @@ export function ModernLayout() {
       <div className="flex flex-1 overflow-hidden relative">
         <ModernSidebar open={sidebarOpen} onClose={closeSidebar} className="h-full" />
 
-        <main className="flex-1 w-full overflow-y-auto overflow-x-hidden p-4 md:p-6 lg:p-8 safe-area-bottom">
+        <main ref={mainRef} className="flex-1 w-full overflow-y-auto overflow-x-hidden p-4 md:p-6 lg:p-8 safe-area-bottom">
            <div className="max-w-7xl mx-auto pb-8">
              <Outlet />
            </div>
