@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { realtimeService, SSECompatibleResponse } from '../services/realtime.service.js';
+import { config } from '../config/index.js';
 
 /**
  * GET /realtime/events - SSE endpoint
@@ -25,7 +26,7 @@ export const getEvents = (req: Request, res: Response) => {
     if (sseRes.flush) {
       sseRes.flush();
     }
-  }, 30000);
+  }, config.realtime.sseHeartbeatInterval);
 
   // Handle connection close
   req.on('close', () => {

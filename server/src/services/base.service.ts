@@ -76,7 +76,7 @@ export abstract class BaseService<T extends MinimalEntity> {
   protected abstract readonly cacheKey: string;
   
   /** Cache TTL in seconds (default: 5 minutes) */
-  protected cacheTtl = 300;
+  protected cacheTtl = config.cache.defaultTtl;
 
   /** Default filter to apply to all queries (e.g., 'isDeleted = false') */
   protected readonly defaultFilter?: string;

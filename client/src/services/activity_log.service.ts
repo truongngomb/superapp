@@ -2,7 +2,7 @@
  * Activity Log Service
  * Handles fetching activity logs from the backend
  */
-import { api, createAbortController, API_ENDPOINTS, type RequestConfig } from '@/config';
+import { api, createAbortController, API_ENDPOINTS, type RequestConfig, env } from '@/config';
 import type { ActivityLog, PaginatedActivityLogs, ActivityLogParams } from '@/types';
 
 // ============================================================================
@@ -10,7 +10,7 @@ import type { ActivityLog, PaginatedActivityLogs, ActivityLogParams } from '@/ty
 // ============================================================================
 
 interface ServiceConfig extends Omit<RequestConfig, 'signal'> {
-  /** Request timeout in ms (default: 10000) */
+  /** Request timeout in ms (default: env.API_REQUEST_TIMEOUT) */
   timeout?: number;
   /** AbortSignal for cancellation */
   signal?: AbortSignal;
@@ -25,7 +25,7 @@ export const activityLogService = {
    * Get paginated activity logs
    */
   async getPage(params?: ActivityLogParams, config?: ServiceConfig): Promise<PaginatedActivityLogs> {
-    const { controller, clear } = createAbortController(config?.timeout ?? 10000);
+    const { controller, clear } = createAbortController(config?.timeout ?? env.API_REQUEST_TIMEOUT);
     
     try {
       const searchParams = new URLSearchParams();
@@ -51,7 +51,7 @@ export const activityLogService = {
    * Get all activity logs for export (no pagination)
    */
   async getAllForExport(params?: ActivityLogParams, config?: ServiceConfig): Promise<ActivityLog[]> {
-    const { controller, clear } = createAbortController(config?.timeout ?? 30000);
+    const { controller, clear } = createAbortController(config?.timeout ?? env.API_REQUEST_TIMEOUT);
     
     try {
       const searchParams = new URLSearchParams();

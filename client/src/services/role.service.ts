@@ -3,7 +3,7 @@
  * Handles all role-related API calls
  */
 
-import { api, createAbortController, API_ENDPOINTS, type RequestConfig } from '@/config';
+import { api, createAbortController, API_ENDPOINTS, type RequestConfig, env } from '@/config';
 import type { Role, CreateRoleInput, UpdateRoleInput, RoleListParams, PaginatedRoles } from '@/types';
 
 // ============================================================================
@@ -11,7 +11,7 @@ import type { Role, CreateRoleInput, UpdateRoleInput, RoleListParams, PaginatedR
 // ============================================================================
 
 interface ServiceConfig extends Omit<RequestConfig, 'signal'> {
-  /** Request timeout in ms (default: 10000) */
+  /** Request timeout in ms (default: env.API_REQUEST_TIMEOUT) */
   timeout?: number;
   /** AbortSignal for cancellation */
   signal?: AbortSignal;
@@ -26,7 +26,7 @@ export const roleService = {
    * Get all roles
    */
   async getAll(config?: ServiceConfig): Promise<Role[]> {
-    const { controller, clear } = createAbortController(config?.timeout ?? 10000);
+    const { controller, clear } = createAbortController(config?.timeout ?? env.API_REQUEST_TIMEOUT);
     
     try {
       return await api.get<Role[]>(API_ENDPOINTS.ROLES, {
@@ -41,7 +41,7 @@ export const roleService = {
    * Get paginated roles
    */
   async getPage(params?: RoleListParams, config?: ServiceConfig): Promise<PaginatedRoles> {
-    const { controller, clear } = createAbortController(config?.timeout ?? 10000);
+    const { controller, clear } = createAbortController(config?.timeout ?? env.API_REQUEST_TIMEOUT);
     
     try {
       const queryParams = new URLSearchParams();
@@ -68,7 +68,7 @@ export const roleService = {
    * Get role by ID
    */
   async getById(id: string, config?: ServiceConfig): Promise<Role> {
-    const { controller, clear } = createAbortController(config?.timeout ?? 10000);
+    const { controller, clear } = createAbortController(config?.timeout ?? env.API_REQUEST_TIMEOUT);
     
     try {
       return await api.get<Role>(`${API_ENDPOINTS.ROLES}/${id}`, {

@@ -3,7 +3,7 @@
  * Handles all category-related API calls
  */
 
-import { api, createAbortController, API_ENDPOINTS, type RequestConfig } from '@/config';
+import { api, createAbortController, API_ENDPOINTS, type RequestConfig, env } from '@/config';
 import type { Category, CreateCategoryInput, UpdateCategoryInput, CategoryListParams, PaginatedCategories } from '@/types';
 
 // ============================================================================
@@ -11,7 +11,7 @@ import type { Category, CreateCategoryInput, UpdateCategoryInput, CategoryListPa
 // ============================================================================
 
 interface ServiceConfig extends Omit<RequestConfig, 'signal'> {
-  /** Request timeout in ms (default: 10000) */
+  /** Request timeout in ms (default: env.API_REQUEST_TIMEOUT) */
   timeout?: number;
   /** AbortSignal for cancellation */
   signal?: AbortSignal;
@@ -27,7 +27,7 @@ export const categoryService = {
    * @param params Optional filters for search/color
    */
   async getAll(params?: CategoryListParams, config?: ServiceConfig): Promise<Category[]> {
-    const { controller, clear } = createAbortController(config?.timeout ?? 10000);
+    const { controller, clear } = createAbortController(config?.timeout ?? env.API_REQUEST_TIMEOUT);
     
     try {
       // Build query params if params provided
@@ -53,7 +53,7 @@ export const categoryService = {
    * Get paginated categories
    */
   async getPage(params?: CategoryListParams, config?: ServiceConfig): Promise<PaginatedCategories> {
-    const { controller, clear } = createAbortController(config?.timeout ?? 10000);
+    const { controller, clear } = createAbortController(config?.timeout ?? env.API_REQUEST_TIMEOUT);
     
     try {
       const queryParams = new URLSearchParams();
@@ -81,7 +81,7 @@ export const categoryService = {
    * Get category by ID
    */
   async getById(id: string, config?: ServiceConfig): Promise<Category> {
-    const { controller, clear } = createAbortController(config?.timeout ?? 10000);
+    const { controller, clear } = createAbortController(config?.timeout ?? env.API_REQUEST_TIMEOUT);
     
     try {
       return await api.get<Category>(`${API_ENDPOINTS.CATEGORIES}/${id}`, {
@@ -145,7 +145,7 @@ export const categoryService = {
    * Get all categories for export (no pagination)
    */
   async getAllForExport(params?: CategoryListParams, config?: ServiceConfig): Promise<Category[]> {
-    const { controller, clear } = createAbortController(config?.timeout ?? 30000);
+    const { controller, clear } = createAbortController(config?.timeout ?? env.API_REQUEST_TIMEOUT);
     
     try {
       const queryParams = new URLSearchParams();

@@ -54,7 +54,7 @@ async function startServer(): Promise<void> {
     setTimeout(() => {
       log.error('Forced shutdown after timeout.');
       process.exit(1);
-    }, 10000);
+    }, config.server.gracefulShutdownTimeout);
   };
 
   process.on('SIGTERM', () => { shutdown('SIGTERM'); });

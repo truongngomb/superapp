@@ -25,7 +25,7 @@ export default function ActivityLogsPage() {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const debouncedSearchQuery = useDebounce(searchQuery, 400);
+  const debouncedSearchQuery = useDebounce(searchQuery);
   
   // Destructure pagination
   const { page, totalPages, total } = pagination;

@@ -3,8 +3,7 @@
  * Handles all auth-related API calls
  */
 
-import { api, createAbortController } from '@/config';
-import { API_ENDPOINTS } from '@/config';
+import { api, createAbortController, API_ENDPOINTS, env } from '@/config';
 import type { AuthStatusResponse, AuthUser, OAuthConfigResponse } from '@/types';
 
 // ============================================================================
@@ -12,7 +11,7 @@ import type { AuthStatusResponse, AuthUser, OAuthConfigResponse } from '@/types'
 // ============================================================================
 
 interface ServiceConfig {
-  /** Request timeout in ms (default: 10000) */
+  /** Request timeout in ms (default: env.API_REQUEST_TIMEOUT) */
   timeout?: number;
   /** AbortSignal for cancellation */
   signal?: AbortSignal;
@@ -28,7 +27,7 @@ export const authService = {
    * @returns Auth status with user data if authenticated
    */
   async getCurrentUser(config?: ServiceConfig): Promise<AuthStatusResponse> {
-    const { controller, clear } = createAbortController(config?.timeout ?? 10000);
+    const { controller, clear } = createAbortController(config?.timeout ?? env.API_REQUEST_TIMEOUT);
     
     try {
       return await api.get<AuthStatusResponse>(

@@ -1,3 +1,4 @@
+import { config } from '../config/index.js';
 /**
  * Common Utility Helpers
  */
@@ -88,7 +89,11 @@ export const retry = async <T>(
     maxDelay?: number;
   } = {}
 ): Promise<T> => {
-  const { maxRetries = 3, baseDelay = 500, maxDelay = 5000 } = options;
+  const { 
+    maxRetries = config.retry.maxAttempts, 
+    baseDelay = config.retry.baseDelay, 
+    maxDelay = config.retry.maxDelay 
+  } = options;
   
   let lastError: Error | undefined;
   

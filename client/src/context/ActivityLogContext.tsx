@@ -5,6 +5,7 @@ import { logger } from '@/utils';
 import { ActivityLogContext } from './ActivityLogContext.base';
 import { useRealtime } from './RealtimeContext';
 import { useAuth } from '@/hooks';
+import { env } from '@/config';
 
 export const ActivityLogProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -17,8 +18,8 @@ export const ActivityLogProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const [hasMore, setHasMore] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-  // Hardcoded limit to the max used in app (20 from NotificationCenter)
-  const limit = 10;
+  // Limit to the max used in app (e.g., from NotificationCenter)
+  const limit = env.NOTIFICATION_LIMIT;
 
   const fetchLogs = useCallback(async (options?: { page?: number; isLoadMore?: boolean }) => {
     const isLoadMore = options?.isLoadMore ?? false;
@@ -55,7 +56,7 @@ export const ActivityLogProvider: React.FC<{ children: React.ReactNode }> = ({ c
       setIsLoading(false);
       setIsLoadingMore(false);
     }
-  }, []); // Removed 'page' dependency
+  }, [limit]); // Added 'limit' dependency
 
   // Subscribe to real-time updates via RealtimeContext
   const { subscribe } = useRealtime();

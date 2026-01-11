@@ -1,3 +1,4 @@
+import { env } from './env';
 /**
  * Application Constants
  * Centralized constant values used across the app
@@ -60,8 +61,8 @@ export const THEME = {
 // Pagination Defaults
 export const PAGINATION = {
   DEFAULT_PAGE: 1,
-  DEFAULT_LIMIT: 20,
-  MAX_LIMIT: 100,
+  DEFAULT_LIMIT: env.DEFAULT_PAGE_SIZE,
+  MAX_LIMIT: env.MAX_PAGE_SIZE,
 } as const;
 
 // Animation Durations (ms)

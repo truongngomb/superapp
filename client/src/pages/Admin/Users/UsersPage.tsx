@@ -73,7 +73,7 @@ export default function UsersPage() {
   const { roles, fetchRoles } = useRoles();
 
   const [searchQuery, setSearchQuery] = useState('');
-  const debouncedSearchQuery = useDebounce(searchQuery, 400);
+  const debouncedSearchQuery = useDebounce(searchQuery);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [assigningUser, setAssigningUser] = useState<User | null>(null);

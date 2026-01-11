@@ -3,7 +3,7 @@
  * Handles user management API calls
  */
 
-import { api, createAbortController, API_ENDPOINTS, type RequestConfig } from '@/config';
+import { api, createAbortController, API_ENDPOINTS, type RequestConfig, env } from '@/config';
 
 import type { User, UserCreateInput, UserUpdateInput, UserRoleAssignment, PaginatedUsers, UserListParams } from '@/types';
 
@@ -13,7 +13,7 @@ import type { User, UserCreateInput, UserUpdateInput, UserRoleAssignment, Pagina
 // ============================================================================
 
 interface ServiceConfig extends Omit<RequestConfig, 'signal'> {
-  /** Request timeout in ms (default: 10000) */
+  /** Request timeout in ms (default: env.API_REQUEST_TIMEOUT) */
   timeout?: number;
   /** AbortSignal for cancellation */
   signal?: AbortSignal;
@@ -28,7 +28,7 @@ export const userService = {
    * Get paginated list of users
    */
   async getPage(params?: UserListParams, config?: ServiceConfig): Promise<PaginatedUsers> {
-    const { controller, clear } = createAbortController(config?.timeout ?? 10000);
+    const { controller, clear } = createAbortController(config?.timeout ?? env.API_REQUEST_TIMEOUT);
     
     try {
       const searchParams = new URLSearchParams();
@@ -58,7 +58,7 @@ export const userService = {
    * Get all users for export (no pagination)
    */
   async getAllForExport(params?: Omit<UserListParams, 'page' | 'limit'>, config?: ServiceConfig): Promise<User[]> {
-    const { controller, clear } = createAbortController(config?.timeout ?? 10000);
+    const { controller, clear } = createAbortController(config?.timeout ?? env.API_REQUEST_TIMEOUT);
     
     try {
       const searchParams = new URLSearchParams();

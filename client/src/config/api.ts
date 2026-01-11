@@ -146,7 +146,7 @@ async function request<T>(
 ): Promise<T> {
   const { 
     retries = 0, 
-    retryDelay = 1000, 
+    retryDelay = env.API_RETRY_DELAY, 
     rawResponse = false,
     ...restConfig 
   } = config;

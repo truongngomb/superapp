@@ -56,6 +56,76 @@ const envSchema = z.object({
     .string()
     .default('20')
     .transform((val) => parseInt(val, 10)),
+
+  // Cache
+  CACHE_DEFAULT_TTL: z
+    .string()
+    .default('300')
+    .transform((val) => parseInt(val, 10)),
+  
+  CACHE_CHECK_PERIOD: z
+    .string()
+    .default('120')
+    .transform((val) => parseInt(val, 10)),
+
+  // Rate Limiting
+  RATE_LIMIT_WINDOW_MS: z
+    .string()
+    .default('60000')
+    .transform((val) => parseInt(val, 10)),
+
+  RATE_LIMIT_BATCH_MAX: z
+    .string()
+    .default('10')
+    .transform((val) => parseInt(val, 10)),
+
+  RATE_LIMIT_STANDARD_MAX: z
+    .string()
+    .default('100')
+    .transform((val) => parseInt(val, 10)),
+
+  // Auth & Session
+  AUTH_SESSION_MAX_AGE: z
+    .string()
+    .default('604800000') // 7 days
+    .transform((val) => parseInt(val, 10)),
+
+  OAUTH_STATE_MAX_AGE: z
+    .string()
+    .default('300000') // 5 minutes
+    .transform((val) => parseInt(val, 10)),
+
+  // Realtime & Server
+  SSE_HEARTBEAT_INTERVAL: z
+    .string()
+    .default('30000')
+    .transform((val) => parseInt(val, 10)),
+
+  REALTIME_RECONNECT_DELAY: z
+    .string()
+    .default('5000')
+    .transform((val) => parseInt(val, 10)),
+
+  GRACEFUL_SHUTDOWN_TIMEOUT: z
+    .string()
+    .default('10000')
+    .transform((val) => parseInt(val, 10)),
+
+  // Retry
+  RETRY_MAX_ATTEMPTS: z
+    .string()
+    .default('3')
+    .transform((val) => parseInt(val, 10)),
+
+  RETRY_BASE_DELAY: z
+    .string()
+    .default('500')
+    .transform((val) => parseInt(val, 10)),
+
+  RETRY_MAX_DELAY: z
+    .string()
+    .default('5000')
+    .transform((val) => parseInt(val, 10)),
 });
 
 // =============================================================================
@@ -127,6 +197,43 @@ export const config = {
 
   /** Default items per page */
   itemsPerPage: env.ITEMS_PER_PAGE,
+
+  /** Cache configuration */
+  cache: {
+    defaultTtl: env.CACHE_DEFAULT_TTL,
+    checkPeriod: env.CACHE_CHECK_PERIOD,
+  },
+
+  /** Rate limiting configuration */
+  rateLimit: {
+    windowMs: env.RATE_LIMIT_WINDOW_MS,
+    batchMax: env.RATE_LIMIT_BATCH_MAX,
+    standardMax: env.RATE_LIMIT_STANDARD_MAX,
+  },
+
+  /** Auth & Session configuration */
+  auth: {
+    sessionMaxAge: env.AUTH_SESSION_MAX_AGE,
+    oauthStateMaxAge: env.OAUTH_STATE_MAX_AGE,
+  },
+
+  /** Realtime & Server configuration */
+  realtime: {
+    sseHeartbeatInterval: env.SSE_HEARTBEAT_INTERVAL,
+    reconnectDelay: env.REALTIME_RECONNECT_DELAY,
+  },
+
+  /** Server lifecycle configuration */
+  server: {
+    gracefulShutdownTimeout: env.GRACEFUL_SHUTDOWN_TIMEOUT,
+  },
+
+  /** Retry configuration */
+  retry: {
+    maxAttempts: env.RETRY_MAX_ATTEMPTS,
+    baseDelay: env.RETRY_BASE_DELAY,
+    maxDelay: env.RETRY_MAX_DELAY,
+  },
 } as const;
 
 // =============================================================================

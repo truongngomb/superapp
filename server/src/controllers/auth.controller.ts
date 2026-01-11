@@ -42,7 +42,7 @@ export const initGoogleAuth = async (_req: Request, res: Response) => {
     // Store state and verifier in cookie for callback
     res.cookie('oauth_state', JSON.stringify({ state, codeVerifier }), {
       ...COOKIE_OPTIONS,
-      maxAge: 5 * 60 * 1000, // 5 minutes
+      maxAge: config.auth.oauthStateMaxAge,
     });
 
     res.redirect(url);
@@ -78,7 +78,7 @@ export const handleGoogleCallback = async (req: Request, res: Response) => {
     // Set auth cookie with token only (optimized)
     res.cookie(COOKIE_NAME, token, {
       ...COOKIE_OPTIONS,
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      maxAge: config.auth.sessionMaxAge,
     });
 
     res.redirect(config.clientUrl);

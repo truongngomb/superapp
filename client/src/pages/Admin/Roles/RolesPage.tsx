@@ -86,7 +86,7 @@ export default function RolesPage() {
     storageKey: STORAGE_KEYS.ROLES_SORT,
   });
 
-  const debouncedSearch = useDebounce(searchTerm, 400);
+  const debouncedSearch = useDebounce(searchTerm);
 
   // Export hook
   const { exportToExcel } = useExcelExport<Role>({

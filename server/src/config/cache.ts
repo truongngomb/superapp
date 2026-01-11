@@ -4,16 +4,17 @@
  * Provides caching utilities using node-cache for improved performance.
  */
 import NodeCache from 'node-cache';
+import { config } from './env.js';
 
 // =============================================================================
 // Cache Configuration
 // =============================================================================
 
 /** Default TTL in seconds (5 minutes) */
-const DEFAULT_TTL = 300;
+const DEFAULT_TTL = config.cache.defaultTtl;
 
 /** Check period in seconds (2 minutes) */
-const CHECK_PERIOD = 120;
+const CHECK_PERIOD = config.cache.checkPeriod;
 
 /**
  * Application cache instance

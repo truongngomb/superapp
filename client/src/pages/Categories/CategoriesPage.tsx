@@ -77,7 +77,7 @@ export default function CategoriesPage() {
   const canSelect = canDelete || canUpdate;
 
   const [searchQuery, setSearchQuery] = useState("");
-  const debouncedSearchQuery = useDebounce(searchQuery, 400); // 400ms debounce
+  const debouncedSearchQuery = useDebounce(searchQuery); // uses default from config/env
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);

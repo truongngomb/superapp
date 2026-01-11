@@ -96,8 +96,8 @@ class RealtimeService {
       this.isSubscribed = true;
     } catch (error) {
       log.error('Failed to subscribe to PocketBase real-time events:', error);
-      // Retry after 5 seconds
-      setTimeout(() => { void this.initSubscription(); }, 5000);
+      // Retry after reconnect delay from config
+      setTimeout(() => { void this.initSubscription(); }, config.realtime.reconnectDelay);
     } finally {
       this.isInitializing = false;
     }

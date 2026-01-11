@@ -6,6 +6,7 @@
  */
 import { Request, Response, NextFunction } from 'express';
 import { TooManyRequestsError } from './errorHandler.js';
+import { config } from '../config/index.js';
 
 // =============================================================================
 // Types
@@ -96,8 +97,8 @@ export function rateLimit(options: RateLimitOptions) {
  * 10 requests per minute per user
  */
 export const batchOperationLimit = rateLimit({
-  windowMs: 60 * 1000, // 1 minute
-  maxRequests: 10,
+  windowMs: config.rateLimit.windowMs,
+  maxRequests: config.rateLimit.batchMax,
   message: 'Too many batch operations. Please wait a moment before trying again.',
 });
 
@@ -106,6 +107,6 @@ export const batchOperationLimit = rateLimit({
  * 100 requests per minute per user
  */
 export const standardRateLimit = rateLimit({
-  windowMs: 60 * 1000, // 1 minute
-  maxRequests: 100,
+  windowMs: config.rateLimit.windowMs,
+  maxRequests: config.rateLimit.standardMax,
 });
