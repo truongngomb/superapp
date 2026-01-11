@@ -40,6 +40,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           'transition-all duration-200',
           'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
           'disabled:opacity-50 disabled:pointer-events-none',
+          'border-2 border-transparent', // Ensure consistent height with outline variant
           fullWidth && 'w-full',
           variantStyles[variant],
           sizeStyles[size],

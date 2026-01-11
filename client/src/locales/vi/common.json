@@ -79,7 +79,8 @@
   "switch_to_presets": "Chuyển sang bảng màu",
   "switch_to_picker": "Chuyển sang chọn màu",
   "actions_menu": {
-    "change_language": "Thay đổi ngôn ngữ"
+    "change_language": "Thay đổi ngôn ngữ",
+    "reset": "Đặt lại"
   },
   "restore": "Khôi phục",
   "trash": "Thùng rác",

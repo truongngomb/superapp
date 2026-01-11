@@ -79,7 +79,8 @@
   "switch_to_presets": "Switch to color palette",
   "switch_to_picker": "Switch to color picker",
   "actions_menu": {
-    "change_language": "Change language"
+    "change_language": "Change language",
+    "reset": "Reset"
   },
   "restore": "Restore",
   "trash": "Trash",

@@ -79,7 +79,8 @@
   "switch_to_presets": "색상 팔레트로 전환",
   "switch_to_picker": "색상 선택기로 전환",
   "actions_menu": {
-    "change_language": "언어 변경"
+    "change_language": "언어 변경",
+    "reset": "초기화"
   },
   "restore": "복구",
   "trash": "휴지통",

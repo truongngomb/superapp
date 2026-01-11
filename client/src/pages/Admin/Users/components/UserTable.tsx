@@ -39,10 +39,10 @@ export function UserTable({
   const isIndeterminate = selectedIds.length > 0 && selectedIds.length < users.length;
 
   return (
-    <div className="overflow-x-auto">
+    <div className="w-full overflow-auto rounded-lg border border-border bg-card shadow-sm">
       <table className="w-full text-left border-collapse">
-        <thead>
-          <tr className="border-b border-border/50 bg-muted/30">
+        <thead className="bg-background text-muted-foreground">
+          <tr>
             <th className="p-4 w-10">
               {onSelectAll && (
                 <Checkbox
