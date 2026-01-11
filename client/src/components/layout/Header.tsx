@@ -107,9 +107,10 @@ function UserAvatar({ avatar, name, email }: UserAvatarProps) {
 
 export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
   const { t } = useTranslation(['common', 'users', 'roles', 'categories', 'home', 'auth']);
+  /* Hook extracts */
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, logout, isLoading } = useAuth();
   const { isDark, toggleTheme } = useTheme();
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const { unreadCount } = useActivityLogContext();
@@ -145,14 +146,24 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-1">
-          {NAVIGATION_ITEMS.map((link) => (
-            <NavLink
-              key={link.path}
-              link={link}
-              isActive={isLinkActive(link)}
-              label={t(link.labelKey)}
-            />
-          ))}
+          {isLoading ? (
+            // Skeleton Loading State
+            Array.from({ length: 4 }).map((_, i) => (
+              <div
+                key={i}
+                className="h-9 w-24 rounded-lg bg-muted/20 animate-pulse"
+              />
+            ))
+          ) : (
+            NAVIGATION_ITEMS.map((link) => (
+              <NavLink
+                key={link.path}
+                link={link}
+                isActive={isLinkActive(link)}
+                label={t(link.labelKey)}
+              />
+            ))
+          )}
         </nav>
 
         {/* Actions */}
@@ -170,34 +181,38 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
             {isDark ? <Sun className={ICON_CLASS} /> : <Moon className={ICON_CLASS} />}
           </motion.button>
 
-          {/* Notifications */ }
-          {
-            isAuthenticated && (
-              <div className="relative">
-                <motion.button
-                  type="button"
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => { setIsNotificationsOpen(true); }}
-                  className={ICON_BUTTON_CLASS}
-                  aria-label={t('toggle_notifications', 'Thông báo')}
-                >
-                  <Bell className={ICON_CLASS} />
-                  {unreadCount > 0 && (
-                    <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow-sm ring-2 ring-background">
-                      {unreadCount > 9 ? '9+' : unreadCount}
-                    </span>
-                  )}
-                </motion.button>
-              </div>
-            )
-          }
+          {/* Notifications */}
+          {isAuthenticated && (
+            <div className="relative">
+              <motion.button
+                type="button"
+                whileTap={{ scale: 0.95 }}
+                onClick={() => { setIsNotificationsOpen(true); }}
+                className={ICON_BUTTON_CLASS}
+                aria-label={t('toggle_notifications', 'Thông báo')}
+              >
+                <Bell className={ICON_CLASS} />
+                {unreadCount > 0 && (
+                  <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow-sm ring-2 ring-background">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
+              </motion.button>
+            </div>
+          )}
 
           {/* Auth section */}
-          {isAuthenticated && user ? (
+          {isLoading ? (
+            // Skeleton User State
+            <div className="flex items-center gap-2 px-2">
+              <div className="h-8 w-8 rounded-full bg-muted/20 animate-pulse" />
+              <div className="h-4 w-20 rounded bg-muted/20 animate-pulse hidden sm:block" />
+            </div>
+          ) : isAuthenticated && user ? (
             <div className="flex items-center gap-2">
-              <NotificationCenter 
-                isOpen={isNotificationsOpen} 
-                onClose={() => { setIsNotificationsOpen(false); }} 
+              <NotificationCenter
+                isOpen={isNotificationsOpen}
+                onClose={() => { setIsNotificationsOpen(false); }}
               />
               <UserAvatar avatar={user.avatar} name={user.name} email={user.email} />
               <motion.button
