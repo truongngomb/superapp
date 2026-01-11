@@ -272,7 +272,9 @@ export default function RolesPage() {
           <Input
             placeholder={t("roles:list.search_placeholder")}
             value={searchTerm}
-            onChange={(e) => { setSearchTerm(e.target.value); }}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+            }}
             className="pl-9"
           />
         </div>
@@ -291,10 +293,17 @@ export default function RolesPage() {
               order: sortConfig.order ?? undefined,
               search: searchTerm,
               isDeleted: showArchived,
-            }).finally(() => { setIsRefreshing(false); });
+            }).finally(() => {
+              setIsRefreshing(false);
+            });
           }}
         >
-          <RefreshCw className={cn("w-5 h-5", (loading || isRefreshing) && "animate-spin")} />
+          <RefreshCw
+            className={cn(
+              "w-5 h-5",
+              (loading || isRefreshing) && "animate-spin"
+            )}
+          />
         </Button>
       </div>
 
@@ -338,7 +347,9 @@ export default function RolesPage() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => { setShowBatchRestoreConfirm(true); }}
+                onClick={() => {
+                  setShowBatchRestoreConfirm(true);
+                }}
               >
                 <RefreshCw className="w-4 h-4 mr-1.5" />
                 {t("common:restore", { defaultValue: "Restore" })} (
@@ -352,7 +363,9 @@ export default function RolesPage() {
               <Button
                 variant="danger"
                 size="sm"
-                onClick={() => { setShowBatchDeleteConfirm(true); }}
+                onClick={() => {
+                  setShowBatchDeleteConfirm(true);
+                }}
               >
                 <Trash2 className="w-4 h-4 mr-1.5" />
                 {t("common:delete")} ({selectedIds.length})
@@ -425,7 +438,11 @@ export default function RolesPage() {
             </p>
             {!searchTerm && !showArchived && (
               <PermissionGuard resource="roles" action="create">
-                <Button onClick={() => { setShowFormModal(true); }}>
+                <Button
+                  onClick={() => {
+                    setShowFormModal(true);
+                  }}
+                >
                   <Plus className="w-4 h-4 mr-2" />
                   {t("roles:list.add_first")}
                 </Button>
@@ -448,9 +465,15 @@ export default function RolesPage() {
                       setEditingRole(r);
                       setShowFormModal(true);
                     },
-                    onDelete: (id) => { setDeleteId(id); },
-                    onRestore: (id) => { handleRestore(id); },
-                    onDuplicate: (role) => { void handleDuplicate(role); },
+                    onDelete: (id) => {
+                      setDeleteId(id);
+                    },
+                    onRestore: (id) => {
+                      handleRestore(id);
+                    },
+                    onDuplicate: (role) => {
+                      void handleDuplicate(role);
+                    },
                   }}
                   isSelected={selectedIds.includes(role.id)}
                   onSelect={canSelect ? handleSelectOne : undefined}
@@ -458,20 +481,30 @@ export default function RolesPage() {
               ))}
             </div>
           ) : (
-            <RoleTable
-              roles={roles}
-              selectedIds={canSelect ? selectedIds : []}
-              currentPage={pagination.page}
-              onSelectAll={canSelect ? handleSelectAll : undefined}
-              onSelectOne={canSelect ? handleSelectOne : undefined}
-              onEdit={(r) => {
-                setEditingRole(r);
-                setShowFormModal(true);
-              }}
-              onDelete={(id) => { setDeleteId(id); }}
-              onRestore={(id) => { handleRestore(id); }}
-              onDuplicate={(role) => { void handleDuplicate(role); }}
-            />
+            <Card>
+              <CardContent className="p-0">
+                <RoleTable
+                  roles={roles}
+                  selectedIds={canSelect ? selectedIds : []}
+                  currentPage={pagination.page}
+                  onSelectAll={canSelect ? handleSelectAll : undefined}
+                  onSelectOne={canSelect ? handleSelectOne : undefined}
+                  onEdit={(r) => {
+                    setEditingRole(r);
+                    setShowFormModal(true);
+                  }}
+                  onDelete={(id) => {
+                    setDeleteId(id);
+                  }}
+                  onRestore={(id) => {
+                    handleRestore(id);
+                  }}
+                  onDuplicate={(role) => {
+                    void handleDuplicate(role);
+                  }}
+                />
+              </CardContent>
+            </Card>
           )}
 
           {/* Pagination */}
@@ -528,7 +561,9 @@ export default function RolesPage() {
       {/* Delete Confirm Modal */}
       <ConfirmModal
         isOpen={!!deleteId}
-        onCancel={() => { setDeleteId(null); }}
+        onCancel={() => {
+          setDeleteId(null);
+        }}
         onConfirm={() => {
           void handleDelete();
         }}
@@ -546,7 +581,9 @@ export default function RolesPage() {
       {/* Restore Confirm Modal */}
       <ConfirmModal
         isOpen={!!restoreId}
-        onCancel={() => { setRestoreId(null); }}
+        onCancel={() => {
+          setRestoreId(null);
+        }}
         title={t("common:restore", { defaultValue: "Restore" })}
         message={t("roles:restore_confirm", {
           defaultValue: "Are you sure you want to restore this role?",
@@ -555,7 +592,9 @@ export default function RolesPage() {
         loading={submitting}
         onConfirm={() => {
           if (restoreId) {
-            void restoreRole(restoreId).then(() => { setRestoreId(null); });
+            void restoreRole(restoreId).then(() => {
+              setRestoreId(null);
+            });
           }
         }}
         variant="info"
@@ -564,7 +603,9 @@ export default function RolesPage() {
       {/* Batch Delete Confirm Modal */}
       <ConfirmModal
         isOpen={showBatchDeleteConfirm}
-        onCancel={() => { setShowBatchDeleteConfirm(false); }}
+        onCancel={() => {
+          setShowBatchDeleteConfirm(false);
+        }}
         onConfirm={() => {
           void handleBatchDelete();
         }}
@@ -575,7 +616,9 @@ export default function RolesPage() {
           hasDeletedSelected
             ? t("roles:batch_hard_delete_confirm", {
                 count: selectedIds.length,
-                defaultValue: `Are you sure you want to permanently delete ${String(selectedIds.length)} items?`,
+                defaultValue: `Are you sure you want to permanently delete ${String(
+                  selectedIds.length
+                )} items?`,
               })
             : t("roles:batch_delete_confirm", { count: selectedIds.length })
         }
@@ -587,7 +630,9 @@ export default function RolesPage() {
       {/* Batch Restore Confirm Modal */}
       <ConfirmModal
         isOpen={showBatchRestoreConfirm}
-        onCancel={() => { setShowBatchRestoreConfirm(false); }}
+        onCancel={() => {
+          setShowBatchRestoreConfirm(false);
+        }}
         onConfirm={() => {
           void handleBatchRestore();
         }}
@@ -605,7 +650,9 @@ export default function RolesPage() {
       {/* Batch Status Confirm Modal */}
       <ConfirmModal
         isOpen={!!batchStatusConfig?.isOpen}
-        onCancel={() => { setBatchStatusConfig(null); }}
+        onCancel={() => {
+          setBatchStatusConfig(null);
+        }}
         title={t("common:confirm")}
         message={t("roles:batch_status_confirm", {
           count: selectedIds.length,

@@ -40,7 +40,7 @@ export function RoleTable({
 
   return (
     <div className="w-full overflow-auto rounded-lg border border-border bg-card shadow-sm">
-      <table className="w-full text-sm">
+      <table className="w-full text-left border-collapse">
         <thead className="bg-background text-muted-foreground">
           <tr>
             <th className="w-12 h-12 px-4 text-left">&nbsp;</th>

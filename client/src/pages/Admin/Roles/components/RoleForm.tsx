@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Input, Modal, Toggle } from '@/components/common';
 import { PERMISSIONS } from '@/config/constants';
 import type { Role, CreateRoleInput } from '@/types';
+import { useSettings } from '@/hooks';
 
 interface RoleFormProps {
   role: Role | null;
@@ -14,6 +15,18 @@ interface RoleFormProps {
 
 export function RoleForm({ role, onSubmit, onClose, loading, isOpen }: RoleFormProps) {
   const { t } = useTranslation(['roles', 'common']);
+  const { getSettingValue } = useSettings();
+  
+  // Get dynamic resources from settings, fallback to empty array
+  const settingResources = getSettingValue<string[]>('role_resources', []);
+
+  // Merge default resources with setting resources, ensuring uniqueness
+  const resources = useMemo(() => {
+    const defaults = [...PERMISSIONS.RESOURCES];
+    const fromSettings = settingResources;
+    return Array.from(new Set([...fromSettings, ...defaults]));
+  }, [settingResources]);
+
   const [formData, setFormData] = useState<CreateRoleInput>({
     name: '',
     description: '',
@@ -99,7 +112,7 @@ export function RoleForm({ role, onSubmit, onClose, loading, isOpen }: RoleFormP
         <div>
           <label className="block text-sm font-medium text-foreground mb-2">{t('roles:form.permissions_label')}</label>
           <div className="border border-border rounded-lg p-4 space-y-4 bg-background">
-            {PERMISSIONS.RESOURCES.map(resource => (
+            {resources.map(resource => (
               <div key={resource} className="border-b border-border pb-3 last:border-0 last:pb-0">
                 <div className="font-medium capitalize mb-2 text-foreground">{resource}</div>
                 <div className="flex flex-wrap gap-4">
