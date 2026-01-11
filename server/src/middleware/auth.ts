@@ -120,3 +120,34 @@ export const requireAuth = (
   }
   next();
 };
+
+/**
+ * Require admin role middleware
+ * 
+ * Blocks request with 403 if user does not have 'admin' role.
+ */
+export const requireAdmin = (
+  req: Request,
+  _res: Response,
+  next: NextFunction
+) => {
+  if (!req.user) {
+    throw new UnauthorizedError('Please login to access this resource');
+  }
+
+  // Check if user has admin role or specific system permission
+  const roles = req.user.roles || [];
+  const permissions = req.user.permissions;
+  
+  const hasAdminRole = roles.some(role => role === 'admin' || role === 'SUPER_ADMIN');
+  const hasSystemView = permissions['system']?.includes('view');
+  const hasAllManage = permissions['all']?.includes('manage');
+  
+  const isAdmin = hasAdminRole || hasSystemView || hasAllManage;
+  
+  if (!isAdmin) {
+    throw new UnauthorizedError('Access denied: Admin privileges required');
+  }
+  
+  next();
+};
