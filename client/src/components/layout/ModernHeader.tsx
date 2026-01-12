@@ -23,6 +23,7 @@ import { useAuth, useActivityLogContext } from '@/hooks';
 import { useTheme } from '@/context';
 import { LanguageSwitcher } from '../common/LanguageSwitcher';
 import { NotificationCenter } from '../notifications/NotificationCenter';
+import { useLayout } from '@/context/LayoutContext';
 
 interface ModernHeaderProps {
   onMenuToggle?: () => void;
@@ -39,6 +40,8 @@ export function ModernHeader({ onMenuToggle, menuOpen, onSidebarToggle, isSideba
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const { unreadCount } = useActivityLogContext();
   const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const { headerContent } = useLayout();
 
   const handleLogout = useCallback(() => {
     void logout()
@@ -64,7 +67,7 @@ export function ModernHeader({ onMenuToggle, menuOpen, onSidebarToggle, isSideba
       <div className="h-16 flex items-center justify-between">
         {/* Left: Branding & Mobile Menu Toggle */}
         <div 
-          className="flex items-center gap-4 px-4 h-full transition-[width,padding] duration-300 ease-in-out overflow-hidden border-border lg:w-72 lg:px-6"
+          className="flex items-center gap-4 px-4 h-full transition-[width,padding] duration-300 ease-in-out overflow-hidden border-border lg:w-72 lg:px-6 shrink-0"
         >
           <button
             onClick={onMenuToggle}
@@ -88,19 +91,26 @@ export function ModernHeader({ onMenuToggle, menuOpen, onSidebarToggle, isSideba
           </div>
         </div>
 
-        {/* Center: Toggle Sidebar Button & Spacer */}
-        <div className="flex-1 hidden lg:flex items-center pr-4">
+        {/* Center: Toggle Sidebar Button & Dynamic Content */}
+        <div className="flex-1 hidden lg:flex items-center gap-4 px-4 min-w-0">
           <button
             onClick={onSidebarToggle}
-            className="p-2 rounded-lg hover:bg-surface text-muted-foreground hover:text-foreground transition-colors"
+            className="p-2 rounded-lg hover:bg-surface text-muted-foreground hover:text-foreground transition-colors shrink-0"
             title={isSidebarOpen ? t('common:hide_sidebar') : t('common:show_sidebar')}
           >
              {isSidebarOpen ? <PanelLeftClose className="w-6 h-6" /> : <PanelLeftOpen className="w-6 h-6" />}
           </button>
+
+          {/* Dynamic Header Content (e.g., Sub-navigation) */}
+          <div className="flex-1 flex items-center overflow-x-auto no-scrollbar py-2 min-w-0">
+            <div className="flex items-center gap-1 min-w-max">
+              {headerContent}
+            </div>
+          </div>
         </div>
 
         {/* Right: Tools & Profile */}
-        <div className="flex items-center gap-2 sm:gap-4 px-4">
+        <div className="flex items-center gap-2 sm:gap-4 px-4 shrink-0">
 
           <div className="flex items-center gap-1 sm:gap-2">
             <LanguageSwitcher className="text-foreground hover:bg-surface" />
@@ -174,6 +184,15 @@ export function ModernHeader({ onMenuToggle, menuOpen, onSidebarToggle, isSideba
           </div>
         </div>
       </div>
+
+      {/* Mobile Sub-navigation Row (Visible only on small screens when headerContent exists) */}
+      {headerContent && (
+        <div className="lg:hidden border-t border-border bg-background/50 backdrop-blur-md overflow-x-auto no-scrollbar transition-all duration-300">
+          <div className="flex items-center gap-1 px-4 py-2 min-w-max">
+            {headerContent}
+          </div>
+        </div>
+      )}
 
       {isAuthenticated && (
         <NotificationCenter

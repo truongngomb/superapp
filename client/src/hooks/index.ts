@@ -13,4 +13,5 @@ export * from './useSort';
 export * from './useDataSorting';
 export * from './useDebounce';
 export * from './useSettings';
+export * from './useLayoutMode';
 export { useToast } from '@/context/useToast';

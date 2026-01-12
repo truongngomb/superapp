@@ -27,7 +27,7 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
     permission: { resource: 'categories', action: 'view' }
   },
   { 
-    path: '/admin/dashboard', 
+    path: '/admin', 
     labelKey: 'admin', 
     icon: Settings,
     permission: { resource: 'dashboard', action: 'view' },
