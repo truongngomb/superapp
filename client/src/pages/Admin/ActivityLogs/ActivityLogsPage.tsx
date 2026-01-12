@@ -53,7 +53,7 @@ export default function ActivityLogsPage() {
   }, [debouncedSearchQuery, sortConfig]);
 
   const sortColumns = [
-    { field: 'created', label: t('table.time') },
+    { field: 'created', label: t('activity_logs:table.time') },
   ];
 
   const handlePageChange = (newPage: number) => {
@@ -63,14 +63,14 @@ export default function ActivityLogsPage() {
   // Excel export hook
   const { exportToExcel } = useExcelExport<ActivityLog>({
     fileNamePrefix: 'activity_logs',
-    sheetName: t('title'),
+    sheetName: t('activity_logs:title'),
     columns: [
       { key: '#', header: t('common:order', { defaultValue: '#' }), width: 8 },
-      { key: 'expand.user.name', header: t('table.user'), width: 20 },
-      { key: 'action', header: t('table.action'), width: 12 },
-      { key: 'resource', header: t('table.resource'), width: 15 },
-      { key: 'message', header: t('table.details'), width: 40 },
-      { key: 'created', header: t('table.time'), width: 20 },
+      { key: 'expand.user.name', header: t('activity_logs:table.user'), width: 20 },
+      { key: 'action', header: t('activity_logs:table.action'), width: 12 },
+      { key: 'resource', header: t('activity_logs:table.resource'), width: 15 },
+      { key: 'message', header: t('activity_logs:table.details'), width: 40 },
+      { key: 'created', header: t('activity_logs:table.time'), width: 20 },
     ],
   });
 
@@ -81,7 +81,15 @@ export default function ActivityLogsPage() {
       sort: sortConfig.field,
       order: sortConfig.order ?? 'desc',
     });
-    await exportToExcel(allData);
+    
+    // Translate action and resource for export
+    const translatedData = allData.map(log => ({
+      ...log,
+      action: t(`activity_logs:actions.${log.action}`, { defaultValue: log.action.toUpperCase() }),
+      resource: t(`activity_logs:resources.${log.resource}`, { defaultValue: log.resource })
+    }));
+
+    await exportToExcel(translatedData as unknown as ActivityLog[]);
   };
 
   return (
@@ -92,9 +100,9 @@ export default function ActivityLogsPage() {
           <div className="flex items-start gap-3">
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-                {t('title')}
+                {t('activity_logs:title')}
               </h1>
-              <p className="text-muted mt-1">{t('subtitle')}</p>
+              <p className="text-muted mt-1">{t('activity_logs:subtitle')}</p>
             </div>
             <PermissionGuard resource="activity_logs" action="view">
               <button
@@ -157,7 +165,7 @@ export default function ActivityLogsPage() {
             <CardContent>
               <Shield className="w-12 h-12 text-muted mx-auto mb-4" />
               <p className="text-muted">
-                {searchQuery ? t('list.empty_search') : t('list.empty')} 
+                {searchQuery ? t('activity_logs:list.empty_search') : t('activity_logs:list.empty')} 
               </p>
             </CardContent>
           </Card>

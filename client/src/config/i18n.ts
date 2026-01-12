@@ -16,7 +16,7 @@ import authEn from '../locales/en/auth.json';
 import categoriesEn from '../locales/en/categories.json';
 import rolesEn from '../locales/en/roles.json';
 import usersEn from '../locales/en/users.json';
-import activityLogsEn from '../locales/en/common.json';
+import activityLogsEn from '../locales/en/activity_logs.json';
 import notificationsEn from '../locales/en/notifications.json';
 import settingsEn from '../locales/en/settings.json';
 

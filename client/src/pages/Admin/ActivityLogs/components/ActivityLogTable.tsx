@@ -73,12 +73,14 @@ export function ActivityLogTable({ logs, currentPage = 1, perPage = 10 }: Activi
                       log.action === 'delete' && "bg-red-500/10 text-red-500 border-red-500/20",
                       log.action === 'login' && "bg-purple-500/10 text-purple-500 border-purple-500/20",
                     )}>
-                      {log.action.toUpperCase()}
+                      {t(`actions.${log.action}`, { defaultValue: log.action.toUpperCase() })}
                     </span>
                   </td>
                   <td className="p-4 align-middle">
                     <div className="flex items-center gap-2 text-muted-foreground">
-                      <span className="capitalize">{log.resource}</span>
+                      <span className="capitalize">
+                        {t(`resources.${log.resource}`, { defaultValue: log.resource })}
+                      </span>
                     </div>
                   </td>
                   <td className="p-4 align-middle">
