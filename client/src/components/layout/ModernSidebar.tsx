@@ -16,9 +16,10 @@ interface ModernSidebarProps {
   open: boolean;
   onClose: () => void;
   className?: string;
+  desktopOpen?: boolean;
 }
 
-export function ModernSidebar({ open, onClose, className }: ModernSidebarProps) {
+export function ModernSidebar({ open, onClose, className, desktopOpen = true }: ModernSidebarProps) {
   const { t } = useTranslation(['common', 'users', 'roles', 'categories', 'home', 'auth']);
   const location = useLocation();
   const { user } = useAuth();
@@ -41,12 +42,14 @@ export function ModernSidebar({ open, onClose, className }: ModernSidebarProps) 
       {/* Sidebar Container */}
       <aside
         className={cn(
-          "fixed top-0 left-0 z-50 h-full w-72 bg-muted/30 shadow-sm transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:z-0 lg:h-[calc(100vh-4rem)] border-r border-border",
+          "fixed top-0 left-0 z-50 h-full w-72 bg-muted/30 shadow-sm transition-[width,transform] duration-300 ease-in-out lg:z-0 lg:h-[calc(100vh-4rem)] border-r border-border",
           open ? "translate-x-0" : "-translate-x-full",
+          // Desktop behavior: use width transition for push effect, removing transform
+          desktopOpen ? "lg:translate-x-0 lg:static lg:w-72" : "lg:translate-x-0 lg:static lg:w-0 lg:border-r-0 lg:overflow-hidden",
           className
         )}
       >
-        <div className="flex flex-col h-full overflow-hidden bg-gradient-to-b from-background to-surface/50">
+        <div className="flex flex-col h-full w-72 overflow-hidden bg-gradient-to-b from-background to-surface/50">
            {/* Mobile Header (Close Button) */}
            <div className="lg:hidden flex items-center justify-end p-2">
               <button onClick={onClose} className="p-2 text-muted-foreground hover:bg-surface rounded-full">

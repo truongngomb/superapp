@@ -78,6 +78,8 @@
   "switch_theme_light": "Switch to light mode",
   "switch_theme_dark": "Switch to dark mode",
   "toggle_menu": "Toggle menu",
+  "show_sidebar": "Show Sidebar",
+  "hide_sidebar": "Hide Sidebar",
   "active": "Active",
   "inactive": "Inactive",
   "get_started": "Get Started",

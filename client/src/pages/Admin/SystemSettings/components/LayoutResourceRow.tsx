@@ -17,13 +17,13 @@ export function LayoutResourceRow({ resource, currentMode, onModeChange }: Layou
         </div>
         <span className="font-medium font-mono">{resource}</span>
       </div>
-      <div className="w-[200px]">
+      <div className="flex items-center justify-end w-[250px]">
          <select
           value={currentMode}
           onChange={(e) => { onModeChange(resource, e.target.value); }}
-          className="w-full bg-background border border-border rounded-lg px-3 py-1.5 text-sm h-9 focus:ring-1 focus:ring-primary focus:border-primary"
+          className="w-auto bg-background border border-border rounded-lg px-3 py-1.5 text-sm h-9 focus:ring-1 focus:ring-primary focus:border-primary"
         >
-          <option value="default">{t('settings:layout.modes.default')} (Global)</option>
+          <option value="default">{t('settings:layout.modes.default')} ({t('settings:layout.global_layout')})</option>
           <option value="standard">{t('settings:layout.modes.standard')}</option>
           <option value="modern">{t('settings:layout.modes.modern')}</option>
         </select>

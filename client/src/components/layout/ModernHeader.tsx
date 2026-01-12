@@ -15,7 +15,9 @@ import {
   X, 
   Bell, 
   Maximize,
-  Minimize
+  Minimize,
+  PanelLeftClose,
+  PanelLeftOpen
 } from 'lucide-react';
 import { useAuth, useActivityLogContext } from '@/hooks';
 import { useTheme } from '@/context';
@@ -25,9 +27,11 @@ import { NotificationCenter } from '../notifications/NotificationCenter';
 interface ModernHeaderProps {
   onMenuToggle?: () => void;
   menuOpen?: boolean;
+  onSidebarToggle?: () => void;
+  isSidebarOpen?: boolean;
 }
 
-export function ModernHeader({ onMenuToggle, menuOpen }: ModernHeaderProps) {
+export function ModernHeader({ onMenuToggle, menuOpen, onSidebarToggle, isSidebarOpen = true }: ModernHeaderProps) {
   const { t } = useTranslation(['common', 'auth']);
   // navigate removed as we use window.location.href for logout
   const { user, isAuthenticated, logout } = useAuth();
@@ -57,9 +61,11 @@ export function ModernHeader({ onMenuToggle, menuOpen }: ModernHeaderProps) {
 
   return (
     <header className="sticky top-0 z-40 w-full bg-background/80 backdrop-blur-lg border-b border-border shadow-sm">
-      <div className="px-4 h-16 flex items-center justify-between">
+      <div className="h-16 flex items-center justify-between">
         {/* Left: Branding & Mobile Menu Toggle */}
-        <div className="flex items-center gap-4">
+        <div 
+          className="flex items-center gap-4 px-4 h-full transition-[width,padding] duration-300 ease-in-out overflow-hidden border-border lg:w-72 lg:px-6"
+        >
           <button
             onClick={onMenuToggle}
             className="p-1 rounded-md hover:bg-surface transition-colors lg:hidden"
@@ -82,9 +88,19 @@ export function ModernHeader({ onMenuToggle, menuOpen }: ModernHeaderProps) {
           </div>
         </div>
 
+        {/* Center: Toggle Sidebar Button & Spacer */}
+        <div className="flex-1 hidden lg:flex items-center pr-4">
+          <button
+            onClick={onSidebarToggle}
+            className="p-2 rounded-lg hover:bg-surface text-muted-foreground hover:text-foreground transition-colors"
+            title={isSidebarOpen ? t('common:hide_sidebar') : t('common:show_sidebar')}
+          >
+             {isSidebarOpen ? <PanelLeftClose className="w-6 h-6" /> : <PanelLeftOpen className="w-6 h-6" />}
+          </button>
+        </div>
+
         {/* Right: Tools & Profile */}
-        <div className="flex items-center gap-2 sm:gap-4">
-          
+        <div className="flex items-center gap-2 sm:gap-4 px-4">
 
           <div className="flex items-center gap-1 sm:gap-2">
             <LanguageSwitcher className="text-foreground hover:bg-surface" />

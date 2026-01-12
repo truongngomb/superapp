@@ -79,6 +79,8 @@
   "switch_theme_light": "라이트 모드로 전환",
   "switch_theme_dark": "다크 모드로 전환",
   "toggle_menu": "메뉴 토글",
+  "show_sidebar": "사이드바 표시",
+  "hide_sidebar": "사이드바 숨기기",
   "active": "활성",
   "inactive": "비활성",
   "get_started": "시작하기",
