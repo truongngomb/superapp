@@ -45,7 +45,7 @@ const getResourceIcon = (resource: string) => {
 };
 
 export const ActivityLogItem: React.FC<ActivityLogItemProps> = ({ log, onClick }) => {
-  const { t, i18n } = useTranslation('activity_logs');
+  const { t, i18n } = useTranslation(['activity_logs', 'common']);
   
   // Determine locale for date-fns
   const dateLocale = getDateLocale(i18n.language);
@@ -95,7 +95,7 @@ export const ActivityLogItem: React.FC<ActivityLogItemProps> = ({ log, onClick }
         <div className="mt-1.5 flex items-center gap-2">
           <div className="flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wider">
             {getResourceIcon(log.resource)}
-            <span>{t(`resources.${log.resource}`, { defaultValue: log.resource })}</span>
+            <span>{t(`common:resources.${log.resource}`, { defaultValue: log.resource })}</span>
           </div>
           {log.recordId && (
             <span className="text-[10px] text-slate-300 dark:text-slate-600 font-mono">

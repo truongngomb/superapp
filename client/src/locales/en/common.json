@@ -6,9 +6,63 @@
   "edit": "Edit",
   "add": "Add New",
   "search": "Search...",
-  "actions": "Actions",
   "confirm": "Confirm",
-  "error": "Error",
+  "confirmation": {
+    "delete": "Are you sure you want to move this {{entity}} to Trash?",
+    "hard_delete": "Are you sure you want to PERMANENTLY delete this {{entity}}? This action cannot be undone.",
+    "restore": "Are you sure you want to restore this {{entity}}?"
+  },
+  "batch_confirmation": {
+    "delete": "Are you sure you want to move {{count}} {{entities}} to Trash?",
+    "hard_delete": "Are you sure you want to PERMANENTLY delete {{count}} selected {{entities}}? This action cannot be undone.",
+    "restore": "Are you sure you want to restore {{count}} selected {{entities}}?",
+    "status": "Are you sure you want to {{action}} {{count}} selected {{entities}}?"
+  },
+  "toast": {
+    "create_success": "{{entity}} created successfully!",
+    "update_success": "{{entity}} updated successfully!",
+    "delete_success": "Moved to Trash successfully!",
+    "hard_delete_success": "Permanently deleted {{entity}}!",
+    "restore_success": "{{entity}} restored successfully!",
+    "batch_delete_success": "Moved {{count}} {{entities}} to Trash!",
+    "batch_hard_delete_success": "Permanently deleted {{count}} {{entities}}!",
+    "batch_restore_success": "Successfully restored {{count}} {{entities}}!",
+    "batch_status_success": "Successfully updated status for {{count}} {{entities}}!",
+    "load_error": "Failed to load {{entities}}",
+    "error": "An error occurred"
+  },
+  "list": {
+    "empty": "No {{entities}} found",
+    "empty_search": "No matching {{entities}} found",
+    "add_first": "Add first {{entity}}"
+  },
+  "form": {
+    "add_title": "Add New {{entity}}",
+    "edit_title": "Edit {{entity}}"
+  },
+  "actions": {
+    "label": "Actions",
+    "create": "Create",
+    "update": "Update",
+    "delete": "Delete",
+    "login": "Login",
+    "logout": "Logout",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "view": "View",
+    "edit": "Edit",
+    "restore": "Restore",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "save": "Save",
+    "close": "Close"
+  },
+  "resources": {
+    "users": "Users",
+    "categories": "Categories",
+    "roles": "Roles",
+    "activity_logs": "Activity Logs"
+  },
   "success": "Success",
   "name": "Name",
   "order": "#",

@@ -1,15 +1,10 @@
 {
+  "entity": "Category",
+  "entities": "Categories",
   "title": "Category Management",
   "subtitle": "Manage product categories",
   "create_btn": "Create Category",
-  "list": {
-    "empty": "No categories found",
-    "empty_search": "No matching categories found",
-    "add_first": "Add first category"
-  },
   "form": {
-    "add_title": "Add New Category",
-    "edit_title": "Edit Category",
     "name_label": "Category Name",
     "name_placeholder": "Enter category name",
     "desc_label": "Description",
@@ -19,39 +14,8 @@
     "active_description": "Category is visible and available for use",
     "copy_suffix": " (Copy)"
   },
-  "restore_confirm": "Are you sure you want to restore this category?",
-  "activate_selected": "Activate",
-  "deactivate_selected": "Deactivate",
-  "batch_status_confirm": "Are you sure you want to {{action}} {{count}} selected categories?",
-  "actions": {
-    "activate": "activate",
-    "deactivate": "deactivate"
-  },
-  "delete_confirm": "Are you sure you want to move this category to Trash?",
-  "hard_delete_confirm": "Are you sure you want to PERMANENTLY delete this category? This action cannot be undone.",
-  "batch_delete_confirm": "Are you sure you want to move {{count}} categories to Trash?",
-  "batch_hard_delete_confirm": "Are you sure you want to PERMANENTLY delete {{count}} selected categories? This action cannot be undone.",
-  "batch_restore_confirm": "Are you sure you want to restore {{count}} selected categories?",
-  "toast": {
-    "load_error": "Failed to load categories",
-    "create_success": "Category created successfully!",
-    "update_success": "Category updated successfully!",
-    "delete_success": "Moved to Trash successfully!",
-    "hard_delete_success": "Permanently deleted category!",
-    "batch_delete_success": "Moved {{count}} categories to Trash!",
-    "batch_hard_delete_success": "Permanently deleted {{count}} categories!",
-    "batch_status_success": "Successfully updated status for {{count}} categories!",
-    "batch_restore_success": "Successfully restored {{count}} categories!",
-    "error": "An error occurred"
-  },
   "view_mode": {
     "list": "List view",
     "table": "Table view"
-  },
-  "export": {
-    "button": "Export Excel",
-    "exporting": "Exporting...",
-    "success": "Export successful!",
-    "error": "Export failed"
   }
 }

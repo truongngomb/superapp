@@ -1,12 +1,11 @@
 {
+  "entity": "Role",
+  "entities": "Roles",
   "title": "Role Management",
   "subtitle": "Manage user roles and permissions",
   "create_btn": "Create Role",
   "loading": "Loading roles...",
   "list": {
-    "empty": "No roles yet",
-    "empty_search": "No matching roles found",
-    "add_first": "Create first role",
     "search_placeholder": "Search roles...",
     "resources_configured": "resources configured"
   },
@@ -20,39 +19,8 @@
     "permissions_label": "Permissions",
     "active_description": "Allow users with this role to access the system"
   },
-  "delete_title": "Delete Role",
-  "delete_confirm": "Are you sure you want to move this role to Trash?",
-  "hard_delete_confirm": "Are you sure you want to PERMANENTLY delete this role? This action cannot be undone.",
-  "toast": {
-    "load_error": "Failed to load roles",
-    "create_success": "Role created successfully!",
-    "update_success": "Role updated successfully!",
-    "delete_success": "Moved to Trash successfully!",
-    "hard_delete_success": "Permanently deleted role!",
-    "batch_delete_success": "Moved {{count}} roles to Trash!",
-    "batch_hard_delete_success": "Permanently deleted {{count}} roles!",
-    "batch_restore_success": "Successfully restored {{count}} roles!",
-    "batch_status_success": "Successfully updated status for {{count}} roles!",
-    "restore_success": "Role restored successfully!",
-    "error": "An error occurred"
-  },
-  "batch_delete_confirm": "Are you sure you want to move {{count}} roles to Trash?",
-  "batch_hard_delete_confirm": "Are you sure you want to PERMANENTLY delete {{count}} selected roles? This action cannot be undone.",
-  "batch_restore_confirm": "Are you sure you want to restore {{count}} selected roles?",
-  "batch_status_confirm": "Are you sure you want to {{action}} {{count}} selected roles?",
-  "restore_confirm": "Are you sure you want to restore this role?",
-  "actions": {
-    "activate": "activate",
-    "deactivate": "deactivate"
-  },
   "view_mode": {
     "list": "List view",
     "table": "Table view"
-  },
-  "export": {
-    "button": "Export Excel",
-    "exporting": "Exporting...",
-    "success": "Export successful!",
-    "error": "Export failed"
   }
 }

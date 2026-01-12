@@ -6,9 +6,64 @@
   "edit": "수정",
   "add": "추가",
   "search": "검색...",
-  "actions": "작업",
   "confirm": "확인",
   "error": "오류",
+  "confirmation": {
+    "delete": "이 {{entity}}을(를) 휴지통으로 이동하시겠습니까?",
+    "hard_delete": "이 {{entity}}을(를) 영구적으로 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.",
+    "restore": "이 {{entity}}을(를) 복구하시겠습니까?"
+  },
+  "batch_confirmation": {
+    "delete": "{{count}}개의 {{entities}}을(를) 휴지통으로 이동하시겠습니까?",
+    "hard_delete": "선택한 {{count}}개의 {{entities}}을(를) 영구적으로 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.",
+    "restore": "선택한 {{count}}개의 {{entities}}을(를) 복구하시겠습니까?",
+    "status": "선택한 {{count}}개의 {{entities}}을(를) {{action}}하시겠습니까?"
+  },
+  "toast": {
+    "create_success": "{{entity}} 생성 성공!",
+    "update_success": "{{entity}} 수정 성공!",
+    "delete_success": "휴지통으로 이동 성공!",
+    "hard_delete_success": "{{entity}} 영구 삭제 성공!",
+    "restore_success": "{{entity}} 복구 성공!",
+    "batch_delete_success": "{{count}}개의 {{entities}} 휴지통 이동 성공!",
+    "batch_hard_delete_success": "{{count}}개의 {{entities}} 영구 삭제 성공!",
+    "batch_restore_success": "{{count}}개의 {{entities}} 복구 성공!",
+    "batch_status_success": "{{count}}개의 {{entities}} 상태 변경 성공!",
+    "load_error": "{{entities}} 로드 실패",
+    "error": "오류가 발생했습니다"
+  },
+  "list": {
+    "empty": "등록된 {{entities}} 없음",
+    "empty_search": "일치하는 {{entities}} 없음",
+    "add_first": "첫 번째 {{entity}} 추가"
+  },
+  "form": {
+    "add_title": "새 {{entity}} 추가",
+    "edit_title": "{{entity}} 수정"
+  },
+  "actions": {
+    "label": "작업",
+    "create": "생성",
+    "update": "수정",
+    "delete": "삭제",
+    "login": "로그인",
+    "logout": "로그아웃",
+    "activate": "활성화",
+    "deactivate": "비활성화",
+    "view": "보기",
+    "edit": "편집",
+    "restore": "복구",
+    "confirm": "확인",
+    "cancel": "취소",
+    "save": "저장",
+    "close": "닫기"
+  },
+  "resources": {
+    "users": "사용자",
+    "categories": "카테고리",
+    "roles": "역할",
+    "activity_logs": "활동 로그"
+  },
   "success": "성공",
   "name": "이름",
   "order": "#",

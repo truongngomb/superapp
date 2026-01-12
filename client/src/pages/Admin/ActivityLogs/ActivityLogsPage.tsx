@@ -165,7 +165,7 @@ export default function ActivityLogsPage() {
             <CardContent>
               <Shield className="w-12 h-12 text-muted mx-auto mb-4" />
               <p className="text-muted">
-                {searchQuery ? t('activity_logs:list.empty_search') : t('activity_logs:list.empty')} 
+                {searchQuery ? t('common:list.empty_search', { entities: t('activity_logs:entities') }) : t('common:list.empty', { entities: t('activity_logs:entities') })} 
               </p>
             </CardContent>
           </Card>

@@ -1,15 +1,10 @@
 {
+  "entity": "danh mục",
+  "entities": "danh mục",
   "title": "Quản lý Danh mục",
   "subtitle": "Quản lý danh mục sản phẩm",
   "create_btn": "Tạo Danh mục",
-  "list": {
-    "empty": "Chưa có danh mục nào",
-    "empty_search": "Không tìm thấy danh mục phù hợp",
-    "add_first": "Thêm danh mục đầu tiên"
-  },
   "form": {
-    "add_title": "Thêm danh mục mới",
-    "edit_title": "Chỉnh sửa danh mục",
     "name_label": "Tên danh mục",
     "name_placeholder": "Nhập tên danh mục",
     "desc_label": "Mô tả",
@@ -19,39 +14,8 @@
     "active_description": "Danh mục hiển thị và có thể sử dụng",
     "copy_suffix": " (Bản sao)"
   },
-  "restore_confirm": "Bạn có chắc chắn muốn khôi phục danh mục này không?",
-  "activate_selected": "Bật",
-  "deactivate_selected": "Tắt",
-  "batch_status_confirm": "Bạn có chắc muốn {{action}} {{count}} danh mục đã chọn?",
-  "actions": {
-    "activate": "bật",
-    "deactivate": "tắt"
-  },
-  "delete_confirm": "Bạn có chắc muốn chuyển danh mục này vào Thùng rác?",
-  "hard_delete_confirm": "Bạn có chắc muốn xóa VĨNH VIỄN danh mục này? Hành động này không thể hoàn tác.",
-  "batch_delete_confirm": "Bạn có chắc muốn chuyển {{count}} danh mục vào Thùng rác?",
-  "batch_hard_delete_confirm": "Bạn có chắc muốn xóa VĨNH VIỄN {{count}} danh mục đã chọn? Hành động này không thể hoàn tác.",
-  "batch_restore_confirm": "Bạn có chắc muốn khôi phục {{count}} danh mục đã chọn?",
-  "toast": {
-    "load_error": "Không thể tải danh sách danh mục",
-    "create_success": "Tạo danh mục thành công!",
-    "update_success": "Cập nhật danh mục thành công!",
-    "delete_success": "Đã chuyển vào Thùng rác!",
-    "hard_delete_success": "Đã xóa vĩnh viễn danh mục!",
-    "batch_delete_success": "Đã chuyển {{count}} danh mục vào Thùng rác!",
-    "batch_hard_delete_success": "Đã xóa vĩnh viễn {{count}} danh mục!",
-    "batch_status_success": "Đã cập nhật trạng thái cho {{count}} danh mục!",
-    "batch_restore_success": "Đã khôi phục {{count}} danh mục thành công!",
-    "error": "Đã xảy ra lỗi"
-  },
   "view_mode": {
     "list": "Dạng danh sách",
     "table": "Dạng bảng"
-  },
-  "export": {
-    "button": "Xuất Excel",
-    "exporting": "Đang xuất...",
-    "success": "Xuất file thành công!",
-    "error": "Xuất file thất bại"
   }
 }

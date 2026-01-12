@@ -1,4 +1,6 @@
 {
+  "entity": "nhật ký hoạt động",
+  "entities": "nghật ký hoạt động",
   "title": "Nhật ký hoạt động",
   "subtitle": "Xem và kiểm tra các hoạt động hệ thống",
   "table": {
@@ -7,19 +9,5 @@
     "resource": "Tài nguyên",
     "details": "Chi tiết",
     "time": "Thời gian"
-  },
-  "list": {
-    "empty": "Không có nhật ký hoạt động",
-    "empty_search": "Không tìm thấy nhật ký phù hợp"
-  },
-  "toast": {
-    "load_error": "Không thể tải nhật ký hoạt động",
-    "error": "Đã xảy ra lỗi"
-  },
-  "export": {
-    "button": "Xuất Excel",
-    "exporting": "Đang xuất...",
-    "success": "Xuất file thành công!",
-    "error": "Xuất file thất bại"
   }
 }

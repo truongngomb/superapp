@@ -60,7 +60,7 @@ export function RoleTable({
               {t('common:status')}
             </th>
             <th className="w-32 h-12 px-4 text-right font-medium">
-              {t('common:actions')}
+              {t('common:actions.label')}
             </th>
           </tr>
         </thead>

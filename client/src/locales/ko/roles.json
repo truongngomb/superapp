@@ -1,12 +1,11 @@
 {
+  "entity": "역할",
+  "entities": "역할",
   "title": "역할 관리",
   "subtitle": "사용자 역할 및 권한 관리",
   "create_btn": "역할 생성",
   "loading": "역할 로딩 중...",
   "list": {
-    "empty": "역할이 없습니다",
-    "empty_search": "일치하는 역할이 없습니다",
-    "add_first": "첫 번째 역할 생성",
     "search_placeholder": "역할 검색...",
     "resources_configured": "개 리소스 구성됨"
   },
@@ -18,41 +17,10 @@
     "desc_label": "설명",
     "desc_placeholder": "역할 설명 입력",
     "permissions_label": "권한",
-    "active_description": "이 역할의 사용자가 시스템에 액세스할 수 있도록 허용"
-  },
-  "delete_title": "역할 삭제",
-  "delete_confirm": "이 역할을 휴지통으로 이동하시겠습니까?",
-  "hard_delete_confirm": "이 역할을 영구적으로 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.",
-  "toast": {
-    "load_error": "역할을 불러오는 데 실패했습니다",
-    "create_success": "역할이 생성되었습니다!",
-    "update_success": "역할이 수정되었습니다!",
-    "delete_success": "휴지통으로 이동되었습니다!",
-    "hard_delete_success": "역할이 영구 삭제되었습니다!",
-    "batch_delete_success": "{{count}}개의 역할이 휴지통으로 이동되었습니다!",
-    "batch_hard_delete_success": "{{count}}개의 역할이 영구 삭제되었습니다!",
-    "batch_restore_success": "{{count}}개의 역할이 성공적으로 복구되었습니다!",
-    "batch_status_success": "{{count}}개의 역할 상태가 업데이트되었습니다!",
-    "restore_success": "역할이 복구되었습니다!",
-    "error": "오류가 발생했습니다"
-  },
-  "batch_delete_confirm": "선택한 {{count}}개의 역할을 휴지통으로 이동하시겠습니까?",
-  "batch_hard_delete_confirm": "선택한 {{count}}개의 역할을 영구적으로 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.",
-  "batch_restore_confirm": "선택한 {{count}}개의 역할을 복구하시겠습니까?",
-  "batch_status_confirm": "선택한 {{count}}개의 역할을 {{action}}하시겠습니까?",
-  "restore_confirm": "이 역할을 복구하시겠습니까?",
-  "actions": {
-    "activate": "활성화",
-    "deactivate": "비활성화"
+    "active_description": "이 역할을 가진 사용자가 시스템에 액세스할 수 있도록 허용"
   },
   "view_mode": {
     "list": "목록 보기",
     "table": "테이블 보기"
-  },
-  "export": {
-    "button": "엑셀 내보내기",
-    "exporting": "내보내는 중...",
-    "success": "내보내기 성공!",
-    "error": "내보내기 실패"
   }
 }

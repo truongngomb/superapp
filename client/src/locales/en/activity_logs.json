@@ -1,4 +1,6 @@
 {
+  "entity": "Activity Log",
+  "entities": "Activity Logs",
   "title": "Activity Logs",
   "subtitle": "View and audit system activities",
   "table": {
@@ -7,19 +9,5 @@
     "resource": "Resource",
     "details": "Details",
     "time": "Time"
-  },
-  "list": {
-    "empty": "No activity logs found",
-    "empty_search": "No matching activity logs found"
-  },
-  "toast": {
-    "load_error": "Failed to load activity logs",
-    "error": "An error occurred"
-  },
-  "export": {
-    "button": "Export Excel",
-    "exporting": "Exporting...",
-    "success": "Export successful!",
-    "error": "Export failed"
   }
 }

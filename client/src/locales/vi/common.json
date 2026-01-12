@@ -6,9 +6,64 @@
   "edit": "Sửa",
   "add": "Thêm mới",
   "search": "Tìm kiếm...",
-  "actions": "Thao tác",
   "confirm": "Xác nhận",
   "error": "Lỗi",
+  "confirmation": {
+    "delete": "Bạn có chắc muốn chuyển {{entity}} này vào Thùng rác?",
+    "hard_delete": "Bạn có chắc muốn xóa VĨNH VIỄN {{entity}} này? Hành động này không thể hoàn tác.",
+    "restore": "Bạn có chắc muốn khôi phục {{entity}} này không?"
+  },
+  "batch_confirmation": {
+    "delete": "Bạn có chắc muốn chuyển {{count}} {{entities}} vào Thùng rác?",
+    "hard_delete": "Bạn có chắc muốn xóa VĨNH VIỄN {{count}} {{entities}} đã chọn? Hành động này không thể hoàn tác.",
+    "restore": "Bạn có chắc muốn khôi phục {{count}} {{entities}} đã chọn?",
+    "status": "Bạn có chắc muốn {{action}} {{count}} {{entities}} đã chọn?"
+  },
+  "toast": {
+    "create_success": "Tạo {{entity}} thành công!",
+    "update_success": "Cập nhật {{entity}} thành công!",
+    "delete_success": "Đã chuyển vào Thùng rác thành công!",
+    "hard_delete_success": "Đã xóa vĩnh viễn {{entity}}!",
+    "restore_success": "Đã khôi phục {{entity}} thành công!",
+    "batch_delete_success": "Đã chuyển {{count}} {{entities}} vào Thùng rác!",
+    "batch_hard_delete_success": "Đã xóa vĩnh viễn {{count}} {{entities}}!",
+    "batch_restore_success": "Đã khôi phục {{count}} {{entities}} thành công!",
+    "batch_status_success": "Đã cập nhật trạng thái cho {{count}} {{entities}}!",
+    "load_error": "Không thể tải {{entities}}",
+    "error": "Đã xảy ra lỗi"
+  },
+  "list": {
+    "empty": "Chưa có {{entities}} nào",
+    "empty_search": "Không tìm thấy {{entities}} phù hợp",
+    "add_first": "Thêm {{entity}} đầu tiên"
+  },
+  "form": {
+    "add_title": "Thêm mới {{entity}}",
+    "edit_title": "Chỉnh sửa {{entity}}"
+  },
+  "actions": {
+    "label": "Thao tác",
+    "create": "Tạo",
+    "update": "Cập nhật",
+    "delete": "Xóa",
+    "login": "Đăng nhập",
+    "logout": "Đăng xuất",
+    "activate": "Bật",
+    "deactivate": "Tắt",
+    "view": "Xem",
+    "edit": "Sửa",
+    "restore": "Khôi phục",
+    "confirm": "Xác nhận",
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "close": "Đóng"
+  },
+  "resources": {
+    "users": "Người dùng",
+    "categories": "Danh mục",
+    "roles": "Vai trò",
+    "activity_logs": "Nhật ký"
+  },
   "remove_success": "Đã xóa thành công",
   "remove_error": "Lỗi khi xóa",
   "maintenance": {

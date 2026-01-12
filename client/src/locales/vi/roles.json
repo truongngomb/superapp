@@ -1,58 +1,26 @@
 {
-  "title": "Quản lý Role",
-  "subtitle": "Quản lý vai trò và phân quyền người dùng",
+  "entity": "vai trò",
+  "entities": "vai trò",
+  "title": "Quản lý Vai trò",
+  "subtitle": "Quản lý vai trò và phân quyền",
   "create_btn": "Tạo Vai trò",
-  "loading": "Đang tải danh sách role...",
+  "loading": "Đang tải danh sách...",
   "list": {
-    "empty": "Chưa có role nào",
-    "empty_search": "Không tìm thấy role phù hợp",
-    "add_first": "Tạo role đầu tiên",
-    "search_placeholder": "Tìm kiếm role...",
-    "resources_configured": "tài nguyên được cấu hình"
+    "search_placeholder": "Tìm kiếm vai trò...",
+    "resources_configured": "tài nguyên đã cấu hình"
   },
   "form": {
-    "add_title": "Thêm mới Vai trò",
-    "edit_title": "Chỉnh sửa Role",
-    "name_label": "Tên Role",
-    "name_placeholder": "Nhập tên role",
+    "add_title": "Thêm Vai trò Mới",
+    "edit_title": "Chỉnh sửa Vai trò",
+    "name_label": "Tên vai trò",
+    "name_placeholder": "Nhập tên vai trò",
     "desc_label": "Mô tả",
-    "desc_placeholder": "Nhập mô tả cho role",
-    "permissions_label": "Quyền hạn",
-    "active_description": "Cho phép người dùng với role này truy cập hệ thống"
-  },
-  "delete_title": "Xóa Vai trò",
-  "delete_confirm": "Bạn có chắc muốn chuyển vai trò này vào Thùng rác?",
-  "hard_delete_confirm": "Bạn có chắc muốn xóa VĨNH VIỄN vai trò này? Hành động này không thể hoàn tác.",
-  "toast": {
-    "load_error": "Không thể tải danh sách role",
-    "create_success": "Tạo role thành công!",
-    "update_success": "Cập nhật role thành công!",
-    "delete_success": "Đã chuyển vào Thùng rác!",
-    "hard_delete_success": "Đã xóa vĩnh viễn role!",
-    "batch_delete_success": "Đã chuyển {{count}} role vào Thùng rác!",
-    "batch_hard_delete_success": "Đã xóa vĩnh viễn {{count}} role!",
-    "batch_restore_success": "Đã khôi phục {{count}} role thành công!",
-    "batch_status_success": "Đã cập nhật trạng thái cho {{count}} role!",
-    "restore_success": "Khôi phục role thành công!",
-    "error": "Đã xảy ra lỗi"
-  },
-  "batch_delete_confirm": "Bạn có chắc muốn chuyển {{count}} vai trò vào Thùng rác?",
-  "batch_hard_delete_confirm": "Bạn có chắc muốn xóa VĨNH VIỄN {{count}} vai trò đã chọn? Hành động này không thể hoàn tác.",
-  "batch_restore_confirm": "Bạn có chắc muốn khôi phục {{count}} vai trò đã chọn?",
-  "batch_status_confirm": "Bạn có chắc muốn {{action}} {{count}} vai trò đã chọn?",
-  "restore_confirm": "Bạn có chắc chắn muốn khôi phục vai trò này?",
-  "actions": {
-    "activate": "bật",
-    "deactivate": "tắt"
+    "desc_placeholder": "Nhập mô tả",
+    "permissions_label": "Phân quyền",
+    "active_description": "Cho phép người dùng có vai trò này truy cập hệ thống"
   },
   "view_mode": {
-    "list": "Xem danh sách",
-    "table": "Xem bảng"
-  },
-  "export": {
-    "button": "Xuất Excel",
-    "exporting": "Đang xuất...",
-    "success": "Xuất file thành công!",
-    "error": "Xuất file thất bại"
+    "list": "Dạng danh sách",
+    "table": "Dạng bảng"
   }
 }

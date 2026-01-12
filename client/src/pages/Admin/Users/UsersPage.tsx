@@ -364,14 +364,14 @@ export default function UsersPage() {
                     size="sm"
                     onClick={() => { setBatchStatusConfig({ isOpen: true, isActive: true }); }}
                   >
-                    {t("activate_selected")} ({selectedIds.length})
+                    {t("common:actions.activate")} ({selectedIds.length})
                   </Button>
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => { setBatchStatusConfig({ isOpen: true, isActive: false }); }}
                   >
-                    {t("deactivate_selected")} ({selectedIds.length})
+                    {t("common:actions.deactivate")} ({selectedIds.length})
                   </Button>
                 </>
               )}
@@ -403,7 +403,7 @@ export default function UsersPage() {
           <CardContent>
             <Users className="w-12 h-12 text-muted mx-auto mb-4" />
             <p className="text-muted">
-              {searchQuery ? t("users:list.empty_search") : t("users:list.empty")}
+              {searchQuery ? t("common:list.empty_search", { entities: t("users:entities") }) : t("common:list.empty", { entities: t("users:entities") })}
             </p>
           </CardContent>
         </Card>
@@ -516,7 +516,7 @@ export default function UsersPage() {
       <ConfirmModal
         isOpen={!!deleteId}
         title={t("common:delete")}
-        message={t("users:delete_confirm")}
+        message={t("common:confirmation.delete", { entity: t("users:entity") })}
         confirmText={t("common:delete")}
         cancelText={t("common:cancel")}
         loading={deleting}
@@ -533,7 +533,7 @@ export default function UsersPage() {
       <ConfirmModal
         isOpen={!!restoreId}
         title={t("common:restore")}
-        message={t("users:restore_confirm")}
+        message={t("common:confirmation.restore", { entity: t("users:entity") })}
         confirmText={t("common:confirm")}
         cancelText={t("common:cancel")}
         loading={submitting}
@@ -553,7 +553,7 @@ export default function UsersPage() {
       <ConfirmModal
         isOpen={showBatchDeleteConfirm}
         title={t("common:batch_delete_title")}
-        message={t("batch_delete_confirm", { count: selectedIds.length })}
+        message={t("common:batch_confirmation.delete", { count: selectedIds.length, entities: t("users:entities") })}
         confirmText={t("common:delete")}
         cancelText={t("common:cancel")}
         loading={batchDeleting}
@@ -566,11 +566,12 @@ export default function UsersPage() {
       <ConfirmModal
         isOpen={!!batchStatusConfig?.isOpen}
         title={t("common:confirm")}
-        message={t("batch_status_confirm", {
+        message={t("common:batch_confirmation.status", {
           count: selectedIds.length,
+          entities: t("users:entities"),
           action: batchStatusConfig?.isActive
-            ? t("actions.activate")
-            : t("actions.deactivate"),
+            ? t("common:actions.activate")
+            : t("common:actions.deactivate"),
         })}
         confirmText={t("common:confirm")}
         cancelText={t("common:cancel")}
@@ -585,7 +586,7 @@ export default function UsersPage() {
       <ConfirmModal
         isOpen={showBatchRestoreConfirm}
         title={t("common:batch_restore_title")}
-        message={t("batch_restore_confirm", { count: selectedIds.length })}
+        message={t("common:batch_confirmation.restore", { count: selectedIds.length, entities: t("users:entities") })}
         confirmText={t("common:confirm")}
         cancelText={t("common:cancel")}
         loading={submitting}

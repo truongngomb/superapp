@@ -395,7 +395,7 @@ export default function CategoriesPage() {
                       setBatchStatusConfig({ isOpen: true, isActive: true });
                     }}
                   >
-                    {t("activate_selected")} ({selectedIds.length})
+                    {t("common:actions.activate")} ({selectedIds.length})
                   </Button>
                   <Button
                     variant="outline"
@@ -404,7 +404,7 @@ export default function CategoriesPage() {
                       setBatchStatusConfig({ isOpen: true, isActive: false });
                     }}
                   >
-                    {t("deactivate_selected")} ({selectedIds.length})
+                    {t("common:actions.deactivate")} ({selectedIds.length})
                   </Button>
                 </>
               )}
@@ -440,8 +440,8 @@ export default function CategoriesPage() {
             <Folder className="w-12 h-12 text-muted mx-auto mb-4" />
             <p className="text-muted">
               {searchQuery
-                ? t("categories:list.empty_search")
-                : t("categories:list.empty")}
+                ? t("common:list.empty_search", { entities: t("categories:entities") })
+                : t("common:list.empty", { entities: t("categories:entities") })}
             </p>
             {!searchQuery && (
               <PermissionGuard resource="categories" action="create">
@@ -451,7 +451,7 @@ export default function CategoriesPage() {
                   }}
                   className="mt-4"
                 >
-                  {t("categories:list.add_first")}
+                  {t("common:list.add_first", { entity: t("categories:entity") })}
                 </Button>
               </PermissionGuard>
             )}
@@ -547,8 +547,8 @@ export default function CategoriesPage() {
         title={t("common:delete")}
         message={
           displayCategories.find((c) => c.id === deleteId)?.isDeleted
-            ? t("categories:hard_delete_confirm")
-            : t("categories:delete_confirm")
+            ? t("common:confirmation.hard_delete", { entity: t("categories:entity") })
+            : t("common:confirmation.delete", { entity: t("categories:entity") })
         }
         confirmText={t("common:delete")}
         cancelText={t("common:cancel")}
@@ -566,8 +566,8 @@ export default function CategoriesPage() {
       <ConfirmModal
         isOpen={!!restoreId}
         title={t("common:restore", { defaultValue: "Restore" })}
-        message={t("categories:restore_confirm", {
-          defaultValue: "Are you sure you want to restore this category?",
+        message={t("common:confirmation.restore", {
+          entity: t("categories:entity"),
         })}
         confirmText={t("common:confirm", { defaultValue: "Confirm" })}
         cancelText={t("common:cancel")}
@@ -590,11 +590,13 @@ export default function CategoriesPage() {
         title={t("common:delete")}
         message={
           hasDeletedSelected
-            ? t("categories:batch_hard_delete_confirm", {
+            ? t("common:batch_confirmation.hard_delete", {
                 count: selectedIds.length,
+                entities: t("categories:entities"),
               })
-            : t("categories:batch_delete_confirm", {
+            : t("common:batch_confirmation.delete", {
                 count: selectedIds.length,
+                entities: t("categories:entities"),
               })
         }
         confirmText={t("common:delete")}
@@ -613,11 +615,12 @@ export default function CategoriesPage() {
       <ConfirmModal
         isOpen={!!batchStatusConfig?.isOpen}
         title={t("common:confirm")}
-        message={t("batch_status_confirm", {
+        message={t("common:batch_confirmation.status", {
           count: selectedIds.length,
+          entities: t("categories:entities"),
           action: batchStatusConfig?.isActive
-            ? t("actions.activate")
-            : t("actions.deactivate"),
+            ? t("common:actions.activate")
+            : t("common:actions.deactivate"),
         })}
         confirmText={t("common:confirm")}
         cancelText={t("common:cancel")}
@@ -635,10 +638,9 @@ export default function CategoriesPage() {
       <ConfirmModal
         isOpen={showBatchRestoreConfirm}
         title={t("common:restore", { defaultValue: "Restore" })}
-        message={t("categories:batch_restore_confirm", {
+        message={t("common:batch_confirmation.restore", {
           count: selectedIds.length,
-          defaultValue:
-            "Are you sure you want to restore {{count}} categories?",
+          entities: t("categories:entities"),
         })}
         confirmText={t("common:confirm")}
         cancelText={t("common:cancel")}

@@ -1,4 +1,6 @@
 {
+  "entity": "활동 로그",
+  "entities": "활동 로그",
   "title": "활동 로그",
   "subtitle": "시스템 활동 보기 및 감사",
   "table": {
@@ -7,19 +9,5 @@
     "resource": "리소스",
     "details": "세부 정보",
     "time": "시간"
-  },
-  "list": {
-    "empty": "활동 로그가 없습니다",
-    "empty_search": "일치하는 활동 로그가 없습니다"
-  },
-  "toast": {
-    "load_error": "활동 로그를 불러오지 못했습니다",
-    "error": "오류가 발생했습니다"
-  },
-  "export": {
-    "button": "엑셀 내보내기",
-    "exporting": "내보내는 중...",
-    "success": "내보내기 성공!",
-    "error": "내보내기 실패"
   }
 }

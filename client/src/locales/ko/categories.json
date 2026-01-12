@@ -1,15 +1,10 @@
 {
+  "entity": "카테고리",
+  "entities": "카테고리",
   "title": "카테고리 관리",
   "subtitle": "제품 카테고리 관리",
   "create_btn": "카테고리 생성",
-  "list": {
-    "empty": "카테고리가 없습니다",
-    "empty_search": "일치하는 카테고리가 없습니다",
-    "add_first": "첫 번째 카테고리 추가"
-  },
   "form": {
-    "add_title": "새 카테고리 추가",
-    "edit_title": "카테고리 수정",
     "name_label": "카테고리 이름",
     "name_placeholder": "카테고리 이름 입력",
     "desc_label": "설명",
@@ -19,39 +14,8 @@
     "active_description": "카테고리가 표시되고 사용 가능함",
     "copy_suffix": " (사본)"
   },
-  "restore_confirm": "이 카테고리를 복구하시겠습니까?",
-  "activate_selected": "활성화",
-  "deactivate_selected": "비활성화",
-  "batch_status_confirm": "선택한 {{count}}개의 카테고리를 {{action}}하시겠습니까?",
-  "actions": {
-    "activate": "활성화",
-    "deactivate": "비활성화"
-  },
-  "delete_confirm": "이 카테고리를 휴지통으로 이동하시겠습니까?",
-  "hard_delete_confirm": "이 카테고리를 영구적으로 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.",
-  "batch_delete_confirm": "{{count}}개의 카테고리를 휴지통으로 이동하시겠습니까?",
-  "batch_hard_delete_confirm": "선택한 {{count}}개의 카테고리를 영구적으로 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.",
-  "batch_restore_confirm": "선택한 {{count}}개의 카테고리를 복구하시겠습니까?",
-  "toast": {
-    "load_error": "카테고리를 불러오는 데 실패했습니다",
-    "create_success": "카테고리가 생성되었습니다!",
-    "update_success": "카테고리가 수정되었습니다!",
-    "delete_success": "휴지통으로 이동되었습니다!",
-    "hard_delete_success": "카테고리가 영구 삭제되었습니다!",
-    "batch_delete_success": "{{count}}개의 카테고리가 휴지통으로 이동되었습니다!",
-    "batch_hard_delete_success": "{{count}}개의 카테고리가 영구 삭제되었습니다!",
-    "batch_status_success": "{{count}}개의 카테고리 상태가 업데이트되었습니다!",
-    "batch_restore_success": "{{count}}개의 카테고리가 성공적으로 복구되었습니다!",
-    "error": "오류가 발생했습니다"
-  },
   "view_mode": {
     "list": "목록 보기",
     "table": "테이블 보기"
-  },
-  "export": {
-    "button": "Excel 내보내기",
-    "exporting": "내보내는 중...",
-    "success": "내보내기 성공!",
-    "error": "내보내기 실패"
   }
 }

@@ -384,7 +384,7 @@ export default function RolesPage() {
                       setBatchStatusConfig({ isOpen: true, isActive: true });
                     }}
                   >
-                    {t("roles:actions.activate")} ({selectedIds.length})
+                    {t("common:actions.activate")} ({selectedIds.length})
                   </Button>
                   <Button
                     variant="outline"
@@ -393,7 +393,7 @@ export default function RolesPage() {
                       setBatchStatusConfig({ isOpen: true, isActive: false });
                     }}
                   >
-                    {t("roles:actions.deactivate")} ({selectedIds.length})
+                    {t("common:actions.deactivate")} ({selectedIds.length})
                   </Button>
                 </>
               )}
@@ -424,8 +424,8 @@ export default function RolesPage() {
             </div>
             <h3 className="text-lg font-semibold mb-1">
               {searchTerm
-                ? t("roles:list.empty_search")
-                : t("roles:list.empty")}
+                ? t("common:list.empty_search", { entities: t("roles:entities") })
+                : t("common:list.empty", { entities: t("roles:entities") })}
             </h3>
             <p className="text-muted-foreground mb-4 max-w-sm">
               {searchTerm
@@ -434,7 +434,7 @@ export default function RolesPage() {
                   })
                 : showArchived
                 ? t("common:empty_trash", { defaultValue: "Trash is empty" })
-                : t("roles:list.add_first")}
+                : t("common:list.add_first", { entity: t("roles:entity") })}
             </p>
             {!searchTerm && !showArchived && (
               <PermissionGuard resource="roles" action="create">
@@ -444,7 +444,7 @@ export default function RolesPage() {
                   }}
                 >
                   <Plus className="w-4 h-4 mr-2" />
-                  {t("roles:list.add_first")}
+                  {t("common:list.add_first", { entity: t("roles:entity") })}
                 </Button>
               </PermissionGuard>
             )}
@@ -567,11 +567,11 @@ export default function RolesPage() {
         onConfirm={() => {
           void handleDelete();
         }}
-        title={t("roles:delete_title")}
+        title={t("common:delete")}
         message={
           roles.find((r) => r.id === deleteId)?.isDeleted
-            ? t("roles:hard_delete_confirm")
-            : t("roles:delete_confirm")
+            ? t("common:confirmation.hard_delete", { entity: t("roles:entity") })
+            : t("common:confirmation.delete", { entity: t("roles:entity") })
         }
         confirmText={t("common:delete")}
         loading={deleting}
@@ -585,8 +585,8 @@ export default function RolesPage() {
           setRestoreId(null);
         }}
         title={t("common:restore", { defaultValue: "Restore" })}
-        message={t("roles:restore_confirm", {
-          defaultValue: "Are you sure you want to restore this role?",
+        message={t("common:confirmation.restore", {
+          entity: t("roles:entity"),
         })}
         confirmText={t("common:confirm", { defaultValue: "Confirm" })}
         loading={submitting}
@@ -614,13 +614,14 @@ export default function RolesPage() {
         })}
         message={
           hasDeletedSelected
-            ? t("roles:batch_hard_delete_confirm", {
+            ? t("common:batch_confirmation.hard_delete", {
                 count: selectedIds.length,
+                entities: t("roles:entities"),
                 defaultValue: `Are you sure you want to permanently delete ${String(
                   selectedIds.length
                 )} items?`,
               })
-            : t("roles:batch_delete_confirm", { count: selectedIds.length })
+            : t("common:batch_confirmation.delete", { count: selectedIds.length, entities: t("roles:entities") })
         }
         confirmText={t("common:delete")}
         loading={batchDeleting}
@@ -639,8 +640,9 @@ export default function RolesPage() {
         title={t("common:batch_restore_title", {
           defaultValue: "Restore Selected Items",
         })}
-        message={t("roles:batch_restore_confirm", {
+        message={t("common:batch_confirmation.restore", {
           count: selectedIds.length,
+          entities: t("roles:entities"),
         })}
         confirmText={t("common:restore", { defaultValue: "Restore" })}
         loading={submitting}
@@ -654,11 +656,12 @@ export default function RolesPage() {
           setBatchStatusConfig(null);
         }}
         title={t("common:confirm")}
-        message={t("roles:batch_status_confirm", {
+        message={t("common:batch_confirmation.status", {
           count: selectedIds.length,
+          entities: t("roles:entities"),
           action: batchStatusConfig?.isActive
-            ? t("roles:actions.activate")
-            : t("roles:actions.deactivate"),
+            ? t("common:actions.activate")
+            : t("common:actions.deactivate"),
           defaultValue: `Are you sure you want to ${
             batchStatusConfig?.isActive ? "activate" : "deactivate"
           } ${String(selectedIds.length)} roles?`,

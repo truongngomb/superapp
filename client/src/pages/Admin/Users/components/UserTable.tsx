@@ -68,7 +68,7 @@ export function UserTable({
               {t('common:created')}
             </th>
             <th className="p-4 text-right text-sm font-semibold text-muted tracking-wider">
-              {t('common:actions')}
+              {t('common:actions.label')}
             </th>
           </tr>
         </thead>
