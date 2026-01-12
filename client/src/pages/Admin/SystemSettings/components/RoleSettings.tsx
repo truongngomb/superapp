@@ -1,22 +1,51 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Shield, Save, Plus } from 'lucide-react';
 import { Button, Card, CardHeader, CardContent, CardFooter, Input } from '@/components/common';
 import { Reorder } from 'framer-motion';
+import { useSettings } from '@/hooks';
 import { RoleResourceRow } from './RoleResourceRow';
 
-interface RoleSettingsProps {
-  roleResources: string[];
-  setRoleResources: (resources: string[]) => void;
-  onSave: () => Promise<void>;
-  onReset: () => void;
-  submitting: boolean;
-  disabled: boolean;
-}
-
-export function RoleSettings({ roleResources, setRoleResources, onSave, onReset, submitting, disabled }: RoleSettingsProps) {
+export function RoleSettings() {
   const { t } = useTranslation(['settings', 'common']);
+  const { settings, updateSetting, getSettingValue } = useSettings();
+
+  // Local state
+  const [roleResources, setRoleResources] = useState<string[]>([]);
+  const [initialRoleResources, setInitialRoleResources] = useState<string[] | null>(null);
   const [newResource, setNewResource] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+
+  // Sync with global settings
+  useEffect(() => {
+    if (settings.length > 0) {
+      const resources = getSettingValue('role_resources', []);
+      setRoleResources(resources);
+      setInitialRoleResources([...resources]);
+    }
+  }, [settings, getSettingValue]);
+
+  const handleSave = async () => {
+    setSubmitting(true);
+    try {
+      await updateSetting('role_resources', roleResources);
+      setInitialRoleResources([...roleResources]);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleReset = () => {
+    if (initialRoleResources) {
+      setRoleResources([...initialRoleResources]);
+    }
+  };
+
+  const isDirty = () => {
+    if (!initialRoleResources) return false;
+    if (roleResources.length !== initialRoleResources.length) return true;
+    return JSON.stringify(roleResources) !== JSON.stringify(initialRoleResources);
+  };
 
   const addResource = () => {
     if (newResource && !roleResources.includes(newResource)) {
@@ -111,15 +140,15 @@ export function RoleSettings({ roleResources, setRoleResources, onSave, onReset,
         <CardFooter className="flex items-center justify-end gap-3 bg-muted/30">
           <Button
             variant="outline"
-            onClick={onReset}
-            disabled={disabled || submitting}
+            onClick={handleReset}
+            disabled={!isDirty() || submitting}
           >
             {t('common:actions_menu.reset')}
           </Button>
           <Button 
-            onClick={() => void onSave()} 
+            onClick={() => void handleSave()} 
             loading={submitting}
-            disabled={disabled || submitting}
+            disabled={!isDirty() || submitting}
             className="min-w-[140px]"
           >
             <Save className="w-4 h-4 mr-2" />

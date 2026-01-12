@@ -1,24 +1,97 @@
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Layout, Save, Check } from 'lucide-react';
 import { Button, Card, CardHeader, CardContent, CardFooter } from '@/components/common';
 import { cn } from '@/utils';
+import { useSettings } from '@/hooks';
 import { LayoutResourceRow } from './LayoutResourceRow';
 
-interface LayoutSettingsProps {
-  layoutConfig: {
+export function LayoutSettings() {
+  const { t } = useTranslation(['settings', 'common']);
+  const { settings, updateSetting, getSettingValue } = useSettings();
+
+  // Local state
+  const [layoutConfig, setLayoutConfig] = useState<{
     global: string;
     pages: Record<string, string>;
-  };
-  setLayoutConfig: (config: { global: string; pages: Record<string, string> }) => void;
-  onSave: () => Promise<void>;
-  onReset: () => void;
-  submitting: boolean;
-  roleResources: string[];
-  disabled: boolean;
-}
+  }>({
+    global: 'standard',
+    pages: {}
+  });
+  
+  const [roleResources, setRoleResources] = useState<string[]>([]);
+  const [initialLayoutConfig, setInitialLayoutConfig] = useState<{
+    global: string;
+    pages: Record<string, string>;
+  } | null>(null);
+  
+  const [submitting, setSubmitting] = useState(false);
 
-export function LayoutSettings({ layoutConfig, setLayoutConfig, onSave, onReset, submitting, roleResources, disabled }: LayoutSettingsProps) {
-  const { t } = useTranslation(['settings', 'common']);
+  // Sync with global settings
+  useEffect(() => {
+    if (settings.length > 0) {
+      const rawConfig = getSettingValue('layout_config', {
+        global: 'standard',
+        pages: {} as Record<string, string>
+      });
+
+      // Migrate legacy config if needed
+      const migratedPages = { ...rawConfig.pages };
+      if (migratedPages['home']) {
+        migratedPages['/'] = migratedPages['home'];
+        delete migratedPages['home'];
+      }
+      if (migratedPages['categories']) {
+        migratedPages['/categories'] = migratedPages['categories'];
+        delete migratedPages['categories'];
+      }
+
+      const cleanConfig = {
+        ...rawConfig,
+        pages: migratedPages
+      };
+
+      setLayoutConfig(cleanConfig);
+      setInitialLayoutConfig(JSON.parse(JSON.stringify(cleanConfig)) as typeof layoutConfig);
+
+      // We also need role resources to list the pages
+      const resources = getSettingValue('role_resources', []);
+      setRoleResources(resources);
+    }
+  }, [settings, getSettingValue]);
+
+  const handleSave = async () => {
+    setSubmitting(true);
+    try {
+      await updateSetting('layout_config', layoutConfig);
+      setInitialLayoutConfig(JSON.parse(JSON.stringify(layoutConfig)) as typeof layoutConfig);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleReset = () => {
+    if (initialLayoutConfig) {
+      setLayoutConfig(JSON.parse(JSON.stringify(initialLayoutConfig)) as typeof layoutConfig);
+    }
+  };
+
+  const isDirty = () => {
+    if (!initialLayoutConfig) return false;
+    
+    if (layoutConfig.global !== initialLayoutConfig.global) return true;
+    
+    const currentKeys = Object.keys(layoutConfig.pages);
+    const initialKeys = Object.keys(initialLayoutConfig.pages);
+    
+    if (currentKeys.length !== initialKeys.length) return true;
+    
+    for (const key of currentKeys) {
+      if (layoutConfig.pages[key] !== initialLayoutConfig.pages[key]) return true;
+    }
+    
+    return false;
+  };
 
   // Handle layout change for a specific resource
   const handleResourceLayoutChange = (resource: string, mode: string) => {
@@ -128,15 +201,15 @@ export function LayoutSettings({ layoutConfig, setLayoutConfig, onSave, onReset,
         <CardFooter className="flex items-center justify-end gap-3 bg-muted/30">
           <Button
             variant="outline"
-            onClick={onReset}
-            disabled={disabled || submitting}
+            onClick={handleReset}
+            disabled={!isDirty() || submitting}
           >
             {t('common:actions_menu.reset')}
           </Button>
           <Button 
-            onClick={() => void onSave()} 
+            onClick={() => void handleSave()} 
             loading={submitting}
-            disabled={disabled || submitting}
+            disabled={!isDirty() || submitting}
             className="min-w-[140px]"
           >
             <Save className="w-4 h-4 mr-2" />
