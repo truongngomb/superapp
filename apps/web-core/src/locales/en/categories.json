@@ -13,9 +13,5 @@
     "active_label": "Active",
     "active_description": "Category is visible and available for use",
     "copy_suffix": " (Copy)"
-  },
-  "view_mode": {
-    "list": "List view",
-    "table": "Table view"
   }
 }

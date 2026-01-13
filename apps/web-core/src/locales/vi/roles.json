@@ -4,9 +4,7 @@
   "title": "Quản lý Vai trò",
   "subtitle": "Quản lý vai trò và phân quyền",
   "create_btn": "Tạo Vai trò",
-  "loading": "Đang tải danh sách...",
   "list": {
-    "search_placeholder": "Tìm kiếm vai trò...",
     "resources_configured": "tài nguyên đã cấu hình"
   },
   "form": {
@@ -18,9 +16,5 @@
     "desc_placeholder": "Nhập mô tả",
     "permissions_label": "Phân quyền",
     "active_description": "Cho phép người dùng có vai trò này truy cập hệ thống"
-  },
-  "view_mode": {
-    "list": "Dạng danh sách",
-    "table": "Dạng bảng"
   }
 }

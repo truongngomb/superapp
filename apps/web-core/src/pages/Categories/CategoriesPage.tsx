@@ -32,17 +32,16 @@ import {
 } from "@/components/common";
 import { PermissionGuard } from "@/components/common/PermissionGuard";
 import type { Category, CreateCategoryInput, SortColumn, CategoryListParams } from "@/types";
-import { cn as _cn, getStorageItem, setStorageItem } from "@/utils";
+import { cn, getStorageItem, setStorageItem } from "@/utils";
 import { STORAGE_KEYS } from "@/config";
 import { useResource, useSort, useDebounce, useAuth, useExcelExport } from "@/hooks";
 
-// Fix for broken import type resolution
-const cn = _cn as unknown as (...inputs: (string | boolean | undefined | null)[]) => string;
+
 import { categoryService } from "@/services";
 import { CategoryForm } from "./components/CategoryForm";
 import { CategoryRow } from "./components/CategoryRow";
 import { CategorySkeleton } from "./components/CategorySkeleton";
-// import { CategoryTableSkeleton } from "./components/CategoryTableSkeleton"; // Replaced by DataTable skeleton
+import { CategoryTableSkeleton } from "./components/CategoryTableSkeleton";
 import { CATEGORY_ICONS, type CategoryIcon } from './components/icons';
 
 // Define Resource Types
@@ -60,13 +59,11 @@ export default function CategoriesPage() {
 
   // Setup View Mode
   const [viewMode, setViewMode] = useState<ViewMode>(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return
     return getStorageItem<ViewMode>(STORAGE_KEYS.CATEGORIES_VIEW_MODE as string) || "list";
   });
   
   const handleViewModeChange = (mode: ViewMode) => {
     setViewMode(mode);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     setStorageItem(STORAGE_KEYS.CATEGORIES_VIEW_MODE as string, mode);
   };
 
@@ -393,12 +390,7 @@ export default function CategoriesPage() {
               // Using helper or specialized skeleton if needed, otherwise Generic Skeleton works 
               // but we don't have DataTableSkeleton yet potentially matching columns perfectly without config
               // reusing CategoryTableSkeleton for now as it matches layout close enough or manual mapping
-               <DataTable
-                 data={[]}
-                 columns={columns}
-                 keyExtractor={(item) => item.id}
-                 isLoading={true}
-               />
+                <CategoryTableSkeleton />
            ) : (
              <div className="space-y-0.5">
                {Array.from({ length: 5 }).map((_, i) => <CategorySkeleton key={i} />)}

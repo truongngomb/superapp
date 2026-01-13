@@ -13,9 +13,5 @@
     "active_label": "Hoạt động",
     "active_description": "Danh mục hiển thị và có thể sử dụng",
     "copy_suffix": " (Bản sao)"
-  },
-  "view_mode": {
-    "list": "Dạng danh sách",
-    "table": "Dạng bảng"
   }
 }

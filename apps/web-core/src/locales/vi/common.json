@@ -160,5 +160,9 @@
     "previous_page": "Trang trước",
     "next_page": "Trang sau",
     "last_page": "Trang cuối"
+  },
+  "view_mode": {
+    "list": "Dạng danh sách",
+    "table": "Dạng bảng"
   }
 }

@@ -4,9 +4,7 @@
   "title": "Role Management",
   "subtitle": "Manage user roles and permissions",
   "create_btn": "Create Role",
-  "loading": "Loading roles...",
   "list": {
-    "search_placeholder": "Search roles...",
     "resources_configured": "resources configured"
   },
   "form": {
@@ -18,9 +16,5 @@
     "desc_placeholder": "Enter role description",
     "permissions_label": "Permissions",
     "active_description": "Allow users with this role to access the system"
-  },
-  "view_mode": {
-    "list": "List view",
-    "table": "Table view"
   }
 }

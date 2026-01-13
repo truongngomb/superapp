@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { motion as framerMotion } from 'framer-motion';
 import { 
@@ -32,21 +32,19 @@ import {
   Avatar
 } from '@/components/common';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
-import { useRoles, useSort, useDebounce, useAuth, useResource, useToast, useExcelExport } from '@/hooks';
-import type { User, SortColumn, UserCreateInput, UserListParams, UserUpdateInput } from '@/types';
-import { cn as _cn, getStorageItem, setStorageItem } from '@/utils';
+import { useSort, useDebounce, useAuth, useResource, useToast, useExcelExport } from '@/hooks';
+import type { User, SortColumn, UserCreateInput, UserListParams, UserUpdateInput, Role } from '@/types';
+import { cn, getStorageItem, setStorageItem } from '@/utils';
 import { STORAGE_KEYS } from '@/config';
 
-// Fix for broken import type resolution
-const cn = _cn as unknown as (...inputs: (string | boolean | undefined | null)[]) => string;
+
 
 // ...
 
-// (Wait, I can't jump lines easily in one block without multi_replace. Use multi_replace again.)
 import { UserRow } from './components/UserRow';
 import { UserForm } from './components/UserForm';
 import { RoleSelectModal } from '@/pages/Admin/Roles/components/RoleSelectModal';
-import { userService } from '@/services';
+import { userService, roleService } from '@/services';
 import { UserTableSkeleton } from './components/UserTableSkeleton';
 import { UserRowSkeleton } from './components/UserRowSkeleton';
 
@@ -69,18 +67,27 @@ export default function UsersPage() {
 
   // View Mode
   const [viewMode, setViewMode] = useState<ViewMode>(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return
     return getStorageItem<ViewMode>(STORAGE_KEYS.USERS_VIEW_MODE as string) || 'list';
   });
   const handleViewModeChange = (mode: ViewMode) => {
     setViewMode(mode);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     setStorageItem(STORAGE_KEYS.USERS_VIEW_MODE as string, mode);
   };
 
 
   // Roles for Assignment
-  const { roles, fetchRoles } = useRoles();
+  const [roles, setRoles] = useState<Role[]>([]);
+  
+  const fetchRoles = useCallback(async () => {
+    try {
+      // Fetch all active roles for assignment
+      const response = await roleService.getPage({ page: 1, limit: 100, isDeleted: false });
+      setRoles(response.items);
+    } catch (error) {
+      console.error('Failed to fetch roles', error);
+      errorToast(t('toast.load_error'));
+    }
+  }, [errorToast, t]);
 
   // Use Generic Resource Hook
   const {
@@ -118,6 +125,7 @@ export default function UsersPage() {
   const { checkPermission } = useAuth();
   const canDelete = checkPermission('users', 'delete');
   const canUpdate = checkPermission('users', 'update');
+  const canCreate = checkPermission('users', 'create');
   const canSelect = canDelete || canUpdate;
 
   // UI State
@@ -134,7 +142,7 @@ export default function UsersPage() {
   } | null>(null);
 
   // Trigger Fetch on Filters Change
-  useMemo(() => {
+  useEffect(() => {
     const params: UserListParams = {
        search: debouncedSearchQuery || undefined,
        sort: sortConfig.field,
@@ -407,6 +415,11 @@ export default function UsersPage() {
                <p className="text-muted">
                  {searchQuery ? t("common:list.empty_search", { entities: t("users:entities") }) : t("common:list.empty", { entities: t("users:entities") })}
                </p>
+               {!searchQuery && canCreate && (
+                 <Button onClick={() => { setEditingUser(null); setShowForm(true); }} className="mt-4">
+                   {t("common:list.add_first", { entity: t("users:entity") })}
+                 </Button>
+               )}
              </CardContent>
            </Card>
         ) : (

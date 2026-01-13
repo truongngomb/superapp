@@ -154,5 +154,9 @@
     "previous_page": "Previous page",
     "next_page": "Next page",
     "last_page": "Last page"
+  },
+  "view_mode": {
+    "list": "List view",
+    "table": "Table view"
   }
 }
