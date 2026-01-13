@@ -198,7 +198,7 @@ export function LayoutSettings() {
             </div>
           </div>
         </CardContent>
-        <CardFooter className="flex items-center justify-end gap-3 bg-muted/30">
+        <CardFooter className="flex items-center justify-end gap-3">
           <Button
             variant="outline"
             onClick={handleReset}
