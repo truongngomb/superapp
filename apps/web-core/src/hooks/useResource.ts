@@ -115,15 +115,13 @@ export function useResource<T extends { id: string }, CreateInput, UpdateInput, 
   }, [items]);
 
   const handleSelectOne = useCallback((id: string, checked: boolean) => {
-    if (checked) {
-       setSelectedIds(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
-    } else {
-       setSelectedIds(prev => prev.filter(i => i !== id));
-    }
+    setSelectedIds(prev => checked 
+      ? (prev.includes(id) ? prev : [...prev, id])
+      : prev.filter(i => i !== id)
+    );
   }, []);
 
-  // CRUD Actions
-  const handleCreate = async (data: CreateInput) => {
+  const handleCreate = useCallback(async (data: CreateInput) => {
     setLoading(true);
     try {
       await service.create(data);
@@ -136,9 +134,9 @@ export function useResource<T extends { id: string }, CreateInput, UpdateInput, 
     } finally {
       setLoading(false);
     }
-  };
+  }, [service, resourceName, success, errorToast, t, fetchItems]);
 
-  const handleUpdate = async (id: string, data: UpdateInput) => {
+  const handleUpdate = useCallback(async (id: string, data: UpdateInput) => {
     setLoading(true);
     try {
       await service.update(id, data);
@@ -151,9 +149,9 @@ export function useResource<T extends { id: string }, CreateInput, UpdateInput, 
     } finally {
       setLoading(false);
     }
-  };
+  }, [service, resourceName, success, errorToast, t, fetchItems]);
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = useCallback(async (id: string) => {
     try {
        await service.delete(id);
        success(t('toast.delete_success'));
@@ -161,9 +159,9 @@ export function useResource<T extends { id: string }, CreateInput, UpdateInput, 
     } catch {
        errorToast(t('toast.error'));
     }
-  };
+  }, [service, success, errorToast, fetchItems, t]);
 
-  const handleRestore = async (id: string) => {
+  const handleRestore = useCallback(async (id: string) => {
     try {
        await service.restore(id);
        success(t('toast.restore_success', { entity: t(`resources.${resourceName}`) }));
@@ -171,7 +169,7 @@ export function useResource<T extends { id: string }, CreateInput, UpdateInput, 
     } catch {
        errorToast(t('toast.error'));
     }
-  };
+  }, [service, resourceName, success, errorToast, fetchItems, t]);
 
   const handleBatchDelete = async () => {
      if (selectedIds.length === 0) return;

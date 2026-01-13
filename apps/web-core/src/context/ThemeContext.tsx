@@ -3,7 +3,7 @@
  * Manages application theme (light/dark mode)
  */
 
-import { useState, useEffect, useCallback, type ReactNode } from 'react';
+import { useState, useEffect, useCallback, useMemo, type ReactNode } from 'react';
 import { THEME, STORAGE_KEYS } from '@/config';
 import { getStorageItem, setStorageItem } from '@/utils';
 import { useAuth } from '@/hooks';
@@ -57,8 +57,8 @@ export function ThemeProvider({ children, defaultTheme = THEME.LIGHT }: ThemePro
     const dbTheme = user?.preferences?.theme as Theme | undefined;
     if (!dbTheme) return;
     
-    const timer = setTimeout(() => {
-      setThemeState(prev => prev !== dbTheme ? dbTheme : prev);
+    const timer = setTimeout(() => { 
+      setThemeState(prev => prev !== dbTheme ? dbTheme : prev); 
     }, 0);
     
     return () => { clearTimeout(timer); };
@@ -89,12 +89,12 @@ export function ThemeProvider({ children, defaultTheme = THEME.LIGHT }: ThemePro
     setTheme(theme === THEME.DARK ? THEME.LIGHT : THEME.DARK);
   }, [theme, setTheme]);
 
-  const value = {
+  const value = useMemo(() => ({
     theme,
     isDark: theme === THEME.DARK,
     toggleTheme,
     setTheme,
-  };
+  }), [theme, toggleTheme, setTheme]);
 
   return (
     <ThemeContext.Provider value={value}>

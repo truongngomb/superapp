@@ -7,7 +7,7 @@
     "declaration": true,
     "outDir": "dist",
     "skipLibCheck": true,
-    "types": [],
+    "types": ["node"],
     "paths": {
       "@superapp/shared-types": ["../shared-types/src/index.ts"]
     }

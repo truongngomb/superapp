@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useRef, useCallback } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useCallback, useMemo } from 'react';
 import { logger } from '@/utils';
 
 import { useAuth } from '@/hooks';
@@ -32,7 +32,8 @@ export const RealtimeProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       if (eventSourceRef.current) {
         eventSourceRef.current.close();
         eventSourceRef.current = null;
-        setIsConnected(false);
+        // Deferred to avoid cascading render warning
+        setTimeout(() => { setIsConnected(false); }, 0);
       }
       return;
     }
@@ -119,8 +120,10 @@ export const RealtimeProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     };
   }, [handleEvent]);
 
+  const value = useMemo(() => ({ isConnected, subscribe }), [isConnected, subscribe]);
+
   return (
-    <RealtimeContext.Provider value={{ isConnected, subscribe }}>
+    <RealtimeContext.Provider value={value}>
       {children}
     </RealtimeContext.Provider>
   );

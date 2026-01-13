@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, type ReactNode } from 'react';
+import { useState, useEffect, useCallback, useMemo, type ReactNode } from 'react';
 import { settingsService, type SettingItem } from '@/services';
 import { useToast } from '@/context';
 import { SettingsContext } from './SettingsContext.base';
@@ -21,7 +21,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     }
   }, [show]);
 
-  const updateSetting = async (key: string, value: unknown) => {
+  const updateSetting = useCallback(async (key: string, value: unknown) => {
     setSubmitting(true);
     try {
       await settingsService.update(key, value);
@@ -34,7 +34,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     } finally {
       setSubmitting(false);
     }
-  };
+  }, [fetchSettings, show]);
 
   const getSettingValue = useCallback(<T = unknown>(key: string, defaultValue: T): T => {
     const setting = settings.find(s => s.key === key);
@@ -45,15 +45,17 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     void fetchSettings();
   }, [fetchSettings]);
 
+  const contextValue = useMemo(() => ({
+    settings,
+    loading,
+    submitting,
+    fetchSettings,
+    updateSetting,
+    getSettingValue
+  }), [settings, loading, submitting, fetchSettings, updateSetting, getSettingValue]);
+
   return (
-    <SettingsContext.Provider value={{
-      settings,
-      loading,
-      submitting,
-      fetchSettings,
-      updateSetting,
-      getSettingValue
-    }}>
+    <SettingsContext.Provider value={contextValue}>
       {children}
     </SettingsContext.Provider>
   );
