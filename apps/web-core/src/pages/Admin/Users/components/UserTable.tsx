@@ -26,7 +26,7 @@ export function UserTable({
   selectedIds,
   currentPage = 1,
   perPage = 10,
-  onSelectAll,
+  onSelectAll: _onSelectAll,
   onSelectOne,
   onEdit,
   onAssignRole,
@@ -35,22 +35,13 @@ export function UserTable({
 }: UserTableProps) {
   const { t } = useTranslation(['users', 'common']);
 
-  const allSelected = users.length > 0 && selectedIds.length === users.length;
-  const isIndeterminate = selectedIds.length > 0 && selectedIds.length < users.length;
-
   return (
     <div className="w-full overflow-auto rounded-lg border border-border bg-card shadow-sm">
       <table className="w-full text-left border-collapse">
         <thead className="bg-background text-muted-foreground">
           <tr>
             <th className="p-4 w-10">
-              {onSelectAll && (
-                <Checkbox
-                  checked={allSelected}
-                  triState={isIndeterminate}
-                  onChange={(checked) => { onSelectAll(checked); }}
-                />
-              )}
+              {/* Select All hidden as it is handled by outer component */}
             </th>
             <th className="w-12 p-4 text-center text-sm font-semibold text-muted tracking-wider">
               {t('common:order')}
@@ -79,7 +70,7 @@ export function UserTable({
             <tr 
               key={user.id} 
               className={cn(
-                "hover:bg-muted/50 transition-colors",
+                "hover:bg-muted/5 transition-colors",
                 selectedIds.includes(user.id) && "bg-primary/5"
               )}
             >

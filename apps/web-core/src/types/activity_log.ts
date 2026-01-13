@@ -1,4 +1,4 @@
-import type { BaseEntity } from './common';
+import type { BaseEntity, PaginatedResponse } from './common';
 
 // ============================================================================
 // Entity
@@ -24,12 +24,10 @@ export interface ActivityLog extends BaseEntity {
   details?: Record<string, unknown>;
 }
 
-export interface PaginatedActivityLogs {
-  items: ActivityLog[];
-  page: number;
-  total: number;
-  totalPages: number;
-}
+/**
+ * Paginated activity logs response
+ */
+export type PaginatedActivityLogs = PaginatedResponse<ActivityLog>;
 
 export interface ActivityLogParams {
   page?: number;

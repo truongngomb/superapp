@@ -1,4 +1,4 @@
-import { BaseEntity } from './common';
+import { BaseEntity, PaginatedResponse } from './common';
 
 /**
  * User entity from API
@@ -52,13 +52,7 @@ export interface UserRoleAssignment {
 /**
  * Paginated users response
  */
-export interface PaginatedUsers {
-  items: User[];
-  page: number;
-  limit: number;
-  total: number;
-  totalPages: number;
-}
+export type PaginatedUsers = PaginatedResponse<User>;
 
 /**
  * User list query parameters

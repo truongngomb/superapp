@@ -1,8 +1,8 @@
 
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { RefreshCw, Search, Shield, Loader2, FileSpreadsheet } from 'lucide-react';
-import { Button, Card, CardContent, Pagination, SortPopup, Input, PermissionGuard } from '@/components/common';
+import { RefreshCw, Search, Loader2, FileSpreadsheet } from 'lucide-react';
+import { Button, Pagination, SortPopup, Input, PermissionGuard } from '@/components/common';
 import { STORAGE_KEYS } from '@/config';
 import { ActivityLogTable } from './components/ActivityLogTable';
 import { ActivityLogTableSkeleton } from './components/ActivityLogTableSkeleton';
@@ -160,21 +160,17 @@ export default function ActivityLogsPage() {
         {/* Logs Table */}
         {(loading && logs.length === 0) || isRefreshing ? (
           <ActivityLogTableSkeleton />
-        ) : logs.length === 0 ? (
-          <Card className="py-12 text-center">
-            <CardContent>
-              <Shield className="w-12 h-12 text-muted mx-auto mb-4" />
-              <p className="text-muted">
-                {searchQuery ? t('common:list.empty_search', { entities: t('activity_logs:entities') }) : t('common:list.empty', { entities: t('activity_logs:entities') })} 
-              </p>
-            </CardContent>
-          </Card>
         ) : (
-          <Card>
-            <CardContent className="p-0">
-              <ActivityLogTable logs={logs} currentPage={page} />
-            </CardContent>
-          </Card>
+          <ActivityLogTable 
+            logs={logs} 
+            currentPage={page} 
+            sortConfig={{
+              field: sortConfig.field,
+              order: sortConfig.order === 'asc' ? 'asc' : 'desc'
+            }}
+            onSort={handleSort}
+            isLoading={loading}
+          />
         )}
 
         {/* Pagination */}

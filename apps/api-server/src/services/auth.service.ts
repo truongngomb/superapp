@@ -48,14 +48,16 @@ class AuthService {
    */
   async initGoogleAuth(): Promise<GoogleAuthInitResult> {
     const authMethods = await pb.collection(Collections.USERS).listAuthMethods();
-    const googleProvider = authMethods.authProviders.find((p) => p.name === 'google');
+    // PocketBase SDK v0.26+ uses oauth2.providers instead of authProviders
+    const providers = authMethods.oauth2?.providers ?? [];
+    const googleProvider = providers.find((p) => p.name === 'google');
 
     if (!googleProvider) {
       log.error('Google OAuth not configured in PocketBase');
       throw new Error('Google OAuth not configured');
     }
 
-    const url = new URL(googleProvider.authUrl);
+    const url = new URL(googleProvider.authURL);
     url.searchParams.set('redirect_uri', this.REDIRECT_URI);
 
     return {

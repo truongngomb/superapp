@@ -2,7 +2,7 @@
  * Role Types
  */
 
-import type { BaseEntity } from './common';
+import type { BaseEntity, PaginatedResponse } from './common';
 import { PermissionAction, PermissionResource } from './common';
 
 // ============================================================================
@@ -67,12 +67,7 @@ export interface RoleListParams {
 /**
  * Paginated role response
  */
-export interface PaginatedRoles {
-  items: Role[];
-  page: number;
-  totalPages: number;
-  total: number;
-}
+export type PaginatedRoles = PaginatedResponse<Role>;
 
 // ============================================================================
 // Permission Helpers

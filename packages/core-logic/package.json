@@ -15,18 +15,18 @@
   },
   "dependencies": {
     "clsx": "^2.1.1",
-    "tailwind-merge": "^2.2.0",
     "date-fns": "^4.1.0",
+    "eruda": "^3.4.3",
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
-    "eruda": "^3.4.1"
+    "tailwind-merge": "^3.4.0"
   },
   "peerDependencies": {
     "react": "^18.0.0"
   },
   "devDependencies": {
-     "typescript": "^5.0.0",
-     "@types/file-saver": "^2.0.7",
-     "@types/react": "^18.0.0"
+    "@types/file-saver": "^2.0.7",
+    "@types/react": "^19.2.8",
+    "typescript": "^5.9.3"
   }
 }

@@ -91,7 +91,7 @@ function createApp(): Express {
   // =========================================================================
   
   // 404 handler for API routes
-  app.use('/api/*', (_req, _res, next) => {
+  app.use('/api/{*path}', (_req, _res, next) => {
     next(new NotFoundError('Endpoint not found'));
   });
 

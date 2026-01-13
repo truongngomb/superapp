@@ -4,6 +4,7 @@
   "scripts": {
     "dev": "pnpm -r dev",
     "build": "pnpm -r build",
+    "db": "pnpm --filter @superapp/api-server db",
     "lint": "pnpm -r lint",
     "test": "pnpm -r test"
   },

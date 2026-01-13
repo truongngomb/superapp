@@ -2,7 +2,7 @@
  * Category Types
  */
 
-import type { BaseEntity } from './common';
+import type { BaseEntity, PaginatedResponse } from './common';
 
 // ============================================================================
 // Entity
@@ -66,9 +66,4 @@ export interface CategoryListParams {
 /**
  * Paginated category response
  */
-export interface PaginatedCategories {
-  items: Category[];
-  page: number;
-  totalPages: number;
-  total: number;
-}
+export type PaginatedCategories = PaginatedResponse<Category>;

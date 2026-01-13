@@ -35,6 +35,7 @@ export interface DataTableProps<T> {
 
   isLoading?: boolean;
   emptyMessage?: string;
+  showSelectAll?: boolean;
 }
 
 export function DataTable<T>({
@@ -51,6 +52,7 @@ export function DataTable<T>({
   perPage = 10,
   isLoading,
   emptyMessage,
+  showSelectAll = false,
 }: DataTableProps<T>) {
   const { t } = useTranslation('common');
 
@@ -73,7 +75,7 @@ export function DataTable<T>({
             {/* Selection Column */}
             {(onSelectAll || onSelectOne) && (
               <th className="w-12 px-4 py-3 align-middle">
-                 {onSelectAll && (
+                 {showSelectAll && onSelectAll && (
                   <Checkbox
                     checked={allSelected}
                     triState={isIndeterminate}
@@ -94,7 +96,7 @@ export function DataTable<T>({
                 key={col.key}
                 className={cn(
                   "px-4 py-3 text-sm font-semibold text-muted tracking-wider align-middle whitespace-nowrap",
-                  col.sortable && "cursor-pointer hover:bg-muted/50 select-none",
+                  col.sortable && "cursor-pointer hover:bg-muted/5 select-none",
                   col.align === 'center' && "text-center",
                   col.align === 'right' && "text-right",
                   col.className
@@ -141,7 +143,7 @@ export function DataTable<T>({
                 <tr
                   key={id}
                   className={cn(
-                    "hover:bg-muted/50 transition-colors group",
+                    "hover:bg-muted/5 transition-colors group",
                     isSelected && "bg-primary/5"
                   )}
                 >

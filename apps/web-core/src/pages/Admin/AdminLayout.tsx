@@ -72,7 +72,7 @@ export default function AdminLayout() {
                     'flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all whitespace-nowrap',
                     isActive
                       ? 'bg-primary/10 text-primary'
-                      : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
+                      : 'text-muted-foreground hover:bg-muted/20 hover:text-foreground'
                   )
                 }
               >
