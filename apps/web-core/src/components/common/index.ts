@@ -14,3 +14,7 @@ export * from './NotFoundPage';
 export * from './PageLoader';
 export * from './DataTable';
 export * from './Avatar';
+export * from './ResourceToolbar';
+export * from './BatchActionButtons';
+export * from './PageHeader';
+export * from './SearchFilterBar';

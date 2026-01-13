@@ -3,8 +3,6 @@ import { AnimatePresence, motion as framerMotion } from "framer-motion";
 import {
   Plus,
   Shield,
-  Search,
-  RefreshCw,
   Loader2,
   Trash2,
   FileSpreadsheet,
@@ -17,17 +15,15 @@ import {
   Button,
   Card,
   CardContent,
-  Input,
   ConfirmModal,
-  SortPopup,
   Pagination,
-  Toggle,
-  ViewSwitcher,
-  Checkbox,
   type ViewMode,
   DataTable,
   type Column,
   Badge,
+  ResourceToolbar,
+  BatchActionButtons,
+  SearchFilterBar
 } from "@/components/common";
 import { PermissionGuard } from "@/components/common/PermissionGuard";
 import type { Role, SortColumn, CreateRoleInput, UpdateRoleInput, RoleListParams } from "@/types";
@@ -267,111 +263,44 @@ export default function RolesPage() {
       </div>
 
       {/* Toolbar */}
-      <div className="flex gap-3 mb-4">
-        <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" />
-          <Input
-            value={searchQuery}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setSearchQuery(e.target.value); }}
-            placeholder={t("common:search")}
-            className="pl-10"
+      {/* Search Filter Bar */}
+      <SearchFilterBar
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        sortColumns={sortColumns}
+        sortConfig={sortConfig}
+        onSort={handleSort}
+        isRefreshing={isRefreshing}
+        isLoading={loading}
+        onRefresh={() => { setIsRefreshing(true); void fetchItems().finally(() => { setIsRefreshing(false); }); }}
+      />
+
+      {/* Resource Toolbar */}
+      <ResourceToolbar
+        resource="roles"
+        itemCount={roles.length}
+        totalItems={total}
+        canSelect={canSelect}
+        selectedCount={selectedIds.length}
+        totalListItems={roles.length}
+        onSelectAll={handleSelectAll}
+        viewMode={viewMode}
+        onViewModeChange={handleViewModeChange}
+        showArchived={showArchived}
+        onShowArchivedChange={(checked) => { setShowArchived(checked); setSelectedIds([]); }}
+        batchActions={
+          <BatchActionButtons
+            resource="roles"
+            selectedCount={selectedIds.length}
+            showArchived={showArchived}
+            hasDeletedSelected={hasDeletedSelected}
+            onRestore={() => { setShowBatchRestoreConfirm(true); }}
+            onDelete={() => { setShowBatchDeleteConfirm(true); }}
+            onActivate={() => { setBatchStatusConfig({ isOpen: true, isActive: true }); }}
+            onDeactivate={() => { setBatchStatusConfig({ isOpen: true, isActive: false }); }}
           />
-        </div>
-        <SortPopup columns={sortColumns} currentSort={sortConfig} onSort={handleSort} />
-        <Button variant="outline" onClick={() => { setIsRefreshing(true); void fetchItems().finally(() => { setIsRefreshing(false); }); }}>
-          <RefreshCw className={cn("w-5 h-5", (loading || isRefreshing) && "animate-spin")} />
-        </Button>
-      </div>
-
-      {/* Batch Actions & View Switcher */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-        <div className="flex items-center gap-4">
-          <AnimatePresence mode="popLayout">
-            {roles.length > 0 && canSelect && (
-              <framerMotion.div
-                key="select-all"
-                initial={{ opacity: 0, scale: 0.95, x: -10 }}
-                animate={{ opacity: 1, scale: 1, x: 0 }}
-                exit={{ opacity: 0, scale: 0.95, x: -10 }}
-                transition={{ duration: 0.2 }}
-                className="flex items-center p-3 bg-surface rounded-lg"
-              >
-                <Checkbox
-                  triState
-                  checked={selectedIds.length === 0 ? false : selectedIds.length === roles.length ? true : "indeterminate"}
-                  onChange={handleSelectAll}
-                  label={t("common:select_all")}
-                  hideLabelOnMobile
-                />
-              </framerMotion.div>
-            )}
-          </AnimatePresence>
-
-          <framerMotion.div
-            initial={{ opacity: 0, x: -5 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3, delay: 0.1 }}
-          >
-            <ViewSwitcher value={viewMode} onChange={handleViewModeChange} />
-          </framerMotion.div>
-
-          <PermissionGuard resource="roles" action="manage">
-            <framerMotion.div
-              initial={{ opacity: 0, x: -5 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3, delay: 0.2 }}
-            >
-              <Toggle
-                checked={showArchived}
-                onChange={(checked: boolean) => { setShowArchived(checked); setSelectedIds([]); }}
-                label={t("common:show_archived")}
-                hideLabelOnMobile
-              />
-            </framerMotion.div>
-          </PermissionGuard>
-        </div>
-        
-        {/* Batch Action Buttons */}
-        <div className="flex items-center gap-3">
-          <AnimatePresence mode="popLayout">
-            {selectedIds.length > 0 && (
-              <framerMotion.div
-                key="batch-actions"
-                initial={{ opacity: 0, x: 10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 10 }}
-                className="flex items-center gap-3"
-              >
-                {showArchived && (
-                  <PermissionGuard resource="roles" action="update">
-                    <Button variant="outline" size="sm" onClick={() => { setShowBatchRestoreConfirm(true); }}>
-                      <RefreshCw className="w-4 h-4" /> {t("common:restore")} ({selectedIds.length})
-                    </Button>
-                  </PermissionGuard>
-                )}
-                <PermissionGuard resource="roles" action="delete">
-                  <Button variant="danger" size="sm" onClick={() => { setShowBatchDeleteConfirm(true); }}>
-                    <Trash2 className="w-4 h-4" /> {t("common:delete_selected")} ({selectedIds.length})
-                  </Button>
-                </PermissionGuard>
-                {!hasDeletedSelected && (
-                  <PermissionGuard resource="roles" action="update">
-                    <div className="flex items-center gap-2">
-                       <Button variant="outline" size="sm" onClick={() => { setBatchStatusConfig({ isOpen: true, isActive: true }); }}>
-                         {t("common:actions.activate")} ({selectedIds.length})
-                       </Button>
-                       <Button variant="outline" size="sm" onClick={() => { setBatchStatusConfig({ isOpen: true, isActive: false }); }}>
-                         {t("common:actions.deactivate")} ({selectedIds.length})
-                       </Button>
-                    </div>
-                  </PermissionGuard>
-                )}
-              </framerMotion.div>
-            )}
-          </AnimatePresence>
-          <p className="text-sm text-muted">{t('common:total_items', { count: total })}</p>
-        </div>
-      </div>
+        }
+      />
 
       {/* Content */}
       <AnimatePresence mode="wait">

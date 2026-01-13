@@ -8,6 +8,9 @@ export { env, validateEnv } from './env';
 // Constants
 export * from './constants';
 
+// Animation Variants
+export * from './animation.variants';
+
 // API client
 export { 
   api, 
