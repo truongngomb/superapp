@@ -19,4 +19,6 @@ export * from './useResource';
 export type { UseResourceReturn } from './useResource';
 export * from './useResourceService';
 export * from './useExcelExport';
+export * from './usePreferenceSync';
 export { useToast } from '@/context/useToast';
+export { useTheme } from '@/context/useTheme';

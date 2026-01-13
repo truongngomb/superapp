@@ -77,6 +77,11 @@ export function setStorageItem<T extends Record<string, unknown> | string | numb
     };
     
     storage.setItem(key, JSON.stringify(item));
+    
+    // Dispatch custom event for same-tab synchronization
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('local-storage-update', { detail: { key, value } }));
+    }
   } catch (error) {
     logger.warn('Storage', 'Failed to save to storage:', error);
   }
@@ -88,6 +93,9 @@ export function setStorageItem<T extends Record<string, unknown> | string | numb
 export function removeStorageItem(key: StorageKey, options?: StorageOptions): void {
   const storage = options?.storage ?? localStorage;
   storage.removeItem(key);
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('local-storage-update', { detail: { key, value: null } }));
+  }
 }
 
 /**
@@ -96,6 +104,9 @@ export function removeStorageItem(key: StorageKey, options?: StorageOptions): vo
 export function clearStorage(options?: StorageOptions): void {
   const storage = options?.storage ?? localStorage;
   storage.clear();
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('local-storage-update', { detail: { key: null, value: null } }));
+  }
 }
 
 // ============================================================================

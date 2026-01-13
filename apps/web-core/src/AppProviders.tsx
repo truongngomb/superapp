@@ -24,18 +24,18 @@ interface AppProvidersProps {
  */
 export function AppProviders({ children }: AppProvidersProps) {
   return (
-    <ThemeProvider>
-      <ToastProvider>
-        <SettingsProvider>
-          <AuthProvider>
+    <AuthProvider>
+      <ThemeProvider>
+        <ToastProvider>
+          <SettingsProvider>
             <RealtimeProvider>
               <ActivityLogProvider>
                 {children}
               </ActivityLogProvider>
             </RealtimeProvider>
-          </AuthProvider>
-        </SettingsProvider>
-      </ToastProvider>
-    </ThemeProvider>
+          </SettingsProvider>
+        </ToastProvider>
+      </ThemeProvider>
+    </AuthProvider>
   );
 }

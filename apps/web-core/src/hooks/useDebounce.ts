@@ -1,1 +1,1 @@
-export { useDebounce } from '@superapp/core-logic';
+export { useDebounce, useDebounceCallback } from '@superapp/core-logic';

@@ -11,10 +11,12 @@ import {
   type ReactNode,
 } from 'react';
 import { authService } from '@/services';
-import { logger } from '@/utils';
-import { ApiException } from '@/config';
+import { logger, setStorageItem } from '@/utils';
+import { ApiException, STORAGE_KEYS } from '@/config';
+import i18n from '@/config/i18n';
 import { PermissionAction, PermissionResource } from '@/types';
 import type { AuthUser } from '@/types';
+import { usePreferenceSync } from '@/hooks/usePreferenceSync';
 import { AuthContext, type AuthContextType } from './AuthContext';
 
 // ============================================================================
@@ -30,6 +32,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Sync preferences (continuous)
+  usePreferenceSync(user, !!user && !user.isGuest);
+
   // Check auth status
   const checkAuth = useCallback(async () => {
     try {
@@ -40,6 +45,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
       // Guest users have user object with isGuest=true
       if (response.user) {
         setUser(response.user);
+        
+        // Sync preferences from DB to LocalStorage
+        if (response.user.preferences) {
+          const validKeys = Object.values(STORAGE_KEYS) as string[];
+          
+          for (const [key, value] of Object.entries(response.user.preferences)) {
+            if (key === 'language' && i18n.language !== value) {
+              void i18n.changeLanguage(value as string);
+            } else if (validKeys.includes(key)) {
+              setStorageItem(key, value as string | number | boolean | Record<string, unknown> | null);
+            }
+          }
+        }
       } else {
         setUser(null);
       }

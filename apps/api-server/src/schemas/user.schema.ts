@@ -36,6 +36,7 @@ export const UserUpdateSchema = z.object({
   emailVisibility: z.boolean().optional(),
   isActive: z.boolean().optional(),
   roles: z.array(z.string()).optional(),
+  preferences: z.record(z.string(), z.unknown()).optional(),
 });
 
 /**

@@ -9,6 +9,7 @@ export interface User extends BaseEntity {
   avatar?: string;
   roles?: string[];
   roleNames?: string[];
+  preferences?: Record<string, unknown>;
 }
 
 // ============================================================================
@@ -36,6 +37,7 @@ export interface UserUpdateInput {
   emailVisibility?: boolean;
   isActive?: boolean;
   roles?: string[];
+  preferences?: Record<string, unknown>;
 }
 
 /**

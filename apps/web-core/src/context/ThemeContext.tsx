@@ -6,6 +6,7 @@
 import { useState, useEffect, useCallback, type ReactNode } from 'react';
 import { THEME, STORAGE_KEYS } from '@/config';
 import { getStorageItem, setStorageItem } from '@/utils';
+import { useAuth } from '@/hooks';
 import { ThemeContext } from './themeContext.internal';
 
 // ============================================================================
@@ -25,6 +26,7 @@ interface ThemeProviderProps {
 }
 
 export function ThemeProvider({ children, defaultTheme = THEME.LIGHT }: ThemeProviderProps) {
+  const { user } = useAuth();
   const [theme, setThemeState] = useState<Theme>(() => {
     // Check stored preference first
     const stored = getStorageItem<Theme>(STORAGE_KEYS.THEME);
@@ -49,6 +51,18 @@ export function ThemeProvider({ children, defaultTheme = THEME.LIGHT }: ThemePro
       root.classList.remove('dark');
     }
   }, [theme]);
+
+  // Sync theme with user preferences from DB (deferred to avoid cascading render warning)
+  useEffect(() => {
+    const dbTheme = user?.preferences?.theme as Theme | undefined;
+    if (!dbTheme) return;
+    
+    const timer = setTimeout(() => {
+      setThemeState(prev => prev !== dbTheme ? dbTheme : prev);
+    }, 0);
+    
+    return () => { clearTimeout(timer); };
+  }, [user?.preferences?.theme]);
 
   // Listen for system preference changes
   useEffect(() => {

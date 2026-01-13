@@ -25,6 +25,8 @@ export interface AuthUser {
   updated?: string;
   /** Whether this is a guest user (with Public role permissions) */
   isGuest?: boolean;
+  /** User-specific UI preferences */
+  preferences?: Record<string, unknown>;
 }
 
 // ============================================================================

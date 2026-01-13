@@ -3,6 +3,7 @@
  * Only loads in development mode or when ?debug=true is in URL
  * Note: eruda is excluded from production builds to reduce bundle size
  */
+/// <reference types="vite/client" />
 
 import { logger } from './logger';
 

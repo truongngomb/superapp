@@ -2,7 +2,7 @@
  * Users Collection
  */
 import type { AuthCollectionSchema } from '../collection.schema.js';
-import { autodateField, boolField, fileField, relationField, textField } from '../collection.schema.js';
+import { autodateField, boolField, fileField, jsonField, relationField, textField } from '../collection.schema.js';
 
 /**
  * Users collection
@@ -17,6 +17,7 @@ export const usersCollection: AuthCollectionSchema = {
     relationField('roles', 'roles', { maxSelect: 99 }),
     boolField('isActive'),
     boolField('isDeleted'),
+    jsonField('preferences'),
     autodateField('created', { onCreate: true, onUpdate: false }),
     autodateField('updated', { onCreate: true, onUpdate: true }),
   ],

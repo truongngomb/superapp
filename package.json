@@ -8,5 +8,8 @@
     "lint": "pnpm -r lint",
     "test": "pnpm -r test"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/node": "^25.0.7",
+    "vite": "^7.3.1"
+  }
 }
