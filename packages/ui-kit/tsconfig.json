@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "declaration": true,
+    "outDir": "dist",
+    "skipLibCheck": true,
+    "jsx": "react-jsx",
+    "types": ["node"],
+    "paths": {
+      "@superapp/shared-types": ["../shared-types/src/index.ts"],
+      "@superapp/core-logic": ["../core-logic/src/index.ts"]
+    }
+  },
+  "include": ["src"]
+}

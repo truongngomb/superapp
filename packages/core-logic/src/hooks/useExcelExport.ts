@@ -1,0 +1,144 @@
+/**
+ * Excel Export Hook
+ * 
+ * Provides functionality to export data to Excel files using exceljs
+ */
+import { useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Workbook } from 'exceljs';
+import { saveAs } from 'file-saver';
+import { logger } from '../utils';
+
+export interface ExportColumn<T> {
+  /** Property key - supports dot notation for nested properties (e.g. 'expand.user.name') */
+  key: keyof T | '#' | (string & {});
+  header: string;
+  width?: number;
+}
+
+export interface UseExcelExportOptions<T> {
+  /** File name prefix (without extension) */
+  fileNamePrefix: string;
+  /** Column definitions */
+  columns: ExportColumn<T>[];
+  /** Sheet name */
+  sheetName?: string;
+  /** Callback on success */
+  onSuccess?: (message: string) => void;
+  /** Callback on error */
+  onError?: (message: string) => void;
+}
+
+export interface UseExcelExportReturn<T> {
+  /** Export data to Excel */
+  exportToExcel: (data: T[]) => Promise<void>;
+  /** Whether export is in progress */
+  exporting: boolean;
+}
+
+/**
+ * Hook for exporting data to Excel files
+ */
+export function useExcelExport<T extends object>(
+  options: UseExcelExportOptions<T>
+): UseExcelExportReturn<T> {
+  const { fileNamePrefix, columns, sheetName = 'Sheet1', onSuccess, onError } = options;
+  const [exporting, setExporting] = useState(false);
+  const { t } = useTranslation('common');
+
+  const exportToExcel = useCallback(async (data: T[]) => {
+    if (exporting) return;
+    
+    setExporting(true);
+    
+    try {
+      // Create workbook and worksheet
+      const workbook = new Workbook();
+      workbook.creator = 'SuperApp';
+      workbook.created = new Date();
+      
+      const worksheet = workbook.addWorksheet(sheetName);
+
+      // Define columns
+      worksheet.columns = columns.map((col) => ({
+        header: col.header,
+        key: String(col.key),
+        width: col.width || 20,
+      }));
+
+      // Style header row
+      const headerRow = worksheet.getRow(1);
+      headerRow.font = { bold: true };
+      headerRow.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFE2E8F0' }, // Light gray background
+      };
+      headerRow.alignment = { vertical: 'middle', horizontal: 'left' };
+
+      // Add data rows
+      data.forEach((item, index) => {
+        const rowData: Record<string, unknown> = {};
+        columns.forEach((col) => {
+          // Special handling for row number column
+          if (col.key === '#') {
+            rowData['#'] = index + 1;
+            return;
+          }
+          // Get value - support nested keys with dot notation (e.g. 'expand.user.name')
+          const keyStr = String(col.key);
+          let value: unknown;
+          
+          if (keyStr.includes('.')) {
+            // Handle nested property path
+            value = keyStr.split('.').reduce<unknown>(
+              (obj, key) => (obj && typeof obj === 'object' ? (obj as Record<string, unknown>)[key] : undefined),
+              item
+            );
+          } else {
+            value = (item as Record<string, unknown>)[keyStr];
+          }
+          
+          // Convert boolean to localized string
+          if (typeof value === 'boolean') {
+            rowData[keyStr] = value ? t('active') : t('inactive');
+          } else {
+            rowData[keyStr] = value ?? '';
+          }
+        });
+        worksheet.addRow(rowData);
+      });
+
+      // Auto-fit column widths (approximate)
+      worksheet.columns.forEach((column) => {
+        if (column.width && column.width < 10) {
+          column.width = 10;
+        }
+      });
+
+      // Generate file name with timestamp
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '').slice(0, 15);
+      const fileName = `${fileNamePrefix}_${timestamp}.xlsx`;
+
+      // Generate buffer and save
+      const buffer = await workbook.xlsx.writeBuffer();
+      const blob = new Blob([buffer], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      });
+      saveAs(blob, fileName);
+
+      if (onSuccess) {
+        onSuccess(t('export_success', { defaultValue: 'Export successful!' }));
+      }
+    } catch (error) {
+      logger.warn('useExcelExport', 'Export failed:', error);
+      if (onError) {
+        onError(t('export_error', { defaultValue: 'Export failed' }));
+      }
+    } finally {
+      setExporting(false);
+    }
+  }, [exporting, columns, sheetName, fileNamePrefix, onSuccess, onError, t]);
+
+  return { exportToExcel, exporting };
+}
