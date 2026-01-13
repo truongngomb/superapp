@@ -12,7 +12,7 @@ import { PermissionAction, PermissionResource } from './common';
 /**
  * Permission map: resource -> actions[]
  */
-export type RolePermissions = Record<string, string[]>;
+export type RolePermissions = Record<string, string[] | undefined>;
 
 /**
  * Role entity from API

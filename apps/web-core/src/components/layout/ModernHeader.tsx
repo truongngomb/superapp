@@ -23,7 +23,7 @@ import { useAuth, useActivityLogContext } from '@/hooks';
 import { useTheme } from '@/context';
 import { LanguageSwitcher } from '../common/LanguageSwitcher';
 import { NotificationCenter } from '../notifications/NotificationCenter';
-import { useLayout } from '@/context/LayoutContext';
+import { useLayout } from '@/hooks';
 
 interface ModernHeaderProps {
   onMenuToggle?: () => void;

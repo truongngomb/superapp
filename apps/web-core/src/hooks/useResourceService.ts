@@ -6,8 +6,8 @@ export interface ServiceConfig extends Omit<RequestConfig, 'signal'> {
   signal?: AbortSignal;
 }
 
-export interface ResourceService<T, CreateInput = any, UpdateInput = any, ListParams = any> {
-  getPage: (params?: ListParams, config?: ServiceConfig) => Promise<PaginatedResponse<T> | any>;
+export interface ResourceService<T, CreateInput = unknown, UpdateInput = unknown, ListParams = Record<string, unknown>> {
+  getPage: (params?: ListParams, config?: ServiceConfig) => Promise<PaginatedResponse<T>>;
   getById: (id: string, config?: ServiceConfig) => Promise<T>;
   create: (data: CreateInput) => Promise<T>;
   update: (id: string, data: UpdateInput) => Promise<T>;
@@ -19,17 +19,17 @@ export interface ResourceService<T, CreateInput = any, UpdateInput = any, ListPa
   getAllForExport: (params?: ListParams, config?: ServiceConfig) => Promise<T[]>;
 }
 
-export function createResourceService<T, CreateInput, UpdateInput, ListParams>(
+export function createResourceService<T, CreateInput, UpdateInput, ListParams extends Record<string, unknown>>(
   endpoint: string
 ): ResourceService<T, CreateInput, UpdateInput, ListParams> {
   return {
-    async getPage(params?: any, config?: ServiceConfig) {
+    async getPage(params?: ListParams, config?: ServiceConfig) {
       const { controller, clear } = createAbortController(config?.timeout ?? env.API_REQUEST_TIMEOUT);
       try {
         const queryParams = new URLSearchParams();
         if (params) {
           Object.entries(params).forEach(([key, value]) => {
-            if (value !== undefined && value !== null) {
+            if (value !== undefined && value !== null && (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean')) {
               queryParams.append(key, String(value));
             }
           });
@@ -74,14 +74,14 @@ export function createResourceService<T, CreateInput, UpdateInput, ListParams>(
       return api.post(`${endpoint}/batch-status`, { ids, isActive });
     },
 
-    async getAllForExport(params?: any, config?: ServiceConfig) {
+    async getAllForExport(params?: ListParams, config?: ServiceConfig) {
        const { controller, clear } = createAbortController(config?.timeout ?? env.API_REQUEST_TIMEOUT);
       try {
          const queryParams = new URLSearchParams();
         if (params) {
           Object.entries(params).forEach(([key, value]) => {
-             if (key === 'page' || key === 'limit') return; // Skip pagination for export
-            if (value !== undefined && value !== null) {
+            if (key === 'page' || key === 'limit') return; // Skip pagination for export
+            if (value !== undefined && value !== null && (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean')) {
               queryParams.append(key, String(value));
             }
           });

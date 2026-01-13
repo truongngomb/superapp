@@ -28,7 +28,7 @@ const LOG_LEVELS: Record<LogLevel, number> = {
 };
 
 // Basic environment check that works in Vite
-const isDev = (import.meta as any).env.DEV;
+const isDev = Boolean((import.meta as unknown as { env?: { DEV?: boolean } }).env?.DEV);
 
 const config: LoggerConfig = {
   enabled: true,
@@ -55,15 +55,17 @@ function getCallerInfo(): string {
   if (!config.showCaller) return '';
   
   const error = new Error();
-  const stack = error.stack?.split('\n') || [];
+  const stack = error.stack?.split('\n');
+  if (!stack) return '';
   // Stack: Error -> getCallerInfo -> log method -> caller
-  const callerLine = stack[4] || '';
+  const callerLine = stack[4];
+  if (!callerLine) return '';
   
   const match = callerLine.match(/\((.*):(\\d+):(\\d+)\)/) ||
                 callerLine.match(/at\\s+(.*):(\\d+):(\\d+)/);
   
   if (match) {
-    return `@ ${match[1] ?? ''}:${match[2] ?? ''}`;
+    return `@ ${match[1]}:${match[2]}`;
   }
   return '';
 }

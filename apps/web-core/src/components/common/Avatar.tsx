@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { cn } from '@/utils';
-import { User } from 'lucide-react';
 
 interface AvatarProps {
   src?: string | null;

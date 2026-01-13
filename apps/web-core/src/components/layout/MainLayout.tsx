@@ -1,5 +1,5 @@
 import { useLayoutMode } from '@/hooks';
-import { LayoutProvider } from '@/context/LayoutContext';
+import { LayoutProvider } from '@/context/LayoutProvider';
 import { StandardLayout } from './StandardLayout';
 import { ModernLayout } from './ModernLayout';
 

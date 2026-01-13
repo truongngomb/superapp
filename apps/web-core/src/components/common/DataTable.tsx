@@ -173,7 +173,7 @@ export function DataTable<T>({
                         col.className
                       )}
                     >
-                      {col.render ? col.render(item, index) : (item as any)[col.key]}
+                      {col.render ? col.render(item, index) : ((item as Record<string, unknown>)[col.key] as ReactNode)}
                     </td>
                   ))}
                 </tr>

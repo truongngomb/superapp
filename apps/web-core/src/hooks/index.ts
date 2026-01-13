@@ -14,6 +14,7 @@ export * from './useDataSorting';
 export * from './useDebounce';
 export * from './useSettings';
 export * from './useLayoutMode';
+export * from './useLayout';
 export * from './useResource';
 export type { UseResourceReturn } from './useResource';
 export * from './useResourceService';

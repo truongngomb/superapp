@@ -4,8 +4,7 @@ import { Users, Shield, LayoutDashboard, FileClock, Settings } from 'lucide-reac
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/utils';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
-import { useLayout } from '@/context/LayoutContext';
-import { useLayoutMode } from '@/hooks';
+import { useLayout, useLayoutMode } from '@/hooks';
 
 // ============================================================================
 // Types

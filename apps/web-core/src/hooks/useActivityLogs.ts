@@ -69,7 +69,7 @@ export function useActivityLogs() {
     } catch (error) {
       logger.warn('useActivityLogs', 'Failed to load activity logs:', error);
       // Use common load_error from namespace
-      toast.error(t('toast.load_error' as any, { defaultValue: 'Failed to load activity logs' }));
+      toast.error(t('common:toast.load_error', { defaultValue: 'Failed to load activity logs' }));
     } finally {
       setLoading(false);
       setIsLoadingMore(false);
@@ -82,7 +82,7 @@ export function useActivityLogs() {
       return await activityLogService.getAllForExport(params);
     } catch (error) {
       logger.warn('useActivityLogs', 'Failed to get logs for export:', error);
-      toast.error(t('toast.load_error' as any, { defaultValue: 'Failed to load logs for export' }));
+      toast.error(t('common:toast.load_error', { defaultValue: 'Failed to load logs for export' }));
       return [];
     } finally {
       setExporting(false);
