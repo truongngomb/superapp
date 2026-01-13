@@ -12,35 +12,31 @@ export function UserTableSkeleton() {
         <thead className="bg-background text-muted-foreground">
           <tr>
             {/* Selection */}
-            <th className="w-12 px-4 py-3 align-middle">
+            <th className="w-10 p-4">
                <Skeleton className="w-4 h-4 rounded" />
             </th>
             {/* Order */}
-            <th className="w-12 px-4 py-3 text-center align-middle">
+            <th className="w-12 p-4 text-center">
                <Skeleton className="h-4 w-8 mx-auto" />
             </th>
-            {/* Avatar */}
-            <th className="w-12 px-4 py-3 align-middle">
-               <Skeleton className="w-8 h-8 rounded-full" />
-            </th>
-            {/* Name */}
-            <th className="px-4 py-3 align-middle">
-               <Skeleton className="h-4 w-24" />
-            </th>
-            {/* Email */}
-            <th className="px-4 py-3 align-middle hidden md:table-cell">
+            {/* User Info (Avatar + Name) */}
+            <th className="p-4">
                <Skeleton className="h-4 w-32" />
             </th>
             {/* Roles */}
-            <th className="px-4 py-3 align-middle">
+            <th className="p-4">
                <Skeleton className="h-4 w-20" />
             </th>
             {/* Status */}
-            <th className="w-24 px-4 py-3 align-middle">
+            <th className="w-32 p-4">
                <Skeleton className="h-4 w-16" />
             </th>
+            {/* Created */}
+            <th className="p-4 hidden md:table-cell">
+               <Skeleton className="h-4 w-24" />
+            </th>
             {/* Actions */}
-            <th className="w-40 px-4 py-3 align-middle text-right">
+            <th className="p-4 text-right">
                <Skeleton className="h-4 w-16 ml-auto" />
             </th>
           </tr>
@@ -49,38 +45,40 @@ export function UserTableSkeleton() {
           {Array.from({ length: 5 }).map((_, i) => (
             <tr key={i} className="border-t border-border">
               {/* Selection */}
-              <td className="w-12 px-4 py-3 align-middle">
+              <td className="p-4">
                 <Skeleton className="w-4 h-4 rounded" />
               </td>
               {/* Order */}
-              <td className="w-12 px-4 py-3 text-center align-middle">
+              <td className="p-4">
                 <Skeleton className="h-4 w-6 mx-auto" />
               </td>
-              {/* Avatar */}
-              <td className="w-12 px-4 py-3 align-middle">
-                <Skeleton className="w-8 h-8 rounded-full" />
-              </td>
-              {/* Name */}
-              <td className="px-4 py-3 align-middle">
-                <Skeleton className="h-4 w-32" />
-              </td>
-              {/* Email */}
-              <td className="px-4 py-3 align-middle hidden md:table-cell">
-                <Skeleton className="h-4 w-48" />
+              {/* User Info */}
+              <td className="p-4">
+                <div className="flex items-center gap-3">
+                  <Skeleton className="w-10 h-10 rounded-full flex-shrink-0" />
+                  <div className="flex flex-col gap-1.5 flex-1 min-w-0">
+                    <Skeleton className="h-4 w-32" />
+                    <Skeleton className="h-3 w-40" />
+                  </div>
+                </div>
               </td>
               {/* Roles */}
-              <td className="px-4 py-3 align-middle">
+              <td className="p-4">
                 <div className="flex gap-1">
                   <Skeleton className="h-5 w-16 rounded-full" />
                   <Skeleton className="h-5 w-12 rounded-full" />
                 </div>
               </td>
               {/* Status */}
-              <td className="w-24 px-4 py-3 align-middle">
+              <td className="p-4">
                 <Skeleton className="h-5 w-16 rounded-full" />
               </td>
+              {/* Created */}
+              <td className="p-4 hidden md:table-cell">
+                <Skeleton className="h-4 w-24" />
+              </td>
               {/* Actions */}
-              <td className="w-40 px-4 py-3 align-middle">
+              <td className="p-4">
                 <div className="flex items-center justify-end gap-1">
                   <Skeleton className="w-8 h-8 rounded-md" />
                   <Skeleton className="w-8 h-8 rounded-md" />

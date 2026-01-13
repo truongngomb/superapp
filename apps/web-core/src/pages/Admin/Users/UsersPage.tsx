@@ -316,7 +316,7 @@ export default function UsersPage() {
         <PermissionGuard resource="users" action="create">
           <Button onClick={() => { setEditingUser(null); setShowForm(true); }}>
             <Plus className="w-5 h-5" />
-            {t("common:add")}
+            {t("users:create_btn")}
           </Button>
         </PermissionGuard>
       </div>
@@ -515,7 +515,11 @@ export default function UsersPage() {
       <ConfirmModal
         isOpen={!!deleteId}
         title={t("common:delete")}
-        message={t("common:confirmation.delete", { entity: t("users:entity") })}
+        message={
+          users.find((u) => u.id === deleteId)?.isDeleted
+            ? t("common:confirmation.hard_delete", { entity: t("users:entity") })
+            : t("common:confirmation.delete", { entity: t("users:entity") })
+        }
         confirmText={t("common:delete")}
         cancelText={t("common:cancel")}
         loading={loading}
@@ -537,8 +541,12 @@ export default function UsersPage() {
 
        <ConfirmModal
         isOpen={showBatchDeleteConfirm}
-        title={t("common:batch_delete_title")}
-        message={t("common:batch_confirmation.delete", { count: selectedIds.length, entities: t("users:entities") })}
+        title={t("common:delete")}
+        message={
+          hasDeletedSelected
+            ? t("common:batch_confirmation.hard_delete", { count: selectedIds.length, entities: t("users:entities") })
+            : t("common:batch_confirmation.delete", { count: selectedIds.length, entities: t("users:entities") })
+        }
         confirmText={t("common:delete")}
         cancelText={t("common:cancel")}
         loading={loading}
@@ -562,7 +570,7 @@ export default function UsersPage() {
 
        <ConfirmModal
          isOpen={showBatchRestoreConfirm}
-         title={t("common:batch_restore_title")}
+         title={t("common:restore")}
          message={t("common:batch_confirmation.restore", { count: selectedIds.length, entities: t("users:entities") })}
          loading={loading}
          onConfirm={() => { void handleBatchRestore().then(() => { setShowBatchRestoreConfirm(false); }); }}

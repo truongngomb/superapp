@@ -56,7 +56,7 @@ export function UserTable({
               {t('common:order')}
             </th>
             <th className="p-4 text-sm font-semibold text-muted tracking-wider">
-              {t('common:users')}
+              {t('common:name')}
             </th>
             <th className="p-4 text-sm font-semibold text-muted tracking-wider">
               {t('users:form.role_label')}
@@ -112,7 +112,7 @@ export function UserTable({
                       <span className="font-medium truncate">{user.name || user.email}</span>
                       {user.isDeleted && (
                         <Badge variant="danger" size="sm">
-                          {t('common:archived', { defaultValue: 'Archived' })}
+                          {t('common:archived')}
                         </Badge>
                       )}
                     </div>
@@ -127,7 +127,7 @@ export function UserTable({
                       <Badge key={i} variant="secondary" size="sm">{name}</Badge>
                     ))
                   ) : (
-                    <span className="text-xs text-muted">{t('users:form.no_role')}</span>
+                    <span className="text-xs text-muted">{t('common:no_roles')}</span>
                   )}
                 </div>
               </td>
@@ -165,15 +165,15 @@ export function UserTable({
                       </>
                     )}
                     {user.isDeleted && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => { onRestore(user.id); }}
-                        aria-label={t('common:restore', { defaultValue: 'Restore' })}
-                        title={t('common:restore', { defaultValue: 'Restore' })}
-                      >
-                        <RotateCcw className="w-4 h-4 text-primary" />
-                      </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => { onRestore(user.id); }}
+                          aria-label={t('common:restore')}
+                          title={t('common:restore')}
+                        >
+                          <RotateCcw className="w-4 h-4 text-primary" />
+                        </Button>
                     )}
                   </PermissionGuard>
                   <PermissionGuard resource="users" action="delete">

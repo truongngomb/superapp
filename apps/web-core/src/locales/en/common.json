@@ -158,5 +158,7 @@
   "view_mode": {
     "list": "List view",
     "table": "Table view"
-  }
+  },
+  "archived": "Archived",
+  "no_roles": "No roles"
 }

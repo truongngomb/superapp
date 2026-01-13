@@ -20,9 +20,12 @@
     "delete_title": "Xóa Người dùng",
     "create_title": "Thêm Người dùng",
     "is_active_label": "Trạng thái hoạt động"
-  },"toast": {
+  },
+  "toast": {
     "assign_role_success": "Gán vai trò thành công!",
     "assign_roles_success": "Gán các vai trò thành công!",
     "remove_role_success": "Xóa vai trò thành công!"
-  }
+  },
+  "create_btn": "Thêm Người dùng",
+  "assign_role_btn": "Gán vai trò"
 }

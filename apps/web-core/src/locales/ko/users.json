@@ -25,5 +25,7 @@
     "assign_role_success": "역할이 할당되었습니다!",
     "assign_roles_success": "역할이 할당되었습니다!",
     "remove_role_success": "역할이 제거되었습니다!"
-  }
+  },
+  "create_btn": "사용자 추가",
+  "assign_role_btn": "역할 할당"
 }

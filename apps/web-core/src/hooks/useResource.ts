@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useToast } from '@/hooks';
 import { useTranslation } from 'react-i18next';
 import type { ResourceService } from './useResourceService';
@@ -55,10 +55,24 @@ export function useResource<T extends { id: string }, CreateInput, UpdateInput, 
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [queryParams, setQueryParams] = useState<ListParams>((initialParams || {}) as ListParams);
+  
+  // Use state for queryParams to trigger UI updates (e.g., pagination)
+  const [queryParams, setQueryParamsState] = useState<ListParams>((initialParams || {}) as ListParams);
+  
+  // Use ref to keep params stable for fetchItems to avoid infinite loop
+  const paramsRef = useRef<ListParams>((initialParams || {}) as ListParams);
+
+  const setQueryParams = useCallback((params: ListParams) => {
+    paramsRef.current = params;
+    setQueryParamsState(params);
+  }, []);
 
   const fetchItems = useCallback(async (params?: ListParams) => {
-    const isPageChange = params?.page !== undefined && params.page !== queryParams.page;
+    const currentParams = paramsRef.current;
+    const nextParams = { ...currentParams, ...params };
+    
+    // Determine if this is a page change (loadingMore)
+    const isPageChange = params?.page !== undefined && params.page !== currentParams.page;
 
     if (isPageChange) {
       setIsLoadingMore(true);
@@ -67,10 +81,8 @@ export function useResource<T extends { id: string }, CreateInput, UpdateInput, 
     }
 
     try {
-      const mergedParams = { ...queryParams, ...params };
-      const response = await service.getPage(mergedParams) as unknown;
+      const response = await service.getPage(nextParams) as unknown;
       
-      // Handle different response structures if necessary
       if (response && typeof response === 'object' && 'items' in response && Array.isArray((response as { items: unknown[] }).items)) {
          setItems((response as { items: T[] }).items);
          setTotal((response as { total?: number }).total || 0);
@@ -79,7 +91,8 @@ export function useResource<T extends { id: string }, CreateInput, UpdateInput, 
          setTotal(response.length);
       }
       
-      setQueryParams(mergedParams);
+      // Update both ref and state
+      setQueryParams(nextParams);
     } catch (_error) {
       errorToast(t('toast.load_error', { entities: t(`resources.${resourceName}`) }));
       console.error(_error);
@@ -87,7 +100,7 @@ export function useResource<T extends { id: string }, CreateInput, UpdateInput, 
       setLoading(false);
       setIsLoadingMore(false);
     }
-  }, [service, queryParams, resourceName, errorToast, t]);
+  }, [service, resourceName, errorToast, t, setQueryParams]);
 
   // Initial Load
   useEffect(() => {

@@ -158,5 +158,11 @@
     "previous_page": "이전 페이지",
     "next_page": "다음 페이지",
     "last_page": "마지막 페이지"
+  },
+  "archived": "보관됨",
+  "no_roles": "역할 없음",
+  "view_mode": {
+    "list": "목록 보기",
+    "table": "테이블 보기"
   }
 }

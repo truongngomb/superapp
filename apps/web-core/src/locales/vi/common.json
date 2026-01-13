@@ -164,5 +164,7 @@
   "view_mode": {
     "list": "Dạng danh sách",
     "table": "Dạng bảng"
-  }
+  },
+  "archived": "Đã lưu trữ",
+  "no_roles": "Chưa có vai trò"
 }

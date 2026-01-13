@@ -25,5 +25,7 @@
     "assign_role_success": "Role assigned successfully!",
     "assign_roles_success": "Roles assigned successfully!",
     "remove_role_success": "Role removed successfully!"
-  }
+  },
+  "create_btn": "Create User",
+  "assign_role_btn": "Assign Role"
 }

@@ -153,7 +153,7 @@ export default function RolesPage() {
 
   // Actions
   const onDuplicate = useCallback(async (role: Role) => {
-    const newName = `${role.name} (${t("common:copy", { defaultValue: "Copy" })})`;
+    const newName = `${role.name} (${t("common:copy")})`;
     await handleCreate({
       name: newName,
       description: role.description,
