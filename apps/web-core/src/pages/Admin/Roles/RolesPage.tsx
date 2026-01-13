@@ -117,7 +117,7 @@ export default function RolesPage() {
     isActive: boolean;
   } | null>(null);
 
-  // Update params when filters change
+  // Update params when filters change (including initial load)
   useEffect(() => {
     const params: RoleListParams = {
        search: debouncedSearchQuery || undefined,
@@ -273,7 +273,7 @@ export default function RolesPage() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" />
           <Input
             value={searchQuery}
-            onChange={(e) => { setSearchQuery(e.target.value); }}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setSearchQuery(e.target.value); }}
             placeholder={t("common:search")}
             className="pl-10"
           />

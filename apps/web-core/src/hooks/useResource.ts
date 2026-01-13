@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useToast } from '@/hooks';
 import { useTranslation } from 'react-i18next';
 import type { ResourceService } from './useResourceService';
@@ -102,11 +102,8 @@ export function useResource<T extends { id: string }, CreateInput, UpdateInput, 
     }
   }, [service, resourceName, errorToast, t, setQueryParams]);
 
-  // Initial Load
-  useEffect(() => {
-     void fetchItems();
-     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // NOTE: No initial fetch here - pages should call fetchItems in their own useEffect
+  // This matches ActivityLogsPage pattern and prevents duplicate API calls
 
   // Selection Logic
   const handleSelectAll = useCallback((checked: boolean) => {

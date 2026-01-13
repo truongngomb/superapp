@@ -129,7 +129,7 @@ export default function ActivityLogsPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" />
             <Input
               value={searchQuery}
-              onChange={(e) => { setSearchQuery(e.target.value); }}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setSearchQuery(e.target.value); }}
               placeholder={t('common:search')}
               className="pl-10"
             />

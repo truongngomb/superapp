@@ -141,7 +141,13 @@ export default function UsersPage() {
     isActive: boolean;
   } | null>(null);
 
-  // Trigger Fetch on Filters Change
+  // Fetch roles once on mount
+  useEffect(() => {
+    void fetchRoles();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Trigger Fetch on Filters Change (including initial load)
   useEffect(() => {
     const params: UserListParams = {
        search: debouncedSearchQuery || undefined,
@@ -151,9 +157,7 @@ export default function UsersPage() {
        isDeleted: showArchived || undefined,
     };
     void fetchItems(params);
-    // Fetch roles if not loaded (could be optimized)
-    void fetchRoles();
-  }, [debouncedSearchQuery, sortConfig, showArchived, fetchItems, fetchRoles]);
+  }, [debouncedSearchQuery, sortConfig, showArchived, fetchItems]);
 
   // Handle Assignments
   const handleAssignRoles = async (roleIds: string[]) => {
@@ -327,7 +331,7 @@ export default function UsersPage() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" />
           <Input
             value={searchQuery}
-            onChange={(e) => { setSearchQuery(e.target.value); }}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setSearchQuery(e.target.value); }}
             placeholder={t("common:search")}
             className="pl-10"
           />

@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useCallback } from "react"; // Removed useEffect as useResource handles it
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { AnimatePresence } from "framer-motion";
 import {
@@ -121,12 +121,7 @@ export default function CategoriesPage() {
     isActive: boolean;
   } | null>(null);
 
-  // Update params when filters change
-  // Note: useResource removed dependency on internal useEffect for params, so we call fetchItems when dependencies change
-  // But wait, useResource has `fetchItems` which updates `queryParams`.
-  // We should trigger fetchItems when filter changs.
-  
-  // Update params when filters change
+  // Update params when filters change (including initial load)
   useEffect(() => {
     const params: CategoryListParams = {
        search: debouncedSearchQuery || undefined,
@@ -307,7 +302,7 @@ export default function CategoriesPage() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" />
           <Input
             value={searchQuery}
-            onChange={(e) => { setSearchQuery(e.target.value); }}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setSearchQuery(e.target.value); }}
             placeholder={t("common:search")}
             className="pl-10"
           />
