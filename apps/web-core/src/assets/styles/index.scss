@@ -17,6 +17,11 @@
   // Main content area - prevent layout shift when scrollbar appears/disappears
   main {
     scrollbar-gutter: stable;
+
+    // Hide scrollbar when a loading skeleton is visible
+    &:has(.animate-pulse) {
+      overflow-y: hidden !important;
+    }
   }
 
   body {

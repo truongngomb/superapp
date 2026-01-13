@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from 'react';
+import { AnimatePresence, motion as framerMotion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { RefreshCw, Search, Loader2, FileSpreadsheet } from 'lucide-react';
 import { Button, Pagination, SortPopup, Input, PermissionGuard } from '@/components/common';
@@ -158,20 +159,32 @@ export default function ActivityLogsPage() {
         </div>
 
         {/* Logs Table */}
-        {(loading && logs.length === 0) || isRefreshing ? (
-          <ActivityLogTableSkeleton />
-        ) : (
-          <ActivityLogTable 
-            logs={logs} 
-            currentPage={page} 
-            sortConfig={{
-              field: sortConfig.field,
-              order: sortConfig.order === 'asc' ? 'asc' : 'desc'
-            }}
-            onSort={handleSort}
-            isLoading={loading}
-          />
-        )}
+        <AnimatePresence mode="wait">
+          <framerMotion.div
+            key={loading && logs.length === 0 ? "loading" : logs.length === 0 ? "empty" : "content"}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="min-h-[400px]"
+          >
+            {(loading && logs.length === 0) || isRefreshing ? (
+              <ActivityLogTableSkeleton />
+            ) : (
+              <ActivityLogTable 
+                logs={logs} 
+                currentPage={page} 
+                sortConfig={{
+                  field: sortConfig.field,
+                  order: sortConfig.order === 'asc' ? 'asc' : 'desc'
+                }}
+                onSort={handleSort}
+                isLoading={loading}
+              />
+            )}
+          </framerMotion.div>
+        </AnimatePresence>
+
 
         {/* Pagination */}
         {!loading && logs.length > 0 && totalPages > 1 && (

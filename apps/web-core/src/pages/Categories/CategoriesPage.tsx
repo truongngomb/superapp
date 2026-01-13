@@ -1,19 +1,18 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion as framerMotion } from "framer-motion";
 import {
   Plus,
   Folder,
   Search,
-  RefreshCw,
+  Edit2,
+  Copy,
+  RotateCcw,
+  Trash2,
   Loader2,
   FileSpreadsheet,
-  Edit2,
-  Trash2,
-  RotateCcw,
-  Copy
+  RefreshCw,
 } from "lucide-react";
-import { motion as framerMotion } from "framer-motion";
 import {
   Button,
   Card,
@@ -316,70 +315,103 @@ export default function CategoriesPage() {
       {/* Batch Actions & View Switcher */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
         <div className="flex items-center gap-4">
-          {categories.length > 0 && canSelect && (
-             <div className="flex items-center p-3 bg-surface rounded-lg">
-               <Checkbox
-                 triState
-                 checked={selectedIds.length === 0 ? false : selectedIds.length === categories.length ? true : "indeterminate"}
-                 onChange={handleSelectAll}
-                 label={t("common:select_all")}
-                 hideLabelOnMobile
-               />
-             </div>
-          )}
-          <ViewSwitcher value={viewMode} onChange={handleViewModeChange} />
-             <PermissionGuard resource="categories" action="manage">
-            <Toggle
-              checked={showArchived}
-              onChange={(checked: boolean) => { setShowArchived(checked); setSelectedIds([]); }}
-              label={t("common:show_archived", { defaultValue: "Show Archived" })}
-              hideLabelOnMobile
-            />
+          <AnimatePresence mode="popLayout">
+            {categories.length > 0 && canSelect && (
+              <framerMotion.div
+                key="select-all"
+                initial={{ opacity: 0, scale: 0.95, x: -10 }}
+                animate={{ opacity: 1, scale: 1, x: 0 }}
+                exit={{ opacity: 0, scale: 0.95, x: -10 }}
+                transition={{ duration: 0.2 }}
+                className="flex items-center p-3 bg-surface rounded-lg"
+              >
+                <Checkbox
+                  triState
+                  checked={selectedIds.length === 0 ? false : selectedIds.length === categories.length ? true : "indeterminate"}
+                  onChange={handleSelectAll}
+                  label={t("common:select_all")}
+                  hideLabelOnMobile
+                />
+              </framerMotion.div>
+            )}
+          </AnimatePresence>
+
+          <framerMotion.div
+            initial={{ opacity: 0, x: -5 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+          >
+            <ViewSwitcher value={viewMode} onChange={handleViewModeChange} />
+          </framerMotion.div>
+
+          <PermissionGuard resource="categories" action="manage">
+            <framerMotion.div
+              initial={{ opacity: 0, x: -5 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3, delay: 0.2 }}
+            >
+              <Toggle
+                checked={showArchived}
+                onChange={(checked: boolean) => { setShowArchived(checked); setSelectedIds([]); }}
+                label={t("common:show_archived", { defaultValue: "Show Archived" })}
+                hideLabelOnMobile
+              />
+            </framerMotion.div>
           </PermissionGuard>
         </div>
         
         {/* Batch Action Buttons */}
         <div className="flex items-center gap-3">
-          {selectedIds.length > 0 && (
-             <>
-               {showArchived && (
-                 <PermissionGuard resource="categories" action="update">
-                   <Button variant="outline" size="sm" onClick={() => { setShowBatchRestoreConfirm(true); }}>
-                     <RefreshCw className="w-4 h-4" /> {t("common:restore", { defaultValue: "Restore" })} ({selectedIds.length})
-                   </Button>
-                 </PermissionGuard>
-               )}
-               <PermissionGuard resource="categories" action="delete">
-                 <Button variant="danger" size="sm" onClick={() => { setShowBatchDeleteConfirm(true); }}>
-                   <Trash2 className="w-4 h-4" /> {t("common:delete_selected")} ({selectedIds.length})
-                 </Button>
-               </PermissionGuard>
-               <PermissionGuard resource="categories" action="update">
-                 {!hasDeletedSelected && (
-                   <>
-                     <Button variant="outline" size="sm" onClick={() => { setBatchStatusConfig({ isOpen: true, isActive: true }); }}>
-                       {t("common:actions.activate")} ({selectedIds.length})
-                     </Button>
-                     <Button variant="outline" size="sm" onClick={() => { setBatchStatusConfig({ isOpen: true, isActive: false }); }}>
-                       {t("common:actions.deactivate")} ({selectedIds.length})
-                     </Button>
-                   </>
-                 )}
-               </PermissionGuard>
-             </>
-          )}
+          <AnimatePresence mode="popLayout">
+            {selectedIds.length > 0 && (
+              <framerMotion.div
+                key="batch-actions"
+                initial={{ opacity: 0, x: 10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
+                className="flex items-center gap-3"
+              >
+                {showArchived && (
+                  <PermissionGuard resource="categories" action="update">
+                    <Button variant="outline" size="sm" onClick={() => { setShowBatchRestoreConfirm(true); }}>
+                      <RefreshCw className="w-4 h-4" /> {t("common:restore", { defaultValue: "Restore" })} ({selectedIds.length})
+                    </Button>
+                  </PermissionGuard>
+                )}
+                <PermissionGuard resource="categories" action="delete">
+                  <Button variant="danger" size="sm" onClick={() => { setShowBatchDeleteConfirm(true); }}>
+                    <Trash2 className="w-4 h-4" /> {t("common:delete_selected")} ({selectedIds.length})
+                  </Button>
+                </PermissionGuard>
+                <PermissionGuard resource="categories" action="update">
+                  {!hasDeletedSelected && (
+                    <div className="flex items-center gap-2">
+                       <Button variant="outline" size="sm" onClick={() => { setBatchStatusConfig({ isOpen: true, isActive: true }); }}>
+                         {t("common:actions.activate")} ({selectedIds.length})
+                       </Button>
+                       <Button variant="outline" size="sm" onClick={() => { setBatchStatusConfig({ isOpen: true, isActive: false }); }}>
+                         {t("common:actions.deactivate")} ({selectedIds.length})
+                       </Button>
+                    </div>
+                  )}
+                </PermissionGuard>
+              </framerMotion.div>
+            )}
+          </AnimatePresence>
           <p className="text-sm text-muted">{t("common:total_items", { count: total })}</p>
         </div>
       </div>
 
       {/* Content */}
-      <framerMotion.div
-        key={loading ? "loading" : "content"}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.2 }}
-      >
+      <AnimatePresence mode="wait">
+        <framerMotion.div
+          key={loading && categories.length === 0 ? "loading" : categories.length === 0 ? "empty" : "content"}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
+          className="min-h-[400px]"
+        >
         {loading && categories.length === 0 ? (
            viewMode === 'table' ? (
               // Using helper or specialized skeleton if needed, otherwise Generic Skeleton works 
@@ -457,6 +489,7 @@ export default function CategoriesPage() {
            </div>
         )}
       </framerMotion.div>
+      </AnimatePresence>
 
       {/* Modals */}
       <AnimatePresence>
