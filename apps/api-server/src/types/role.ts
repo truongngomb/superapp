@@ -1,21 +1,21 @@
 /**
  * Role & Permission Types
  */
-import type { BaseEntity, CreateInput, UpdateInput } from './common.js';
+import type { Role } from '@superapp/shared-types';
+import type { CreateInput, UpdateInput } from './common.js';
 
-// =============================================================================
-// Permission Types
-// =============================================================================
+// Re-export Role entities and Permissions
+export type {
+  Role,
+  RolePermissions,
+  Resource,
+  Action
+} from '@superapp/shared-types';
 
-/**
- * Available resources in the system
- */
-export type Resource = 'categories' | 'users' | 'roles' | 'activity_logs' | 'dashboard' | 'all';
-
-/**
- * Available actions on resources
- */
-export type Action = 'view' | 'create' | 'update' | 'delete' | 'manage';
+// Re-export constants
+// Note: Shared types might define Enums, but we had object constants.
+// If shared types has Enums PermissionResource, PermissionAction, we can use them or map them.
+// Providing backward compatibility:
 
 /**
  * Resource constants for type-safe usage
@@ -40,41 +40,6 @@ export const Actions = {
   MANAGE: 'manage',
 } as const;
 
-/**
- * Role permissions mapping
- * Maps resources to allowed actions
- * 
- * @example
- * ```typescript
- * const adminPermissions: RolePermissions = {
- *   all: ['manage'],
- * };
- * 
- * const editorPermissions: RolePermissions = {
- *   categories: ['view', 'create', 'update'],
- *   users: ['view'],
- * };
- * ```
- */
-export interface RolePermissions {
-  [resource: string]: Action[];
-}
-
-// =============================================================================
-// Role Entity
-// =============================================================================
-
-/**
- * Role entity representing a user role with permissions
- */
-export interface Role extends BaseEntity {
-  /** Role display name */
-  name: string;
-  /** Role description */
-  description?: string;
-  /** Permissions assigned to this role */
-  permissions: RolePermissions;
-}
 
 // =============================================================================
 // Role Input Types

@@ -18,7 +18,7 @@ export type {
   Timestamps,
   ApiResponse,
   ApiErrorResponse,
-  PaginatedResponse,
+  PaginatedResponse, // Aliased to ApiPaginatedResponse
   PaginationParams,
   PartialBy,
   CreateInput,

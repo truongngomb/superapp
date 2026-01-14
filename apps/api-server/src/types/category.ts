@@ -1,27 +1,11 @@
 /**
  * Category Types
  */
-import type { BaseEntity, CreateInput, UpdateInput } from './common.js';
+import type { Category } from '@superapp/shared-types';
+import type { CreateInput, UpdateInput } from './common.js';
 
-// =============================================================================
-// Category Entity
-// =============================================================================
-
-/**
- * Category entity representing a content category
- */
-export interface Category extends BaseEntity {
-  /** Category display name */
-  name: string;
-  /** Category description */
-  description: string;
-  /** Hex color code for UI display */
-  color: string;
-  /** Icon identifier */
-  icon: string;
-  /** Active status */
-  isActive: boolean;
-}
+// Re-export entity
+export type { Category } from '@superapp/shared-types';
 
 // =============================================================================
 // Category Input Types
