@@ -2,6 +2,7 @@
  * Role Validation Schemas
  */
 import { z } from 'zod';
+import { PermissionResource, PermissionAction } from '@superapp/shared-types';
 
 // =============================================================================
 // Permission Schema Components
@@ -11,7 +12,10 @@ import { z } from 'zod';
  * Schema for role permissions object
  * Maps resource names to arrays of action strings
  */
-const permissionsSchema = z.record(z.string(), z.array(z.string()));
+const permissionsSchema = z.record(
+  z.nativeEnum(PermissionResource),
+  z.array(z.nativeEnum(PermissionAction))
+);
 
 // =============================================================================
 // Role Schemas
@@ -23,7 +27,7 @@ const permissionsSchema = z.record(z.string(), z.array(z.string()));
 export const RoleCreateSchema = z.object({
   name: z.string().min(1, 'Name is required').max(50, 'Name too long'),
   description: z.string().max(200, 'Description too long').optional(),
-  permissions: permissionsSchema.default({}),
+  permissions: permissionsSchema.default({} as Record<PermissionResource, PermissionAction[]>),
   isActive: z.boolean().optional(),
 });
 

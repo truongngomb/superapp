@@ -1,4 +1,5 @@
 import { env } from './env';
+import { PermissionResource, PermissionAction } from '@superapp/shared-types';
 /**
  * Application Constants
  * Centralized constant values used across the app
@@ -84,7 +85,8 @@ export const BREAKPOINTS = {
 } as const;
 
 // RBAC Constants
+// RBAC Constants
 export const PERMISSIONS = {
-  RESOURCES: ['all'] as const,
-  ACTIONS: ['view', 'create', 'update', 'delete', 'manage'] as const,
+  RESOURCES: Object.values(PermissionResource),
+  ACTIONS: Object.values(PermissionAction),
 } as const;

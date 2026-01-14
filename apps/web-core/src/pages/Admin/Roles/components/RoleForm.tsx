@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Input, Modal, Toggle } from '@/components/common';
 import { PERMISSIONS } from '@/config/constants';
-import type { Role, CreateRoleInput } from '@superapp/shared-types';
+import { type Role, type CreateRoleInput, PermissionAction, type PermissionResource } from '@superapp/shared-types';
 import { useSettings } from '@/hooks';
 
 interface RoleFormProps {
@@ -24,7 +24,7 @@ export function RoleForm({ role, onSubmit, onClose, loading, isOpen }: RoleFormP
   const resources = useMemo(() => {
     const defaults = [...PERMISSIONS.RESOURCES];
     const fromSettings = settingResources;
-    return Array.from(new Set([...fromSettings, ...defaults]));
+    return Array.from(new Set([...fromSettings, ...defaults])) as PermissionResource[];
   }, [settingResources]);
 
   const [formData, setFormData] = useState<CreateRoleInput>({
@@ -48,12 +48,16 @@ export function RoleForm({ role, onSubmit, onClose, loading, isOpen }: RoleFormP
     }
   }, [role, isOpen]);
 
-  const handleTogglePermission = (resource: string, action: string) => {
-    const currentPerms = formData.permissions[resource] || [];
-    let newPerms: string[];
+  const handleTogglePermission = (resource: string, actionString: string) => {
+    const action = actionString as PermissionAction;
+    const resourceKey = resource as PermissionResource;
+    
+    // Ensure currentPerms is treated as PermissionAction[]
+    const currentPerms = (formData.permissions[resourceKey] as PermissionAction[] | undefined) ?? [];
+    let newPerms: PermissionAction[];
 
     if (currentPerms.includes(action)) {
-      newPerms = currentPerms.filter(a => a !== action);
+      newPerms = currentPerms.filter((a: PermissionAction) => a !== action);
     } else {
       newPerms = [...currentPerms, action];
     }
@@ -62,14 +66,26 @@ export function RoleForm({ role, onSubmit, onClose, loading, isOpen }: RoleFormP
       ...formData,
       permissions: {
         ...formData.permissions,
-        [resource]: newPerms,
+        [resourceKey]: newPerms,
       },
     });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    
+    // Ensure all resources are present in the permissions object
+    // Map every known resource to its current value or empty array so backend receives complete map
+    const completePermissions = resources.reduce((acc, resource) => {
+      const currentPerms = formData.permissions[resource];
+      acc[resource] = Array.isArray(currentPerms) ? currentPerms : [];
+      return acc;
+    }, {} as Record<PermissionResource, PermissionAction[]>);
+
+    onSubmit({
+      ...formData,
+      permissions: completePermissions
+    });
   };
 
   return (

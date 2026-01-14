@@ -55,9 +55,14 @@ export function AppRoutes() {
         <Route
           index
           element={
-            <LazyPage>
-              <HomePage />
-            </LazyPage>
+            <ProtectedRoute
+              resource={PermissionResource.Home}
+              action={PermissionAction.View}
+            >
+              <LazyPage>
+                <HomePage />
+              </LazyPage>
+            </ProtectedRoute>
           }
         />
 

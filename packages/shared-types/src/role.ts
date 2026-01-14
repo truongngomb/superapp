@@ -11,19 +11,21 @@ import { PermissionAction, PermissionResource } from './common.js';
 
 /**
  * Available resources in the system
+ * @deprecated Use PermissionResource from common.ts instead
  */
-export type Resource = 'categories' | 'users' | 'roles' | 'activity_logs' | 'dashboard' | 'all';
+export type Resource = PermissionResource;
 
 /**
  * Available actions on resources
+ * @deprecated Use PermissionAction from common.ts instead
  */
-export type Action = 'view' | 'create' | 'update' | 'delete' | 'manage';
+export type Action = PermissionAction;
 
 /**
  * Permission map: resource -> actions[]
  */
 export interface RolePermissions {
-  [resource: string]: Action[];
+  [resource: string]: PermissionAction[];
 }
 
 /**
@@ -103,11 +105,11 @@ export function hasPermission(
   const resourcePerms = role.permissions[resource];
   const allPerms = role.permissions[PermissionResource.All];
 
-  const hasAction = (actions: Action[] | undefined, act: string) => 
-    actions?.some(a => a === act || a === 'manage') ?? false;
+  const hasAction = (actions: PermissionAction[] | undefined, act: PermissionAction | string) => 
+    actions?.some(a => a === (act as PermissionAction) || a === PermissionAction.Manage) ?? false;
 
   return (
-    hasAction(resourcePerms, action as Action) ||
-    hasAction(allPerms, action as Action)
+    hasAction(resourcePerms, action) ||
+    hasAction(allPerms, action)
   );
 }

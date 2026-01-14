@@ -244,4 +244,5 @@ export enum PermissionResource {
   Users = 'users',
   ActivityLogs = 'activity_logs',
   Dashboard = 'dashboard',
+  Home = 'home',
 }
