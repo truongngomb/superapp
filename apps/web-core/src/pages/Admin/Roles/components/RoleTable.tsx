@@ -70,7 +70,7 @@ export function RoleTable({
           {roles.map((role, index) => {
             const isSelected = selectedIds.includes(role.id);
             const permissionsCount = Object.entries(role.permissions)
-              .filter(([, actions]) => actions && actions.length > 0)
+              .filter(([, actions]) => actions.length > 0)
               .length;
             const orderNumber = (currentPage - 1) * perPage + index + 1;
 

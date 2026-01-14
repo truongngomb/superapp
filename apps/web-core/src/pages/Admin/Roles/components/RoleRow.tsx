@@ -93,7 +93,7 @@ export function RoleRow({ index, style, data, isSelected, onSelect }: RoleRowPro
       isActive={role.isActive}
       meta={
         <span className="text-xs">
-          {Object.entries(role.permissions).filter(([, actions]) => actions && actions.length > 0).length} {t('roles:list.resources_configured')}
+          {Object.entries(role.permissions).filter(([, actions]) => actions.length > 0).length} {t('roles:list.resources_configured')}
         </span>
       }
       actions={actions}
