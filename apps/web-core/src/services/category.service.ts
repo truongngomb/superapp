@@ -4,7 +4,7 @@
  */
 
 import { api, createAbortController, API_ENDPOINTS, type RequestConfig, env } from '@/config';
-import type { Category, CreateCategoryInput, UpdateCategoryInput, CategoryListParams, PaginatedCategories } from '@/types';
+import type { Category, CreateCategoryInput, UpdateCategoryInput, CategoryListParams, PaginatedCategories } from '@superapp/shared-types';
 
 // ============================================================================
 // Types

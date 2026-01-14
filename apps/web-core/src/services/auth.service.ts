@@ -4,7 +4,7 @@
  */
 
 import { api, createAbortController, API_ENDPOINTS, env } from '@/config';
-import type { AuthStatusResponse, AuthUser, OAuthConfigResponse } from '@/types';
+import type { AuthStatusResponse, AuthUser, OAuthConfigResponse } from '@superapp/shared-types';
 
 // ============================================================================
 // Types

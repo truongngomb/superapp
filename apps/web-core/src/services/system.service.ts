@@ -1,5 +1,5 @@
 import { api } from '@/config/api';
-import type { SystemStats } from '@/types/system';
+import type { SystemStats } from '@superapp/shared-types';
 
 export const systemService = {
   getStats: async (): Promise<SystemStats> => {

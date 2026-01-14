@@ -5,7 +5,7 @@
 
 import { api, createAbortController, API_ENDPOINTS, type RequestConfig, env } from '@/config';
 
-import type { User, UserCreateInput, UserUpdateInput, UserRoleAssignment, PaginatedUsers, UserListParams } from '@/types';
+import type { User, UserCreateInput, UserUpdateInput, UserRoleAssignment, PaginatedUsers, UserListParams } from '@superapp/shared-types';
 
 
 // ============================================================================

@@ -14,8 +14,8 @@ import { authService } from '@/services';
 import { logger, setStorageItem } from '@/utils';
 import { ApiException, STORAGE_KEYS } from '@/config';
 import i18n from '@/config/i18n';
-import { PermissionAction, PermissionResource } from '@/types';
-import type { AuthUser } from '@/types';
+import { PermissionAction, PermissionResource } from '@superapp/shared-types';
+import type { AuthUser } from '@superapp/shared-types';
 import { usePreferenceSync } from '@/hooks/usePreferenceSync';
 import { AuthContext, type AuthContextType } from './AuthContext';
 

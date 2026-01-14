@@ -3,7 +3,7 @@
  * Handles fetching activity logs from the backend
  */
 import { api, createAbortController, API_ENDPOINTS, type RequestConfig, env } from '@/config';
-import type { ActivityLog, PaginatedActivityLogs, ActivityLogParams } from '@/types';
+import type { ActivityLog, PaginatedActivityLogs, ActivityLogParams } from '@superapp/shared-types';
 
 // ============================================================================
 // Types

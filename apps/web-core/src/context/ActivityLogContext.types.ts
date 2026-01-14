@@ -1,4 +1,4 @@
-import type { ActivityLog } from '@/types';
+import type { ActivityLog } from '@superapp/shared-types';
 
 export interface ActivityLogContextType {
   logs: ActivityLog[];

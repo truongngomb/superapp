@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { activityLogService } from '@/services';
-import type { ActivityLog } from '@/types';
+import type { ActivityLog } from '@superapp/shared-types';
 import { logger } from '@/utils';
 import { ActivityLogContext } from './ActivityLogContext.base';
 import { useRealtime } from './RealtimeContext';

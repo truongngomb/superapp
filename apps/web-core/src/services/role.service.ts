@@ -4,7 +4,7 @@
  */
 
 import { api, createAbortController, API_ENDPOINTS, type RequestConfig, env } from '@/config';
-import type { Role, CreateRoleInput, UpdateRoleInput, RoleListParams, PaginatedRoles } from '@/types';
+import type { Role, CreateRoleInput, UpdateRoleInput, RoleListParams, PaginatedRoles } from '@superapp/shared-types';
 
 // ============================================================================
 // Types
