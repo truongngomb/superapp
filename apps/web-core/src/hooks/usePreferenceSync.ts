@@ -7,7 +7,7 @@ import { useDebounceCallback } from '@superapp/core-logic';
 import { STORAGE_KEYS } from '@/config';
 import { getStorageItem } from '@/utils';
 import { userService } from '@/services';
-import type { AuthUser } from '@/types';
+import type { AuthUser } from '@superapp/shared-types';
 
 // Keys to sync from localStorage to database
 const SYNC_KEYS = [

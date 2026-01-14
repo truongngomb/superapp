@@ -1,25 +1,23 @@
 /**
  * Utils Module Exports
+ * Re-exports from @superapp/core-logic package
  */
 
-// Class name utility
-export { cn } from './cn';
-
-// Logger
-export { logger, type LogLevel } from './logger';
-
-// Storage utilities
+// Re-export all utilities from core-logic package
 export {
+  // Class name utility
+  cn,
+  // Logger
+  logger,
+  type LogLevel,
+  // Storage utilities
   getStorageItem,
   setStorageItem,
   removeStorageItem,
   clearStorage,
   getTheme,
   setTheme,
-} from './storage';
-
-// Date utilities
-export {
+  // Date utilities
   getDateLocale,
   formatDate,
   formatDateTime,
@@ -28,10 +26,7 @@ export {
   isToday,
   isPast,
   isFuture,
-} from './date';
-
-// Validation utilities
-export {
+  // Validation utilities
   isEmpty,
   isEmail,
   isUrl,
@@ -45,7 +40,6 @@ export {
   invalidResult,
   fieldError,
   rules,
-} from './validation';
-
-// Eruda debugger
-export { initEruda } from './eruda';
+  // Eruda debugger
+  initEruda,
+} from '@superapp/core-logic';

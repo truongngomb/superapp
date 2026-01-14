@@ -2,23 +2,30 @@
  * Hooks Module Exports
  */
 
+// Local hooks
 export { useAuth } from './useAuth';
 export { usePermission, usePermissions } from './usePermission';
-
 export * from './useCategories';
 export * from './useUsers';
-export * from './useOnClickOutside';
 export * from './useActivityLogs';
-export * from './useSort';
-export * from './useDataSorting';
-export * from './useDebounce';
 export * from './useSettings';
 export * from './useLayoutMode';
 export * from './useLayout';
 export * from './useResource';
 export type { UseResourceReturn } from './useResource';
 export * from './useResourceService';
-export * from './useExcelExport';
 export * from './usePreferenceSync';
+
+// Re-exports from core-logic package
+export {
+  useDebounce,
+  useDebounceCallback,
+  useSort,
+  useDataSorting,
+  useExcelExport,
+  useOnClickOutside,
+} from '@superapp/core-logic';
+
+// Context hooks re-exports
 export { useToast } from '@/context/useToast';
 export { useTheme } from '@/context/useTheme';

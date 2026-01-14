@@ -2,8 +2,8 @@ import { useState, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { categoryService } from '@/services';
 import { useToast } from '@/context';
-import type { Category, CreateCategoryInput, CategoryListParams } from '@/types';
-import { logger } from '@/utils/logger';
+import type { Category, CreateCategoryInput, CategoryListParams } from '@superapp/shared-types';
+import { logger } from '@/utils';
 import { ApiException } from '@/config';
 
 export function useCategories() {

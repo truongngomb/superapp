@@ -2,8 +2,8 @@ import { useState, useCallback, useRef, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { activityLogService } from '@/services';
 import { useToast } from '@/context';
-import type { ActivityLog, ActivityLogParams } from '@/types';
-import { logger } from '@/utils/logger';
+import type { ActivityLog, ActivityLogParams } from '@superapp/shared-types';
+import { logger } from '@/utils';
 import { ActivityLogContext } from '@/context/ActivityLogContext.base';
 
 /**

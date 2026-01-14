@@ -1,5 +1,5 @@
 import { api, createAbortController, type RequestConfig, env } from '@/config';
-import type { PaginatedResponse } from '@/types';
+import type { PaginatedResponse } from '@superapp/shared-types';
 
 export interface ServiceConfig extends Omit<RequestConfig, 'signal'> {
   timeout?: number;
