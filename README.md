@@ -4,8 +4,21 @@
 
 ## 📂 Repository Structure
 
-- **[client/](client/README.md)**: Frontend application (React, TS, Vite, Capacitor).
-- **[server/](server/README.md)**: Backend application (Node.js, Express, PocketBase).
+```
+my-project/
+├── apps/
+│   ├── api-server/          # Backend API (Express, PocketBase)
+│   └── web-core/            # Frontend SPA (React, Vite, Capacitor)
+├── packages/
+│   ├── shared-types/        # Shared TypeScript types & Zod schemas
+│   ├── core-logic/          # Shared hooks & utilities
+│   └── ui-kit/              # Shared UI components
+├── package.json             # Root workspace config
+└── pnpm-workspace.yaml      # pnpm workspace definition
+```
+
+- **[apps/web-core/](apps/web-core/README.md)**: Frontend application (React 19, TS, Vite, Capacitor)
+- **[apps/api-server/](apps/api-server/README.md)**: Backend application (Node.js, Express, PocketBase)
 
 ## ✨ Features
 
@@ -25,26 +38,26 @@
 
 ### 1. Setup
 
-Clone the repo and install dependencies for the entire workspace:
+Clone the repo and install dependencies using pnpm:
 
 ```bash
 git clone <repository-url>
 cd my-project
-npm install
+pnpm install
 ```
 
 ### 2. Environment
 
 See detailed instructions in sub-folders:
-- [Client Configuration](client/README.md#environment-variables)
-- [Server Configuration](server/README.md#environment-variables)
+- [Frontend Configuration](apps/web-core/README.md#environment-variables)
+- [Backend Configuration](apps/api-server/README.md#environment-variables)
 
 ### 3. Run Development
 
-Start both the client and server concurrently:
+Start all apps concurrently:
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 - **Frontend**: http://localhost:5173
@@ -53,25 +66,31 @@ npm run dev
 
 ## 🛠️ Main Commands
 
-These commands run scripts across the workspace (client & server).
+These commands run scripts across the workspace.
 
 | Command | Description |
 |---------|-------------|
-| `npm run dev` | Start development servers concurrently |
-| `npm run build` | Build both client and server |
-| `npm run lint` | Run ESLint in both workspaces |
-| `npm run client:dev` | Start frontend only |
-| `npm run server:dev` | Start backend only |
-| `npm run db` | Run Database CLI (Server workspace) |
+| `pnpm dev` | Start all development servers |
+| `pnpm build` | Build all apps and packages |
+| `pnpm lint` | Run ESLint in all workspaces |
+| `pnpm db` | Run Database CLI (api-server) |
+| `pnpm test` | Run tests in all workspaces |
 
 ## 📱 Mobile Development
 
-Mobile commands are managed via the client workspace but can be run from root:
+Mobile commands are managed via the web-core workspace:
 
 ```bash
-npm run android:open  # Open Android Studio
-npm run ios:open      # Open Xcode
-npm run cap:sync      # Sync Capacitor
+cd apps/web-core
+
+# Sync web build with Capacitor platforms
+pnpm cap:sync
+
+# Open Android Studio
+pnpm android:open
+
+# Open Xcode (macOS only)
+pnpm ios:open
 ```
 
 ## 🔒 Security
@@ -81,6 +100,14 @@ npm run cap:sync      # Sync Capacitor
 - Rate limiting for batch operations
 - Permission-based access control
 - Soft delete for data safety
+
+## 📦 Shared Packages
+
+| Package | Description |
+|---------|-------------|
+| `@superapp/shared-types` | TypeScript types & Zod validation schemas |
+| `@superapp/core-logic` | Shared React hooks & utility functions |
+| `@superapp/ui-kit` | Reusable UI components with TailwindCSS |
 
 ## 📄 License
 

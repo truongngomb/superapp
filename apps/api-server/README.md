@@ -1,20 +1,21 @@
-# SuperApp Server
+# SuperApp API Server
 
 Backend API and Database Management using Express and PocketBase.
 
 ## Tech Stack
 
-- **Runtime**: Node.js
-- **Framework**: Express
+- **Runtime**: Node.js (ESM)
+- **Framework**: Express 5
 - **Database**: PocketBase (SQLite/Go)
-- **Validation**: Zod
+- **Validation**: Zod 4
 - **Caching**: NodeCache (In-memory, 5min TTL)
-- **Language**: TypeScript
+- **Language**: TypeScript 5.9
+- **Security**: Helmet, CORS, Cookie-parser
 
 ## Project Structure
 
 ```
-server/
+apps/api-server/
 ├── src/
 │   ├── config/             # Server config (env, cache, database)
 │   ├── controllers/        # Route handlers
@@ -22,7 +23,10 @@ server/
 │   │   ├── category.controller.ts
 │   │   ├── role.controller.ts
 │   │   ├── user.controller.ts
-│   │   └── activity_log.controller.ts
+│   │   ├── activity_log.controller.ts
+│   │   ├── settings.controller.ts
+│   │   ├── system.controller.ts
+│   │   └── realtime.controller.ts
 │   ├── database/           # PocketBase Schema & Migrations
 │   │   ├── collections/    # Schema definitions (Code-First)
 │   │   └── seeds/          # Data seeding scripts
@@ -54,7 +58,7 @@ server/
 
 ### Environment Variables
 
-Create a `.env` file in the `server` directory **(Required)**:
+Create a `.env` file in `apps/api-server` **(Required)**:
 
 ```env
 PORT=3001
@@ -71,10 +75,10 @@ POCKETBASE_ADMIN_PASSWORD=your_secure_password
 
 | Command | Description |
 |---------|-------------|
-| `npm run dev` | Start development server with watch mode |
-| `npm run build` | Compile TypeScript to JavaScript |
-| `npm run start` | Run compiled code |
-| `npm run db` | Run Database CLI tools |
+| `pnpm dev` | Start development server with watch mode |
+| `pnpm build` | Compile TypeScript to JavaScript |
+| `pnpm start` | Run compiled code |
+| `pnpm lint` | Run ESLint |
 
 ## Architecture
 
@@ -96,8 +100,9 @@ All entity services extend `BaseService<T>` which provides:
 
 ### RBAC (Role-Based Access Control)
 
-Resources: `categories`, `users`, `roles`, `activity_logs`, `all`
-Actions: `view`, `create`, `update`, `delete`, `manage`
+| Resources | Actions |
+|-----------|---------|
+| `categories`, `users`, `roles`, `activity_logs`, `dashboard`, `all` | `view`, `create`, `update`, `delete`, `manage` |
 
 ```typescript
 // Usage in routes
@@ -110,21 +115,25 @@ This project uses a custom **Code-First Migration** system working with PocketBa
 
 ### Interactive CLI
 
-Run `npm run db` to access the interactive menu:
-1. **Show Status**: Compare code schema vs database.
-2. **Migrate**: Push changes from code to database.
-3. **Pull Schema**: Update code from database (introspection).
-4. **Generate Script**: Generate migration summary.
-5. **Backup/Restore**: Manage schema backups.
-6. **Seed**: Run data seeding.
+Run `pnpm db` from the root to access the interactive menu:
+
+1. **Show Status**: Compare code schema vs database
+2. **Migrate**: Push changes from code to database
+3. **Pull Schema**: Update code from database (introspection)
+4. **Generate Script**: Generate migration summary
+5. **Backup/Restore**: Manage schema backups
+6. **Seed**: Run data seeding
 
 ### Command Flags
 
 ```bash
-npm run db -- --status    # Check status
-npm run db -- --migrate   # Safe migration
-npm run db -- --migrate --force  # Force destructive changes
-npm run db -- --seed      # Seed data
+pnpm db --status          # Check status
+pnpm db --migrate         # Safe migration
+pnpm db --migrate --force # Force destructive changes
+pnpm db --seed            # Seed data
+pnpm db --pull            # Pull schema from database
+pnpm db --backup          # Backup current schema
+pnpm db --generate        # Generate migration script
 ```
 
 ## API Reference
@@ -140,13 +149,21 @@ Base URL: `http://localhost:3001/api`
 | **Roles** | `GET/POST /roles`, `GET/PATCH/DELETE /roles/:id`, `POST /roles/batch-*` |
 | **Categories** | `GET/POST /categories`, `GET/PATCH/DELETE /categories/:id`, `POST /categories/batch-*` |
 | **Activity Logs** | `GET /activity-logs` |
+| **Settings** | `GET/PUT /settings` |
+| **System** | `GET /system/info`, `GET /system/health` |
 | **Realtime** | `GET /realtime/events` (SSE) |
-| **Health** | `GET /health` |
 
 ### Batch Operations
 
 All entity endpoints support:
-- `POST /batch-delete` - Soft delete multiple
-- `POST /batch-restore` - Restore multiple
-- `POST /batch-status` - Update status (isActive)
-- `GET /export` - Export all filtered data
+
+- `POST /<entity>/batch-delete` - Soft delete multiple
+- `POST /<entity>/batch-restore` - Restore multiple
+- `POST /<entity>/batch-status` - Update status (isActive)
+- `GET /<entity>/export` - Export all filtered data
+
+## Shared Packages
+
+This app uses shared packages from the monorepo:
+
+- `@superapp/shared-types` - TypeScript types & Zod schemas
