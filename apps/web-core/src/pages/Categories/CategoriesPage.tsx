@@ -26,7 +26,7 @@ import {
   SearchFilterBar
 } from "@/components/common";
 import { PermissionGuard } from "@/components/common/PermissionGuard";
-import type { Category, CreateCategoryInput, SortColumn, CategoryListParams } from "@/types";
+import type { Category, CreateCategoryInput, SortColumn, CategoryListParams } from "@superapp/shared-types";
 import { cn, getStorageItem, setStorageItem } from "@/utils";
 import { STORAGE_KEYS } from "@/config";
 import { useResource, useSort, useDebounce, useAuth, useExcelExport } from "@/hooks";

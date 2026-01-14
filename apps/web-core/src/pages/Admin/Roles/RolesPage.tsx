@@ -26,7 +26,7 @@ import {
   SearchFilterBar
 } from "@/components/common";
 import { PermissionGuard } from "@/components/common/PermissionGuard";
-import type { Role, SortColumn, CreateRoleInput, UpdateRoleInput, RoleListParams } from "@/types";
+import type { Role, SortColumn, CreateRoleInput, UpdateRoleInput, RoleListParams } from "@superapp/shared-types";
 import { cn, getStorageItem, setStorageItem } from "@/utils";
 import { STORAGE_KEYS } from "@/config";
 import { useSort, useDebounce, useAuth, useResource, useExcelExport } from "@/hooks";

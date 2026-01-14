@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Shield, X } from 'lucide-react';
 import { Button, Modal, Badge } from '@/components/common';
-import type { User, Role } from '@/types';
+import type { User, Role } from '@superapp/shared-types';
 
 interface RoleSelectModalProps {
   isOpen: boolean;

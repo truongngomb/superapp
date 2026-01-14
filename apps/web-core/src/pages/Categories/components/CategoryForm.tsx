@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, ColorPicker, Input, Modal, Toggle } from '@/components/common';
-import type { Category, CreateCategoryInput } from '@/types';
+import type { Category, CreateCategoryInput } from '@superapp/shared-types';
 import { IconPicker } from './IconPicker';
 
 interface CategoryFormProps {

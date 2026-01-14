@@ -5,7 +5,7 @@
 
 import { type ReactNode, type ReactElement } from 'react';
 import { useAuth } from '@/hooks';
-import { PermissionAction, PermissionResource } from '@/types';
+import { PermissionAction, PermissionResource } from '@superapp/shared-types';
 
 // ============================================================================
 // Types

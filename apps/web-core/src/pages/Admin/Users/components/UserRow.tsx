@@ -3,7 +3,7 @@ import { Edit2, Trash2, UserCog, User as UserIcon, RotateCcw } from 'lucide-reac
 import { Button, Badge, DataRow } from '@/components/common';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
 import { formatDate } from '@/utils';
-import type { User } from '@/types';
+import type { User } from '@superapp/shared-types';
 import { cn } from '@/utils';
 
 interface UserRowProps {

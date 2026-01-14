@@ -11,7 +11,7 @@ import { motion } from 'framer-motion';
 import { Card, CardContent, Skeleton } from '@/components/common';
 import { roleService, userService, categoryService, activityLogService } from '@/services';
 import { systemService } from '@/services/system.service';
-import type { SystemStats } from '@/types/system';
+import type { SystemStats } from '@superapp/shared-types';
 import { formatDateTime, logger } from '@/utils';
 
 // ============================================================================

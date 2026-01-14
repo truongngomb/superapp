@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Input, Modal, Toggle } from '@/components/common';
 import { PERMISSIONS } from '@/config/constants';
-import type { Role, CreateRoleInput } from '@/types';
+import type { Role, CreateRoleInput } from '@superapp/shared-types';
 import { useSettings } from '@/hooks';
 
 interface RoleFormProps {

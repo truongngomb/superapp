@@ -8,7 +8,7 @@ import { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { MainLayout } from '@/components/layout';
 import { ProtectedRoute, GuestGuard, PageLoader, NotFoundPage } from '@/components/common';
-import { PermissionResource, PermissionAction } from '@/types';
+import { PermissionResource, PermissionAction } from '@superapp/shared-types';
 
 // ============================================================================
 // Lazy Loaded Pages

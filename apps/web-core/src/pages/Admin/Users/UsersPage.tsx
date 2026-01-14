@@ -28,7 +28,7 @@ import {
 } from '@/components/common';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
 import { useSort, useDebounce, useAuth, useResource, useToast, useExcelExport } from '@/hooks';
-import type { User, SortColumn, UserCreateInput, UserListParams, UserUpdateInput, Role } from '@/types';
+import type { User, SortColumn, UserCreateInput, UserListParams, UserUpdateInput, Role } from '@superapp/shared-types';
 import { cn, getStorageItem, setStorageItem } from '@/utils';
 import { STORAGE_KEYS } from '@/config';
 

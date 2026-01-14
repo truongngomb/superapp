@@ -1,4 +1,5 @@
-import { useCallback, useMemo, useState, useRef, useEffect } from 'react';
+import { useCallback, useMemo, useState, useRef } from 'react';
+import { useOnClickOutside } from '@superapp/core-logic';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
@@ -36,21 +37,9 @@ export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
   }, [i18n]);
 
   // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen]);
+  useOnClickOutside(dropdownRef, () => {
+    if (isOpen) setIsOpen(false);
+  });
 
   return (
     <div className="relative" ref={dropdownRef}>

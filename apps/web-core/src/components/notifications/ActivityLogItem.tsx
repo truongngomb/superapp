@@ -17,7 +17,7 @@ import {
   Activity
 } from 'lucide-react';
 import { cn, getDateLocale } from '@/utils';
-import type { ActivityLog } from '@/types';
+import type { ActivityLog } from '@superapp/shared-types';
 
 interface ActivityLogItemProps {
   log: ActivityLog;

@@ -1,6 +1,6 @@
 import { Shield, Edit2, Trash2, RotateCcw, Copy } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import type { Role } from '@/types';
+import type { Role } from '@superapp/shared-types';
 import { Button, DataRow } from '@/components/common';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
 import { cn } from '@/utils';
@@ -93,7 +93,7 @@ export function RoleRow({ index, style, data, isSelected, onSelect }: RoleRowPro
       isActive={role.isActive}
       meta={
         <span className="text-xs">
-          {Object.entries(role.permissions).filter(([, actions]) => actions.length > 0).length} {t('roles:list.resources_configured')}
+          {Object.entries(role.permissions).filter(([, actions]) => actions && actions.length > 0).length} {t('roles:list.resources_configured')}
         </span>
       }
       actions={actions}

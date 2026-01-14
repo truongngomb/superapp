@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Button, Checkbox, Badge } from '@/components/common';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
 import { cn } from '@/utils';
-import type { Role } from '@/types';
+import type { Role } from '@superapp/shared-types';
 
 interface RoleTableProps {
   roles: Role[];
@@ -70,7 +70,7 @@ export function RoleTable({
           {roles.map((role, index) => {
             const isSelected = selectedIds.includes(role.id);
             const permissionsCount = Object.entries(role.permissions)
-              .filter(([, actions]) => actions.length > 0)
+              .filter(([, actions]) => actions && actions.length > 0)
               .length;
             const orderNumber = (currentPage - 1) * perPage + index + 1;
 

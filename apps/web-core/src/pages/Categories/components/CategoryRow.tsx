@@ -3,7 +3,7 @@ import { Edit2, Trash2, RotateCcw, Copy } from 'lucide-react';
 import { Button, DataRow } from '@/components/common';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
 import { cn } from '@/utils';
-import type { Category } from '@/types';
+import type { Category } from '@superapp/shared-types';
 import { CATEGORY_ICONS, type CategoryIcon } from './icons';
 
 interface CategoryRowProps {

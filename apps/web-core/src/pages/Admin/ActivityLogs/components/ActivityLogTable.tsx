@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { formatDistanceToNow } from 'date-fns';
 import { Clock } from 'lucide-react';
 import { DataTable, type Column } from '@/components/common';
-import { ActivityLog } from '@/types';
+import { ActivityLog } from '@superapp/shared-types';
 import { cn, getDateLocale } from '@/utils';
 
 interface ActivityLogTableProps {

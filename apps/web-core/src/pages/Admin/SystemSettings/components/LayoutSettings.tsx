@@ -95,7 +95,8 @@ export function LayoutSettings() {
 
   // Handle layout change for a specific resource
   const handleResourceLayoutChange = (resource: string, mode: string) => {
-    const path = `/${resource}`;
+    // Special case: "home" resource maps to "/" path (root)
+    const path = resource === 'home' ? '/' : `/${resource}`;
     const newPages = { ...layoutConfig.pages };
 
     if (mode === 'default') {
@@ -182,7 +183,8 @@ export function LayoutSettings() {
                 </div>
               ) : (
                 roleResources.map(resource => {
-                  const path = `/${resource}`;
+                  // Special case: "home" resource maps to "/" path
+                  const path = resource === 'home' ? '/' : `/${resource}`;
                   const currentMode = layoutConfig.pages[path] || 'default';
                   
                   return (

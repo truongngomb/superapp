@@ -3,7 +3,7 @@ import { Edit2, Trash2, UserCog, RotateCcw, User as UserIcon } from 'lucide-reac
 import { Button, Badge, Checkbox } from '@/components/common';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
 import { formatDate } from '@/utils';
-import type { User } from '@/types';
+import type { User } from '@superapp/shared-types';
 import { cn } from '@/utils';
 
 interface UserTableProps {

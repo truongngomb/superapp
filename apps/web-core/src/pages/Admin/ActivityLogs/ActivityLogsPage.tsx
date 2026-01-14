@@ -7,10 +7,9 @@ import { Button, Pagination, SortPopup, Input, PermissionGuard } from '@/compone
 import { STORAGE_KEYS } from '@/config';
 import { ActivityLogTable } from './components/ActivityLogTable';
 import { ActivityLogTableSkeleton } from './components/ActivityLogTableSkeleton';
-import type { ActivityLog } from '@/types';
+import type { ActivityLog } from '@superapp/shared-types';
 import { cn } from '@/utils';
-import { useSort, useDebounce, useActivityLogs } from '@/hooks';
-import { useExcelExport } from '@/hooks/useExcelExport';
+import { useSort, useDebounce, useActivityLogs, useExcelExport } from '@/hooks';
 
 export default function ActivityLogsPage() {
   const { t } = useTranslation(['activity_logs', 'common']);
