@@ -20,6 +20,9 @@ importers:
 
   apps/api-server:
     dependencies:
+      '@superapp/core-logic':
+        specifier: workspace:*
+        version: link:../../packages/core-logic
       '@superapp/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types

@@ -3,7 +3,7 @@ import { useEffect, type RefObject } from 'react';
 type Handler = (event: MouseEvent | TouchEvent) => void;
 
 export function useOnClickOutside<T extends HTMLElement = HTMLElement>(
-  ref: RefObject<T>,
+  ref: RefObject<T | null>,
   handler: Handler
 ): void {
   useEffect(() => {
@@ -11,7 +11,7 @@ export function useOnClickOutside<T extends HTMLElement = HTMLElement>(
       const el = ref.current;
 
       // Do nothing if clicking ref's element or descendent elements
-      if (el.contains(event.target as Node)) {
+      if (!el || el.contains(event.target as Node)) {
         return;
       }
 

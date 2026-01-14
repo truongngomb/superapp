@@ -15,7 +15,8 @@
     "paths": {
       "@/*": ["./src/*"],
       "@superapp/shared-types": ["../../packages/shared-types/src/index.ts"],
-      "@superapp/core-logic": ["../../packages/core-logic/src/index.ts"]
+      "@superapp/core-logic": ["../../packages/core-logic/src/index.ts"],
+      "@superapp/core-logic/*": ["../../packages/core-logic/src/*"]
     },
     "declaration": true,
     "declarationMap": true,

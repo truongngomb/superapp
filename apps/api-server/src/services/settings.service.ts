@@ -108,7 +108,7 @@ export const SettingsService = {
         .map(r => ({
           key: r.key as string,
           value: r.value as unknown,
-          visibility: (r.visibility as SettingVisibilityType) || SettingVisibility.ADMIN,
+          visibility: r.visibility as SettingVisibilityType,
         }));
     } catch (error) {
       log.error('Failed to get all settings:', error);
