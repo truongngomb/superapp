@@ -4,8 +4,6 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "lib": ["ES2023", "DOM"],
-    "outDir": "./dist",
-    "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -15,6 +13,7 @@
     "paths": {
       "@/*": ["./src/*"],
       "@superapp/shared-types": ["../../packages/shared-types/src/index.ts"],
+      "@superapp/shared-types/*": ["../../packages/shared-types/src/*"],
       "@superapp/core-logic": ["../../packages/core-logic/src/index.ts"],
       "@superapp/core-logic/*": ["../../packages/core-logic/src/*"]
     },
@@ -23,7 +22,9 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedIndexedAccess": true
+    "noUncheckedIndexedAccess": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

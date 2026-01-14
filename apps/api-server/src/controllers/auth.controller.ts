@@ -125,8 +125,9 @@ export const getMe = async (req: Request, res: Response) => {
   try {
     const session = await authService.validateSession(token);
     res.json({ success: true, data: session });
-  } catch (error) {
-    log.warn('Session validation failed', error);
+  } catch (err: unknown) {
+    const error = err instanceof Error ? err : new Error(String(err));
+    log.warn('Session validation failed', error.message);
     res.json({ 
       success: true, 
       data: { user: null, isAuthenticated: false } 

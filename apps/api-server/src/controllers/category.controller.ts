@@ -101,7 +101,7 @@ export const getById = async (req: Request, res: Response, _next: NextFunction) 
  */
 export const create = async (req: Request, res: Response, _next: NextFunction) => {
   // Body is already validated by middleware (validateBody)
-  const category = await categoryService.create(req.body as CategoryCreateInput, req.user?.id);
+  const category = await categoryService.create(req.body as unknown as CategoryCreateInput, req.user?.id);
   res.status(201).json({ success: true, data: category });
 };
 
@@ -111,7 +111,7 @@ export const create = async (req: Request, res: Response, _next: NextFunction) =
 export const update = async (req: Request, res: Response, _next: NextFunction) => {
   const category = await categoryService.update(
     req.params['id'] as string,
-    req.body as CategoryUpdateInput,
+    req.body as unknown as CategoryUpdateInput,
     req.user?.id
   );
   res.json({ success: true, data: category });

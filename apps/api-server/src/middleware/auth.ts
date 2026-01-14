@@ -137,7 +137,7 @@ export const requireAdmin = (
 
   // Check if user has admin role or specific system permission
   const roles = req.user.roles || [];
-  const permissions = req.user.permissions;
+  const permissions = req.user.permissions || {};
   
   const hasAdminRole = roles.some(role => role === 'admin' || role === 'SUPER_ADMIN');
   const hasSystemView = permissions['system']?.includes('view');
