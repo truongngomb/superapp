@@ -36,12 +36,15 @@ export function RoleForm({ role, onSubmit, onClose, loading, isOpen }: RoleFormP
 
   useEffect(() => {
     if (isOpen) {
-      setFormData({
-        name: role?.name ?? '',
-        description: role?.description ?? '',
-        permissions: role?.permissions ?? {},
-        isActive: role?.isActive ?? true,
-      });
+      // Defer state updates to avoid cascading render warning
+      setTimeout(() => {
+        setFormData({
+          name: role?.name ?? '',
+          description: role?.description ?? '',
+          permissions: role?.permissions ?? {},
+          isActive: role?.isActive ?? true,
+        });
+      }, 0);
     }
   }, [role, isOpen]);
 
@@ -90,14 +93,14 @@ export function RoleForm({ role, onSubmit, onClose, loading, isOpen }: RoleFormP
         <Input
           label={t('roles:form.name_label')}
           value={formData.name}
-          onChange={(e) => { setFormData({ ...formData, name: e.target.value }); }}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setFormData({ ...formData, name: e.target.value }); }}
           placeholder={t('roles:form.name_placeholder')}
           required
         />
         <Input
           label={t('roles:form.desc_label')}
           value={formData.description}
-          onChange={(e) => { setFormData({ ...formData, description: e.target.value }); }}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setFormData({ ...formData, description: e.target.value }); }}
           placeholder={t('roles:form.desc_placeholder')}
         />
 

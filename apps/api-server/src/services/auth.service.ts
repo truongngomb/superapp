@@ -49,7 +49,7 @@ class AuthService {
   async initGoogleAuth(): Promise<GoogleAuthInitResult> {
     const authMethods = await pb.collection(Collections.USERS).listAuthMethods();
     // PocketBase SDK v0.26+ uses oauth2.providers instead of authProviders
-    const providers = authMethods.oauth2?.providers ?? [];
+    const providers = authMethods.oauth2.providers;
     const googleProvider = providers.find((p) => p.name === 'google');
 
     if (!googleProvider) {

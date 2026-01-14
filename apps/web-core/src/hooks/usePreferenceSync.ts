@@ -45,7 +45,6 @@ export function usePreferenceSync(user: AuthUser | null, isAuthenticated: boolea
     return prefs;
   }, []);
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
   const syncToDb: () => void = useDebounceCallback(async () => {
     if (!isAuthenticated || !user?.id) return;
 

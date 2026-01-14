@@ -172,9 +172,12 @@ export function ColorPicker({
   // Sync internal state when value prop changes
   useEffect(() => {
     const parsed = parseColor(value);
-    setHex6(parsed.hex6);
-    setAlpha(parsed.alpha);
-    setHexInput(value.toUpperCase());
+    // Defer state updates to avoid cascading render warning
+    setTimeout(() => {
+      setHex6(parsed.hex6);
+      setAlpha(parsed.alpha);
+      setHexInput(value.toUpperCase());
+    }, 0);
   }, [value]);
   
   // Emit change

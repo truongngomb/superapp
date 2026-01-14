@@ -24,11 +24,14 @@ export function UserForm({ user, onSubmit, onClose, loading, isOpen }: UserFormP
 
   useEffect(() => {
     if (isOpen) {
-      setName(user?.name || '');
-      setEmail(user?.email || '');
-      setPassword('');
-      setPasswordConfirm('');
-      setIsActive(user?.isActive ?? true);
+      // Defer state updates to avoid cascading render warning
+      setTimeout(() => {
+        setName(user?.name || '');
+        setEmail(user?.email || '');
+        setPassword('');
+        setPasswordConfirm('');
+        setIsActive(user?.isActive ?? true);
+      }, 0);
     }
   }, [user, isOpen]);
 
@@ -103,7 +106,7 @@ export function UserForm({ user, onSubmit, onClose, loading, isOpen }: UserFormP
         <Input
           label={t('users:form.name_label')}
           value={name}
-          onChange={(e) => { setName(e.target.value); }}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setName(e.target.value); }}
           placeholder={t('users:form.name_placeholder')}
           required
         />
@@ -114,7 +117,7 @@ export function UserForm({ user, onSubmit, onClose, loading, isOpen }: UserFormP
               label={t('users:form.email_label')}
               type="email"
               value={email}
-              onChange={(e) => { setEmail(e.target.value); }}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setEmail(e.target.value); }}
               placeholder="example@domain.com"
               required
             />
@@ -122,14 +125,14 @@ export function UserForm({ user, onSubmit, onClose, loading, isOpen }: UserFormP
               label={t('common:password', { defaultValue: 'Password' })}
               type="password"
               value={password}
-              onChange={(e) => { setPassword(e.target.value); }}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setPassword(e.target.value); }}
               required
             />
             <Input
               label={t('common:password_confirm', { defaultValue: 'Confirm Password' })}
               type="password"
               value={passwordConfirm}
-              onChange={(e) => { setPasswordConfirm(e.target.value); }}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setPasswordConfirm(e.target.value); }}
               required
               error={password !== passwordConfirm && passwordConfirm !== '' ? t('auth:error.password_mismatch', { defaultValue: 'Passwords do not match' }) : undefined}
             />

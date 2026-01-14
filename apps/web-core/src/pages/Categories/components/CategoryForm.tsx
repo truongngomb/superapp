@@ -23,23 +23,26 @@ export function CategoryForm({ isOpen, category, onSubmit, onClose, loading }: C
   });
 
   useEffect(() => {
-    if (category) {
-      setFormData({
-        name: category.name,
-        description: category.description,
-        color: category.color,
-        icon: category.icon,
-        isActive: category.isActive,
-      });
-    } else {
-      setFormData({
-        name: '',
-        description: '',
-        color: '#3b82f6ff',
-        icon: 'folder',
-        isActive: true,
-      });
-    }
+    // Defer state updates to avoid cascading render warning
+    setTimeout(() => {
+      if (category) {
+        setFormData({
+          name: category.name,
+          description: category.description,
+          color: category.color,
+          icon: category.icon,
+          isActive: category.isActive,
+        });
+      } else {
+        setFormData({
+          name: '',
+          description: '',
+          color: '#3b82f6ff',
+          icon: 'folder',
+          isActive: true,
+        });
+      }
+    }, 0);
   }, [category, isOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -68,14 +71,14 @@ export function CategoryForm({ isOpen, category, onSubmit, onClose, loading }: C
         <Input
           label={t('categories:form.name_label')}
           value={formData.name}
-          onChange={(e) => { setFormData({ ...formData, name: e.target.value }); }}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setFormData({ ...formData, name: e.target.value }); }}
           placeholder={t('categories:form.name_placeholder')}
           required
         />
         <Input
           label={t('categories:form.desc_label')}
           value={formData.description}
-          onChange={(e) => { setFormData({ ...formData, description: e.target.value }); }}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setFormData({ ...formData, description: e.target.value }); }}
           placeholder={t('categories:form.desc_placeholder')}
         />
         

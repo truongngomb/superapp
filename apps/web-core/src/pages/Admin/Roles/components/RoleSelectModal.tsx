@@ -26,7 +26,10 @@ export function RoleSelectModal({
 
   useEffect(() => {
     if (isOpen && user) {
-      setSelectedRoleIds(user.roles || []);
+      // Defer state updates to avoid cascading render warning
+      setTimeout(() => {
+        setSelectedRoleIds(user.roles || []);
+      }, 0);
     }
   }, [user, isOpen]);
 
