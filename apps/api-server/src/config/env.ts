@@ -20,6 +20,10 @@ const envSchema = z.object({
     .transform((val) => parseInt(val, 10))
     .refine((val) => val > 0 && val < 65536, 'PORT must be between 1 and 65535'),
   
+  HOST: z
+    .string()
+    .default('0.0.0.0'),
+  
   NODE_ENV: z
     .enum(['development', 'production', 'test'])
     .default('development'),
@@ -126,6 +130,12 @@ const envSchema = z.object({
     .string()
     .default('5000')
     .transform((val) => parseInt(val, 10)),
+
+  // CORS
+  ALLOWED_ORIGINS: z
+    .string()
+    .default('')
+    .transform((val) => val.split(',').map(s => s.trim()).filter(Boolean)),
 });
 
 // =============================================================================
@@ -170,6 +180,9 @@ const env = parseEnv();
 export const config = {
   /** Server port number */
   port: env.PORT,
+
+  /** Server host address to bind to */
+  host: env.HOST,
   
   /** Current environment: 'development' | 'production' | 'test' */
   nodeEnv: env.NODE_ENV,
@@ -179,6 +192,9 @@ export const config = {
   
   /** Backend server URL (for OAuth callbacks) */
   serverUrl: env.SERVER_URL,
+
+  /** Additional allowed CORS origins */
+  allowedOrigins: env.ALLOWED_ORIGINS,
   
   /** PocketBase database URL */
   pocketbaseUrl: env.POCKETBASE_URL,

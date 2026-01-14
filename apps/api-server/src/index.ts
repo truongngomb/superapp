@@ -31,7 +31,7 @@ async function startServer(): Promise<void> {
   }
 
   // Start Express server
-  const server = app.listen(config.port, () => {
+  const server = app.listen(config.port, config.host, () => {
     log.info(`
 🚀 SuperApp Server is running!
 📍 Environment: ${config.nodeEnv}
