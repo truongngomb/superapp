@@ -10,8 +10,9 @@ Kiểm tra CHẤT LƯỢNG CODE và ĐỘ ĐỒNG NHẤT (Consistency) tuyệt �
 
 ## TÀI LIỆU THAM CHIẾU (SSoT)
 **Category Management** (Category) là chuẩn duy nhất (Single Source of Truth).
-- Frontend: `client/src/pages/Categories`
-- Backend: `server/src/routes/categories.ts`, `server/src/services/category.service.ts`
+- Frontend: `apps/web-core/src/pages/Categories`
+- Backend: `apps/api-server/src/services/category.service.ts`, `apps/api-server/src/routes/categories.ts`
+- Patterns: `.agent/docs/component-patterns.md`
 
 ---
 
@@ -67,8 +68,8 @@ Chỉ hiện khi có item được chọn (`selectedIds.length > 0`):
 
 ### 1. Component Structure
 - [ ] File chính nằm đúng chỗ?
-    - Admin feature → `src/pages/Admin/{Feature}/`
-    - Non-admin → `src/pages/{Feature}/`
+    - Admin feature → `apps/web-core/src/pages/Admin/{Feature}/`
+    - Non-admin → `apps/web-core/src/pages/{Feature}/`
 - [ ] Tên file PascalCase (`FeaturePage.tsx`, `FeatureForm.tsx`)?
 
 ### 2. Hooks (`use{Features}.ts`)
@@ -103,10 +104,25 @@ Chỉ hiện khi có item được chọn (`selectedIds.length > 0`):
 
 ---
 
+## PHẦN IV: AUTOMATED CHECKS
+
+// turbo
+```bash
+pnpm lint
+```
+
+// turbo
+```bash
+pnpm build
+```
+
+---
+
 ## OUTPUT
 Trả về báo cáo theo format:
 
-1. **Kết quả I18n**: [PASS / FAIL] (Liệt kê text chưa dịch nếu có).
-2. **Kết quả UI Match**: [PASS / MISMATCH] (Chỉ ra điểm lệch so với Category).
-3. **Danh sách lỗi cần fix**: (Nếu có).
-4. **Kết luận**: [READY] hoặc [NEEDS WORK].
+1. **Kết quả Lint/Build**: [PASS / FAIL]
+2. **Kết quả I18n**: [PASS / FAIL] (Liệt kê text chưa dịch nếu có)
+3. **Kết quả UI Match**: [PASS / MISMATCH] (Chỉ ra điểm lệch so với Category)
+4. **Danh sách lỗi cần fix**: (Nếu có)
+5. **Kết luận**: [READY] hoặc [NEEDS WORK]
