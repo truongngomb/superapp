@@ -2,7 +2,7 @@
  * Category Types
  */
 
-import type { BaseEntity, PaginatedResponse } from './common';
+import type { BaseEntity, PaginatedResponse } from './common.js';
 
 // ============================================================================
 // Entity

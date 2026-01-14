@@ -2,17 +2,29 @@
  * Role Types
  */
 
-import type { BaseEntity, PaginatedResponse } from './common';
-import { PermissionAction, PermissionResource } from './common';
+import type { BaseEntity, PaginatedResponse } from './common.js';
+import { PermissionAction, PermissionResource } from './common.js';
 
 // ============================================================================
 // Entity
 // ============================================================================
 
 /**
+ * Available resources in the system
+ */
+export type Resource = 'categories' | 'users' | 'roles' | 'activity_logs' | 'dashboard' | 'all';
+
+/**
+ * Available actions on resources
+ */
+export type Action = 'view' | 'create' | 'update' | 'delete' | 'manage';
+
+/**
  * Permission map: resource -> actions[]
  */
-export type RolePermissions = Record<string, string[] | undefined>;
+export interface RolePermissions {
+  [resource: string]: Action[];
+}
 
 /**
  * Role entity from API
@@ -30,22 +42,29 @@ export interface Role extends BaseEntity {
 /**
  * Create role input
  */
-export interface CreateRoleInput {
+export interface RoleCreateInput {
   name: string;
   description?: string;
   permissions: RolePermissions;
   isActive?: boolean;
 }
 
+// Deprecated alias for backward compatibility
+export type CreateRoleInput = RoleCreateInput;
+
+
 /**
  * Update role input (all fields optional)
  */
-export interface UpdateRoleInput {
+export interface RoleUpdateInput {
   name?: string;
   description?: string;
   permissions?: RolePermissions;
   isActive?: boolean;
 }
+
+// Deprecated alias for backward compatibility
+export type UpdateRoleInput = RoleUpdateInput;
 
 // ============================================================================
 // Query Types
@@ -81,13 +100,14 @@ export function hasPermission(
   resource: PermissionResource | string,
   action: PermissionAction | string
 ): boolean {
-  const resourcePerms = role.permissions[resource] || [];
-  const allPerms = role.permissions[PermissionResource.All] || [];
+  const resourcePerms = role.permissions[resource];
+  const allPerms = role.permissions[PermissionResource.All];
+
+  const hasAction = (actions: Action[] | undefined, act: string) => 
+    actions?.some(a => a === act || a === 'manage') ?? false;
 
   return (
-    resourcePerms.includes(action) ||
-    resourcePerms.includes(PermissionAction.Manage) ||
-    allPerms.includes(PermissionAction.Manage)
+    hasAction(resourcePerms, action as Action) ||
+    hasAction(allPerms, action as Action)
   );
 }
-

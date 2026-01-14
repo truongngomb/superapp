@@ -1,4 +1,4 @@
-import { BaseEntity, PaginatedResponse } from './common';
+import { BaseEntity, PaginatedResponse } from './common.js';
 
 /**
  * User entity from API
@@ -7,8 +7,11 @@ export interface User extends BaseEntity {
   email: string;
   name: string;
   avatar?: string;
+  /** Role IDs */
   roles?: string[];
+  /** Role Names (expanded) */
   roleNames?: string[];
+  emailVisibility?: boolean;
   preferences?: Record<string, unknown>;
 }
 

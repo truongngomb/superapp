@@ -1,15 +1,18 @@
-import type { BaseEntity, PaginatedResponse } from './common';
+import type { PaginatedResponse } from './common.js';
 
 // ============================================================================
 // Entity
 // ============================================================================
 
-export type ActivityAction = 'create' | 'update' | 'delete' | 'login' | 'logout';
+export type ActivityLogAction = 'create' | 'update' | 'delete' | 'login' | 'logout';
 
 /**
- * Activity log entity - read-only, extends BaseEntity
+ * Activity log entity - read-only
+ * Note: Activity logs in backend might not have all BaseEntity fields (like updated/isActive)
  */
-export interface ActivityLog extends BaseEntity {
+export interface ActivityLog {
+  id: string;
+  created: string;
   user?: string;
   expand?: {
     user?: {
@@ -17,7 +20,7 @@ export interface ActivityLog extends BaseEntity {
       avatar?: string;
     };
   };
-  action: ActivityAction;
+  action: ActivityLogAction;
   resource: string;
   recordId?: string;
   message: string;

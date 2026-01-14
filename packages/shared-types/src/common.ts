@@ -44,7 +44,7 @@ export interface PaginationParams {
 }
 
 /**
- * Paginated response from API
+ * Paginated response from API (UI friendly structure)
  */
 export interface PaginatedResponse<T> {
   items: T[];
@@ -57,12 +57,50 @@ export interface PaginatedResponse<T> {
 }
 
 /**
+ * Standard API Response Structure (Backend DTO)
+ */
+export interface ApiResponse<T = unknown> {
+  success: true;
+  data: T;
+  message?: string;
+}
+
+/**
+ * Standard API Error Response
+ */
+export interface ApiErrorResponse {
+  success: false;
+  message: string;
+  code?: string;
+  stack?: string;
+}
+
+/**
+ * API Paginated Response (Backend DTO matching api-server structure)
+ */
+export interface ApiPaginatedResponse<T> {
+  success: true;
+  data: T[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
+/**
  * Search/Filter parameters
  */
 export interface SearchParams extends PaginationParams {
   query?: string;
   filters?: Record<string, unknown>;
 }
+
+// ============================================================================
+// Entity Types
+// ============================================================================
+
 
 // ============================================================================
 // Entity Types
@@ -80,6 +118,19 @@ export interface BaseEntity {
   /** Soft delete flag */
   isDeleted: boolean;
 }
+
+/**
+ * Minimal entity interface (id + created)
+ */
+export interface MinimalEntity {
+  id: string;
+  created: string;
+}
+
+/**
+ * Timestamps only
+ */
+export type Timestamps = Pick<BaseEntity, 'created' | 'updated'>;
 
 
 

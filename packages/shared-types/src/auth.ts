@@ -20,6 +20,7 @@ export interface AuthUser {
   name?: string;
   avatar?: string;
   verified?: boolean;
+  roles?: string[];
   permissions?: PermissionMap;
   created?: string;
   updated?: string;

@@ -3,22 +3,22 @@
  */
 
 // Common/Shared types
-export * from './common';
+export * from './common.js';
 
 // Auth types
-export * from './auth';
+export * from './auth.js';
 
 // Category types
-export * from './category';
+export * from './category.js';
 
 // Role types
-export * from './role';
+export * from './role.js';
 
 // Activity Log types
-export * from './activity_log';
+export * from './activity_log.js';
 
 // User types
-export * from './user';
+export * from './user.js';
 
 // System types
-export * from './system';
+export * from './system.js';
