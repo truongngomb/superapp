@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo, type ReactNode } from 'react';
 import { settingsService, type SettingItem } from '@/services';
 import { useToast } from '@/context';
+import { useAuth } from '@/hooks';
 import { SettingsContext } from './SettingsContext.base';
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
@@ -8,18 +9,27 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const { show } = useToast();
+  const { checkPermission } = useAuth();
+
+  // Check if user has admin access to settings
+  const isAdmin = useMemo(() => {
+    return checkPermission('settings', 'read');
+  }, [checkPermission]);
 
   const fetchSettings = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await settingsService.getAll();
+      // Use getAll for admin, getPublic for regular users and guests
+      const data = isAdmin 
+        ? await settingsService.getAll()
+        : await settingsService.getPublic();
       setSettings(data);
     } catch {
       show('Failed to fetch settings', 'error');
     } finally {
       setLoading(false);
     }
-  }, [show]);
+  }, [show, isAdmin]);
 
   const updateSetting = useCallback(async (key: string, value: unknown) => {
     setSubmitting(true);
@@ -60,3 +70,4 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     </SettingsContext.Provider>
   );
 }
+

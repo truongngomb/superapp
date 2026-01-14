@@ -7,14 +7,22 @@ import { api } from '@/config';
 export interface SettingItem {
   key: string;
   value: unknown;
+  visibility?: 'public' | 'admin' | 'secret';
 }
 
 export const settingsService = {
   /**
-   * Get all settings
+   * Get all settings (admin only - returns public + admin visibility)
    */
   async getAll(): Promise<SettingItem[]> {
     return api.get<SettingItem[]>('/settings');
+  },
+
+  /**
+   * Get public settings only (for authenticated non-admin users)
+   */
+  async getPublic(): Promise<SettingItem[]> {
+    return api.get<SettingItem[]>('/settings/public');
   },
 
   /**

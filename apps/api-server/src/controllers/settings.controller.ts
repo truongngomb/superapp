@@ -12,7 +12,7 @@ const log = createLogger('SettingsController');
  */
 export const SettingsController = {
   /**
-   * Get all settings
+   * Get all settings (admin only - returns public + admin visibility)
    */
   async getAll(_req: Request, res: Response) {
     try {
@@ -20,6 +20,19 @@ export const SettingsController = {
       res.json(settings);
     } catch (error) {
       log.error('Error in getAll settings:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  },
+
+  /**
+   * Get public settings only (for authenticated users)
+   */
+  async getPublic(_req: Request, res: Response) {
+    try {
+      const settings = await SettingsService.getPublicSettings();
+      res.json(settings);
+    } catch (error) {
+      log.error('Error in getPublic settings:', error);
       res.status(500).json({ message: 'Internal server error' });
     }
   },
@@ -49,11 +62,11 @@ export const SettingsController = {
    */
   async set(req: Request, res: Response) {
     try {
-      const { key, value } = req.body as { key: string; value: unknown };
+      const { key, value, visibility } = req.body as { key: string; value: unknown; visibility?: string };
       if (!key) {
         return res.status(400).json({ message: 'Key is required' });
       }
-      await SettingsService.setSetting(key, value);
+      await SettingsService.setSetting(key, value, visibility as 'public' | 'admin' | 'secret' | undefined);
       res.status(200).json({ success: true });
     } catch (error) {
       log.error('Error in set setting:', error);
@@ -61,3 +74,4 @@ export const SettingsController = {
     }
   }
 };
+
