@@ -29,11 +29,14 @@ function createApp(): Express {
   // =========================================================================
   
   // Helmet with relaxed CSP for API docs
+  // Helmet with CSP configuration
+  // Note: 'unsafe-inline' is currently kept for compatibility with certain inline styles/scripts
+  // We removed 'unsafe-eval' to improve security
   app.use(helmet({
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdn.jsdelivr.net"],
+        scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
         styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://fonts.googleapis.com"],
         fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdn.jsdelivr.net"],
         imgSrc: ["'self'", "data:", "https:", "blob:"],
@@ -115,7 +118,7 @@ function createApp(): Express {
   // =========================================================================
 
   // Generate OpenAPI document
-  const openApiDocument = generateOpenApiDocument(config.serverUrl);
+  const openApiDocument = generateOpenApiDocument(config.serverUrl) as unknown as Record<string, unknown>;
 
   // Serve raw OpenAPI JSON (protected - for Scalar UI on Frontend)
   app.get('/api/openapi.json', requireAdmin, (_req, res) => {

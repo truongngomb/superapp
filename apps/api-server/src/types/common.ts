@@ -9,21 +9,15 @@ export type {
   BaseEntity,
   MinimalEntity,
   Timestamps,
-} from '@superapp/shared-types';
-
-// Re-export API response types
-// Aliasing ApiPaginatedResponse to PaginatedResponse for backend usage to match existing code
-export type {
   ApiResponse,
   ApiErrorResponse,
-  ApiPaginatedResponse as PaginatedResponse,
+  PaginatedResponse,
   PaginationParams,
-} from '@superapp/shared-types';
-
-// Re-export Utility types
-export type {
   PartialBy,
 } from '@superapp/shared-types';
+
+// Export values explicitly which can also be used as types
+export { PermissionAction, PermissionResource } from '@superapp/shared-types';
 
 // Create generic Input types based on Shared Types utilities NOT yet existing there?
 // Shared Types doesn't have generic CreateInput/UpdateInput utility types exported explicitly

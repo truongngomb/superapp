@@ -42,7 +42,7 @@ export const requirePermission = (resource: Resource, action: Action) => {
       throw new UnauthorizedError('Please login to access this resource');
     }
 
-    const permissions = user.permissions;
+    const permissions = user.permissions || {};
 
     // Debug logging in development
     if (config.isDevelopment) {
@@ -112,7 +112,7 @@ export function hasPermission(
  * ```
  */
 export const requireAnyPermission = (
-  permissions: Array<[Resource, Action]>
+  permissions: Array<{ resource: Resource; action: Action }>
 ) => {
   return (req: Request, _res: Response, next: NextFunction) => {
     const user = req.user;
@@ -121,9 +121,11 @@ export const requireAnyPermission = (
       throw new UnauthorizedError('Please login to access this resource');
     }
 
-    const userPerms = user.permissions;
-    const hasAny = permissions.some(([resource, action]) =>
-      hasPermission(userPerms, resource, action)
+    const userPermissions = req.user?.permissions || {};
+
+    // Check if user has ANY of the required permissions
+    const hasAny = permissions.some(p => 
+      hasPermission(userPermissions, p.resource, p.action)
     );
 
     if (!hasAny) {
@@ -146,7 +148,7 @@ export const requireAnyPermission = (
  * ```
  */
 export const requireAllPermissions = (
-  permissions: Array<[Resource, Action]>
+  permissions: Array<{ resource: Resource; action: Action }>
 ) => {
   return (req: Request, _res: Response, next: NextFunction) => {
     const user = req.user;
@@ -155,9 +157,9 @@ export const requireAllPermissions = (
       throw new UnauthorizedError('Please login to access this resource');
     }
 
-    const userPerms = user.permissions;
-    const hasAll = permissions.every(([resource, action]) =>
-      hasPermission(userPerms, resource, action)
+    const userPermissions = req.user?.permissions || {};
+    const hasAll = permissions.every(p => 
+      hasPermission(userPermissions, p.resource, p.action)
     );
 
     if (!hasAll) {

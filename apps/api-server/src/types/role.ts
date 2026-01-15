@@ -1,16 +1,16 @@
 /**
  * Role & Permission Types
  */
-import type { Role } from '@superapp/shared-types';
+import type { Role, RolePermissions } from '@superapp/shared-types';
 import type { CreateInput, UpdateInput } from './common.js';
+import { PermissionResource, PermissionAction } from './common.js'; // Ensure these are value imports for usage in constants
 
 // Re-export Role entities and Permissions
-export type {
-  Role,
-  RolePermissions,
-  Resource,
-  Action
-} from '@superapp/shared-types';
+export type { Role, RolePermissions };
+// Deprecated aliases - use PermissionResource and PermissionAction directly
+export type Resource = PermissionResource; // Map Resource to PermissionResource enum or type
+// Action was previously a type alias for PermissionAction, but now mapped to PermissionAction enum
+export type Action = PermissionAction;
 
 // Re-export constants
 // Note: Shared types might define Enums, but we had object constants.
@@ -21,23 +21,23 @@ export type {
  * Resource constants for type-safe usage
  */
 export const Resources = {
-  CATEGORIES: 'categories',
-  USERS: 'users',
-  ROLES: 'roles',
-  ACTIVITY_LOGS: 'activity_logs',
-  DASHBOARD: 'dashboard',
-  ALL: 'all',
+  CATEGORIES: PermissionResource.Categories,
+  USERS: PermissionResource.Users,
+  ROLES: PermissionResource.Roles,
+  ACTIVITY_LOGS: PermissionResource.ActivityLogs,
+  DASHBOARD: PermissionResource.Dashboard,
+  ALL: PermissionResource.All,
 } as const;
 
 /**
  * Action constants for type-safe usage
  */
 export const Actions = {
-  VIEW: 'view',
-  CREATE: 'create',
-  UPDATE: 'update',
-  DELETE: 'delete',
-  MANAGE: 'manage',
+  VIEW: PermissionAction.View,
+  CREATE: PermissionAction.Create,
+  UPDATE: PermissionAction.Update,
+  DELETE: PermissionAction.Delete,
+  MANAGE: PermissionAction.Manage,
 } as const;
 
 

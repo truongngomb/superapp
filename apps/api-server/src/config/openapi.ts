@@ -5,6 +5,7 @@
  * Used by Scalar UI for API documentation.
  */
 import { OpenAPIRegistry, OpenApiGeneratorV31 } from '@asteasolutions/zod-to-openapi';
+import { OpenAPIObject } from 'openapi3-ts/oas31';
 
 // =============================================================================
 // Registry (Singleton)
@@ -46,7 +47,7 @@ openApiRegistry.registerComponent('securitySchemes', 'cookieAuth', {
  * @param serverUrl - Base URL of the API server
  * @returns OpenAPI 3.1 document object
  */
-export function generateOpenApiDocument(serverUrl: string) {
+export function generateOpenApiDocument(serverUrl: string): OpenAPIObject {
   const generator = new OpenApiGeneratorV31(openApiRegistry.definitions);
 
   return generator.generateDocument({

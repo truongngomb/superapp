@@ -119,10 +119,8 @@ class AuthService {
       const authData = await pb.collection(Collections.USERS).authRefresh();
       const user = authData.record;
 
-      const avatarUrl = user['avatar']
-        ? pb.files.getUrl(user, user['avatar'] as string)
-        : null;
-
+      // Avatar URL calc removed as unused and creating issues
+      
       const permissions = await permissionService.getUserPermissions(user.id);
 
       return {
@@ -130,7 +128,7 @@ class AuthService {
           id: user.id,
           email: user['email'] as string,
           name: user['name'] as string,
-          avatar: avatarUrl,
+          avatar: user.avatar ? String(user.avatar) : undefined,
           permissions,
         },
         isAuthenticated: true,

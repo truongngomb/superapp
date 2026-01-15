@@ -14,10 +14,14 @@ export const checkMaintenanceMode = async (req: Request, res: Response, next: Ne
   // Allow admin users
   const user = req.user;
   if (user) {
-    const hasAdminRole = user.roles?.some((r: string) => r === 'admin' || r === 'SUPER_ADMIN');
-    const hasAllManage = user.permissions['all']?.includes('manage');
+    // Bypass for admins/system
+    const roles = user.roles || [];
+    const permissions = user.permissions || {};
+    
+    const hasAdminRole = roles.some(role => role === 'admin' || role === 'SUPER_ADMIN');
+    const hasSystemManage = permissions['system']?.includes('manage') ?? false;
 
-    if (hasAdminRole || hasAllManage) {
+    if (hasAdminRole || hasSystemManage) {
       next();
       return;
     }

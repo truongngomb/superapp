@@ -44,6 +44,7 @@
     "@types/systeminformation": "^3.54.1",
     "eslint": "^9.39.2",
     "globals": "^17.0.0",
+    "openapi3-ts": "^4.5.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.53.0"

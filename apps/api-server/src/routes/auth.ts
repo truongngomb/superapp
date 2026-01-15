@@ -4,7 +4,7 @@
  * Handles authentication-related endpoints.
  */
 import { Router } from 'express';
-import { asyncHandler } from '../middleware/index.js';
+import { asyncHandler, standardRateLimit } from '../middleware/index.js';
 import { authController } from '../controllers/index.js';
 
 export const authRouter: Router = Router();
@@ -14,10 +14,10 @@ export const authRouter: Router = Router();
 // =============================================================================
 
 /** Initiate Google OAuth flow */
-authRouter.get('/google', asyncHandler(authController.initGoogleAuth));
+authRouter.get('/google', standardRateLimit, asyncHandler(authController.initGoogleAuth));
 
 /** Handle Google OAuth callback */
-authRouter.get('/google/callback', asyncHandler(authController.handleGoogleCallback));
+authRouter.get('/google/callback', standardRateLimit, asyncHandler(authController.handleGoogleCallback));
 
 // =============================================================================
 // User Session
@@ -27,4 +27,4 @@ authRouter.get('/google/callback', asyncHandler(authController.handleGoogleCallb
 authRouter.get('/me', asyncHandler(authController.getMe));
 
 /** Logout user */
-authRouter.post('/logout', authController.logout);
+authRouter.post('/logout', standardRateLimit, authController.logout);
