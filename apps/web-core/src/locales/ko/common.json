@@ -164,5 +164,9 @@
   "view_mode": {
     "list": "목록 보기",
     "table": "테이블 보기"
+  },
+  "api_docs": {
+    "view_reference": "대화형 참조",
+    "view_raw": "원시 JSON 데이터"
   }
 }

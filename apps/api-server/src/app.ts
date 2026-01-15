@@ -10,8 +10,9 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 
 import { config, cache } from './config/index.js';
-import { authenticate, checkMaintenanceMode, errorHandler, NotFoundError } from './middleware/index.js';
+import { authenticate, checkMaintenanceMode, errorHandler, NotFoundError, requireAdmin } from './middleware/index.js';
 import { authRouter, categoriesRouter, rolesRouter, usersRouter, activityLogsRouter, realtimeRouter, systemRouter, settingsRouter } from './routes/index.js';
+import { generateOpenApiDocument } from './docs/index.js';
 
 // =============================================================================
 // App Factory
@@ -27,7 +28,19 @@ function createApp(): Express {
   // Security Middleware
   // =========================================================================
   
-  app.use(helmet());
+  // Helmet with relaxed CSP for API docs
+  app.use(helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdn.jsdelivr.net"],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://fonts.googleapis.com"],
+        fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdn.jsdelivr.net"],
+        imgSrc: ["'self'", "data:", "https:", "blob:"],
+        connectSrc: ["'self'", "https:"],
+      },
+    },
+  }));
   app.use(cors({
     origin: (origin, callback) => {
       const allowedOrigins = [
@@ -95,6 +108,18 @@ function createApp(): Express {
         cache: cache.getStats(),
       },
     });
+  });
+
+  // =========================================================================
+  // API Documentation (Admin Only)
+  // =========================================================================
+
+  // Generate OpenAPI document
+  const openApiDocument = generateOpenApiDocument(config.serverUrl);
+
+  // Serve raw OpenAPI JSON (protected - for Scalar UI on Frontend)
+  app.get('/api/openapi.json', requireAdmin, (_req, res) => {
+    res.json(openApiDocument);
   });
 
   // =========================================================================

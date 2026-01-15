@@ -31,6 +31,9 @@ const ActivityLogsPage = lazy(
 const SystemSettingsPage = lazy(
   () => import('@/pages/Admin/SystemSettings/SystemSettingsPage')
 );
+const ApiDocsPage = lazy(
+  () => import('@/pages/Admin/ApiDocs/ApiDocsPage')
+);
 
 // ============================================================================
 // Helper Components
@@ -164,6 +167,19 @@ export function AppRoutes() {
               >
                 <LazyPage>
                   <ActivityLogsPage />
+                </LazyPage>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="api-docs"
+            element={
+              <ProtectedRoute
+                resource={PermissionResource.All}
+                action={PermissionAction.Manage}
+              >
+                <LazyPage>
+                  <ApiDocsPage />
                 </LazyPage>
               </ProtectedRoute>
             }

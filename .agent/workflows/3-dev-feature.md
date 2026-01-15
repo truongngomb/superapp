@@ -11,6 +11,7 @@ Thực thi code dựa trên `implementation_plan.md` đã được duyệt.
 1. **Plan là luật**: Không code ngoài plan
 2. **Category là chuẩn**: Luôn mở code `Categories` để "copy" pattern
 3. **Atomic**: Code từng phần (Type -> Service -> UI -> Integration)
+4. **Shared First**: Logic/UI dùng chung PHẢI đặt tại `packages/` (core-logic, ui-kit)
 
 ## BƯỚC 1: PREPARATION
 1. Đọc lại `implementation_plan.md`
@@ -27,24 +28,30 @@ Thực hiện code theo thứ tự dependency:
 - Schema collection (nếu có)
 - Shared types (`packages/shared-types/`)
 
-### 2.2 Backend
+### 2.2 Shared Packages
+- Logic & Utils: `packages/core-logic/src/utils/`
+- Shared Hooks: `packages/core-logic/src/hooks/`
+- Shared UI: `packages/ui-kit/`
+- [Other]: `packages/[other]/`
+
+### 2.3 Backend
 - Service (extend BaseService)
 - Controller
 - Routes
 
-### 2.3 Frontend Service & Hook
+### 2.4 Frontend Service & Hook
 - Service layer (`apps/web-core/src/services/`)
 - Custom hook (`apps/web-core/src/hooks/`)
 
-### 2.4 I18n
+### 2.5 I18n
 - Tạo files `{en,vi,ko}/{feature}.json`
 - Đăng ký trong `config/i18n.ts`
 
-### 2.5 UI Components
+### 2.6 UI Components
 - Component con trước (Form, Table, Skeleton)
 - Page chính sau
 
-### 2.6 Wiring
+### 2.7 Wiring
 - Thêm route trong `AppRoutes.tsx`
 - Thêm navigation (nếu cần)
 

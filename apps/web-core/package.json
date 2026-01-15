@@ -17,6 +17,7 @@
     "@capacitor/android": "^8.0.1",
     "@capacitor/core": "^8.0.1",
     "@capacitor/ios": "^8.0.1",
+    "@scalar/api-reference-react": "^0.8.23",
     "@superapp/core-logic": "workspace:*",
     "@superapp/shared-types": "workspace:*",
     "clsx": "^2.1.1",

@@ -17,8 +17,10 @@
     "db:generate": "tsx src/scripts/migrate.ts --generate"
   },
   "dependencies": {
-    "@superapp/shared-types": "workspace:*",
+    "@asteasolutions/zod-to-openapi": "^8.4.0",
+    "@scalar/express-api-reference": "^0.8.33",
     "@superapp/core-logic": "workspace:*",
+    "@superapp/shared-types": "workspace:*",
     "compression": "^1.8.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",

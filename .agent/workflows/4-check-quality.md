@@ -5,102 +5,76 @@ description: QUALITY ASSURANCE & CONSISTENCY CHECK
 === WORKFLOW — CHECK QUALITY ===
 
 ## MỤC TIÊU
-Kiểm tra CHẤT LƯỢNG CODE và ĐỘ ĐỒNG NHẤT (Consistency) tuyệt đối với feature mẫu (`Category Management`).
-Đây là bước **BẮT BUỘC** trước khi Merge/Commit.
+Kiểm tra CHẤT LƯỢNG CODE và ĐỘ ĐỒNG NHẤT (Consistency) tuyệt đối với feature mẫu (`Category Management`) và Kiến trúc hệ thống (`architecture.md`).
+Đây là bước **BẮT BUỘC** trước khi hoàn tất task.
 
 ## TÀI LIỆU THAM CHIẾU (SSoT)
 **Category Management** (Category) là chuẩn duy nhất (Single Source of Truth).
 - Frontend: `apps/web-core/src/pages/Categories`
 - Backend: `apps/api-server/src/services/category.service.ts`, `apps/api-server/src/routes/categories.ts`
-- Patterns: `.agent/docs/component-patterns.md`
+- Kiến trúc: `.agent/docs/architecture.md`
 
 ---
 
 ## PHẦN I: KIỂM TRA GIAO DIỆN (UI/UX AUDIT)
 
-### 1. Header Section
-- [ ] Title dùng i18n key `{feature}:title`?
-- [ ] Subtitle dùng i18n key `{feature}:subtitle`?
-- [ ] Nút **Export Excel** (nếu có) phải nằm trong `PermissionGuard` (action="view")?
-- [ ] Nút **Create** (Create New) nằm trong `PermissionGuard` (action="create")?
+### 1. Header & Layout
+- [ ] **Page Title & Subtitle**: Sử dụng i18n key `{feature}:title`.
+- [ ] **Layout Responsiveness**: Tích hợp `useLayoutMode` ('standard' vs 'modern')?
+    - `standard`: Có khoảng trống cho header & sub-nav?
+    - `modern`: Tối ưu không gian (thường dùng `h-[calc(100vh-5rem)]`)?
+- [ ] **Theme Sync**: Giao diện (bao gồm iframe/external UI) đã đồng bộ Dark/Light mode qua `useTheme`?
 
 ### 2. Search & Filter Section
-- [ ] Input Search có placeholder `common:search`?
-- [ ] Input Search có sử dụng `useDebounce` (400ms) không?
-- [ ] Có Icon Search (`lucide-react`)?
-- [ ] Component `SortPopup` nằm ngay cạnh thanh Search?
-- [ ] Nút **Refresh** (Icon `RefreshCw`) có hiệu ứng xoay (spin) khi loading?
+- [ ] Input Search: Có placeholder `common:search`.
+- [ ] Debounce: Sử dụng `useDebounce` (400ms) để tối ưu gọi API.
+- [ ] Icons: Sử dụng `lucide-react` đúng style dự án.
+- [ ] Component `SortPopup`: Nằm cạnh thanh Search (nếu có sort).
 
-### 3. List Controls (Toolbar)
-- [ ] Checkbox **Select All** (chọn tất cả) có hoạt động đúng (checked/unchecked/indeterminate)?
-- [ ] `ViewSwitcher` (nếu có hỗ trợ Table/Grid view)?
-- [ ] Toggle **Show Archived** nằm trong `PermissionGuard` (action="manage")?
-- [ ] Hiển thị dòng **Total items**: `common:total_items`?
+### 3. List Controls & Toolbar
+- [ ] `ViewSwitcher`: Nếu có nhiều chế độ xem (List/Table/Grid).
+- [ ] Status Toggle: Nút **Show Archived** nằm trong `PermissionGuard (action="manage")`.
+- [ ] **Total items**: Hiển thị đúng key `common:total_items`.
+- [ ] **Permission Guard**: Nút Create/Export phải được bọc bởi `PermissionGuard`.
 
-### 4. Batch Actions (Thao tác hàng loạt)
-Chỉ hiện khi có item được chọn (`selectedIds.length > 0`):
-- [ ] Nút **Restore** (chỉ hiện khi đang ở chế độ xem Archived)?
-- [ ] Nút **Delete** (Màu đỏ, icon Trash2)?
-- [ ] Nút **Activate / Deactivate** (Ẩn nếu danh sách chọn có item đã xóa)?
-- [ ] Các nút này có Check Quyền (`PermissionGuard`) đúng không?
-
-### 5. Table / List Display
-- [ ] **Loading State**: Có hiển thị `Skeleton` hoặc `LoadingSpinner` khi fetch data?
+### 4. Table / List Display
+- [ ] **Loading State**: Có `Skeleton` riêng (ví dụ: `FeatureSkeleton.tsx`) khớp chính xác với UI thực tế.
 - [ ] **Empty State**:
-    - Khi không có dữ liệu: Hiện icon Folder + message `list.empty`?
-    - Khi search không thấy: Hiện message `list.empty_search`?
-    - Có nút "Add First" nếu chưa có dữ liệu nào không?
-- [ ] **Table View**: Header cột có đúng key i18n? Có support Sort không?
-- [ ] **List View** (nếu có): Item row hiển thị đủ thông tin?
-
-### 6. Pagination
-- [ ] Component `Pagination` chỉ hiện khi `totalPages > 1`?
-- [ ] Khi chuyển trang có loading overlay (`bg-background/50`) che nội dung cũ không?
-
-### 7. Modals & Dialogs
-- [ ] **Form Modal**: Có wrap bằng `AnimatePresence` để có animation đóng mở?
-- [ ] **Delete Confirm**: Dùng `ConfirmModal`, message phân biệt "soft delete" và "hard delete"?
-- [ ] **Restore Confirm**: Dùng `ConfirmModal`, message rõ ràng?
+    - Khi không có dữ liệu: Hiện message `list.empty`.
+    - Khi search không thấy: Hiện message `list.empty_search`.
+    - Có nút "Add First" nếu user có quyền create.
 
 ---
 
 ## PHẦN II: KIỂM TRA CODE STRUCTURE
 
-### 1. Component Structure
-- [ ] File chính nằm đúng chỗ?
-    - Admin feature → `apps/web-core/src/pages/Admin/{Feature}/`
-    - Non-admin → `apps/web-core/src/pages/{Feature}/`
-- [ ] Tên file PascalCase (`FeaturePage.tsx`, `FeatureForm.tsx`)?
+### 1. Component & Folder
+- [ ] Vị trí: 
+    - Admin: `apps/web-core/src/pages/Admin/{Feature}/`
+    - Client: `apps/web-core/src/pages/{Feature}/`
+- [ ] Naming: PascalCase cho file/folder component.
 
-### 2. Hooks (`use{Features}.ts`)
-- [ ] Có quản lý đầy đủ state: `items`, `loading`, `submitting`, `deleting`?
-- [ ] Có hàm `fetchData` xử lý Params (search, sort, page)?
-- [ ] Có xử lý Error (try-catch, toast error, logger)?
-- [ ] Dùng `useSort` để lưu trạng thái sort vào LocalStorage?
+### 2. Hooks & State
+- [ ] Sử dụng `useResource` hoặc `useResourceService` để tối ưu quản lý state?
+- [ ] Lưu trạng thái (Sort, ViewMode) vào LocalStorage thông qua `STORAGE_KEYS` (@/config) và `getStorageItem/setStorageItem` (@/utils).
 
-### 3. Service (Frontend)
-- [ ] Có dùng `createAbortController` để cancel request cũ?
-- [ ] Có đủ method CRUD: `getAll`, `getById`, `create`, `update`, `delete`, `restore`?
-- [ ] Method `deleteMany`, `restoreMany` có gọi đúng endpoint batch?
+### 3. Service & API
+- [ ] **Frontend**: Extends `BaseService` (nếu phù hợp) hoặc tuân thủ pattern của `categoryService`.
+- [ ] **AbortController**: Có xử lý cancel request cũ khi component unmount hoặc param thay đổi?
 
-### 4. Types
-- [ ] Có extends `BaseEntity` (id, created, updated, isActive...)?
-- [ ] Type `CreateInput`, `UpdateInput` có định nghĩa đúng field chưa?
-
-### 5. I18N (Đa ngôn ngữ)
-**Quan trọng:** Scan lại toàn bộ code.
-- [ ] Không còn text cứng tiếng Việt/Anh trong code JSX?
-- [ ] Các key trong file `locales/*.json` có prefix đúng Feature name?
-- [ ] Đã khai báo đủ trong 3 file `vi`, `en`, `ko`?
+### 4. I18N (Đa ngôn ngữ)
+- [ ] **Không hardcode text**: Tuyệt đối không còn text cứng trong JSX.
+- [ ] **Cấu trúc JSON**: Key nằm trong `locales/{en|vi|ko}/*.json`. 
+- [ ] **Prefix**: Sử dụng `{feature}.{screen}.{element}` hoặc `common:*`.
 
 ---
 
-## PHẦN III: KIỂM TRA BACKEND (Nếu có sửa Backend)
+## PHẦN III: KIỂM TRA BACKEND (POCKETBASE)
 
-- [ ] **Middleware**: Có check quyền `requirePermission` cho từng route?
-- [ ] **Validation**: Có validate body (Zod schema) trước khi xử lý?
-- [ ] **Soft Delete**: Route `delete` mặc định là soft delete (trừ khi force)?
-- [ ] **Filters**: Mặc định `isDeleted=false` (trừ khi có quyền manage và param showArchived)?
+- [ ] **PocketBase Schema**: Tên collection snake_case, có đủ các system fields (id, created, updated).
+- [ ] **Middleware**: Sử dụng `authenticate`, `requireAuth`, `requireAdmin` hoặc `requirePermission`.
+- [ ] **Zod Validation**: Schema được định nghĩa trong `apps/api-server/src/schemas/`.
+- [ ] **Soft Delete**: Mặc định sử dụng `isActive: false` thay vì xóa vật lý.
 
 ---
 
@@ -108,21 +82,24 @@ Chỉ hiện khi có item được chọn (`selectedIds.length > 0`):
 
 // turbo
 ```bash
-pnpm lint
+# Kiểm tra lỗi Type cho riêng web-core
+pnpm --filter web-core exec tsc --noEmit
 ```
 
 // turbo
 ```bash
-pnpm build
+# Kiểm tra Lint cho web-core
+pnpm lint --filter web-core
 ```
 
 ---
 
-## OUTPUT
-Trả về báo cáo theo format:
+## OUTPUT FORMAT
+Trả về báo cáo theo cấu trúc:
 
-1. **Kết quả Lint/Build**: [PASS / FAIL]
-2. **Kết quả I18n**: [PASS / FAIL] (Liệt kê text chưa dịch nếu có)
-3. **Kết quả UI Match**: [PASS / MISMATCH] (Chỉ ra điểm lệch so với Category)
-4. **Danh sách lỗi cần fix**: (Nếu có)
-5. **Kết luận**: [READY] hoặc [NEEDS WORK]
+1. **Kết quả Check Tự động**: [PASS / FAIL] (Kèm log nếu fail)
+2. **Đồng nhất UI (Standard/Modern)**: [PASS / MISMATCH]
+3. **I18n status**: [DONE / MISSING KEYS]
+4. **Backend/Database Integrity**: [READY / ACTION REQUIRED]
+5. **Kết luận**: [READY] hoặc [NEEDS WORK] (Ghi rõ lý do)
+

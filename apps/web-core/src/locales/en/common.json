@@ -159,6 +159,10 @@
     "list": "List view",
     "table": "Table view"
   },
+  "api_docs": {
+    "view_reference": "Interactive Reference",
+    "view_raw": "Raw JSON Data"
+  },
   "archived": "Archived",
   "no_roles": "No roles"
 }

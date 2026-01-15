@@ -165,6 +165,10 @@
     "list": "Dạng danh sách",
     "table": "Dạng bảng"
   },
+  "api_docs": {
+    "view_reference": "Tài liệu tương tác",
+    "view_raw": "Dữ liệu thô JSON"
+  },
   "archived": "Đã lưu trữ",
   "no_roles": "Chưa có vai trò"
 }
