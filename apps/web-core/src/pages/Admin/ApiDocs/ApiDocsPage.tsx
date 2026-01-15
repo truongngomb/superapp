@@ -8,11 +8,13 @@
  */
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FileJson, BookOpen } from 'lucide-react';
+import { FileJson, BookOpen, ChevronRight, ChevronDown, Maximize2, Minimize2 } from 'lucide-react';
 import { useTheme } from '@/context';
 import { env, STORAGE_KEYS } from '@/config';
 import { getStorageItem, setStorageItem, cn } from '@/utils';
 import { useLayoutMode } from '@/hooks';
+import { useToast } from '@/context';
+import { useEffect } from 'react';
 
 // ============================================================================
 // Types
@@ -90,25 +92,146 @@ function generateScalarHtml(specUrl: string, isDark: boolean): string {
 }
 
 // ============================================================================
-// Component
+// Internal Components
 // ============================================================================
+
+interface JsonNodeProps {
+  data: unknown;
+  name?: string | number;
+  depth?: number;
+  isLast?: boolean;
+  initialExpanded?: boolean;
+}
+
+function JsonNode({ data, name, depth = 0, isLast = true, initialExpanded }: JsonNodeProps) {
+  const [isExpanded, setIsExpanded] = useState(initialExpanded !== undefined ? initialExpanded : depth < 2);
+  
+  const isObject = data !== null && typeof data === 'object';
+  const isArray = Array.isArray(data);
+  const isEmpty = isObject && Object.keys(data).length === 0;
+
+  const toggle = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  const renderValue = (val: unknown) => {
+    if (typeof val === 'string') return <span className="text-green-600 dark:text-green-400">"{val}"</span>;
+    if (typeof val === 'number') return <span className="text-orange-600 dark:text-orange-400">{val}</span>;
+    if (typeof val === 'boolean') return <span className="text-purple-600 dark:text-purple-400">{String(val)}</span>;
+    if (val === null) return <span className="text-red-600 dark:text-red-400">null</span>;
+    if (val === undefined) return <span className="text-gray-400">undefined</span>;
+    if (Array.isArray(val)) return <span className="text-gray-500">[]</span>;
+    if (typeof val === 'object') return <span className="text-gray-500">{"{}"}</span>;
+    
+    // Fallback for other types like bigint, symbol, etc.
+    return <span>{String(val as string | number | boolean | bigint | symbol)}</span>;
+  };
+
+  if (!isObject || isEmpty) {
+    return (
+      <div className="flex items-start ml-4 py-0.5">
+        <span className="text-blue-600 dark:text-blue-400 font-medium mr-2">
+          {name !== undefined && `${String(name)}: `}
+        </span>
+        {renderValue(data)}
+        {!isLast && <span className="text-gray-400">,</span>}
+      </div>
+    );
+  }
+
+  const keys = Object.keys(data);
+  const summary = isArray ? `[ ${String(keys.length)} items ]` : `{ ${String(keys.length)} keys }`;
+
+  return (
+    <div className="ml-4 py-0.5">
+      <div className="flex items-center group cursor-pointer" onClick={toggle}>
+        <span className="text-gray-400 group-hover:text-primary transition-colors">
+          {isExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+        </span>
+        <span className="text-blue-600 dark:text-blue-400 font-medium ml-1 mr-2">
+          {name !== undefined && `${String(name)}: `}
+        </span>
+        <span className="text-gray-500 text-xs italic">
+          {!isExpanded && summary}
+        </span>
+      </div>
+      
+      {isExpanded && (
+        <div className="border-l border-gray-200 dark:border-gray-800 ml-1.5 pl-1 my-1">
+          {keys.map((key, index) => (
+            <JsonNode
+              key={key}
+              name={isArray ? index : key}
+              data={(data as Record<string, unknown>)[key]}
+              depth={depth + 1}
+              isLast={index === keys.length - 1}
+              initialExpanded={initialExpanded}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function ApiDocsPage() {
   const { t } = useTranslation('common');
   const { isDark } = useTheme();
   const layoutMode = useLayoutMode();
+  const toast = useToast();
   
   // Setup View Mode
   const [viewMode, setViewMode] = useState<ApiDocsViewMode>(() => {
-    return getStorageItem<ApiDocsViewMode>(STORAGE_KEYS.API_DOCS_VIEW_MODE as string) || 'reference';
+    return getStorageItem<ApiDocsViewMode>(STORAGE_KEYS.API_DOCS_VIEW_MODE) || 'reference';
   });
+  
+  const [rawJson, setRawJson] = useState<string>('');
+  const [parsedData, setParsedData] = useState<unknown>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [treeKey, setTreeKey] = useState(0);
+  const [defaultExpanded, setDefaultExpanded] = useState<boolean | undefined>(undefined);
+  
+  const specUrl = getOpenApiUrl();
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchSpec = async () => {
+      if (viewMode !== 'raw' || rawJson) return;
+
+      setIsLoading(true);
+      try {
+        const res = await fetch(specUrl);
+        const data = (await res.json()) as unknown;
+        if (isMounted) {
+          setRawJson(JSON.stringify(data, null, 2));
+          setParsedData(data);
+        }
+      } catch (err: unknown) {
+        if (isMounted) {
+          console.error('Failed to fetch OpenAPI spec:', err);
+          setRawJson('Failed to load API spec');
+          setParsedData(null);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    void fetchSpec();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [viewMode, rawJson, specUrl]);
   
   const handleViewModeChange = (mode: ApiDocsViewMode) => {
     setViewMode(mode);
-    setStorageItem(STORAGE_KEYS.API_DOCS_VIEW_MODE as string, mode);
+    setStorageItem(STORAGE_KEYS.API_DOCS_VIEW_MODE, mode);
   };
   
-  const specUrl = getOpenApiUrl();
   const htmlContent = generateScalarHtml(specUrl, isDark);
 
   return (
@@ -158,8 +281,7 @@ export default function ApiDocsPage() {
         </div>
       </div>
 
-      {/* Content Area */}
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden relative">
         {viewMode === 'reference' ? (
           <iframe
             key={isDark ? 'dark' : 'light'}
@@ -169,12 +291,70 @@ export default function ApiDocsPage() {
             sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
           />
         ) : (
-          <iframe
-            title={t('api_docs.view_raw')}
-            src={specUrl}
-            className="w-full h-full border-0 bg-white dark:bg-gray-950"
-            sandbox="allow-scripts allow-same-origin"
-          />
+          <div className="w-full h-full flex flex-col bg-gray-50 dark:bg-gray-950 overflow-hidden">
+            {isLoading ? (
+              <div className="flex items-center justify-center flex-1">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+              </div>
+            ) : (
+              <div className="flex-1 overflow-auto p-4">
+                {parsedData ? (
+                  <div className="font-mono text-xs md:text-sm">
+                    <JsonNode key={treeKey} data={parsedData} initialExpanded={defaultExpanded} />
+                  </div>
+                ) : (
+                  <pre className="text-xs md:text-sm font-mono text-gray-800 dark:text-gray-300 whitespace-pre-wrap break-all">
+                    {rawJson}
+                  </pre>
+                )}
+              </div>
+            )}
+            
+            {/* Actions for Raw/JSON view */}
+            {!isLoading && rawJson && (
+              <div className="absolute top-4 right-8 flex items-center gap-2 z-10">
+                {!!parsedData && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setDefaultExpanded(true);
+                        setTreeKey(prev => prev + 1);
+                      }}
+                      className="px-3 py-1.5 bg-background border border-border rounded-md text-xs font-medium hover:bg-muted transition-colors shadow-sm flex items-center gap-1.5"
+                      title={t('api_docs.expand_all')}
+                    >
+                      <Maximize2 className="w-3.5 h-3.5" />
+                      <span className="hidden md:inline">{t('api_docs.expand_all')}</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setDefaultExpanded(false);
+                        setTreeKey(prev => prev + 1);
+                      }}
+                      className="px-3 py-1.5 bg-background border border-border rounded-md text-xs font-medium hover:bg-muted transition-colors shadow-sm flex items-center gap-1.5"
+                      title={t('api_docs.collapse_all')}
+                    >
+                      <Minimize2 className="w-3.5 h-3.5" />
+                      <span className="hidden md:inline">{t('api_docs.collapse_all')}</span>
+                    </button>
+                  </>
+                )}
+                <button
+                  type="button"
+                  onClick={() => {
+                    void navigator.clipboard.writeText(rawJson).then(() => {
+                      toast.success(t('toast.copy_success'));
+                    });
+                  }}
+                  className="px-3 py-1.5 bg-background border border-border rounded-md text-xs font-medium hover:bg-muted transition-colors shadow-sm flex items-center gap-1.5"
+                >
+                  {t('copy')}
+                </button>
+              </div>
+            )}
+          </div>
         )}
       </div>
     </div>

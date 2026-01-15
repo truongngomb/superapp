@@ -30,7 +30,8 @@
     "batch_restore_success": "Đã khôi phục {{count}} {{entities}} thành công!",
     "batch_status_success": "Đã cập nhật trạng thái cho {{count}} {{entities}}!",
     "load_error": "Không thể tải {{entities}}",
-    "error": "Đã xảy ra lỗi"
+    "error": "Đã xảy ra lỗi",
+    "copy_success": "Đã sao chép vào bộ nhớ tạm"
   },
   "list": {
     "empty": "Chưa có {{entities}} nào",
@@ -167,7 +168,9 @@
   },
   "api_docs": {
     "view_reference": "Tài liệu tương tác",
-    "view_raw": "Dữ liệu thô JSON"
+    "view_raw": "Dữ liệu thô JSON",
+    "expand_all": "Mở rộng tất cả",
+    "collapse_all": "Thu gọn tất cả"
   },
   "archived": "Đã lưu trữ",
   "no_roles": "Chưa có vai trò"

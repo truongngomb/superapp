@@ -29,7 +29,8 @@
     "batch_restore_success": "Successfully restored {{count}} {{entities}}!",
     "batch_status_success": "Successfully updated status for {{count}} {{entities}}!",
     "load_error": "Failed to load {{entities}}",
-    "error": "An error occurred"
+    "error": "An error occurred",
+    "copy_success": "Copied to clipboard"
   },
   "list": {
     "empty": "No {{entities}} found",
@@ -161,7 +162,9 @@
   },
   "api_docs": {
     "view_reference": "Interactive Reference",
-    "view_raw": "Raw JSON Data"
+    "view_raw": "Raw JSON Data",
+    "expand_all": "Expand All",
+    "collapse_all": "Collapse All"
   },
   "archived": "Archived",
   "no_roles": "No roles"
