@@ -12,6 +12,11 @@
     "hard_delete": "Are you sure you want to PERMANENTLY delete this {{entity}}? This action cannot be undone.",
     "restore": "Are you sure you want to restore this {{entity}}?"
   },
+  "auth": {
+    "checking": "Checking authentication...",
+    "access_denied": "Access Denied",
+    "access_denied_desc": "You don't have permission to access this page. Please contact your administrator if you believe this is an error."
+  },
   "batch_confirmation": {
     "delete": "Are you sure you want to move {{count}} {{entities}} to Trash?",
     "hard_delete": "Are you sure you want to PERMANENTLY delete {{count}} selected {{entities}}? This action cannot be undone.",
@@ -30,6 +35,7 @@
     "batch_status_success": "Successfully updated status for {{count}} {{entities}}!",
     "load_error": "Failed to load {{entities}}",
     "error": "An error occurred",
+    "unknown_auth": "Unknown authentication error",
     "copy_success": "Copied to clipboard"
   },
   "list": {
@@ -56,7 +62,17 @@
     "confirm": "Confirm",
     "cancel": "Cancel",
     "save": "Save",
-    "close": "Close"
+    "close": "Close",
+    "move_up": "Move Up",
+    "move_down": "Move Down",
+    "remove": "Remove",
+    "go_home": "Go to Home"
+  },
+  "data_table": {
+    "select_row": "Select row",
+    "select_all": "Select all",
+    "items": "Items",
+    "table_label": "Data Table"
   },
   "resources": {
     "users": "Users",

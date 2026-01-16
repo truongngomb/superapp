@@ -21,7 +21,9 @@
     "category_page": "Category Page",
     "modes": {
       "standard": "Standard Layout",
+      "standard_desc": "Standard layout with header and navigation",
       "modern": "Modern Layout",
+      "modern_desc": "Modern design with sticky sidebar and topbar",
       "default": "Default"
     },
     "resource": "Managed Resource",

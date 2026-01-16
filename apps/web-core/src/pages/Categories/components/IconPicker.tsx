@@ -1,7 +1,7 @@
 import { Search, Check } from 'lucide-react';
 import { cn } from '@/utils';
 import { useState } from 'react';
-import { Input } from '@/components/common';
+import { Input, Button } from '@/components/common';
 import { useTranslation } from 'react-i18next';
 import { CATEGORY_ICONS } from './icons';
 
@@ -35,12 +35,12 @@ export function IconPicker({ value, onChange, color }: IconPickerProps) {
         {filteredIcons.map(([name, Icon]) => {
           const isSelected = value === name;
           return (
-            <button
+            <Button
               key={name}
-              type="button"
+              variant="ghost"
               onClick={() => { onChange(name); }}
               className={cn(
-                'relative flex items-center justify-center w-10 h-10 rounded-lg transition-all hover:bg-muted/10 group',
+                'relative flex items-center justify-center w-10 h-10 p-0 rounded-lg transition-all hover:bg-muted/10 group',
                 isSelected ? 'bg-primary/10 ring-2 ring-primary/20' : 'bg-surface'
               )}
               title={name}
@@ -57,7 +57,7 @@ export function IconPicker({ value, onChange, color }: IconPickerProps) {
                   <Check className="w-2.5 h-2.5" />
                 </div>
               )}
-            </button>
+            </Button>
           );
         })}
         {filteredIcons.length === 0 && (

@@ -150,7 +150,7 @@ export function LayoutSettings() {
                   </div>
                 )}
                 <div className="font-bold mb-1">{t('settings:layout.modes.standard')}</div>
-                <div className="text-xs opacity-70">Standard layout with header and navigation</div>
+                <div className="text-xs opacity-70">{t('settings:layout.modes.standard_desc')}</div>
               </button>
               <button
                 onClick={() => { setLayoutConfig({ ...layoutConfig, global: 'modern' }); }}
@@ -167,7 +167,7 @@ export function LayoutSettings() {
                   </div>
                 )}
                 <div className="font-bold mb-1">{t('settings:layout.modes.modern')}</div>
-                <div className="text-xs opacity-70">Modern design with sticky sidebar and topbar</div>
+                <div className="text-xs opacity-70">{t('settings:layout.modes.modern_desc')}</div>
               </button>
             </div>
           </div>

@@ -57,7 +57,17 @@
     "confirm": "확인",
     "cancel": "취소",
     "save": "저장",
-    "close": "닫기"
+    "close": "닫기",
+    "move_up": "위로 이동",
+    "move_down": "아래로 이동",
+    "remove": "제거",
+    "go_home": "홈으로 이동"
+  },
+  "data_table": {
+    "select_row": "행 선택",
+    "select_all": "모두 선택",
+    "items": "항목",
+    "table_label": "데이터 테이블"
   },
   "resources": {
     "users": "사용자",

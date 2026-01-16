@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Shield, X } from 'lucide-react';
-import { Button, Modal, Badge } from '@/components/common';
+import { Button, Modal, Badge, Checkbox } from '@/components/common';
 import type { User, Role } from '@superapp/shared-types';
 
 interface RoleSelectModalProps {
@@ -121,17 +121,18 @@ export function RoleSelectModal({
               {getSelectedRoleNames().map((name, i) => (
                 <Badge key={i} variant="secondary" className="flex items-center gap-1">
                   {name}
-                  <button
-                    type="button"
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     onClick={() => { 
                       const roleId = selectedRoleIds[i];
                       if (roleId) removeRole(roleId); 
                     }}
-                    className="ml-1 p-0.5 hover:bg-black/10 dark:hover:bg-white/10 rounded"
+                    className="ml-1 h-4 w-4 p-0 hover:bg-transparent"
                     aria-label={t('common:delete')}
                   >
                     <X className="w-3 h-3" />
-                  </button>
+                  </Button>
                 </Badge>
               ))}
             </div>
@@ -152,27 +153,30 @@ export function RoleSelectModal({
               roles.map((role) => {
                 const isSelected = selectedRoleIds.includes(role.id);
                 return (
-                  <label
+                  <div
                     key={role.id}
+                    onClick={() => { toggleRole(role.id); }}
                     className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors
                       ${isSelected
                         ? 'border-primary bg-primary/5'
                         : 'border-border hover:bg-surface'
                       }`}
                   >
-                    <input
-                      type="checkbox"
-                      checked={isSelected}
-                      onChange={() => { toggleRole(role.id); }}
-                      className="accent-primary w-4 h-4"
-                    />
+                    <div onClick={(e) => {
+                      e.stopPropagation();
+                    }}>
+                       <Checkbox
+                        checked={isSelected}
+                        onChange={() => { toggleRole(role.id); }}
+                      />
+                    </div>
                     <div className="flex-1">
                       <p className="font-medium text-foreground">{role.name}</p>
                       {role.description && (
                         <p className="text-sm text-muted">{role.description}</p>
                       )}
                     </div>
-                  </label>
+                  </div>
                 );
               })
             )}

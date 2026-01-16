@@ -14,6 +14,7 @@ import { authService } from '@/services';
 import { logger, setStorageItem } from '@/utils';
 import { ApiException, STORAGE_KEYS } from '@/config';
 import i18n from '@/config/i18n';
+import { useTranslation } from 'react-i18next';
 import { PermissionAction, PermissionResource } from '@superapp/shared-types';
 import type { AuthUser } from '@superapp/shared-types';
 import { usePreferenceSync } from '@/hooks/usePreferenceSync';
@@ -28,6 +29,7 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
+  const { t } = useTranslation(['common']);
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -67,7 +69,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       // Ignore 401/403 as it just means not logged in
       if (err instanceof ApiException) {
         if (!err.isUnauthorized && !err.isForbidden) {
-          setError(err.message || 'Unknown authentication error');
+          setError(err.message || i18n.t('common:toast.unknown_auth'));
         }
       }
       
@@ -108,6 +110,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const clearError = useCallback(() => {
     setError(null);
   }, []);
+
+
 
   // Check permission
   // Now works for both authenticated users and guest users with Public role permissions
@@ -159,7 +163,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             <button
               onClick={clearError}
               className="p-1 hover:bg-red-600 rounded transition-colors"
-              aria-label="Dismiss"
+              aria-label={t('common:actions.close')}
             >
               ✕
             </button>

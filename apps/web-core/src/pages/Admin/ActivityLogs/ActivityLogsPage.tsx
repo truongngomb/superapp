@@ -136,20 +136,20 @@ export default function ActivityLogsPage() {
               <p className="text-muted mt-1">{t('activity_logs:subtitle')}</p>
             </div>
             <PermissionGuard resource="activity_logs" action="view">
-              <button
-                type="button"
+              <Button
+                variant="ghost"
                 onClick={() => { void handleExport(); }}
                 disabled={exporting || logs.length === 0}
-                className="p-2 rounded-lg hover:bg-[#217346]/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="h-10 w-10 p-0 text-[#217346] hover:bg-[#217346]/10"
                 title={t('common:export', { defaultValue: 'Export Excel' })}
                 aria-label={t('common:export', { defaultValue: 'Export Excel' })}
               >
                 {exporting ? (
-                  <Loader2 className="w-6 h-6 animate-spin text-[#217346]" />
+                  <Loader2 className="w-6 h-6 animate-spin" />
                 ) : (
-                  <FileSpreadsheet className="w-6 h-6 text-[#217346]" />
+                  <FileSpreadsheet className="w-6 h-6" />
                 )}
-              </button>
+              </Button>
             </PermissionGuard>
           </div>
         </div>

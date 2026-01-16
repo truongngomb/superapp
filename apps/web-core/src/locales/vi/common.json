@@ -13,6 +13,11 @@
     "hard_delete": "Bạn có chắc muốn xóa VĨNH VIỄN {{entity}} này? Hành động này không thể hoàn tác.",
     "restore": "Bạn có chắc muốn khôi phục {{entity}} này không?"
   },
+  "auth": {
+    "checking": "Đang kiểm tra xác thực...",
+    "access_denied": "Truy cập bị từ chối",
+    "access_denied_desc": "Bạn không có quyền truy cập trang này. Vui lòng liên hệ quản trị viên nếu đây là lỗi."
+  },
   "batch_confirmation": {
     "delete": "Bạn có chắc muốn chuyển {{count}} {{entities}} vào Thùng rác?",
     "hard_delete": "Bạn có chắc muốn xóa VĨNH VIỄN {{count}} {{entities}} đã chọn? Hành động này không thể hoàn tác.",
@@ -31,6 +36,7 @@
     "batch_status_success": "Đã cập nhật trạng thái cho {{count}} {{entities}}!",
     "load_error": "Không thể tải {{entities}}",
     "error": "Đã xảy ra lỗi",
+    "unknown_auth": "Lỗi xác thực không xác định",
     "copy_success": "Đã sao chép vào bộ nhớ tạm"
   },
   "list": {
@@ -57,7 +63,17 @@
     "confirm": "Xác nhận",
     "cancel": "Hủy",
     "save": "Lưu",
-    "close": "Đóng"
+    "close": "Đóng",
+    "move_up": "Di chuyển lên",
+    "move_down": "Di chuyển xuống",
+    "remove": "Gỡ bỏ",
+    "go_home": "Về trang chủ"
+  },
+  "data_table": {
+    "select_row": "Chọn dòng",
+    "select_all": "Chọn tất cả",
+    "items": "Mục",
+    "table_label": "Bảng dữ liệu"
   },
   "resources": {
     "users": "Người dùng",

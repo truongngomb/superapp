@@ -314,14 +314,14 @@ export default function CategoriesPage() {
             <p className="text-muted mt-1">{t("categories:subtitle")}</p>
           </div>
            <PermissionGuard resource="categories" action="view">
-             <button
-              type="button"
+             <Button
+              variant="ghost"
               onClick={() => void handleExport()}
               disabled={exporting || categories.length === 0}
-              className="p-2 rounded-lg hover:bg-[#217346]/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="h-10 w-10 p-0 text-[#217346] hover:bg-[#217346]/10"
              >
-               {exporting ? <Loader2 className="w-6 h-6 animate-spin text-[#217346]" /> : <FileSpreadsheet className="w-6 h-6 text-[#217346]" />}
-             </button>
+               {exporting ? <Loader2 className="w-6 h-6 animate-spin" /> : <FileSpreadsheet className="w-6 h-6" />}
+             </Button>
            </PermissionGuard>
         </div>
         <PermissionGuard resource="categories" action="create">
@@ -381,7 +381,7 @@ export default function CategoriesPage() {
           transition={{ duration: 0.2, ease: "easeOut" }}
           className="min-h-[400px]"
         >
-        {loading && categories.length === 0 ? (
+        { (loading && categories.length === 0) || isRefreshing ? (
            viewMode === 'table' ? (
               // Using helper or specialized skeleton if needed, otherwise Generic Skeleton works 
               // but we don't have DataTableSkeleton yet potentially matching columns perfectly without config

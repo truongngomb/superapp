@@ -21,7 +21,9 @@
     "category_page": "Trang danh mục",
     "modes": {
       "standard": "Giao diện Chuẩn",
+      "standard_desc": "Giao diện tiêu chuẩn với header và điều hướng",
       "modern": "Giao diện Hiện đại",
+      "modern_desc": "Thiết kế hiện đại với sidebar cố định và topbar",
       "default": "Mặc định"
     },
     "resource": "Tài nguyên quản lý",

@@ -1,5 +1,6 @@
 import { GripVertical, ArrowUp, ArrowDown, Trash2 } from 'lucide-react';
 import { Reorder, useDragControls } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 interface RoleResourceRowProps {
   res: string;
@@ -11,6 +12,7 @@ interface RoleResourceRowProps {
 }
 
 export function RoleResourceRow({ res, index, total, onRemove, onMoveUp, onMoveDown }: RoleResourceRowProps) {
+  const { t } = useTranslation(['common']);
   const controls = useDragControls();
 
   return (
@@ -37,7 +39,7 @@ export function RoleResourceRow({ res, index, total, onRemove, onMoveUp, onMoveD
           onClick={() => { onMoveUp(index); }}
           disabled={index === 0}
           className="p-2 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-colors disabled:opacity-30 disabled:pointer-events-none"
-          title="Move Up"
+          title={t('common:actions.move_up')}
         >
           <ArrowUp className="w-4 h-4" />
         </button>
@@ -45,14 +47,14 @@ export function RoleResourceRow({ res, index, total, onRemove, onMoveUp, onMoveD
           onClick={() => { onMoveDown(index); }}
           disabled={index === total - 1}
           className="p-2 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-colors disabled:opacity-30 disabled:pointer-events-none"
-          title="Move Down"
+          title={t('common:actions.move_down')}
         >
           <ArrowDown className="w-4 h-4" />
         </button>
         <button 
           onClick={() => { onRemove(res); }}
           className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors ml-1"
-          title="Remove"
+          title={t('common:actions.remove')}
         >
           <Trash2 className="w-4 h-4" />
         </button>

@@ -10,6 +10,7 @@ import {
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks';
 import { LoadingSpinner } from '@superapp/ui-kit';
+import { useTranslation } from 'react-i18next';
 
 // ============================================================================
 // Types
@@ -68,6 +69,7 @@ export function ProtectedRoute({
   loadingFallback,
   forbiddenFallback,
 }: ProtectedRouteProps): ReactElement {
+  const { t } = useTranslation(['common']);
   const { isAuthenticated, isLoading, checkPermission } = useAuth();
   const location = useLocation();
 
@@ -78,7 +80,7 @@ export function ProtectedRoute({
     }
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
-        <LoadingSpinner size="lg" text="Checking authentication..." />
+        <LoadingSpinner size="lg" text={t('common:auth.checking')} />
       </div>
     );
   }
@@ -121,19 +123,20 @@ export function ProtectedRoute({
  * Default forbidden page component
  */
 function ForbiddenPage(): ReactElement {
+  const { t } = useTranslation(['common']);
+  
   return (
     <div className="flex flex-col items-center justify-center min-h-[50vh] text-center">
       <div className="text-6xl mb-4">🚫</div>
-      <h1 className="text-3xl font-bold text-foreground mb-2">Access Denied</h1>
+      <h1 className="text-3xl font-bold text-foreground mb-2">{t('common:auth.access_denied')}</h1>
       <p className="text-muted mb-6 max-w-md">
-        You don't have permission to access this page. 
-        Please contact your administrator if you believe this is an error.
+        {t('common:auth.access_denied_desc')}
       </p>
       <a
         href="/"
         className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
       >
-        Go to Home
+        {t('common:actions.go_home')}
       </a>
     </div>
   );

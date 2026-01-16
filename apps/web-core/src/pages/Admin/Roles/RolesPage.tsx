@@ -352,7 +352,7 @@ export default function RolesPage() {
           transition={{ duration: 0.2, ease: "easeOut" }}
           className="min-h-[400px]"
         >
-        {loading && roles.length === 0 ? (
+        { (loading && roles.length === 0) || isRefreshing ? (
            viewMode === 'table' ? (
                <RoleTableSkeleton />
            ) : (

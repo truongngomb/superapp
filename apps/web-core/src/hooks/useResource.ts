@@ -53,7 +53,7 @@ export function useResource<T extends { id: string }, CreateInput, UpdateInput, 
   const [exporting, setExporting] = useState(false);
   
   const [items, setItems] = useState<T[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [total, setTotal] = useState(0);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   

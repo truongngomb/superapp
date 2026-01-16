@@ -199,7 +199,7 @@ export default function UsersPage() {
     if (!assigningUser) return;
     try {
       await userService.assignRoles(assigningUser.id, roleIds);
-      success(t('toast.assign_role_success', { defaultValue: 'Roles assigned successfully' }));
+      success(t('toast.assign_role_success'));
       void fetchItems(); // Refresh list to update roles
       setAssigningUser(null);
     } catch {
@@ -238,8 +238,8 @@ export default function UsersPage() {
     {
       key: 'avatar',
       header: '',
-      width: '60px',
-      className: 'px-4',
+      width: '80px',
+      className: 'px-4 justify-center',
       render: (user) => <Avatar src={user.avatar} name={user.name} />
     },
     {
@@ -272,7 +272,7 @@ export default function UsersPage() {
                );
              })
            ) : (
-             <span className="text-muted-foreground text-xs italic">{t('common:no_roles', {defaultValue: 'No roles'})}</span>
+             <span className="text-muted-foreground text-xs italic">{t('common:no_roles')}</span>
            )}
          </div>
        )
@@ -301,7 +301,7 @@ export default function UsersPage() {
                  </Button>
                </PermissionGuard>
                <PermissionGuard resource="users" action="update">
-                  <Button variant="ghost" size="sm" onClick={() => { setAssigningUser(user); }} aria-label={t('users:assign_role_btn', {defaultValue: 'Assign Role'})}>
+                  <Button variant="ghost" size="sm" onClick={() => { setAssigningUser(user); }} aria-label={t('users:assign_role_btn')}>
                     <Shield className="w-4 h-4 text-blue-500" />
                   </Button>
                </PermissionGuard>
@@ -346,14 +346,14 @@ export default function UsersPage() {
             <p className="text-muted mt-1">{t("users:subtitle")}</p>
           </div>
           <PermissionGuard resource="users" action="view">
-             <button
-               type="button"
+             <Button
+               variant="ghost"
                onClick={() => void handleExport()}
                disabled={exporting || users.length === 0}
-               className="p-2 rounded-lg hover:bg-[#217346]/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+               className="h-10 w-10 p-0 text-[#217346] hover:bg-[#217346]/10"
              >
-               {exporting ? <Loader2 className="w-6 h-6 animate-spin text-[#217346]" /> : <FileSpreadsheet className="w-6 h-6 text-[#217346]" />}
-             </button>
+               {exporting ? <Loader2 className="w-6 h-6 animate-spin" /> : <FileSpreadsheet className="w-6 h-6" />}
+             </Button>
           </PermissionGuard>
         </div>
         <PermissionGuard resource="users" action="create">
@@ -413,7 +413,7 @@ export default function UsersPage() {
           transition={{ duration: 0.2, ease: "easeOut" }}
           className="min-h-[400px]"
         >
-        {loading && users.length === 0 ? (
+        { (loading && users.length === 0) || isRefreshing ? (
            viewMode === 'table' ? (
               <UserTableSkeleton />
            ) : (

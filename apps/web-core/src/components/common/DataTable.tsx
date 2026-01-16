@@ -125,7 +125,7 @@ function DataTableInner<T>({
               <Checkbox
                 checked={!!isSelected}
                 onChange={(checked) => { onSelectOne(id, checked); }}
-                aria-label={t('select_row', { defaultValue: 'Select row' })}
+                aria-label={t('data_table.select_row')}
               />
             )}
           </div>
@@ -164,7 +164,7 @@ function DataTableInner<T>({
       transition={{ duration: 0.2 }}
       className="w-full rounded-lg border border-border bg-card shadow-sm overflow-hidden flex flex-col"
       role="table"
-      aria-label="Data Table"
+      aria-label={t('data_table.table_label')}
       aria-rowcount={data.length}
     >
       {/* Header */}
@@ -188,7 +188,7 @@ function DataTableInner<T>({
                   checked={allSelected}
                   triState={isIndeterminate}
                   onChange={onSelectAll}
-                  aria-label={t('select_all', { defaultValue: 'Select all' })}
+                  aria-label={t('data_table.select_all')}
                 />
               )}
             </div>
@@ -237,7 +237,7 @@ function DataTableInner<T>({
           </div>
         ) : data.length === 0 ? (
           <div className="p-8 text-center text-muted-foreground border-b border-border/50">
-             {emptyMessage || t('list.empty', { entities: t('items', { defaultValue: 'Items' }) })}
+             {emptyMessage || t('list.empty', { entities: t('data_table.items') })}
           </div>
         ) : useVirtualization ? (
           <List
@@ -275,7 +275,7 @@ function DataTableInner<T>({
                         <Checkbox
                           checked={!!isSelected}
                           onChange={(checked) => { onSelectOne(id, checked); }}
-                          aria-label={t('select_row', { defaultValue: 'Select row' })}
+                          aria-label={t('data_table.select_row')}
                         />
                       )}
                     </div>
