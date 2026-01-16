@@ -35,6 +35,7 @@ Thực hiện code theo thứ tự dependency:
 - [Other]: `packages/[other]/`
 
 ### 2.3 Backend
+> Use skill `create-api-resource`
 - Service (extend BaseService)
 - Controller
 - Routes
@@ -48,6 +49,7 @@ Thực hiện code theo thứ tự dependency:
 - Đăng ký trong `config/i18n.ts`
 
 ### 2.6 UI Components
+> Use skill `scaffold-feature`
 - Component con trước (Form, Table, Skeleton)
 - Page chính sau
 

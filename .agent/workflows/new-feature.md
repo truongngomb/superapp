@@ -39,7 +39,7 @@ Tạo `implementation_plan.md` với:
 
 ---
 
-## PHASE 2: DATABASE
+## PHASE 2: DATABASE & SHARED TYPES
 
 ### Bước 2.1: Tạo Collection Schema
 ```
@@ -52,7 +52,13 @@ apps/api-server/src/database/collections/{feature}.ts
 pnpm db --migrate
 ```
 
-### Bước 2.3: Seed Data (optional)
+### Bước 2.3: cập nhật Types
+```
+packages/shared-types/src/{feature}.ts
+```
+- Export từ `index.ts`
+
+### Bước 2.4: Seed Data (optional)
 ```
 apps/api-server/src/database/seeds/{feature}.seed.ts
 ```
@@ -60,6 +66,8 @@ apps/api-server/src/database/seeds/{feature}.seed.ts
 ---
 
 ## PHASE 3: BACKEND
+
+> **Tip**: Có thể dùng skill `create-api-resource` để sinh nhanh code Backend.
 
 ### Bước 3.1: Tạo Zod Schema
 ```
@@ -85,29 +93,21 @@ apps/api-server/src/routes/{feature}.ts
 
 ---
 
-## PHASE 4: SHARED TYPES
+## PHASE 4: FRONTEND
 
-### Bước 4.1: Cập nhật Types
-```
-packages/shared-types/src/{feature}.ts
-```
-- Export từ `index.ts`
+> **Tip**: Có thể dùng skill `scaffold-feature` để sinh nhanh code Frontend.
 
----
-
-## PHASE 5: FRONTEND
-
-### Bước 5.1: Tạo Service
+### Bước 4.1: Tạo Service
 ```
 apps/web-core/src/services/{feature}.service.ts
 ```
 
-### Bước 5.2: Tạo Hook
+### Bước 4.2: Tạo Hook
 ```
 apps/web-core/src/hooks/use{Feature}.ts
 ```
 
-### Bước 5.3: Tạo Components
+### Bước 4.3: Tạo Components
 ```
 apps/web-core/src/pages/{Feature}/
 ├── {Feature}Page.tsx
@@ -118,16 +118,30 @@ apps/web-core/src/pages/{Feature}/
     └── {Feature}Skeleton.tsx
 ```
 
-### Bước 5.4: Thêm Route
+### Bước 4.4: Thêm Route
 ```
 apps/web-core/src/AppRoutes.tsx
 ```
 
-### Bước 5.5: Tạo i18n Files
+### Bước 4.5: Tạo i18n Files
 ```
 apps/web-core/src/locales/{en,vi,ko}/{feature}.json
 ```
 - Đăng ký trong `config/i18n.ts`
+
+---
+
+## PHASE 5: SELF-CORRECTION & AUDIT (CRITICAL)
+
+### Bước 5.1: Self-Correction
+Sau khi code xong, tự review:
+- Có hardcode text không? -> Chuyển sang i18n
+- Có hardcode màu không? -> Dùng Tailwind tokens
+- Có giống `Category` chưa? -> So sánh patterns
+
+### Bước 5.2: Skill Audit
+1. **Performance**: Chạy skill `vercel-react-best-practices`
+2. **UI/UX**: Chạy skill `web-design-guidelines`
 
 ---
 
@@ -145,7 +159,14 @@ curl http://localhost:3001/api/{feature}
 - Kiểm tra i18n (switch languages)
 - Kiểm tra dark/light theme
 
-### Bước 6.3: Tạo Walkthrough
+### Bước 6.3: Automation Test (Optional)
+// turbo
+```bash
+pnpm lint
+pnpm build
+```
+
+### Bước 6.4: Tạo Walkthrough
 - Ghi lại những gì đã làm
 - Screenshots nếu cần
 

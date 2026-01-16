@@ -210,8 +210,8 @@ X. TECH STACK (KHÔNG ĐƯỢC THAY ĐỔI)
 ==================================================================
 
 Backend:
-- Node.js, Express
-- PocketBase
+- Node.js, Express (API Gateway)
+- PocketBase (Embedded DB/Auth)
 - NodeCache
 
 Frontend:
@@ -239,6 +239,11 @@ Sử dụng các Skills nâng cao để đảm bảo chất lượng code Enterp
 2. `web-design-guidelines`:
 - Audit UI/UX trước khi commit
 - Đảm bảo Accessibility (ARIA, Focus)
+
+3. Automation Skills:
+- `scaffold-feature`: Tạo cấu trúc Frontend chuẩn SSoT
+- `create-api-resource`: Tạo Backend Resource (Service, Controller, Route)
+- `db-migration`: Workflow migration database an toàn
 
 ==================================================================
 XII. NGUYÊN TẮC KẾT THÚC
