@@ -7,6 +7,7 @@ export type { SortOrder, SortConfig };
 
 export interface UseSortOptions {
   storageKey?: string;
+  initialOverride?: SortConfig;
 }
 
 /**
@@ -20,9 +21,12 @@ export function useSort(
   defaultOrder: SortOrder = 'desc',
   options?: UseSortOptions
 ) {
-  const { storageKey } = options || {};
+  const { storageKey, initialOverride } = options || {};
 
   const [sortConfig, setSortConfig] = useState<SortConfig>(() => {
+    if (initialOverride && initialOverride.field && initialOverride.order) {
+      return initialOverride;
+    }
     if (storageKey) {
       const saved = getStorageItem<SortConfig>(storageKey);
       if (saved && saved.field && saved.order) {
