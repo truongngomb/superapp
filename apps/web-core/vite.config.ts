@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => {
       react(),
       VitePWA({
         registerType: 'autoUpdate',
-        includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
+        includeAssets: ['favicon.svg'],
         manifest: {
           name: 'SuperApp',
           short_name: 'SuperApp',
@@ -21,31 +21,33 @@ export default defineConfig(({ mode }) => {
           display: 'standalone',
           icons: [
             {
-              src: 'icons/icon-192x192.png',
+              src: 'favicon.svg',
               sizes: '192x192',
-              type: 'image/png'
+              type: 'image/svg+xml'
             },
             {
-              src: 'icons/icon-512x512.png',
+              src: 'favicon.svg',
               sizes: '512x512',
-              type: 'image/png'
+              type: 'image/svg+xml'
             },
             {
-              src: 'icons/icon-512x512.png',
+              src: 'favicon.svg',
               sizes: '512x512',
-              type: 'image/png',
+              type: 'image/svg+xml',
               purpose: 'maskable'
             }
           ]
         },
         workbox: {
+          navigateFallbackDenylist: [/^\/api/],
           globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
           runtimeCaching: [
             {
-              urlPattern: /^https:\/\/api\./i,
+              urlPattern: ({ url }) => url.pathname.startsWith('/api'),
               handler: 'NetworkFirst',
               options: {
                 cacheName: 'api-cache',
+                networkTimeoutSeconds: 10,
                 expiration: {
                   maxEntries: 100,
                   maxAgeSeconds: 60 * 60 * 24 // 1 day
@@ -60,6 +62,7 @@ export default defineConfig(({ mode }) => {
       })
     ],
     resolve: {
+      dedupe: ['react', 'react-dom'],
       alias: {
         '@': path.resolve(__dirname, './src'),
         '@superapp/shared-types': path.resolve(__dirname, '../../packages/shared-types/src'),

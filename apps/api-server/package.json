@@ -31,6 +31,7 @@
     "node-cache": "^5.1.2",
     "pocketbase": "^0.26.5",
     "systeminformation": "^5.30.3",
+    "tsx": "^4.21.0",
     "zod": "^4.3.5"
   },
   "devDependencies": {
@@ -45,7 +46,6 @@
     "eslint": "^9.39.2",
     "globals": "^17.0.0",
     "openapi3-ts": "^4.5.0",
-    "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.53.0"
   }

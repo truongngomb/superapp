@@ -22,8 +22,8 @@
     "tailwind-merge": "^3.4.0"
   },
   "peerDependencies": {
-    "react": "^18.0.0",
-    "react-i18next": "^14.0.0 || ^15.0.0"
+    "react": "^19.2.3",
+    "react-i18next": "^14.0.0 || ^15.0.0 || ^16.0.0"
   },
   "devDependencies": {
     "@types/file-saver": "^2.0.7",

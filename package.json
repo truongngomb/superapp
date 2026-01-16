@@ -6,7 +6,9 @@
     "build": "pnpm -r build",
     "db": "pnpm --filter @superapp/api-server db",
     "lint": "pnpm -r lint",
-    "test": "pnpm -r test"
+    "test": "pnpm -r test",
+    "docker:build": "docker build -f deploy/Dockerfile -t truongngomb/superapp:latest .",
+    "docker:push": "powershell -ExecutionPolicy Bypass -File deploy/push_docker.ps1"
   },
   "devDependencies": {
     "@types/node": "^25.0.7",

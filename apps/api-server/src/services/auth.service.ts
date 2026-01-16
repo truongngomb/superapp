@@ -128,7 +128,11 @@ class AuthService {
           id: user.id,
           email: user['email'] as string,
           name: user['name'] as string,
-          avatar: user.avatar ? String(user.avatar) : undefined,
+          avatar: user.avatar 
+            ? (String(user.avatar).startsWith('http') 
+              ? String(user.avatar) 
+              : `${config.pocketbaseUrl}/api/files/${Collections.USERS}/${user.id}/${user.avatar as string}`)
+            : undefined,
           permissions,
         },
         isAuthenticated: true,

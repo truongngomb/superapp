@@ -1,0 +1,56 @@
+# ==============================================================================
+# SUPERAPP - DOCKER IGNORE
+# ==============================================================================
+# Files and directories to exclude from Docker build context
+# This improves build performance and reduces image size
+# ==============================================================================
+
+# Dependencies (will be installed inside container)
+node_modules
+**/node_modules
+
+# Build outputs (will be built inside container)
+dist
+**/dist
+.cache
+**/.cache
+
+# Development files
+.git
+.gitignore
+.vscode
+.idea
+*.log
+*.md
+!README.md
+!DEPLOYMENT.md
+
+# Environment files (use Docker env vars instead)
+.env
+.env.*
+!.env.example
+
+# Test files
+**/*.test.*
+**/*.spec.*
+__tests__
+coverage
+
+# Mobile/Native builds
+apps/web-core/android
+apps/web-core/ios
+*.apk
+*.ipa
+
+# Temporary files
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# Agent/AI files
+.agent
+
+# Deploy folder (except what we need)
+deploy/push_docker.ps1
+deploy/DEPLOYMENT.md
