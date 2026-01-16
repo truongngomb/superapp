@@ -51,10 +51,14 @@
     "frontend": "프론트엔드",
     "backend": "백엔드",
     "mobile": "모바일 & PWA",
-    "items": "React 18, TypeScript, Vite, TailwindCSS, Framer Motion, Node.js, Express, PocketBase, Zod, Capacitor, PWA"
+    "frontend_items": ["React 18", "TypeScript", "Vite", "TailwindCSS", "Framer Motion"],
+    "backend_items": ["Node.js", "Express", "PocketBase", "Zod", "NodeCache"],
+    "mobile_items": ["Capacitor", "Android", "iOS", "PWA"]
   },
   "footer": {
     "license": "MIT 라이선스",
-    "rights": "모든 권리 보유."
+    "rights": "모든 권리 보유.",
+    "github": "GitHub",
+    "copyright": "© {{year}} {{brand}}. {{rights}}"
   }
 }

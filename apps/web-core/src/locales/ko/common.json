@@ -1,5 +1,7 @@
 {
   "loading": "로딩 중...",
+  "brand": "SuperApp",
+  "version": "v1.0.0",
   "cancel": "취소",
   "save": "저장",
   "delete": "삭제",

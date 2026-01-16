@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Folder, Smartphone, Users, UserCog, LayoutDashboard, Languages, Zap } from 'lucide-react';
+import { ArrowRight, Smartphone, LayoutDashboard, Languages, Zap, Shield, ScrollText } from 'lucide-react';
 import { Button } from '@/components/common';
 
 const features = [
@@ -11,19 +11,19 @@ const features = [
     descKey: 'home:features.dashboard.description',
   },
   {
-    icon: Users,
-    titleKey: 'home:features.user_mgmt.title',
-    descKey: 'home:features.user_mgmt.description',
+    icon: Shield,
+    titleKey: 'home:features.security.title',
+    descKey: 'home:features.security.description',
   },
   {
-    icon: UserCog,
-    titleKey: 'home:features.role_mgmt.title',
-    descKey: 'home:features.role_mgmt.description',
+    icon: ScrollText,
+    titleKey: 'home:features.activity_logs.title',
+    descKey: 'home:features.activity_logs.description',
   },
   {
-    icon: Folder,
-    titleKey: 'home:features.category_mgmt.title',
-    descKey: 'home:features.category_mgmt.description',
+    icon: Zap,
+    titleKey: 'home:features.performance.title',
+    descKey: 'home:features.performance.description',
   },
   {
     icon: Languages,
@@ -79,7 +79,7 @@ export function HomePage() {
         </motion.div>
 
         <h1 className="text-4xl md:text-6xl font-bold mb-6">
-          <span className="text-gradient">SuperApp</span>
+          <span className="text-gradient">{t('common:brand')}</span>
           <br />
           <span className="text-foreground">{t('home:hero.subtitle')}</span>
         </h1>
@@ -147,7 +147,7 @@ export function HomePage() {
               {t('home:tech_stack.frontend')}
             </h3>
             <div className="flex flex-wrap justify-center gap-2">
-              {['React 18', 'TypeScript', 'Vite', 'TailwindCSS', 'Framer Motion'].map((tech) => (
+              {(t('home:tech_stack.frontend_items', { returnObjects: true }) as string[]).map((tech) => (
                 <span
                   key={tech}
                   className="px-3 py-1.5 rounded-full bg-primary/10 text-xs font-medium text-foreground"
@@ -164,7 +164,7 @@ export function HomePage() {
               {t('home:tech_stack.backend')}
             </h3>
             <div className="flex flex-wrap justify-center gap-2">
-              {['Node.js', 'Express', 'PocketBase', 'Zod', 'NodeCache'].map((tech) => (
+              {(t('home:tech_stack.backend_items', { returnObjects: true }) as string[]).map((tech) => (
                 <span
                   key={tech}
                   className="px-3 py-1.5 rounded-full bg-secondary/10 text-xs font-medium text-foreground"
@@ -181,7 +181,7 @@ export function HomePage() {
               {t('home:tech_stack.mobile')}
             </h3>
             <div className="flex flex-wrap justify-center gap-2">
-              {['Capacitor', 'Android', 'iOS', 'PWA'].map((tech) => (
+              {(t('home:tech_stack.mobile_items', { returnObjects: true }) as string[]).map((tech) => (
                 <span
                   key={tech}
                   className="px-3 py-1.5 rounded-full bg-accent/10 text-xs font-medium text-foreground"
@@ -203,8 +203,8 @@ export function HomePage() {
       >
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted">
           <div className="flex items-center gap-2">
-            <span className="text-gradient font-semibold">SuperApp</span>
-            <span>v1.0.0</span>
+            <span className="text-gradient font-semibold">{t('common:brand')}</span>
+            <span>{t('common:version')}</span>
           </div>
           
           <div className="flex items-center gap-6">
@@ -214,7 +214,7 @@ export function HomePage() {
               rel="noopener noreferrer"
               className="hover:text-primary transition-colors"
             >
-              GitHub
+              {t('home:footer.github')}
             </a>
             <a
               href="#"
@@ -231,7 +231,13 @@ export function HomePage() {
           </div>
 
           <div className="text-center md:text-right">
-            <p>© {new Date().getFullYear()} SuperApp. {t('home:footer.rights')}</p>
+            <p>
+              {t('home:footer.copyright', {
+                year: new Date().getFullYear(),
+                brand: t('common:brand'),
+                rights: t('home:footer.rights'),
+              })}
+            </p>
           </div>
         </div>
       </motion.footer>

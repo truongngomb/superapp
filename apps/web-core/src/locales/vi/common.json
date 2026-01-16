@@ -1,5 +1,7 @@
 {
   "loading": "Đang tải...",
+  "brand": "SuperApp",
+  "version": "v1.0.0",
   "cancel": "Hủy",
   "save": "Lưu",
   "delete": "Xóa",

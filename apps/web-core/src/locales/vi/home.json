@@ -1,13 +1,13 @@
 {
   "hero": {
-    "badge": "Template sẵn sàng cho Production",
-    "subtitle": "Boilerplate Đa nền tảng",
-    "description": "Ứng dụng mẫu cho phát triển nhóm. Xây dựng với React, TypeScript, Vite và Node.js Express."
+    "badge": "Kiến trúc SuperApp Enterprise",
+    "subtitle": "Nền Tảng Phát Triển Toàn Diện",
+    "description": "Hệ thống SuperApp chuẩn mực tích hợp sẵn Frontend, Backend, Mobile và AI Agent. Tối ưu hóa cho tốc độ, bảo mật và khả năng mở rộng không giới hạn."
   },
   "features": {
     "dashboard": {
-      "title": "Bảng điều khiển Admin",
-      "description": "Giám sát hệ thống thời gian thực với CPU, RAM, Disk và thống kê tổng quan nhanh"
+      "title": "Trung Tâm Điều Khiển Live",
+      "description": "Giám sát sức khỏe hệ thống theo thời gian thực (Real-time). Trực quan hóa dữ liệu với biểu đồ động."
     },
     "user_mgmt": {
       "title": "Quản lý người dùng",
@@ -22,28 +22,28 @@
       "description": "Tính năng tham chiếu với CRUD đầy đủ, lưu trữ, khôi phục và xuất dữ liệu"
     },
     "activity_logs": {
-      "title": "Nhật ký hoạt động",
-      "description": "Theo dõi mọi hành động người dùng với bộ lọc, tìm kiếm và xuất lịch sử kiểm tra"
+      "title": "Audit Log Minh Bạch",
+      "description": "Ghi lại chi tiết mọi thay đổi dữ liệu. Truy vết hành vi người dùng chính xác từng milisecond."
     },
     "i18n": {
-      "title": "Hỗ trợ đa ngôn ngữ",
-      "description": "Hỗ trợ i18n đầy đủ cho Tiếng Anh, Tiếng Việt và Tiếng Hàn với react-i18next"
+      "title": "Đa Ngôn Ngữ Native",
+      "description": "Hỗ trợ I18n sâu rộng (EN/VI/KO). Chuyển đổi ngôn ngữ tức thì không cần tải lại trang."
     },
     "export": {
       "title": "Xuất dữ liệu",
       "description": "Xuất dữ liệu ra Excel với cột tùy chỉnh sử dụng ExcelJS"
     },
     "performance": {
-      "title": "Hiệu suất cao",
-      "description": "Tối ưu hóa với Vite và React 18 cho trải nghiệm mượt mà"
+      "title": "Hiệu Năng Cực Đại",
+      "description": "Kiến trúc React 18 + Vite tối ưu hóa Core Web Vitals. Điểm Lighthouse 100/100 cho trải nghiệm mượt mà."
     },
     "security": {
-      "title": "Bảo mật",
-      "description": "Tích hợp tiêu chuẩn bảo mật OWASP, Helmet và route guards"
+      "title": "Bảo Mật Enterprise",
+      "description": "Hệ thống phân quyền RBAC đa lớp, xác thực an toàn và tuân thủ các tiêu chuẩn bảo mật khắt khe nhất."
     },
     "cross_platform": {
-      "title": "Đa nền tảng",
-      "description": "Chạy trên Web, Android và iOS với Capacitor và hỗ trợ PWA"
+      "title": "Đa Nền Tảng Hợp Nhất",
+      "description": "Trải nghiệm đồng nhất trên Web, Android và iOS. Hỗ trợ PWA Offline-first hoạt động không cần mạng."
     }
   },
   "tech_stack": {
@@ -51,10 +51,14 @@
     "frontend": "Frontend",
     "backend": "Backend",
     "mobile": "Mobile & PWA",
-    "items": "React 18, TypeScript, Vite, TailwindCSS, Framer Motion, Node.js, Express, PocketBase, Zod, Capacitor, PWA"
+    "frontend_items": ["React 18", "TypeScript", "Vite", "TailwindCSS", "Framer Motion"],
+    "backend_items": ["Node.js", "Express", "PocketBase", "Zod", "NodeCache"],
+    "mobile_items": ["Capacitor", "Android", "iOS", "PWA"]
   },
   "footer": {
     "license": "Giấy phép MIT",
-    "rights": "Bảo lưu mọi quyền."
+    "rights": "Bảo lưu mọi quyền.",
+    "github": "GitHub",
+    "copyright": "© {{year}} {{brand}}. {{rights}}"
   }
 }

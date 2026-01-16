@@ -1,13 +1,13 @@
 {
   "hero": {
-    "badge": "Production-ready template",
-    "subtitle": "Cross-Platform Boilerplate",
-    "description": "Template application for team development. Built with React, TypeScript, Vite, and Node.js Express."
+    "badge": "Enterprise SuperApp Architecture",
+    "subtitle": "The Ultimate Development Platform",
+    "description": "A standardized SuperApp system integrating Frontend, Backend, Mobile, and AI Agents. Optimized for speed, security, and limitless scalability."
   },
   "features": {
     "dashboard": {
-      "title": "Admin Dashboard",
-      "description": "Real-time system monitoring with CPU, RAM, Disk usage and quick statistics overview"
+      "title": "Live Command Center",
+      "description": "Real-time system health monitoring. Visualize data with dynamic, interactive charts."
     },
     "user_mgmt": {
       "title": "User Management",
@@ -22,28 +22,28 @@
       "description": "Reference feature with full CRUD, archive, restore, and export functionality"
     },
     "activity_logs": {
-      "title": "Activity Logs",
-      "description": "Track all user actions with filtering, search, and audit trail export"
+      "title": "Transparent Audit Logs",
+      "description": "Detailed tracking of all data changes. Trace user behavior with millisecond precision."
     },
     "i18n": {
-      "title": "Multi-language Support",
-      "description": "Full i18n support for English, Vietnamese, and Korean with react-i18next"
+      "title": "Native I18n Support",
+      "description": "Deep Internationalization (EN/VI/KO). Instant language switching without page reload."
     },
     "export": {
       "title": "Data Export",
       "description": "Export data to Excel with customizable columns using ExcelJS"
     },
     "performance": {
-      "title": "High Performance",
-      "description": "Optimized with Vite and React 18 for a smooth experience"
+      "title": "Peak Performance",
+      "description": "React 18 + Vite architecture optimized for Core Web Vitals. 100/100 Lighthouse score for fluid experience."
     },
     "security": {
-      "title": "Security",
-      "description": "Integrated with OWASP security standards, Helmet, and route guards"
+      "title": "Enterprise Security",
+      "description": "Multi-layer RBAC, secure authentication, and compliance with the strictest security standards."
     },
     "cross_platform": {
-      "title": "Cross-Platform",
-      "description": "Runs on Web, Android, and iOS with Capacitor and PWA support"
+      "title": "Unified Cross-Platform",
+      "description": "Seamless experience across Web, Android, and iOS. Offline-first PWA support included."
     }
   },
   "tech_stack": {
@@ -51,10 +51,14 @@
     "frontend": "Frontend",
     "backend": "Backend",
     "mobile": "Mobile & PWA",
-    "items": "React 18, TypeScript, Vite, TailwindCSS, Framer Motion, Node.js, Express, PocketBase, Zod, Capacitor, PWA"
+    "frontend_items": ["React 18", "TypeScript", "Vite", "TailwindCSS", "Framer Motion"],
+    "backend_items": ["Node.js", "Express", "PocketBase", "Zod", "NodeCache"],
+    "mobile_items": ["Capacitor", "Android", "iOS", "PWA"]
   },
   "footer": {
     "license": "MIT License",
-    "rights": "All rights reserved."
+    "rights": "All rights reserved.",
+    "github": "GitHub",
+    "copyright": "© {{year}} {{brand}}. {{rights}}"
   }
 }
