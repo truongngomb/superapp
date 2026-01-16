@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import { AnimatePresence, motion as framerMotion } from "framer-motion";
 import {
   Plus,
@@ -38,9 +38,12 @@ import { RoleRowSkeleton } from "./components/RoleRowSkeleton";
 
 
 
+import { useSearchParams } from "react-router-dom";
+
 export default function RolesPage() {
   const { t } = useTranslation(["roles", "common"]);
   const { checkPermission } = useAuth();
+  const [searchParams] = useSearchParams();
   
   // Permissions
   const canDelete = checkPermission('roles', 'delete');
@@ -49,13 +52,17 @@ export default function RolesPage() {
   const canSelect = canDelete || canUpdate;
 
   // Search & Sort
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
   const debouncedSearchQuery = useDebounce(searchQuery);
-  const [showArchived, setShowArchived] = useState(false);
+  const [showArchived, setShowArchived] = useState(searchParams.get("isDeleted") === "true");
   const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const urlSort = searchParams.get("sort");
+  const urlOrder = searchParams.get("order");
 
   const { sortConfig, handleSort } = useSort("created", "desc", {
     storageKey: STORAGE_KEYS.ROLES_SORT as string,
+    initialOverride: (urlSort && (urlOrder === 'asc' || urlOrder === 'desc')) ? { field: urlSort, order: urlOrder } : undefined
   }) as { sortConfig: { field: string; order: 'asc' | 'desc' }; handleSort: (field: string) => void };
 
   // View Mode
@@ -112,16 +119,47 @@ export default function RolesPage() {
     isActive: boolean;
   } | null>(null);
 
-  // Update params when filters change (including initial load)
+  const prevFiltersRef = useRef({
+    search: debouncedSearchQuery,
+    sort: sortConfig.field,
+    order: sortConfig.order,
+    isDeleted: showArchived,
+  });
+
+  // 1. Initial Load
   useEffect(() => {
-    const params: RoleListParams = {
-       search: debouncedSearchQuery || undefined,
-       sort: sortConfig.field,
-       order: sortConfig.order,
-       page: 1,
-       isDeleted: showArchived || undefined,
-    };
-    void fetchItems(params);
+    void fetchItems(); // Initial load from URL
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // 2. Handle Filter Changes
+  useEffect(() => {
+    // Check if filters actually changed
+    const prev = prevFiltersRef.current;
+    const hasFilterChanged = 
+      prev.search !== debouncedSearchQuery ||
+      prev.sort !== sortConfig.field ||
+      prev.order !== sortConfig.order ||
+      prev.isDeleted !== showArchived;
+
+    if (hasFilterChanged) {
+      // Update ref
+      prevFiltersRef.current = {
+        search: debouncedSearchQuery,
+        sort: sortConfig.field,
+        order: sortConfig.order,
+        isDeleted: showArchived,
+      };
+
+      const params: RoleListParams = {
+         search: debouncedSearchQuery || undefined,
+         sort: sortConfig.field,
+         order: sortConfig.order,
+         page: 1, // Reset page on filter change
+         isDeleted: showArchived || undefined,
+      };
+      void fetchItems(params);
+    }
   }, [debouncedSearchQuery, sortConfig, showArchived, fetchItems]); 
 
   // Excel Export
@@ -163,19 +201,21 @@ export default function RolesPage() {
       key: 'name',
       header: t('roles:form.name_label'),
       sortable: true,
+      width: '200px',
       className: 'font-medium'
     },
     {
       key: 'description',
       header: t('roles:form.desc_label'),
-      className: 'hidden md:table-cell text-muted-foreground',
+      width: '2fr',
+      className: 'hidden md:flex text-muted-foreground',
       render: (item) => <span className="line-clamp-1">{item.description || '-'}</span>
     },
     {
       key: 'isActive',
       header: t('common:status'),
       sortable: true,
-      className: 'w-32',
+      width: '120px',
       render: (item) => item.isActive ? 
         <Badge variant="success" size="sm">{t('common:active')}</Badge> : 
         <Badge variant="danger" size="sm">{t('common:inactive')}</Badge>
@@ -184,7 +224,7 @@ export default function RolesPage() {
       key: 'actions',
       header: t('common:actions.label'),
       align: 'right',
-      className: 'w-32',
+      width: '160px',
       render: (role) => (
         <div className="flex items-center justify-end gap-1">
           {!role.isDeleted && (

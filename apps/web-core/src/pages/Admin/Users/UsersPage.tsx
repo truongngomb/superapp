@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { AnimatePresence, motion as framerMotion } from 'framer-motion';
 import { 
   Users, 
@@ -46,18 +46,27 @@ import { UserRowSkeleton } from './components/UserRowSkeleton';
 /**
  * UsersPage Component
  */
+import { useSearchParams } from 'react-router-dom';
+
+// ...
+
 export default function UsersPage() {
   const { t } = useTranslation(['users', 'common']);
   const { success, error: errorToast } = useToast();
+  const [searchParams] = useSearchParams();
 
   // Search & Sort & Filters
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const debouncedSearchQuery = useDebounce(searchQuery);
-  const [showArchived, setShowArchived] = useState(false);
+  const [showArchived, setShowArchived] = useState(searchParams.get('isDeleted') === 'true');
   const [isRefreshing, setIsRefreshing] = useState(false);
   
+  const urlSort = searchParams.get('sort');
+  const urlOrder = searchParams.get('order');
+
   const { sortConfig, handleSort } = useSort('created', 'desc', {
     storageKey: STORAGE_KEYS.USERS_SORT as string,
+    initialOverride: (urlSort && (urlOrder === 'asc' || urlOrder === 'desc')) ? { field: urlSort, order: urlOrder } : undefined
   }) as { sortConfig: { field: string; order: 'asc' | 'desc' }; handleSort: (field: string) => void };
 
   // View Mode
@@ -142,16 +151,47 @@ export default function UsersPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Trigger Fetch on Filters Change (including initial load)
+  const prevFiltersRef = useRef({
+    search: debouncedSearchQuery,
+    sort: sortConfig.field,
+    order: sortConfig.order,
+    isDeleted: showArchived,
+  });
+
+  // 1. Initial Load
   useEffect(() => {
-    const params: UserListParams = {
-       search: debouncedSearchQuery || undefined,
-       sort: sortConfig.field,
-       order: sortConfig.order,
-       page: 1,
-       isDeleted: showArchived || undefined,
-    };
-    void fetchItems(params);
+    void fetchItems(); // Initial load using URL params
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // 2. Handle Filter Changes
+  useEffect(() => {
+    // Check if filters actually changed
+    const prev = prevFiltersRef.current;
+    const hasFilterChanged = 
+      prev.search !== debouncedSearchQuery ||
+      prev.sort !== sortConfig.field ||
+      prev.order !== sortConfig.order ||
+      prev.isDeleted !== showArchived;
+
+    if (hasFilterChanged) {
+      // Update ref
+      prevFiltersRef.current = {
+        search: debouncedSearchQuery,
+        sort: sortConfig.field,
+        order: sortConfig.order,
+        isDeleted: showArchived,
+      };
+
+      const params: UserListParams = {
+         search: debouncedSearchQuery || undefined,
+         sort: sortConfig.field,
+         order: sortConfig.order,
+         page: 1,
+         isDeleted: showArchived || undefined,
+      };
+      void fetchItems(params);
+    }
   }, [debouncedSearchQuery, sortConfig, showArchived, fetchItems]);
 
   // Handle Assignments
@@ -198,24 +238,28 @@ export default function UsersPage() {
     {
       key: 'avatar',
       header: '',
-      className: 'w-12 px-4',
+      width: '60px',
+      className: 'px-4',
       render: (user) => <Avatar src={user.avatar} name={user.name} />
     },
     {
       key: 'name',
       header: t('common:name'),
       sortable: true,
+      width: '1.5fr',
       className: 'font-medium'
     },
     {
        key: 'email',
        header: t('common:email'),
        sortable: true,
-       className: 'hidden md:table-cell text-muted-foreground'
+       width: '2fr',
+       className: 'hidden md:flex text-muted-foreground'
     },
     {
        key: 'roles',
        header: t('users:form.role_label'),
+       width: '1.5fr',
        render: (user) => (
          <div className="flex flex-wrap gap-1">
            {user.roles && user.roles.length > 0 ? (
@@ -237,7 +281,7 @@ export default function UsersPage() {
       key: 'isActive',
       header: t('common:status'),
       sortable: true,
-      className: 'w-24',
+      width: '120px',
       render: (user) => user.isActive ? 
         <Badge variant="success" size="sm">{t('common:active')}</Badge> : 
         <Badge variant="danger" size="sm">{t('common:inactive')}</Badge>
@@ -246,7 +290,7 @@ export default function UsersPage() {
       key: 'actions',
       header: t('common:actions.label'),
       align: 'right',
-      className: 'w-40',
+      width: '120px',
       render: (user) => (
         <div className="flex items-center justify-end gap-1">
           {!user.isDeleted && (

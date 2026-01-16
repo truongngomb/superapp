@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
 import { activityLogService } from '@/services';
 import { useToast } from '@/context';
 import type { ActivityLog, ActivityLogParams } from '@superapp/shared-types';
@@ -29,10 +30,37 @@ export function useActivityLogs() {
   const [exporting, setExporting] = useState(false);
   const toast = useToast();
   const { t } = useTranslation(['activity_logs', 'common']);
+  const [searchParams, setSearchParams] = useSearchParams();
   
+  // Initialize params from URL
+  const getInitialParams = (): ActivityLogParams => {
+    const params: ActivityLogParams = {
+      page: 1,
+      limit: 10,
+    };
+    const page = searchParams.get('page');
+    if (page) params.page = parseInt(page, 10);
+
+    const sort = searchParams.get('sort');
+    if (sort) params.sort = sort;
+
+    const order = searchParams.get('order');
+    if (order === 'asc' || order === 'desc') params.order = order;
+    
+    const search = searchParams.get('search');
+    if (search) params.search = search;
+    
+    return params;
+  };
+
   // Pagination state
-  const [pagination, setPagination] = useState({ page: 1, totalPages: 1, total: 0 });
-  const lastParamsRef = useRef<ActivityLogParams | undefined>(undefined);
+  const [pagination, setPagination] = useState({ 
+    page: getInitialParams().page || 1, 
+    totalPages: 1, 
+    total: 0 
+  });
+  
+  const lastParamsRef = useRef<ActivityLogParams | undefined>(getInitialParams());
 
   // Use ref to avoid infinite loop when reloading
   const isReloading = useRef(false);
@@ -47,6 +75,27 @@ export function useActivityLogs() {
     if (params !== undefined) {
       lastParamsRef.current = { ...lastParamsRef.current, ...params };
     }
+    
+    // Sync URL
+    const nextParams = lastParamsRef.current || {};
+    
+    setSearchParams((prevSearchParams) => {
+      const newSearchParams = new URLSearchParams(prevSearchParams);
+      
+      if (nextParams.page && nextParams.page > 1) newSearchParams.set('page', nextParams.page.toString());
+      else newSearchParams.delete('page');
+      
+      if (nextParams.sort) newSearchParams.set('sort', nextParams.sort);
+      else newSearchParams.delete('sort');
+      
+      if (nextParams.order) newSearchParams.set('order', nextParams.order);
+      else newSearchParams.delete('order');
+      
+      if (nextParams.search) newSearchParams.set('search', nextParams.search);
+      else newSearchParams.delete('search');
+
+      return newSearchParams;
+    }, { replace: true });
 
     // Skip if already reloading (prevent loop)
     if (isReloading.current) return;
@@ -74,7 +123,7 @@ export function useActivityLogs() {
       setLoading(false);
       setIsLoadingMore(false);
     }
-  }, [toast, t]);
+  }, [toast, t, setSearchParams]);
 
   const getAllForExport = async (params?: ActivityLogParams) => {
     setExporting(true);

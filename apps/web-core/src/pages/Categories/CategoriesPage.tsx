@@ -1,4 +1,5 @@
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { useState, useMemo, useEffect, useCallback, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { AnimatePresence, motion as framerMotion } from "framer-motion";
 import {
@@ -40,16 +41,22 @@ import { CategoryTableSkeleton } from "./components/CategoryTableSkeleton";
 import { CATEGORY_ICONS, type CategoryIcon } from './components/icons';
 
 // Define Resource Types
+
 export default function CategoriesPage() {
   const { t } = useTranslation(["categories", "common"]);
+  const [searchParams] = useSearchParams();
   
   // Setup Search
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
   const debouncedSearchQuery = useDebounce(searchQuery);
 
   // Setup Sort
+  const urlSort = searchParams.get("sort");
+  const urlOrder = searchParams.get("order");
+  
   const { sortConfig, handleSort } = useSort("created", "desc", {
     storageKey: STORAGE_KEYS.CATEGORIES_SORT as string,
+    initialOverride: (urlSort && (urlOrder === 'asc' || urlOrder === 'desc')) ? { field: urlSort, order: urlOrder } : undefined
   }) as { sortConfig: { field: string; order: 'asc' | 'desc' }; handleSort: (field: string) => void };
 
   // Setup View Mode
@@ -62,7 +69,7 @@ export default function CategoriesPage() {
     setStorageItem(STORAGE_KEYS.CATEGORIES_VIEW_MODE as string, mode);
   };
 
-  const [showArchived, setShowArchived] = useState(false);
+  const [showArchived, setShowArchived] = useState(searchParams.get("isDeleted") === "true");
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   // Use Generic Hook
@@ -116,16 +123,47 @@ export default function CategoriesPage() {
     isActive: boolean;
   } | null>(null);
 
-  // Update params when filters change (including initial load)
+  const prevFiltersRef = useRef({
+    search: debouncedSearchQuery,
+    sort: sortConfig.field,
+    order: sortConfig.order,
+    isDeleted: showArchived,
+  });
+
+  // 1. Initial Load
   useEffect(() => {
-    const params: CategoryListParams = {
-       search: debouncedSearchQuery || undefined,
-       sort: sortConfig.field,
-       order: sortConfig.order,
-       page: 1, // Reset to page 1 on filter change
-       isDeleted: showArchived || undefined,
-    };
-    void fetchItems(params);
+    void fetchItems(); // Initial load from URL
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // 2. Handle Filter Changes
+  useEffect(() => {
+    // Check if filters actually changed
+    const prev = prevFiltersRef.current;
+    const hasFilterChanged = 
+      prev.search !== debouncedSearchQuery ||
+      prev.sort !== sortConfig.field ||
+      prev.order !== sortConfig.order ||
+      prev.isDeleted !== showArchived;
+
+    if (hasFilterChanged) {
+      // Update ref
+      prevFiltersRef.current = {
+        search: debouncedSearchQuery,
+        sort: sortConfig.field,
+        order: sortConfig.order,
+        isDeleted: showArchived,
+      };
+
+      const params: CategoryListParams = {
+         search: debouncedSearchQuery || undefined,
+         sort: sortConfig.field,
+         order: sortConfig.order,
+         page: 1, // Reset to page 1 on filter change
+         isDeleted: showArchived || undefined,
+      };
+      void fetchItems(params);
+    }
   }, [debouncedSearchQuery, sortConfig, showArchived, fetchItems]); 
   
   // Excel Export
@@ -175,7 +213,8 @@ export default function CategoriesPage() {
     {
       key: 'icon',
       header: '',
-      className: 'w-12 px-4',
+      width: '60px',
+      className: 'px-4',
       render: (item) => {
         const IconComponent = (CATEGORY_ICONS[item.icon] || CATEGORY_ICONS.folder) as CategoryIcon;
         return (
@@ -192,19 +231,21 @@ export default function CategoriesPage() {
       key: 'name',
       header: t('common:name'),
       sortable: true,
+      width: '200px',
       className: 'font-medium'
     },
     {
       key: 'description',
       header: t('categories:form.desc_label'),
-      className: 'hidden md:table-cell text-muted-foreground',
+      width: '2fr',
+      className: 'hidden md:flex text-muted-foreground',
       render: (item) => <span className="line-clamp-1">{item.description || '-'}</span>
     },
     {
       key: 'isActive',
       header: t('common:status'),
       sortable: true,
-      className: 'w-32',
+      width: '120px',
       render: (item) => item.isActive ? 
         <Badge variant="success" size="sm">{t('common:active')}</Badge> : 
         <Badge variant="danger" size="sm">{t('common:inactive')}</Badge>
@@ -213,7 +254,7 @@ export default function CategoriesPage() {
       key: 'actions',
       header: t('common:actions.label'),
       align: 'right',
-      className: 'w-32',
+      width: '120px',
       render: (category) => (
         <div className="flex items-center justify-end gap-1">
           {!category.isDeleted && (

@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useToast } from '@/hooks';
 import { useTranslation } from 'react-i18next';
 import type { ResourceService } from './useResourceService';
@@ -57,10 +58,43 @@ export function useResource<T extends { id: string }, CreateInput, UpdateInput, 
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   
   // Use state for queryParams to trigger UI updates (e.g., pagination)
-  const [queryParams, setQueryParamsState] = useState<ListParams>((initialParams || {}) as ListParams);
+  // Initialize from URL search params if valid, otherwise use initialParams
+  const [searchParams, setSearchParams] = useSearchParams();
+  
+  const getInitialParams = (): ListParams => {
+    const urlParams: Partial<BaseListParams> & Record<string, unknown> = {};
+    
+    // Standard params
+    const page = searchParams.get('page');
+    if (page) urlParams.page = parseInt(page, 10);
+    
+    const limit = searchParams.get('limit');
+    if (limit) urlParams.limit = parseInt(limit, 10);
+    
+    const sort = searchParams.get('sort');
+    if (sort) urlParams.sort = sort;
+    
+    const order = searchParams.get('order');
+    if (order === 'asc' || order === 'desc') urlParams.order = order;
+    
+    const search = searchParams.get('search');
+    if (search) urlParams.search = search;
+    
+    // Common filters
+    const isActive = searchParams.get('isActive');
+    if (isActive !== null) urlParams.isActive = isActive === 'true';
+    
+    const isDeleted = searchParams.get('isDeleted');
+    if (isDeleted !== null) urlParams.isDeleted = isDeleted === 'true';
+
+    // Merge URL params with initial params (URL takes precedence)
+    return { ...initialParams, ...urlParams } as ListParams;
+  };
+
+  const [queryParams, setQueryParamsState] = useState<ListParams>(getInitialParams);
   
   // Use ref to keep params stable for fetchItems to avoid infinite loop
-  const paramsRef = useRef<ListParams>((initialParams || {}) as ListParams);
+  const paramsRef = useRef<ListParams>(getInitialParams());
 
   const setQueryParams = useCallback((params: ListParams) => {
     paramsRef.current = params;
@@ -79,6 +113,38 @@ export function useResource<T extends { id: string }, CreateInput, UpdateInput, 
     } else {
       setLoading(true);
     }
+
+    // Sync to URL
+    setSearchParams((prevSearchParams) => {
+      const newSearchParams = new URLSearchParams(prevSearchParams);
+      
+      // Core params
+      if (nextParams.page && nextParams.page > 1) newSearchParams.set('page', nextParams.page.toString());
+      else newSearchParams.delete('page');
+
+      if (nextParams.limit && nextParams.limit !== 10) newSearchParams.set('limit', nextParams.limit.toString());
+      else newSearchParams.delete('limit');
+
+      if (nextParams.sort) newSearchParams.set('sort', nextParams.sort);
+      else newSearchParams.delete('sort');
+
+      if (nextParams.order) newSearchParams.set('order', nextParams.order);
+      else newSearchParams.delete('order');
+
+      if (nextParams.search) newSearchParams.set('search', nextParams.search);
+      else newSearchParams.delete('search');
+
+      // Common filters
+      const nextParamsRecord = nextParams as Record<string, unknown>;
+      
+      if (nextParamsRecord.isActive !== undefined) newSearchParams.set('isActive', String(nextParamsRecord.isActive as string | boolean | number));
+      else newSearchParams.delete('isActive');
+
+      if (nextParamsRecord.isDeleted !== undefined) newSearchParams.set('isDeleted', String(nextParamsRecord.isDeleted as string | boolean | number));
+      else newSearchParams.delete('isDeleted');
+
+      return newSearchParams;
+    }, { replace: true });
 
     try {
       const response = await service.getPage(nextParams) as unknown;
@@ -100,7 +166,7 @@ export function useResource<T extends { id: string }, CreateInput, UpdateInput, 
       setLoading(false);
       setIsLoadingMore(false);
     }
-  }, [service, resourceName, errorToast, t, setQueryParams]);
+  }, [service, resourceName, errorToast, t, setQueryParams, setSearchParams]);
 
   // NOTE: No initial fetch here - pages should call fetchItems in their own useEffect
   // This matches ActivityLogsPage pattern and prevents duplicate API calls

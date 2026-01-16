@@ -1,7 +1,8 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { AnimatePresence, motion as framerMotion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
 import { RefreshCw, Search, Loader2, FileSpreadsheet } from 'lucide-react';
 import { Button, Pagination, SortPopup, Input, PermissionGuard } from '@/components/common';
 import { STORAGE_KEYS } from '@/config';
@@ -13,6 +14,7 @@ import { useSort, useDebounce, useActivityLogs, useExcelExport } from '@/hooks';
 
 export default function ActivityLogsPage() {
   const { t } = useTranslation(['activity_logs', 'common']);
+  const [searchParams] = useSearchParams();
   const {
     logs,
     pagination,
@@ -23,7 +25,7 @@ export default function ActivityLogsPage() {
     getAllForExport,
   } = useActivityLogs();
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const debouncedSearchQuery = useDebounce(searchQuery);
   
@@ -31,30 +33,59 @@ export default function ActivityLogsPage() {
   const { page, totalPages, total } = pagination;
 
   // Sorting state
+  const urlSort = searchParams.get('sort');
+  const urlOrder = searchParams.get('order');
+
   const { sortConfig, handleSort } = useSort('created', 'desc', {
     storageKey: STORAGE_KEYS.ACTIVITY_LOGS_SORT,
+    initialOverride: (urlSort && (urlOrder === 'asc' || urlOrder === 'desc')) ? { field: urlSort, order: urlOrder } : undefined
   });
 
-  // Fetch data when filters/sort/page changes
-  useEffect(() => {
-    void fetchLogs({
-      page,
-      sort: sortConfig.field,
-      order: sortConfig.order as 'asc' | 'desc' | undefined,
-      search: debouncedSearchQuery || undefined
-    });
-  }, [fetchLogs, page, sortConfig, debouncedSearchQuery]);
 
-  // Reset page to 1 when search or sort changes
+
+  // Ref to track filter changes
+  const prevFiltersRef = useRef({
+    search: debouncedSearchQuery,
+    sort: sortConfig.field,
+    order: sortConfig.order,
+  });
+
+  // 1. Initial Load
   useEffect(() => {
-    // Page is handled via URL or state, but here we trigger a new fetch
-    // if sort/search changed while we are on page > 1, the hook should probably handle that?
-    // According to Category SSoT: fetchCategories({ page: 1, ... })
-  }, [debouncedSearchQuery, sortConfig]);
+    void fetchLogs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // 2. Handle Filter Changes
+  useEffect(() => {
+    const prev = prevFiltersRef.current;
+    const hasFilterChanged = 
+      prev.search !== debouncedSearchQuery ||
+      prev.sort !== sortConfig.field ||
+      prev.order !== sortConfig.order;
+
+    if (hasFilterChanged) {
+      // Update ref
+      prevFiltersRef.current = {
+        search: debouncedSearchQuery,
+        sort: sortConfig.field,
+        order: sortConfig.order,
+      };
+
+      // Reset to page 1 on filter change
+      void fetchLogs({
+        page: 1,
+        sort: sortConfig.field,
+        order: sortConfig.order as 'asc' | 'desc' | undefined,
+        search: debouncedSearchQuery ? debouncedSearchQuery : undefined
+      });
+    }
+  }, [fetchLogs, sortConfig, debouncedSearchQuery]);
 
   const sortColumns = [
     { field: 'created', label: t('activity_logs:table.time') },
   ];
+
 
   const handlePageChange = (newPage: number) => {
     void fetchLogs({ page: newPage });

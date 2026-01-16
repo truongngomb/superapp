@@ -33,6 +33,7 @@ export function ActivityLogTable({
     {
       key: 'user',
       header: t('table.user'),
+      width: '250px',
       render: (log) => (
         <div className="flex items-center gap-3">
           <div className="relative w-8 h-8 overflow-hidden rounded-full bg-secondary/10">
@@ -59,6 +60,7 @@ export function ActivityLogTable({
     {
       key: 'action',
       header: t('table.action'),
+      width: '140px',
       render: (log) => (
         <span className={cn(
           "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border",
@@ -75,6 +77,7 @@ export function ActivityLogTable({
     {
       key: 'resource',
       header: t('table.resource'),
+      width: '140px',
       render: (log) => (
         <span className="capitalize text-muted-foreground">
           {t(`resources.${log.resource}`, { defaultValue: log.resource })}
@@ -84,6 +87,7 @@ export function ActivityLogTable({
     {
       key: 'message',
       header: t('table.details'),
+      width: '1.5fr',
       className: 'max-w-[300px]',
       render: (log) => (
         <span className="text-foreground/90 truncate block" title={JSON.stringify(log.details)}>
@@ -95,6 +99,7 @@ export function ActivityLogTable({
       key: 'created',
       header: t('table.time'),
       sortable: true,
+      width: '180px',
       render: (log) => (
         <div className="flex items-center gap-1.5 text-muted-foreground whitespace-nowrap" title={new Date(log.created).toLocaleString()}>
           <Clock className="w-3.5 h-3.5" />
