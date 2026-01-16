@@ -50,3 +50,6 @@ ios/
 # Misc
 *.tgz
 .eslintcache
+
+# Agent
+.agent/artifacts/

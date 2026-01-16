@@ -16,28 +16,32 @@ Kiểm tra CHẤT LƯỢNG CODE và ĐỘ ĐỒNG NHẤT (Consistency) tuyệt �
 
 ---
 
-## PHẦN I: KIỂM TRA GIAO DIỆN (UI/UX AUDIT)
+## PHẦN I: UI/UX & PERFORMANCE AUDIT
 
-### 1. Header & Layout
+### 1. Automated Skill Check (CRITICAL)
+- [ ] **Performance**: Chạy skill `vercel-react-best-practices` để tìm Async Waterfall & Barrel Imports.
+- [ ] **Guidelines**: Chạy skill `web-design-guidelines` để check Accessibility (Focus, ARIA, Input types).
+
+### 2. Header & Layout
 - [ ] **Page Title & Subtitle**: Sử dụng i18n key `{feature}:title`.
 - [ ] **Layout Responsiveness**: Tích hợp `useLayoutMode` ('standard' vs 'modern')?
     - `standard`: Có khoảng trống cho header & sub-nav?
     - `modern`: Tối ưu không gian (thường dùng `h-[calc(100vh-5rem)]`)?
 - [ ] **Theme Sync**: Giao diện (bao gồm iframe/external UI) đã đồng bộ Dark/Light mode qua `useTheme`?
 
-### 2. Search & Filter Section
+### 3. Search & Filter Section
 - [ ] Input Search: Có placeholder `common:search`.
 - [ ] Debounce: Sử dụng `useDebounce` (400ms) để tối ưu gọi API.
 - [ ] Icons: Sử dụng `lucide-react` đúng style dự án.
 - [ ] Component `SortPopup`: Nằm cạnh thanh Search (nếu có sort).
 
-### 3. List Controls & Toolbar
+### 4. List Controls & Toolbar
 - [ ] `ViewSwitcher`: Nếu có nhiều chế độ xem (List/Table/Grid).
 - [ ] Status Toggle: Nút **Show Archived** nằm trong `PermissionGuard (action="manage")`.
 - [ ] **Total items**: Hiển thị đúng key `common:total_items`.
 - [ ] **Permission Guard**: Nút Create/Export phải được bọc bởi `PermissionGuard`.
 
-### 4. Table / List Display
+### 5. Table / List Display
 - [ ] **Loading State**: Có `Skeleton` riêng (ví dụ: `FeatureSkeleton.tsx`) khớp chính xác với UI thực tế.
 - [ ] **Empty State**:
     - Khi không có dữ liệu: Hiện message `list.empty`.

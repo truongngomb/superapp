@@ -60,6 +60,8 @@ Sau khi code xong mỗi file, tự review:
 - Có hardcode text không? -> Chuyển sang i18n
 - Có hardcode màu không? -> Dùng Tailwind tokens
 - Có giống `Category` chưa? -> So sánh patterns
+- **Performance**: Check `vercel-react-best-practices` (Async waterfall, Barrel imports)
+- **UI/UX**: Check `web-design-guidelines` (Focus states, Accessibility)
 
 ## BƯỚC 4: VERIFICATION
 // turbo

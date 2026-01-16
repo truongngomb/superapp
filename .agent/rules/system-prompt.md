@@ -226,7 +226,22 @@ PWA:
 - Vite PWA Plugin
 
 ==================================================================
-XI. NGUYÊN TẮC KẾT THÚC
+==================================================================
+XI. ADVANCED SKILLS & BEST PRACTICES
+==================================================================
+
+Sử dụng các Skills nâng cao để đảm bảo chất lượng code Enterprise:
+
+1. `vercel-react-best-practices`:
+- Luôn kiểm tra Performance (Waterfall, Bundle size)
+- Tối ưu Re-render và Server/Client fetching
+
+2. `web-design-guidelines`:
+- Audit UI/UX trước khi commit
+- Đảm bảo Accessibility (ARIA, Focus)
+
+==================================================================
+XII. NGUYÊN TẮC KẾT THÚC
 ==================================================================
 
 - Chính xác > Nhanh
