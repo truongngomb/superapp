@@ -12,6 +12,7 @@ export interface Column<T> {
   className?: string;
   align?: 'left' | 'center' | 'right';
   hidden?: boolean;
+  width?: string | number; // Support custom width (e.g. "20%", "200px", 2 for 2fr)
 }
 
 export interface DataTableProps<T> {
@@ -39,6 +40,7 @@ export interface DataTableProps<T> {
 }
 
 import { List, type RowComponentProps } from 'react-window';
+import { motion } from 'framer-motion';
 
 function DataTableInner<T>({
   data,
@@ -62,6 +64,33 @@ function DataTableInner<T>({
   const allSelected = data.length > 0 && selectedIds?.length === data.length;
   const isIndeterminate = !!(selectedIds && selectedIds.length > 0 && selectedIds.length < data.length);
 
+  // Calculate Grid Template
+  const gridTemplateColumns = useMemo(() => {
+    const parts: string[] = [];
+    
+    // Selection Column
+    if (onSelectAll || onSelectOne) parts.push('48px');
+    
+    // Order Column
+    parts.push('48px');
+    
+    // Data Columns
+    visibleColumns.forEach(col => {
+      if (typeof col.width === 'number') {
+        parts.push(`${String(col.width)}fr`);
+      } else if (typeof col.width === 'string') {
+        parts.push(col.width);
+      } else {
+        // Default to minmax for responsiveness, or simple 1fr
+        // 'minmax(150px, 1fr)' helps prevent squishing, but might cause overflow. 
+        // Let's stick to 1fr as default to fill space evenly like flex.
+        parts.push('minmax(150px, 1fr)');
+      }
+    });
+
+    return parts.join(' ');
+  }, [onSelectAll, onSelectOne, visibleColumns]);
+
   const renderSortIcon = (columnKey: string) => {
     if (sortColumn !== columnKey) return <ChevronsUpDown className="w-4 h-4 ml-1 text-muted-foreground/50" />;
     return sortDirection === 'asc' 
@@ -77,26 +106,33 @@ function DataTableInner<T>({
 
     return (
       <div 
-        style={style}
+        style={{
+          ...style,
+          display: 'grid',
+          gridTemplateColumns,
+        }}
         className={cn(
-          "flex items-center hover:bg-muted/5 transition-colors group border-b border-border/50",
+          "items-center hover:bg-muted/5 transition-colors group border-b border-border/50 bg-background",
           isSelected && "bg-primary/5"
         )}
+        role="row"
+        aria-rowindex={index + 1}
       >
         {/* Selection Cell */}
         {(onSelectAll || onSelectOne) && (
-          <div className="w-12 px-4 flex items-center justify-center shrink-0">
+          <div className="px-2 flex items-center justify-center h-full" role="cell">
             {onSelectOne && (
               <Checkbox
                 checked={!!isSelected}
                 onChange={(checked) => { onSelectOne(id, checked); }}
+                aria-label={t('select_row', { defaultValue: 'Select row' })}
               />
             )}
           </div>
         )}
 
         {/* Order Cell */}
-        <div className="w-12 px-4 text-center text-sm text-muted-foreground shrink-0 overflow-hidden">
+        <div className="px-2 text-center text-sm text-muted-foreground h-full flex items-center justify-center" role="cell">
           {orderNumber}
         </div>
 
@@ -105,15 +141,12 @@ function DataTableInner<T>({
           <div
             key={col.key}
             className={cn(
-              "flex-1 px-4 text-sm truncate",
-              col.align === 'center' && "text-center",
-              col.align === 'right' && "text-right",
+              "px-4 text-sm truncate h-full flex items-center",
+              col.align === 'center' && "justify-center text-center",
+              col.align === 'right' && "justify-end text-right",
               col.className
             )}
-            style={{ 
-              minWidth: col.key === 'actions' ? '120px' : '0',
-              flexBasis: col.key === 'actions' ? '0' : 'auto'
-            }}
+            role="cell"
           >
             {col.render ? col.render(item, index) : ((item as Record<string, unknown>)[col.key] as React.ReactNode)}
           </div>
@@ -125,25 +158,44 @@ function DataTableInner<T>({
   const useVirtualization = data.length > 50;
 
   return (
-    <div className="w-full rounded-lg border border-border bg-card shadow-sm overflow-hidden flex flex-col">
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.2 }}
+      className="w-full rounded-lg border border-border bg-card shadow-sm overflow-hidden flex flex-col"
+      role="table"
+      aria-label="Data Table"
+      aria-rowcount={data.length}
+    >
       {/* Header */}
-      <div className="flex bg-background text-muted-foreground border-b border-border sticky top-0 z-10 w-full overflow-x-auto min-w-full">
-        <div className="flex w-full items-center min-w-[800px]">
+      <div 
+        className="bg-background text-muted-foreground border-b border-border sticky top-0 z-10 w-full min-w-full overflow-hidden"
+        role="rowgroup"
+      >
+        <div 
+          className="items-center w-full min-w-full" 
+          role="row"
+          style={{
+            display: 'grid',
+            gridTemplateColumns,
+          }}
+        >
           {/* Selection Column */}
           {(onSelectAll || onSelectOne) && (
-            <div className="w-12 px-4 py-3 flex items-center justify-center shrink-0">
+            <div className="px-2 py-3 flex items-center justify-center h-full border-r border-transparent" role="columnheader">
                {showSelectAll && onSelectAll && (
                 <Checkbox
                   checked={allSelected}
                   triState={isIndeterminate}
                   onChange={onSelectAll}
+                  aria-label={t('select_all', { defaultValue: 'Select all' })}
                 />
               )}
             </div>
           )}
 
           {/* Order Column */}
-          <div className="w-12 px-4 py-3 text-center text-sm font-semibold text-muted tracking-wider shrink-0 overflow-hidden">
+          <div className="px-2 py-3 text-center text-sm font-semibold text-muted tracking-wider h-full flex items-center justify-center" role="columnheader">
             {t('order')}
           </div>
 
@@ -152,18 +204,16 @@ function DataTableInner<T>({
             <div
               key={col.key}
               className={cn(
-                "flex-1 px-4 py-3 text-sm font-semibold text-muted tracking-wider whitespace-nowrap overflow-hidden select-none",
+                "px-4 py-3 text-sm font-semibold text-muted tracking-wider whitespace-nowrap overflow-hidden select-none h-full flex items-center",
                 col.sortable && "cursor-pointer hover:bg-muted/5",
                 col.className
               )}
-              style={{ 
-                minWidth: col.key === 'actions' ? '120px' : '0',
-                flexBasis: col.key === 'actions' ? '0' : 'auto'
-              }}
               onClick={() => col.sortable && onSort?.(col.key)}
+              role="columnheader"
+              aria-sort={sortColumn === col.key ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}
             >
               <div className={cn(
-                "flex items-center gap-1",
+                "flex items-center gap-1 w-full",
                 col.align === 'center' && "justify-center",
                 col.align === 'right' && "justify-end"
               )}>
@@ -176,7 +226,7 @@ function DataTableInner<T>({
       </div>
 
       {/* Body */}
-      <div className="w-full flex-1 min-w-[800px] overflow-x-auto">
+      <div className="w-full flex-1 min-w-full overflow-x-auto" role="rowgroup">
         {isLoading ? (
           <div className="divide-y divide-border/50">
             {Array.from({ length: 5 }).map((_, i) => (
@@ -199,7 +249,7 @@ function DataTableInner<T>({
           />
         ) : (
           <div className="divide-y divide-border/50">
-            {data.map((item, index) => {
+            {data.map((item: T, index: number) => {
               const id = keyExtractor(item);
               const isSelected = selectedIds?.includes(id);
               const orderNumber = (currentPage - 1) * perPage + index + 1;
@@ -208,24 +258,31 @@ function DataTableInner<T>({
                 <div
                   key={id}
                   className={cn(
-                    "flex items-center hover:bg-muted/5 transition-colors group h-[56px]",
+                    "items-center hover:bg-muted/5 transition-colors group h-[56px] border-b border-border/50 last:border-0",
                     isSelected && "bg-primary/5"
                   )}
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns,
+                  }}
+                  role="row"
+                  aria-rowindex={index + 1}
                 >
                   {/* Selection Cell */}
                   {(onSelectAll || onSelectOne) && (
-                    <div className="w-12 px-4 flex items-center justify-center shrink-0">
+                    <div className="px-2 flex items-center justify-center h-full" role="cell">
                       {onSelectOne && (
                         <Checkbox
                           checked={!!isSelected}
                           onChange={(checked) => { onSelectOne(id, checked); }}
+                          aria-label={t('select_row', { defaultValue: 'Select row' })}
                         />
                       )}
                     </div>
                   )}
 
                   {/* Order Cell */}
-                  <div className="w-12 px-4 text-center text-sm text-muted-foreground shrink-0 overflow-hidden">
+                  <div className="px-2 text-center text-sm text-muted-foreground h-full flex items-center justify-center" role="cell">
                     {orderNumber}
                   </div>
 
@@ -234,15 +291,12 @@ function DataTableInner<T>({
                     <div
                       key={col.key}
                       className={cn(
-                        "flex-1 px-4 text-sm truncate",
-                        col.align === 'center' && "text-center",
-                        col.align === 'right' && "text-right",
+                        "px-4 text-sm truncate h-full flex items-center",
+                        col.align === 'center' && "justify-center text-center",
+                        col.align === 'right' && "justify-end text-right",
                         col.className
                       )}
-                      style={{ 
-                        minWidth: col.key === 'actions' ? '120px' : '0',
-                        flexBasis: col.key === 'actions' ? '0' : 'auto'
-                      }}
+                      role="cell"
                     >
                       {col.render ? col.render(item, index) : ((item as Record<string, unknown>)[col.key] as React.ReactNode)}
                     </div>
@@ -253,7 +307,7 @@ function DataTableInner<T>({
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }
 
