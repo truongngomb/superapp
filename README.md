@@ -21,7 +21,7 @@ my-project/
 - **[apps/web-core/](apps/web-core/README.md)**: Frontend application (React 19, TS, Vite, Capacitor)
 - **[apps/api-server/](apps/api-server/README.md)**: Backend application (Node.js, Express, PocketBase)
 
-## � Technology Stack
+## 🛠️ Technology Stack
 
 - **Frontend**: React 19, TypeScript, Vite, TanStack Query, Shadcn UI (TailwindCSS)
 - **Backend**: Node.js, Express, PocketBase (Auth/DB), Scalar (API Docs)
@@ -74,7 +74,7 @@ pnpm dev
 - **Backend**: http://localhost:3001
 - **PocketBase Admin**: http://localhost:8090/_/
 
-## 🛠️ Main Commands
+## ⚡ Main Commands
 
 These commands run scripts across the workspace.
 
