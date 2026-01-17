@@ -12,7 +12,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const inputId = id ?? label?.toLowerCase().replace(/\s+/g, '-');
 
     return (
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-1.5 w-full">
         {label && (
           <label htmlFor={inputId} className="text-sm font-medium text-foreground">
             {label}
@@ -23,18 +23,17 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           autoComplete="off"
           id={inputId}
           className={cn(
-            'w-full px-4 py-2.5 rounded-lg',
-            'bg-surface border border-border',
-            'text-foreground placeholder:text-muted',
-            'transition-all duration-200',
-            'focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20',
-            error && 'border-red-500 focus:border-red-500 focus:ring-red-500/20',
+            'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm',
+            'ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+            'disabled:cursor-not-allowed disabled:opacity-50',
+            error && 'border-red-500 focus-visible:ring-red-500/20',
             className
           )}
           {...props}
         />
-        {error && <p className="text-sm text-red-500">{error}</p>}
-        {helperText && !error && <p className="text-sm text-muted">{helperText}</p>}
+        {error && <p className="text-sm text-red-500 font-medium">{error}</p>}
+        {helperText && !error && <p className="text-sm text-muted-foreground">{helperText}</p>}
       </div>
     );
   }

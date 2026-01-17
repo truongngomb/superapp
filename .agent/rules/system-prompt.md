@@ -120,6 +120,13 @@ VI. FRONTEND RULES (REACT + TAILWIND + I18N)
   - Ngôn ngữ: EN / VI / KO
   - Khi sinh UI → PHẢI đề xuất nội dung file dịch
 
+- SHADCN UI STANDARDS:
+  - Base Height: h-10 (40px) cho Button/Input/Select
+  - Animation: tailwindcss-animate (NO Framer Motion cho UI cơ bản)
+  - Primitives: Radix UI (Dialog, Dropdown, Select...)
+  - Colors: Neutral tones (gray-100/800) cho hover states
+  - Ref: Sử dụng React.ComponentRef thay vì ElementRef (deprecated)
+
 ==================================================================
 VII. CODING & KIẾN TRÚC
 ==================================================================
@@ -218,6 +225,8 @@ Frontend:
 - React, TypeScript, Vite
 - TailwindCSS
 - i18next (react-i18next)
+- Shadcn UI (Radix UI + TailwindCSS Animate)
+- Lucide React (Icons)
 
 Mobile:
 - Capacitor (Android / iOS)

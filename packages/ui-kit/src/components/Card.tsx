@@ -1,48 +1,43 @@
-import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
-import { motion, type HTMLMotionProps } from 'framer-motion';
+import * as React from 'react';
 import { cn } from '../utils';
 
-interface CardProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
+interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: 'default' | 'elevated' | 'outlined';
   hoverable?: boolean;
-  children: ReactNode;
 }
 
-export const Card = forwardRef<HTMLDivElement, CardProps>(
-  ({ variant = 'default', hoverable = false, children, className, ...props }, ref) => {
+export const Card = React.forwardRef<HTMLDivElement, CardProps>(
+  ({ variant = 'default', hoverable = false, className, children, ...props }, ref) => {
     const variantStyles = {
-      default: 'bg-surface-elevated shadow-md border border-border/50',
-      elevated: 'bg-surface-elevated shadow-lg',
-      outlined: 'bg-transparent border-2 border-border',
+      default: 'bg-card text-card-foreground shadow-sm border border-border/50',
+      elevated: 'bg-card text-card-foreground shadow-lg',
+      outlined: 'bg-transparent border border-border',
     };
 
     return (
-      <motion.div
+      <div
         ref={ref}
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.2 }}
         className={cn(
           'rounded-xl overflow-hidden',
           variantStyles[variant],
-          hoverable && 'transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 hover:border-primary/30 cursor-pointer',
+          hoverable && 'transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 hover:border-primary/30 cursor-pointer',
           className
         )}
         {...props}
       >
         {children}
-      </motion.div>
+      </div>
     );
   }
 );
 
 Card.displayName = 'Card';
 
-interface CardHeaderProps extends HTMLAttributes<HTMLDivElement> {
-  children: ReactNode;
+interface CardHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
+  children: React.ReactNode;
 }
 
-export const CardHeader = forwardRef<HTMLDivElement, CardHeaderProps>(
+export const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
   ({ children, className, ...props }, ref) => {
     return (
       <div
@@ -58,11 +53,11 @@ export const CardHeader = forwardRef<HTMLDivElement, CardHeaderProps>(
 
 CardHeader.displayName = 'CardHeader';
 
-interface CardContentProps extends HTMLAttributes<HTMLDivElement> {
-  children: ReactNode;
+interface CardContentProps extends React.HTMLAttributes<HTMLDivElement> {
+  children: React.ReactNode;
 }
 
-export const CardContent = forwardRef<HTMLDivElement, CardContentProps>(
+export const CardContent = React.forwardRef<HTMLDivElement, CardContentProps>(
   ({ children, className, ...props }, ref) => {
     return (
       <div ref={ref} className={cn('p-4', className)} {...props}>
@@ -74,11 +69,11 @@ export const CardContent = forwardRef<HTMLDivElement, CardContentProps>(
 
 CardContent.displayName = 'CardContent';
 
-interface CardFooterProps extends HTMLAttributes<HTMLDivElement> {
-  children: ReactNode;
+interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {
+  children: React.ReactNode;
 }
 
-export const CardFooter = forwardRef<HTMLDivElement, CardFooterProps>(
+export const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(
   ({ children, className, ...props }, ref) => {
     return (
       <div
