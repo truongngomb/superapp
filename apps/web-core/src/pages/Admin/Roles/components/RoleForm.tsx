@@ -95,11 +95,11 @@ export function RoleForm({ role, onSubmit, onClose, loading, isOpen }: RoleFormP
       title={role ? t('common:form.edit_title', { entity: t('roles:entity') }) : t('common:form.add_title', { entity: t('roles:entity') })}
       size="xl"
       footer={
-        <div className="flex gap-3">
-          <Button type="button" variant="outline" onClick={onClose} className="flex-1">
+        <div className="flex justify-end gap-3 w-full">
+          <Button type="button" variant="outline" onClick={onClose}>
             {t('common:cancel')}
           </Button>
-          <Button type="submit" form="role-form" loading={loading} className="flex-1">
+          <Button type="submit" form="role-form" loading={loading}>
             {role ? t('common:save') : t('common:add')}
           </Button>
         </div>

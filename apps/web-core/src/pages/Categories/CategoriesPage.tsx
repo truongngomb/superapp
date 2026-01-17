@@ -211,11 +211,12 @@ export default function CategoriesPage() {
   // Columns Configuration for DataTable
   const columns: Column<Category>[] = useMemo(() => [
     {
-      key: 'icon',
+      accessorKey: 'icon',
       header: '',
-      width: '60px',
+      size: 60,
       className: 'px-4',
-      render: (item) => {
+      cell: ({ row }) => {
+        const item = row.original;
         const IconComponent = (CATEGORY_ICONS[item.icon] || CATEGORY_ICONS.folder) as CategoryIcon;
         return (
           <div
@@ -228,68 +229,71 @@ export default function CategoriesPage() {
       }
     },
     {
-      key: 'name',
+      accessorKey: 'name',
       header: t('common:name'),
-      sortable: true,
-      width: '200px',
+      enableSorting: true,
+      size: 200,
       className: 'font-medium'
     },
     {
-      key: 'description',
+      accessorKey: 'description',
       header: t('categories:form.desc_label'),
       width: '2fr',
       className: 'hidden md:flex text-muted-foreground',
-      render: (item) => <span className="line-clamp-1">{item.description || '-'}</span>
+      cell: ({ row }) => <span className="line-clamp-1">{row.original.description || '-'}</span>
     },
     {
-      key: 'isActive',
+      accessorKey: 'isActive',
       header: t('common:status'),
-      sortable: true,
-      width: '120px',
-      render: (item) => item.isActive ? 
+      enableSorting: true,
+      size: 120,
+      cell: ({ row }) => row.original.isActive ? 
         <Badge variant="success" size="sm">{t('common:active')}</Badge> : 
         <Badge variant="danger" size="sm">{t('common:inactive')}</Badge>
     },
     {
-      key: 'actions',
+      id: 'actions',
       header: t('common:actions.label'),
       align: 'right',
-      width: '120px',
-      render: (category) => (
-        <div className="flex items-center justify-end gap-1">
-          {!category.isDeleted && (
-            <PermissionGuard resource="categories" action="update">
-              <Button variant="ghost" size="sm" onClick={() => { handleEdit(category); }} aria-label={t('common:edit')}>
-                <Edit2 className="w-4 h-4" />
-              </Button>
-            </PermissionGuard>
-          )}
-          {!category.isDeleted && (
-             <PermissionGuard resource="categories" action="create">
-               <Button variant="ghost" size="sm" onClick={() => { onDuplicate(category); }} aria-label={t('common:duplicate')}>
-                 <Copy className="w-4 h-4 text-blue-500" />
+      size: 120,
+      cell: ({ row }) => {
+        const category = row.original;
+        return (
+          <div className="flex items-center justify-end gap-1">
+            {!category.isDeleted && (
+              <PermissionGuard resource="categories" action="update">
+                <Button variant="ghost" size="sm" onClick={() => { handleEdit(category); }} aria-label={t('common:edit')}>
+                  <Edit2 className="w-4 h-4" />
+                </Button>
+              </PermissionGuard>
+            )}
+            {!category.isDeleted && (
+               <PermissionGuard resource="categories" action="create">
+                 <Button variant="ghost" size="sm" onClick={() => { onDuplicate(category); }} aria-label={t('common:duplicate')}>
+                   <Copy className="w-4 h-4 text-blue-500" />
+                 </Button>
+               </PermissionGuard>
+            )}
+            {category.isDeleted && (
+              <PermissionGuard resource="categories" action="update">
+                <Button variant="ghost" size="sm" onClick={() => { setRestoreId(category.id); }} aria-label={t('common:restore')}>
+                  <RotateCcw className="w-4 h-4 text-primary" />
+                </Button>
+              </PermissionGuard>
+            )}
+            <PermissionGuard resource="categories" action="delete">
+               <Button 
+                 variant="ghost" 
+                 size="sm" 
+                 onClick={() => { setDeleteId(category.id); }}
+                 aria-label={t('common:delete')}
+               >
+                 <Trash2 className={cn('w-4 h-4', category.isDeleted ? 'text-red-700' : 'text-red-500')} />
                </Button>
-             </PermissionGuard>
-          )}
-          {category.isDeleted && (
-            <PermissionGuard resource="categories" action="update">
-              <Button variant="ghost" size="sm" onClick={() => { setRestoreId(category.id); }} aria-label={t('common:restore')}>
-                <RotateCcw className="w-4 h-4 text-primary" />
-              </Button>
             </PermissionGuard>
-          )}
-          <PermissionGuard resource="categories" action="delete">
-             <Button 
-               variant="ghost" 
-               size="sm" 
-               onClick={() => { setDeleteId(category.id); }}
-               aria-label={t('common:delete')}
-             >
-               <Trash2 className={cn('w-4 h-4', category.isDeleted ? 'text-red-700' : 'text-red-500')} />
-             </Button>
-          </PermissionGuard>
-        </div>
-      )
+          </div>
+        );
+      }
     }
   ], [t, handleEdit, onDuplicate]);
 

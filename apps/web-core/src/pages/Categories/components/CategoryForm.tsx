@@ -57,11 +57,11 @@ export function CategoryForm({ isOpen, category, onSubmit, onClose, loading }: C
       title={category ? t('common:form.edit_title', { entity: t('categories:entity') }) : t('common:form.add_title', { entity: t('categories:entity') })}
       size="2xl"
       footer={
-        <div className="flex gap-3">
-          <Button type="button" variant="outline" onClick={onClose} className="flex-1">
+        <div className="flex justify-end gap-3 w-full">
+          <Button type="button" variant="outline" onClick={onClose}>
             {t('common:cancel')}
           </Button>
-          <Button type="submit" form="category-form" loading={loading} className="flex-1">
+          <Button type="submit" form="category-form" loading={loading}>
             {category ? t('common:save') : t('common:add')}
           </Button>
         </div>

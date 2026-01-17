@@ -1,23 +1,39 @@
-import { ReactNode, useMemo, memo, type CSSProperties } from 'react';
+import { useMemo, memo, useEffect, type CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
+import { 
+  useReactTable, 
+  getCoreRowModel, 
+  flexRender,
+  ColumnDef,
+  SortingState,
+  RowSelectionState,
+} from '@tanstack/react-table';
 import { ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react';
 import { Checkbox } from '@superapp/ui-kit';
 import { cn } from '@/utils';
+import { List } from 'react-window';
+import { motion } from 'framer-motion';
 
-export interface Column<T> {
-  key: string;
-  header: ReactNode | string;
-  render?: (item: T, index: number) => ReactNode;
-  sortable?: boolean;
-  className?: string;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
+const VirtualList = List as any;
+
+// Re-export specific type for usage in other files
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type DataTableColumn<T> = ColumnDef<T, any>;
+
+// Legacy compatibility for the plan mostly, but encouraging use of DataTableColumn
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Column<T> = ColumnDef<T, any> & {
+  // Add legacy props if strictly needed during migration, otherwise prefer standard ColumnDef
+  className?: string; // used for cell styling
   align?: 'left' | 'center' | 'right';
   hidden?: boolean;
-  width?: string | number; // Support custom width (e.g. "20%", "200px", 2 for 2fr)
-}
+  width?: string | number;
+};
 
 export interface DataTableProps<T> {
   data: T[];
-  columns: Column<T>[];
+  columns: DataTableColumn<T>[];
   keyExtractor: (item: T) => string;
   
   // Selection
@@ -25,12 +41,12 @@ export interface DataTableProps<T> {
   onSelectAll?: (checked: boolean) => void;
   onSelectOne?: (id: string, checked: boolean) => void;
   
-  // Sorting
+  // Sorting (Server-side)
   sortColumn?: string;
   sortDirection?: 'asc' | 'desc';
   onSort?: (column: string) => void;
   
-  // Pagination (Order number calculation)
+  // Pagination (For Order number)
   currentPage?: number;
   perPage?: number;
 
@@ -38,9 +54,6 @@ export interface DataTableProps<T> {
   emptyMessage?: string;
   showSelectAll?: boolean;
 }
-
-import { List, type RowComponentProps } from 'react-window';
-import { motion } from 'framer-motion';
 
 function DataTableInner<T>({
   data,
@@ -58,104 +71,195 @@ function DataTableInner<T>({
   emptyMessage,
   showSelectAll = false,
 }: DataTableProps<T>) {
+  "use no memo";
   const { t } = useTranslation('common');
 
-  const visibleColumns = useMemo(() => columns.filter(col => !col.hidden), [columns]);
-  const allSelected = data.length > 0 && selectedIds?.length === data.length;
-  const isIndeterminate = !!(selectedIds && selectedIds.length > 0 && selectedIds.length < data.length);
+  // Convert legacy selection props to TanStack rowSelection state
+  const rowSelection = useMemo(() => {
+    if (!selectedIds) return {};
+    return selectedIds.reduce<RowSelectionState>((acc, id) => {
+      acc[id] = true;
+      return acc;
+    }, {});
+  }, [selectedIds]);
 
-  // Calculate Grid Template
-  const gridTemplateColumns = useMemo(() => {
-    const parts: string[] = [];
+  // Convert legacy sort props to TanStack sorting state
+  const sorting = useMemo<SortingState>(() => {
+    if (!sortColumn) return [];
+    return [{
+      id: sortColumn,
+      desc: sortDirection === 'desc',
+    }];
+  }, [sortColumn, sortDirection]);
+
+  // Define Selection Column and Order Column
+  const tableColumns = useMemo<DataTableColumn<T>[]>(() => {
+    const cols = [...columns];
     
-    // Selection Column
-    if (onSelectAll || onSelectOne) parts.push('48px');
-    
-    // Order Column
-    parts.push('48px');
-    
-    // Data Columns
-    visibleColumns.forEach(col => {
-      if (typeof col.width === 'number') {
-        parts.push(`${String(col.width)}fr`);
-      } else if (typeof col.width === 'string') {
-        parts.push(col.width);
-      } else {
-        // Default to minmax for responsiveness, or simple 1fr
-        // 'minmax(150px, 1fr)' helps prevent squishing, but might cause overflow. 
-        // Let's stick to 1fr as default to fill space evenly like flex.
-        parts.push('minmax(150px, 1fr)');
+    // Filter hidden columns (legacy support compatibility)
+    // We cast to any to access the custom legacy props if defined in the standard ColumnDef alias
+     
+    const visibleCols = cols.filter(c => !(c as Column<T>).hidden);
+
+    // Prepend Selection Column if needed
+    if (onSelectAll || onSelectOne) {
+      visibleCols.unshift({
+        id: 'selection',
+        size: 48,
+        minSize: 48,
+        maxSize: 48,
+        header: ({ table }) => (
+          showSelectAll && onSelectAll ? (
+            <div className="flex items-center justify-center h-full w-full">
+              <Checkbox
+                checked={table.getIsAllRowsSelected()}
+                triState={table.getIsSomeRowsSelected()}
+                onChange={(checked) => { onSelectAll(checked); }}
+                aria-label={t('data_table.select_all')}
+              />
+            </div>
+          ) : null
+        ),
+        cell: ({ row }) => (
+          onSelectOne ? (
+            <div className="flex items-center justify-center h-full w-full">
+              <Checkbox
+                checked={row.getIsSelected()}
+                onChange={(checked) => { onSelectOne(row.id, checked); }}
+                aria-label={t('data_table.select_row')}
+              />
+            </div>
+          ) : null
+        ),
+      });
+    }
+
+    // Prepend Order Column
+    visibleCols.splice((onSelectAll || onSelectOne) ? 1 : 0, 0, {
+      id: 'order',
+      size: 48,
+      header: () => (
+        <div className="text-center w-full min-w-full">{t('order')}</div>
+      ),
+      cell: ({ row }) => {
+        const orderNumber = (currentPage - 1) * perPage + row.index + 1;
+        return <div className="text-center text-muted-foreground w-full">{orderNumber}</div>;
       }
     });
 
-    return parts.join(' ');
-  }, [onSelectAll, onSelectOne, visibleColumns]);
+    return visibleCols;
+  }, [columns, onSelectAll, onSelectOne, showSelectAll, currentPage, perPage, t]);
 
-  const renderSortIcon = (columnKey: string) => {
-    if (sortColumn !== columnKey) return <ChevronsUpDown className="w-4 h-4 ml-1 text-muted-foreground/50" />;
-    return sortDirection === 'asc' 
-      ? <ChevronUp className="w-4 h-4 ml-1 text-primary" />
-      : <ChevronDown className="w-4 h-4 ml-1 text-primary" />;
-  };
+  // eslint-disable-next-line
+  const table = useReactTable({
+    data,
+    columns: tableColumns,
+    state: {
+      sorting,
+      rowSelection,
+    },
+    getRowId: keyExtractor,
+    onSortingChange: (updater) => {
+      // Handles server-side sorting callback
+      if (typeof updater !== 'function' && updater.length > 0 && onSort) {
+        const sort = updater[0];
+        if (sort) onSort(sort.id);
+      }
+    },
+    defaultColumn: {
+      enableSorting: false, // Match legacy behavior: opt-in sorting
+    },
+    manualSorting: true,
+    getCoreRowModel: getCoreRowModel(),
+    enableRowSelection: true,
+  });
 
-  const Row = ({ index, style }: RowComponentProps) => {
-    const item = data[index] as T;
-    const id = keyExtractor(item);
-    const isSelected = selectedIds?.includes(id);
-    const orderNumber = (currentPage - 1) * perPage + index + 1;
+  const { rows } = table.getRowModel();
+
+  // Construct grid-template-columns string
+  // Logic: 
+  // - defaultSize (150) -> minmax(150px, 1fr)
+  // - explicit width string from legacy prop "width" -> use as is
+  // - explicit width string like "200px" or "20%" -> use as is
+  // - derived number size -> use px
+  const flatHeaders = table.getFlatHeaders();
+  const refinedGridTemplateColumns = useMemo(() => {
+    return flatHeaders.map((header) => {
+        const colDef = header.column.columnDef as Column<T>;
+        const legacyWidth = colDef.width; 
+        
+        // Priority: legacy string width > TanStack number size
+        if (typeof legacyWidth === 'string') {
+           // check if it's purely number in string
+           if (!isNaN(Number(legacyWidth))) return `${legacyWidth}px`;
+           return legacyWidth;
+        }
+        
+        // If legacyWidth is number, it might be fr or px. 
+        // In the previous Codebase, width=2 was treated as 2fr.
+        // width=200 was treated as 200px (likely).
+        // Let's use logic: if < 20 assumption implies 'fr', but risk is high.
+        // Better to check defined Width logic in previous file:
+        // "Support custom width (e.g. '20%', '200px', 2 for 2fr)"
+        
+        if (typeof legacyWidth === 'number') {
+           if (legacyWidth <= 10) return `${String(legacyWidth)}fr`; // Heuristic: small numbers are fr
+           return `${String(legacyWidth)}px`;
+        }
+
+        // Fallback to TanStack size
+        const size = header.getSize(); 
+        if (size === 150) return 'minmax(150px, 1fr)';
+        return `${String(size)}px`;
+    }).join(' ');
+  }, [flatHeaders]);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const Row = ({ index, style }: { index: number; style: CSSProperties; [key: string]: any }) => {
+    const row = rows[index];
+    if (!row) return null;
 
     return (
-      <div 
+      <div
+        className={cn(
+          "items-center hover:bg-muted/5 transition-colors group border-b border-border/50 bg-background",
+          row.getIsSelected() && "bg-primary/5"
+        )}
         style={{
           ...style,
           display: 'grid',
-          gridTemplateColumns,
+          gridTemplateColumns: refinedGridTemplateColumns,
         }}
-        className={cn(
-          "items-center hover:bg-muted/5 transition-colors group border-b border-border/50 bg-background",
-          isSelected && "bg-primary/5"
-        )}
         role="row"
         aria-rowindex={index + 1}
       >
-        {/* Selection Cell */}
-        {(onSelectAll || onSelectOne) && (
-          <div className="px-2 flex items-center justify-center h-full" role="cell">
-            {onSelectOne && (
-              <Checkbox
-                checked={!!isSelected}
-                onChange={(checked) => { onSelectOne(id, checked); }}
-                aria-label={t('data_table.select_row')}
-              />
-            )}
-          </div>
-        )}
-
-        {/* Order Cell */}
-        <div className="px-2 text-center text-sm text-muted-foreground h-full flex items-center justify-center" role="cell">
-          {orderNumber}
-        </div>
-
-        {/* Data Cells */}
-        {visibleColumns.map((col) => (
-          <div
-            key={col.key}
-            className={cn(
-              "px-4 text-sm truncate h-full flex items-center",
-              col.align === 'center' && "justify-center text-center",
-              col.align === 'right' && "justify-end text-right",
-              col.className
-            )}
-            role="cell"
-          >
-            {col.render ? col.render(item, index) : ((item as Record<string, unknown>)[col.key] as React.ReactNode)}
-          </div>
-        ))}
+        {row.getVisibleCells().map((cell) => {
+            const colDef = cell.column.columnDef as Column<T>;
+           return (
+            <div
+              key={cell.id}
+              className={cn(
+                "px-4 text-sm truncate h-full flex items-center",
+                colDef.align === 'center' && "justify-center text-center",
+                colDef.align === 'right' && "justify-end text-right",
+                colDef.className
+              )}
+              role="cell"
+              style={{ width: '100%' }}
+            >
+              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            </div>
+          );
+        })}
       </div>
     );
   };
 
   const useVirtualization = data.length > 50;
+
+  useEffect(() => {
+    // Force re-render only if needed by virtualization or resize
+  }, [refinedGridTemplateColumns]);
 
   return (
     <motion.div
@@ -177,51 +281,42 @@ function DataTableInner<T>({
           role="row"
           style={{
             display: 'grid',
-            gridTemplateColumns,
+            gridTemplateColumns: refinedGridTemplateColumns,
           }}
         >
-          {/* Selection Column */}
-          {(onSelectAll || onSelectOne) && (
-            <div className="px-2 py-3 flex items-center justify-center h-full border-r border-transparent" role="columnheader">
-               {showSelectAll && onSelectAll && (
-                <Checkbox
-                  checked={allSelected}
-                  triState={isIndeterminate}
-                  onChange={onSelectAll}
-                  aria-label={t('data_table.select_all')}
-                />
-              )}
-            </div>
-          )}
-
-          {/* Order Column */}
-          <div className="px-2 py-3 text-center text-sm font-semibold text-muted tracking-wider h-full flex items-center justify-center" role="columnheader">
-            {t('order')}
-          </div>
-
-          {/* Data Columns */}
-          {visibleColumns.map((col) => (
-            <div
-              key={col.key}
-              className={cn(
-                "px-4 py-3 text-sm font-semibold text-muted tracking-wider whitespace-nowrap overflow-hidden select-none h-full flex items-center",
-                col.sortable && "cursor-pointer hover:bg-muted/5",
-                col.className
-              )}
-              onClick={() => col.sortable && onSort?.(col.key)}
-              role="columnheader"
-              aria-sort={sortColumn === col.key ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}
-            >
-              <div className={cn(
-                "flex items-center gap-1 w-full",
-                col.align === 'center' && "justify-center",
-                col.align === 'right' && "justify-end"
-              )}>
-                {col.header}
-                {col.sortable && renderSortIcon(col.key)}
+          {table.getFlatHeaders().map((header) => {
+            const isSortable = header.column.getCanSort();
+            const colDef = header.column.columnDef as Column<T>;
+            
+            return (
+              <div
+                key={header.id}
+                className={cn(
+                  "px-4 py-3 text-sm font-semibold text-muted tracking-wider whitespace-nowrap overflow-hidden select-none h-full flex items-center",
+                  isSortable && "cursor-pointer hover:bg-muted/5",
+                  colDef.className
+                )}
+                onClick={isSortable ? () => onSort?.(header.column.id) : undefined}
+                role="columnheader"
+              >
+                 <div className={cn(
+                  "flex items-center gap-1 w-full",
+                   colDef.align === 'center' && "justify-center",
+                   colDef.align === 'right' && "justify-end"
+                 )}>
+                  {flexRender(header.column.columnDef.header, header.getContext())}
+                  {isSortable && (
+                    <span className="ml-1">
+                      {{
+                        asc: <ChevronUp className="w-4 h-4 text-primary" />,
+                        desc: <ChevronDown className="w-4 h-4 text-primary" />,
+                      }[header.column.getIsSorted() as string] ?? <ChevronsUpDown className="w-4 h-4 text-muted-foreground/50" />}
+                    </span>
+                  )}
+                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
@@ -230,9 +325,12 @@ function DataTableInner<T>({
         {isLoading ? (
           <div className="divide-y divide-border/50">
             {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="p-4">
-                <div className="h-10 bg-muted/10 animate-pulse rounded" />
-              </div>
+               <div key={i} className="p-4 flex gap-4">
+                  {/* Generic Loading Skeleton row */}
+                  {Array.from({ length: Math.min(columns.length, 5) }).map((_, j) => (
+                     <div key={j} className="h-6 bg-muted/10 animate-pulse rounded flex-1" />
+                  ))}
+               </div>
             ))}
           </div>
         ) : data.length === 0 ? (
@@ -240,70 +338,47 @@ function DataTableInner<T>({
              {emptyMessage || t('list.empty', { entities: t('data_table.items') })}
           </div>
         ) : useVirtualization ? (
-          <List
-            rowCount={data.length}
+          <VirtualList
+            style={{ height: 500, width: '100%' }}
+            rowCount={rows.length}
             rowHeight={56}
             rowComponent={Row}
             rowProps={{}}
-            style={{ height: 500, width: '100%' } as CSSProperties}
           />
         ) : (
           <div className="divide-y divide-border/50">
-            {data.map((item: T, index: number) => {
-              const id = keyExtractor(item);
-              const isSelected = selectedIds?.includes(id);
-              const orderNumber = (currentPage - 1) * perPage + index + 1;
-
-              return (
-                <div
-                  key={id}
-                  className={cn(
-                    "items-center hover:bg-muted/5 transition-colors group h-[56px] border-b border-border/50 last:border-0",
-                    isSelected && "bg-primary/5"
-                  )}
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns,
-                  }}
-                  role="row"
-                  aria-rowindex={index + 1}
-                >
-                  {/* Selection Cell */}
-                  {(onSelectAll || onSelectOne) && (
-                    <div className="px-2 flex items-center justify-center h-full" role="cell">
-                      {onSelectOne && (
-                        <Checkbox
-                          checked={!!isSelected}
-                          onChange={(checked) => { onSelectOne(id, checked); }}
-                          aria-label={t('data_table.select_row')}
-                        />
-                      )}
-                    </div>
-                  )}
-
-                  {/* Order Cell */}
-                  <div className="px-2 text-center text-sm text-muted-foreground h-full flex items-center justify-center" role="cell">
-                    {orderNumber}
-                  </div>
-
-                  {/* Data Cells */}
-                  {visibleColumns.map((col) => (
+            {rows.map((row) => (
+               <div
+                key={row.id}
+                className={cn(
+                  "items-center hover:bg-muted/5 transition-colors group h-[56px] border-b border-border/50 last:border-0",
+                  row.getIsSelected() && "bg-primary/5"
+                )}
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: refinedGridTemplateColumns,
+                }}
+                role="row"
+              >
+                {row.getVisibleCells().map((cell) => {
+                   const colDef = cell.column.columnDef as Column<T>;
+                   return (
                     <div
-                      key={col.key}
+                      key={cell.id}
                       className={cn(
                         "px-4 text-sm truncate h-full flex items-center",
-                        col.align === 'center' && "justify-center text-center",
-                        col.align === 'right' && "justify-end text-right",
-                        col.className
+                        colDef.align === 'center' && "justify-center text-center",
+                        colDef.align === 'right' && "justify-end text-right",
+                        colDef.className
                       )}
                       role="cell"
                     >
-                      {col.render ? col.render(item, index) : ((item as Record<string, unknown>)[col.key] as React.ReactNode)}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </div>
-                  ))}
-                </div>
-              );
-            })}
+                  );
+                })}
+              </div>
+            ))}
           </div>
         )}
       </div>
@@ -311,5 +386,4 @@ function DataTableInner<T>({
   );
 }
 
-// Memoize the whole component to prevent unnecessary internal re-renders
 export const DataTable = memo(DataTableInner) as typeof DataTableInner;

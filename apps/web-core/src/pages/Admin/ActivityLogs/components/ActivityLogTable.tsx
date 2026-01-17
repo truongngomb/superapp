@@ -31,10 +31,12 @@ export function ActivityLogTable({
 
   const columns: Column<ActivityLog>[] = useMemo(() => [
     {
-      key: 'user',
+      accessorKey: 'user',
       header: t('table.user'),
       width: '250px',
-      render: (log) => (
+      cell: ({ row }) => {
+        const log = row.original;
+        return (
         <div className="flex items-center gap-3">
           <div className="relative w-8 h-8 overflow-hidden rounded-full bg-secondary/10">
             {log.expand?.user?.avatar ? (
@@ -55,13 +57,15 @@ export function ActivityLogTable({
             <span className="font-medium truncate">{log.expand?.user?.name || 'Unknown User'}</span>
           </div>
         </div>
-      )
+      )}
     },
     {
-      key: 'action',
+      accessorKey: 'action',
       header: t('table.action'),
       width: '140px',
-      render: (log) => (
+      cell: ({ row }) => {
+        const log = row.original;
+        return (
         <span className={cn(
           "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border",
           log.action === 'create' && "bg-green-500/10 text-green-500 border-green-500/20",
@@ -72,35 +76,41 @@ export function ActivityLogTable({
         )}>
           {t(`actions.${log.action}`, { defaultValue: log.action.toUpperCase() })}
         </span>
-      )
+      )}
     },
     {
-      key: 'resource',
+      accessorKey: 'resource',
       header: t('table.resource'),
       width: '140px',
-      render: (log) => (
+      cell: ({ row }) => {
+        const log = row.original;
+        return (
         <span className="capitalize text-muted-foreground">
           {t(`resources.${log.resource}`, { defaultValue: log.resource })}
         </span>
-      )
+      )}
     },
     {
-      key: 'message',
+      accessorKey: 'message',
       header: t('table.details'),
       width: '1.5fr',
       className: 'max-w-[300px]',
-      render: (log) => (
+      cell: ({ row }) => {
+        const log = row.original;
+        return (
         <span className="text-foreground/90 truncate block" title={JSON.stringify(log.details)}>
           {log.message || (log.details ? JSON.stringify(log.details) : '-')}
         </span>
-      )
+      )}
     },
     {
-      key: 'created',
+      accessorKey: 'created',
       header: t('table.time'),
-      sortable: true,
+      enableSorting: true,
       width: '180px',
-      render: (log) => (
+      cell: ({ row }) => {
+        const log = row.original;
+        return (
         <div className="flex items-center gap-1.5 text-muted-foreground whitespace-nowrap" title={new Date(log.created).toLocaleString()}>
           <Clock className="w-3.5 h-3.5" />
           <span>
@@ -110,7 +120,7 @@ export function ActivityLogTable({
             })}
           </span>
         </div>
-      )
+      )}
     }
   ], [t, i18n.language]);
 

@@ -198,34 +198,36 @@ export default function RolesPage() {
   // Columns Configuration
   const columns: Column<Role>[] = useMemo(() => [
     {
-      key: 'name',
+      accessorKey: 'name',
       header: t('roles:form.name_label'),
-      sortable: true,
+      enableSorting: true,
       width: '200px',
       className: 'font-medium'
     },
     {
-      key: 'description',
+      accessorKey: 'description',
       header: t('roles:form.desc_label'),
       width: '2fr',
       className: 'hidden md:flex text-muted-foreground',
-      render: (item) => <span className="line-clamp-1">{item.description || '-'}</span>
+      cell: ({ row }) => <span className="line-clamp-1">{row.original.description || '-'}</span>
     },
     {
-      key: 'isActive',
+      accessorKey: 'isActive',
       header: t('common:status'),
-      sortable: true,
+      enableSorting: true,
       width: '120px',
-      render: (item) => item.isActive ? 
+      cell: ({ row }) => row.original.isActive ? 
         <Badge variant="success" size="sm">{t('common:active')}</Badge> : 
         <Badge variant="danger" size="sm">{t('common:inactive')}</Badge>
     },
     {
-      key: 'actions',
+      id: 'actions',
       header: t('common:actions.label'),
       align: 'right',
       width: '160px',
-      render: (role) => (
+      cell: ({ row }) => {
+        const role = row.original;
+        return (
         <div className="flex items-center justify-end gap-1">
           {!role.isDeleted && (
             <PermissionGuard resource="roles" action="update">
@@ -259,7 +261,7 @@ export default function RolesPage() {
              </Button>
           </PermissionGuard>
         </div>
-      )
+      )}
     }
   ], [t, onDuplicate]);
 

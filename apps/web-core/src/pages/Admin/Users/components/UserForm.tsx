@@ -63,8 +63,8 @@ export function UserForm({ user, onSubmit, onClose, loading, isOpen }: UserFormP
       onClose={onClose}
       title={isEdit ? t('common:form.edit_title', { entity: t('users:entity') }) : t('common:form.add_title', { entity: t('users:entity') })}
       footer={
-        <div className="flex gap-3">
-          <Button type="button" variant="outline" onClick={onClose} className="flex-1">
+        <div className="flex justify-end gap-3 w-full">
+          <Button type="button" variant="outline" onClick={onClose}>
             {t('common:cancel')}
           </Button>
           <Button 
@@ -72,7 +72,6 @@ export function UserForm({ user, onSubmit, onClose, loading, isOpen }: UserFormP
             form="user-form" 
             loading={loading} 
             disabled={!isFormValid} 
-            className="flex-1"
           >
             {isEdit ? t('common:save') : t('common:add')}
           </Button>

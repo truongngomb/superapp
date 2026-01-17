@@ -236,31 +236,33 @@ export default function UsersPage() {
   // Columns Configuration
   const columns: Column<User>[] = useMemo(() => [
     {
-      key: 'avatar',
+      accessorKey: 'avatar',
       header: '',
       width: '80px',
       className: 'px-4 justify-center',
-      render: (user) => <Avatar src={user.avatar} name={user.name} />
+      cell: ({ row }) => <Avatar src={row.original.avatar} name={row.original.name} />
     },
     {
-      key: 'name',
+      accessorKey: 'name',
       header: t('common:name'),
-      sortable: true,
+      enableSorting: true,
       width: '1.5fr',
       className: 'font-medium'
     },
     {
-       key: 'email',
+       accessorKey: 'email',
        header: t('common:email'),
-       sortable: true,
+       enableSorting: true,
        width: '2fr',
        className: 'hidden md:flex text-muted-foreground'
     },
     {
-       key: 'roles',
+       accessorKey: 'roles',
        header: t('users:form.role_label'),
        width: '1.5fr',
-       render: (user) => (
+       cell: ({ row }) => {
+         const user = row.original;
+         return (
          <div className="flex flex-wrap gap-1">
            {user.roles && user.roles.length > 0 ? (
              user.roles.map((roleId) => {
@@ -275,23 +277,25 @@ export default function UsersPage() {
              <span className="text-muted-foreground text-xs italic">{t('common:no_roles')}</span>
            )}
          </div>
-       )
+       )}
     },
     {
-      key: 'isActive',
+      accessorKey: 'isActive',
       header: t('common:status'),
-      sortable: true,
+      enableSorting: true,
       width: '120px',
-      render: (user) => user.isActive ? 
+      cell: ({ row }) => row.original.isActive ? 
         <Badge variant="success" size="sm">{t('common:active')}</Badge> : 
         <Badge variant="danger" size="sm">{t('common:inactive')}</Badge>
     },
     {
-      key: 'actions',
+      id: 'actions',
       header: t('common:actions.label'),
       align: 'right',
       width: '120px',
-      render: (user) => (
+      cell: ({ row }) => {
+        const user = row.original;
+        return (
         <div className="flex items-center justify-end gap-1">
           {!user.isDeleted && (
             <>
@@ -320,7 +324,7 @@ export default function UsersPage() {
              </Button>
           </PermissionGuard>
         </div>
-      )
+      )}
     }
   ], [t, roles]);
 
