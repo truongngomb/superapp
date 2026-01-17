@@ -10,7 +10,9 @@ import { ActivityLogTable } from './components/ActivityLogTable';
 import { ActivityLogTableSkeleton } from './components/ActivityLogTableSkeleton';
 import type { ActivityLog } from '@superapp/shared-types';
 import { cn } from '@/utils';
-import { useSort, useDebounce, useActivityLogs, useExcelExport } from '@/hooks';
+import { useSort, useDebounce, useActivityLogs, useExcelExport, useResponsiveView, useInfiniteResource } from '@/hooks';
+import { ActivityLogMobileList } from './components/ActivityLogMobileList';
+import { ActivityLogMobileCardSkeletonList } from './components/ActivityLogMobileCardSkeleton';
 
 export default function ActivityLogsPage() {
   const { t } = useTranslation(['activity_logs', 'common']);
@@ -23,7 +25,34 @@ export default function ActivityLogsPage() {
     exporting,
     fetchLogs,
     getAllForExport,
+    queryParams,
   } = useActivityLogs();
+
+  // Responsive View
+  const { effectiveView, isMobile } = useResponsiveView('list'); // Default to list view since we don't have view switcher here
+
+  // Infinite scroll for mobile
+  const infiniteProps = {
+    items: logs,
+    total: pagination.total,
+    queryParams: {
+        ...queryParams,
+        page: pagination.page,
+    },
+    fetchItems: fetchLogs,
+    isLoadingMore,
+  };
+  
+  const {
+    allItems: mobileLogs,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useInfiniteResource({
+    resourceHook: infiniteProps,
+    enabled: isMobile,
+    pageSize: 10,
+  });
 
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -188,7 +217,7 @@ export default function ActivityLogsPage() {
           </p>
         </div>
 
-        {/* Logs Table */}
+        {/* Logs Table / List */}
         <AnimatePresence mode="wait">
           <framerMotion.div
             key={loading && logs.length === 0 ? "loading" : logs.length === 0 ? "empty" : "content"}
@@ -199,25 +228,39 @@ export default function ActivityLogsPage() {
             className="min-h-[400px]"
           >
             {(loading && logs.length === 0) || isRefreshing ? (
-              <ActivityLogTableSkeleton />
+               effectiveView === 'mobile' ? (
+                 <ActivityLogMobileCardSkeletonList count={5} />
+               ) : (
+                 <ActivityLogTableSkeleton />
+               )
             ) : (
-              <ActivityLogTable 
-                logs={logs} 
-                currentPage={page} 
-                sortConfig={{
-                  field: sortConfig.field,
-                  order: sortConfig.order === 'asc' ? 'asc' : 'desc'
-                }}
-                onSort={handleSort}
-                isLoading={loading}
-              />
+               effectiveView === 'mobile' ? (
+                 <ActivityLogMobileList
+                   logs={mobileLogs}
+                   hasNextPage={hasNextPage}
+                   isFetchingNextPage={isFetchingNextPage}
+                   fetchNextPage={fetchNextPage}
+                   isLoading={loading}
+                 />
+               ) : (
+                 <ActivityLogTable 
+                   logs={logs} 
+                   currentPage={page} 
+                   sortConfig={{
+                     field: sortConfig.field,
+                     order: sortConfig.order === 'asc' ? 'asc' : 'desc'
+                   }}
+                   onSort={handleSort}
+                   isLoading={loading}
+                 />
+               )
             )}
           </framerMotion.div>
         </AnimatePresence>
 
 
-        {/* Pagination */}
-        {!loading && logs.length > 0 && totalPages > 1 && (
+        {/* Pagination - Hide on mobile */}
+        {!isMobile && !loading && logs.length > 0 && totalPages > 1 && (
           <div className="mt-4 relative">
             {isLoadingMore && (
               <div className="absolute inset-0 flex items-center justify-center bg-background/50 rounded-lg z-10">

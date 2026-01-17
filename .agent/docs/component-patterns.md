@@ -235,9 +235,23 @@ export function FeatureMobileCard({
       </div>
       
       {/* Bottom Actions */}
-      <div className="flex border-t">
-        <ActionButton icon={Edit2} onClick={onEdit} />
-        <ActionButton icon={Trash2} onClick={onDelete} />
+      <div className="flex border-t border-border">
+        <Button
+          variant="ghost"
+          onClick={() => onEdit(item)}
+          className="flex-1 h-auto py-3.5 rounded-none border-r border-border"
+        >
+          <Edit2 className="w-4 h-4" />
+          <span className="text-sm font-medium hidden xs:inline">Edit</span>
+        </Button>
+        <Button
+          variant="ghost" 
+          onClick={() => onDelete(item.id)}
+          className="flex-1 h-auto py-3.5 rounded-none text-red-500 hover:text-red-700"
+        >
+          <Trash2 className="w-4 h-4" />
+          <span className="text-sm font-medium hidden xs:inline">Delete</span>
+        </Button>
       </div>
     </motion.div>
   );

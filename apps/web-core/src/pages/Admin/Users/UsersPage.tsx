@@ -27,7 +27,7 @@ import {
   SearchFilterBar
 } from '@/components/common';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
-import { useSort, useDebounce, useAuth, useResource, useToast, useExcelExport } from '@/hooks';
+import { useSort, useDebounce, useAuth, useResource, useToast, useExcelExport, useResponsiveView, useInfiniteResource } from '@/hooks';
 import type { User, SortColumn, UserCreateInput, UserListParams, UserUpdateInput, Role } from '@superapp/shared-types';
 import { cn, getStorageItem, setStorageItem } from '@/utils';
 import { STORAGE_KEYS } from '@/config';
@@ -42,6 +42,8 @@ import { RoleSelectModal } from '@/pages/Admin/Roles/components/RoleSelectModal'
 import { userService, roleService } from '@/services';
 import { UserTableSkeleton } from './components/UserTableSkeleton';
 import { UserRowSkeleton } from './components/UserRowSkeleton';
+import { UserMobileList } from './components/UserMobileList';
+import { UserMobileCardSkeletonList } from './components/UserMobileCardSkeleton';
 
 /**
  * UsersPage Component
@@ -123,6 +125,29 @@ export default function UsersPage() {
        sort: sortConfig.field,
        order: sortConfig.order
     }
+  });
+
+  // Responsive View - auto-switch to mobile view on small screens
+  const { effectiveView, isMobile } = useResponsiveView(viewMode);
+
+  // Infinite scroll for mobile
+  const infiniteProps = {
+    items: users,
+    total,
+    queryParams,
+    fetchItems,
+    isLoadingMore,
+  };
+  
+  const {
+    allItems: mobileUsers,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useInfiniteResource({
+    resourceHook: infiniteProps,
+    enabled: isMobile,
+    pageSize: 10,
   });
 
   // Permissions
@@ -383,16 +408,17 @@ export default function UsersPage() {
       {/* Resource Toolbar */}
       <ResourceToolbar
         resource="users"
-        itemCount={users.length}
+        itemCount={isMobile ? mobileUsers.length : users.length}
         totalItems={total}
         canSelect={canSelect}
         selectedCount={selectedIds.length}
-        totalListItems={users.length}
+        totalListItems={isMobile ? mobileUsers.length : users.length}
         onSelectAll={handleSelectAll}
         viewMode={viewMode}
         onViewModeChange={handleViewModeChange}
         showArchived={showArchived}
         onShowArchivedChange={(checked) => { setShowArchived(checked); setSelectedIds([]); }}
+        isMobile={isMobile}
         batchActions={
           <BatchActionButtons
             resource="users"
@@ -418,7 +444,10 @@ export default function UsersPage() {
           className="min-h-[400px]"
         >
         { (loading && users.length === 0) || isRefreshing ? (
-           viewMode === 'table' ? (
+           // Skeleton loading based on view mode
+           effectiveView === 'mobile' ? (
+             <UserMobileCardSkeletonList count={5} />
+           ) : effectiveView === 'table' ? (
               <UserTableSkeleton />
            ) : (
               <div className="space-y-2">
@@ -441,7 +470,23 @@ export default function UsersPage() {
            </Card>
         ) : (
            <div className="space-y-2">
-             {viewMode === 'table' ? (
+             {/* Mobile View with Infinite Scroll */}
+             {effectiveView === 'mobile' ? (
+               <UserMobileList
+                 users={mobileUsers}
+                 roles={roles}
+                 hasNextPage={hasNextPage}
+                 isFetchingNextPage={isFetchingNextPage}
+                 fetchNextPage={fetchNextPage}
+                 isLoading={loading}
+                 selectedIds={canSelect ? selectedIds : []}
+                 onSelect={canSelect ? handleSelectOne : undefined}
+                 onEdit={(u) => { setEditingUser(u); setShowForm(true); }}
+                 onAssignRole={(u) => { setAssigningUser(u); }}
+                 onDelete={(id) => { setDeleteId(id); }}
+                 onRestore={(id) => { setRestoreId(id); }}
+               />
+             ) : effectiveView === 'table' ? (
                 <DataTable
                   data={users}
                   columns={columns}
@@ -473,8 +518,8 @@ export default function UsersPage() {
                 ))
              )}
 
-             {/* Pagination */}
-             {Math.ceil(total / (queryParams.limit || 10)) > 1 && (
+             {/* Pagination - Hide on mobile */}
+             {!isMobile && Math.ceil(total / (queryParams.limit || 10)) > 1 && (
                <div className="mt-4 relative">
                  {isLoadingMore && (
                    <div className="absolute inset-0 flex items-center justify-center bg-background/50 rounded-lg z-10">

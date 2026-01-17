@@ -54,5 +54,6 @@ export function useActivityLogs() {
     exporting,
     fetchLogs: fetchItems,
     getAllForExport,
+    queryParams,
   };
 }
