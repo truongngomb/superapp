@@ -26,6 +26,7 @@ export const Resources = {
   ROLES: PermissionResource.Roles,
   ACTIVITY_LOGS: PermissionResource.ActivityLogs,
   DASHBOARD: PermissionResource.Dashboard,
+  API_DOCS: PermissionResource.ApiDocs,
   ALL: PermissionResource.All,
 } as const;
 

@@ -22,3 +22,6 @@ export {
   type RequestConfig,
   type ApiErrorData,
 } from './api';
+
+// TanStack Query
+export { queryClient, queryKeys, type QueryKeys } from './queryClient';

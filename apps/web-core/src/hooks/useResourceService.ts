@@ -8,14 +8,14 @@ export interface ServiceConfig extends Omit<RequestConfig, 'signal'> {
 
 export interface ResourceService<T, CreateInput = unknown, UpdateInput = unknown, ListParams = Record<string, unknown>> {
   getPage: (params?: ListParams, config?: ServiceConfig) => Promise<PaginatedResponse<T>>;
-  getById: (id: string, config?: ServiceConfig) => Promise<T>;
-  create: (data: CreateInput) => Promise<T>;
-  update: (id: string, data: UpdateInput) => Promise<T>;
-  delete: (id: string) => Promise<void>;
-  restore: (id: string) => Promise<void>;
-  deleteMany: (ids: string[]) => Promise<void>;
-  restoreMany: (ids: string[]) => Promise<void>;
-  batchUpdateStatus: (ids: string[], isActive: boolean) => Promise<void>;
+  getById?: (id: string, config?: ServiceConfig) => Promise<T>;
+  create?: (data: CreateInput) => Promise<T>;
+  update?: (id: string, data: UpdateInput) => Promise<T>;
+  delete?: (id: string) => Promise<void>;
+  restore?: (id: string) => Promise<void>;
+  deleteMany?: (ids: string[]) => Promise<void>;
+  restoreMany?: (ids: string[]) => Promise<void>;
+  batchUpdateStatus?: (ids: string[], isActive: boolean) => Promise<void>;
   getAllForExport: (params?: ListParams, config?: ServiceConfig) => Promise<T[]>;
 }
 

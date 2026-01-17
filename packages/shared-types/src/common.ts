@@ -245,4 +245,5 @@ export enum PermissionResource {
   ActivityLogs = 'activity_logs',
   Dashboard = 'dashboard',
   Home = 'home',
+  ApiDocs = 'api-docs',
 }

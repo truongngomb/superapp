@@ -1,13 +1,27 @@
-import { useState, useCallback, useRef } from 'react';
+/**
+ * useResource Hook - TanStack Query Implementation
+ * 
+ * Generic hook for managing CRUD operations with caching, pagination,
+ * and automatic background updates.
+ * 
+ * This is a drop-in replacement for the original useResource hook,
+ * powered by TanStack Query for better caching and request deduplication.
+ */
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@/hooks';
 import { useTranslation } from 'react-i18next';
 import type { ResourceService } from './useResourceService';
 
+// ============================================================================
+// Types
+// ============================================================================
+
 interface UseResourceOptions<T, CreateInput, UpdateInput, ListParams> {
   service: ResourceService<T, CreateInput, UpdateInput, ListParams>;
   initialParams?: ListParams;
-  resourceName: string; // e.g., 'categories', 'users' for i18n
+  resourceName: string; // e.g., 'categories', 'users' for i18n and query keys
 }
 
 export interface BaseListParams {
@@ -41,6 +55,10 @@ export interface UseResourceReturn<T, CreateInput, UpdateInput, ListParams> {
   getAllForExport: (params?: ListParams) => Promise<T[]>;
 }
 
+// ============================================================================
+// Hook Implementation
+// ============================================================================
+
 export function useResource<T extends { id: string }, CreateInput, UpdateInput, ListParams extends BaseListParams>({
   service,
   initialParams,
@@ -48,23 +66,18 @@ export function useResource<T extends { id: string }, CreateInput, UpdateInput, 
 }: UseResourceOptions<T, CreateInput, UpdateInput, ListParams>): UseResourceReturn<T, CreateInput, UpdateInput, ListParams> {
   const { t } = useTranslation('common');
   const { success, error: errorToast } = useToast();
+  const queryClient = useQueryClient();
 
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [exporting, setExporting] = useState(false);
-  
-  const [items, setItems] = useState<T[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [total, setTotal] = useState(0);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   
-  // Use state for queryParams to trigger UI updates (e.g., pagination)
-  // Initialize from URL search params if valid, otherwise use initialParams
+  // URL Search Params sync
   const [searchParams, setSearchParams] = useSearchParams();
   
+  // Parse initial params from URL
   const getInitialParams = (): ListParams => {
     const urlParams: Partial<BaseListParams> & Record<string, unknown> = {};
     
-    // Standard params
     const page = searchParams.get('page');
     if (page) urlParams.page = parseInt(page, 10);
     
@@ -80,98 +93,120 @@ export function useResource<T extends { id: string }, CreateInput, UpdateInput, 
     const search = searchParams.get('search');
     if (search) urlParams.search = search;
     
-    // Common filters
     const isActive = searchParams.get('isActive');
     if (isActive !== null) urlParams.isActive = isActive === 'true';
     
     const isDeleted = searchParams.get('isDeleted');
     if (isDeleted !== null) urlParams.isDeleted = isDeleted === 'true';
 
-    // Merge URL params with initial params (URL takes precedence)
     return { ...initialParams, ...urlParams } as ListParams;
   };
 
   const [queryParams, setQueryParamsState] = useState<ListParams>(getInitialParams);
-  
-  // Use ref to keep params stable for fetchItems to avoid infinite loop
-  const paramsRef = useRef<ListParams>(getInitialParams());
+  const paramsRef = useRef<ListParams>(queryParams);
 
-  const setQueryParams = useCallback((params: ListParams) => {
-    paramsRef.current = params;
-    setQueryParamsState(params);
-  }, []);
+  // Keep ref in sync
+  useEffect(() => {
+    paramsRef.current = queryParams;
+  }, [queryParams]);
 
-  const fetchItems = useCallback(async (params?: ListParams) => {
-    const currentParams = paramsRef.current;
-    const nextParams = { ...currentParams, ...params };
-    
-    // Determine if this is a page change (loadingMore)
-    const isPageChange = params?.page !== undefined && params.page !== currentParams.page;
+  // Query key for this resource
+  const queryKey = useMemo(
+    () => [resourceName, 'list', queryParams] as const,
+    [resourceName, queryParams]
+  );
 
-    if (isPageChange) {
-      setIsLoadingMore(true);
-    } else {
-      setLoading(true);
+  // ============================================================================
+  // Main Query - List data with caching
+  // ============================================================================
+  const {
+    data,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useQuery({
+    queryKey,
+    queryFn: async () => {
+      const response = await service.getPage(queryParams);
+      return response;
+    },
+    // Keep previous data while fetching new page
+    placeholderData: (previousData) => previousData,
+  });
+
+  // Extract items and total from response
+  const items = useMemo(() => {
+    if (!data) return [];
+    if (Array.isArray(data)) return data as T[];
+    if ('items' in data && Array.isArray((data as { items: unknown[] }).items)) {
+      return (data as { items: T[] }).items;
     }
+    return [];
+  }, [data]);
 
-    // Sync to URL
+  const total = useMemo(() => {
+    if (!data) return 0;
+    if (Array.isArray(data)) return data.length;
+    if ('total' in data) return (data as { total?: number }).total || 0;
+    return 0;
+  }, [data]);
+
+  // Loading states
+  const loading = isLoading;
+  const isLoadingMore = isFetching && !isLoading;
+
+  // ============================================================================
+  // URL Sync
+  // ============================================================================
+  const syncToUrl = useCallback((params: ListParams) => {
     setSearchParams((prevSearchParams) => {
       const newSearchParams = new URLSearchParams(prevSearchParams);
       
-      // Core params
-      if (nextParams.page && nextParams.page > 1) newSearchParams.set('page', nextParams.page.toString());
+      if (params.page && params.page > 1) newSearchParams.set('page', params.page.toString());
       else newSearchParams.delete('page');
 
-      if (nextParams.limit && nextParams.limit !== 10) newSearchParams.set('limit', nextParams.limit.toString());
+      if (params.limit && params.limit !== 10) newSearchParams.set('limit', params.limit.toString());
       else newSearchParams.delete('limit');
 
-      if (nextParams.sort) newSearchParams.set('sort', nextParams.sort);
+      if (params.sort) newSearchParams.set('sort', params.sort);
       else newSearchParams.delete('sort');
 
-      if (nextParams.order) newSearchParams.set('order', nextParams.order);
+      if (params.order) newSearchParams.set('order', params.order);
       else newSearchParams.delete('order');
 
-      if (nextParams.search) newSearchParams.set('search', nextParams.search);
+      if (params.search) newSearchParams.set('search', params.search);
       else newSearchParams.delete('search');
 
-      // Common filters
-      const nextParamsRecord = nextParams as Record<string, unknown>;
+      const paramsRecord = params as Record<string, unknown>;
       
-      if (nextParamsRecord.isActive !== undefined) newSearchParams.set('isActive', String(nextParamsRecord.isActive as string | boolean | number));
+      if (typeof paramsRecord.isActive === 'boolean') newSearchParams.set('isActive', String(paramsRecord.isActive));
       else newSearchParams.delete('isActive');
 
-      if (nextParamsRecord.isDeleted !== undefined) newSearchParams.set('isDeleted', String(nextParamsRecord.isDeleted as string | boolean | number));
+      if (typeof paramsRecord.isDeleted === 'boolean') newSearchParams.set('isDeleted', String(paramsRecord.isDeleted));
       else newSearchParams.delete('isDeleted');
 
       return newSearchParams;
     }, { replace: true });
+  }, [setSearchParams]);
 
-    try {
-      const response = await service.getPage(nextParams) as unknown;
-      
-      if (response && typeof response === 'object' && 'items' in response && Array.isArray((response as { items: unknown[] }).items)) {
-         setItems((response as { items: T[] }).items);
-         setTotal((response as { total?: number }).total || 0);
-      } else if (Array.isArray(response)) {
-         setItems(response as T[]);
-         setTotal(response.length);
-      }
-      
-      // Update both ref and state
-      setQueryParams(nextParams);
-    } catch (_error) {
-      errorToast(t('toast.load_error', { entities: t(`resources.${resourceName}`) }));
-      console.error(_error);
-    } finally {
-      setLoading(false);
-      setIsLoadingMore(false);
-    }
-  }, [service, resourceName, errorToast, t, setQueryParams, setSearchParams]);
+  // ============================================================================
+  // Param Setters
+  // ============================================================================
+  const setQueryParams = useCallback((params: ListParams) => {
+    setQueryParamsState(params);
+    syncToUrl(params);
+  }, [syncToUrl]);
 
-  // NOTE: No initial fetch here - pages should call fetchItems in their own useEffect
-  // This matches ActivityLogsPage pattern and prevents duplicate API calls
+  const fetchItems = useCallback(async (params?: ListParams) => {
+    const nextParams = { ...paramsRef.current, ...params };
+    setQueryParams(nextParams);
+    // Query will automatically refetch due to queryKey change
+    await refetch();
+  }, [setQueryParams, refetch]);
 
+  // ============================================================================
   // Selection Logic
+  // ============================================================================
   const handleSelectAll = useCallback((checked: boolean) => {
     if (checked) {
       setSelectedIds(items.map(item => item.id));
@@ -187,92 +222,166 @@ export function useResource<T extends { id: string }, CreateInput, UpdateInput, 
     );
   }, []);
 
-  const handleCreate = useCallback(async (data: CreateInput) => {
-    setLoading(true);
-    try {
-      await service.create(data);
+  // ============================================================================
+  // Mutations
+  // ============================================================================
+  
+  // Create mutation
+  const createMutation = useMutation({
+    mutationFn: (data: CreateInput) => {
+      if (!service.create) throw new Error('Create not supported');
+      return service.create(data);
+    },
+    onSuccess: () => {
       success(t('toast.create_success', { entity: t(`resources.${resourceName}`) }));
-      await fetchItems(); // Refresh
+      // Invalidate list queries to refetch fresh data
+      void queryClient.invalidateQueries({ queryKey: [resourceName] });
+    },
+    onError: () => {
+      errorToast(t('toast.error'));
+    },
+  });
+
+  // Update mutation
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: UpdateInput }) => {
+      if (!service.update) throw new Error('Update not supported');
+      return service.update(id, data);
+    },
+    onSuccess: () => {
+      success(t('toast.update_success', { entity: t(`resources.${resourceName}`) }));
+      void queryClient.invalidateQueries({ queryKey: [resourceName] });
+    },
+    onError: () => {
+      errorToast(t('toast.error'));
+    },
+  });
+
+  // Delete mutation
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => {
+      if (!service.delete) throw new Error('Delete not supported');
+      return service.delete(id);
+    },
+    onSuccess: () => {
+      success(t('toast.delete_success'));
+      void queryClient.invalidateQueries({ queryKey: [resourceName] });
+    },
+    onError: () => {
+      errorToast(t('toast.error'));
+    },
+  });
+
+  // Restore mutation
+  const restoreMutation = useMutation({
+    mutationFn: (id: string) => {
+      if (!service.restore) throw new Error('Restore not supported');
+      return service.restore(id);
+    },
+    onSuccess: () => {
+      success(t('toast.restore_success', { entity: t(`resources.${resourceName}`) }));
+      void queryClient.invalidateQueries({ queryKey: [resourceName] });
+    },
+    onError: () => {
+      errorToast(t('toast.error'));
+    },
+  });
+
+  // Batch delete mutation
+  const batchDeleteMutation = useMutation({
+    mutationFn: (ids: string[]) => {
+      if (!service.deleteMany) throw new Error('Batch delete not supported');
+      return service.deleteMany(ids);
+    },
+    onSuccess: (_, ids) => {
+      success(t('toast.batch_delete_success', { count: ids.length, entities: t(`resources.${resourceName}`) }));
+      setSelectedIds([]);
+      void queryClient.invalidateQueries({ queryKey: [resourceName] });
+    },
+    onError: () => {
+      errorToast(t('toast.error'));
+    },
+  });
+
+  // Batch restore mutation
+  const batchRestoreMutation = useMutation({
+    mutationFn: (ids: string[]) => {
+      if (!service.restoreMany) throw new Error('Batch restore not supported');
+      return service.restoreMany(ids);
+    },
+    onSuccess: (_, ids) => {
+      success(t('toast.batch_restore_success', { count: ids.length, entities: t(`resources.${resourceName}`) }));
+      setSelectedIds([]);
+      void queryClient.invalidateQueries({ queryKey: [resourceName] });
+    },
+    onError: () => {
+      errorToast(t('toast.error'));
+    },
+  });
+
+  // Batch status mutation
+  const batchStatusMutation = useMutation({
+    mutationFn: ({ ids, isActive }: { ids: string[]; isActive: boolean }) => {
+      if (!service.batchUpdateStatus) throw new Error('Batch status not supported');
+      return service.batchUpdateStatus(ids, isActive);
+    },
+    onSuccess: (_, { ids }) => {
+      success(t('toast.batch_status_success', { count: ids.length }));
+      void queryClient.invalidateQueries({ queryKey: [resourceName] });
+    },
+    onError: () => {
+      errorToast(t('toast.error'));
+    },
+  });
+
+  // ============================================================================
+  // Action Handlers (backward compatible API)
+  // ============================================================================
+  const handleCreate = useCallback(async (data: CreateInput) => {
+    try {
+      await createMutation.mutateAsync(data);
       return true;
     } catch {
-      errorToast(t('toast.error'));
       return false;
-    } finally {
-      setLoading(false);
     }
-  }, [service, resourceName, success, errorToast, t, fetchItems]);
+  }, [createMutation]);
 
   const handleUpdate = useCallback(async (id: string, data: UpdateInput) => {
-    setLoading(true);
     try {
-      await service.update(id, data);
-      success(t('toast.update_success', { entity: t(`resources.${resourceName}`) }));
-      await fetchItems();
+      await updateMutation.mutateAsync({ id, data });
       return true;
     } catch {
-      errorToast(t('toast.error'));
       return false;
-    } finally {
-      setLoading(false);
     }
-  }, [service, resourceName, success, errorToast, t, fetchItems]);
+  }, [updateMutation]);
 
   const handleDelete = useCallback(async (id: string) => {
-    try {
-       await service.delete(id);
-       success(t('toast.delete_success'));
-       await fetchItems();
-    } catch {
-       errorToast(t('toast.error'));
-    }
-  }, [service, success, errorToast, fetchItems, t]);
+    await deleteMutation.mutateAsync(id);
+  }, [deleteMutation]);
 
   const handleRestore = useCallback(async (id: string) => {
-    try {
-       await service.restore(id);
-       success(t('toast.restore_success', { entity: t(`resources.${resourceName}`) }));
-       await fetchItems();
-    } catch {
-       errorToast(t('toast.error'));
-    }
-  }, [service, resourceName, success, errorToast, fetchItems, t]);
+    await restoreMutation.mutateAsync(id);
+  }, [restoreMutation]);
 
-  const handleBatchDelete = async () => {
-     if (selectedIds.length === 0) return;
-     try {
-       await service.deleteMany(selectedIds);
-       success(t('toast.batch_delete_success', { count: selectedIds.length, entities: t(`resources.${resourceName}`) }));
-       setSelectedIds([]);
-       await fetchItems();
-     } catch {
-       errorToast(t('toast.error'));
-     }
-  };
-
-  const handleBatchRestore = async () => {
+  const handleBatchDelete = useCallback(async () => {
     if (selectedIds.length === 0) return;
-     try {
-       await service.restoreMany(selectedIds);
-       success(t('toast.batch_restore_success', { count: selectedIds.length, entities: t(`resources.${resourceName}`) }));
-       setSelectedIds([]);
-       await fetchItems();
-     } catch {
-       errorToast(t('toast.error'));
-     }
-  };
+    await batchDeleteMutation.mutateAsync(selectedIds);
+  }, [selectedIds, batchDeleteMutation]);
 
-  const handleBatchUpdateStatus = async (isActive: boolean) => {
+  const handleBatchRestore = useCallback(async () => {
     if (selectedIds.length === 0) return;
-    try {
-      await service.batchUpdateStatus(selectedIds, isActive);
-      success(t('toast.batch_status_success', { count: selectedIds.length }));
-      await fetchItems();
-    } catch {
-      errorToast(t('toast.error'));
-    }
-  };
+    await batchRestoreMutation.mutateAsync(selectedIds);
+  }, [selectedIds, batchRestoreMutation]);
 
-  const getAllForExport = async (params?: ListParams) => {
+  const handleBatchUpdateStatus = useCallback(async (isActive: boolean) => {
+    if (selectedIds.length === 0) return;
+    await batchStatusMutation.mutateAsync({ ids: selectedIds, isActive });
+  }, [selectedIds, batchStatusMutation]);
+
+  // ============================================================================
+  // Export
+  // ============================================================================
+  const getAllForExport = useCallback(async (params?: ListParams) => {
     setExporting(true);
     try {
       return await service.getAllForExport(params);
@@ -282,11 +391,14 @@ export function useResource<T extends { id: string }, CreateInput, UpdateInput, 
     } finally {
       setExporting(false);
     }
-  };
+  }, [service, resourceName, errorToast, t]);
 
+  // ============================================================================
+  // Return
+  // ============================================================================
   return {
     items,
-    loading,
+    loading: loading || createMutation.isPending || updateMutation.isPending,
     isLoadingMore,
     total,
     queryParams,
