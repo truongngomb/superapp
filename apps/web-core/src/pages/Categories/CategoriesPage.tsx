@@ -30,7 +30,7 @@ import { PermissionGuard } from "@/components/common/PermissionGuard";
 import type { Category, CreateCategoryInput, SortColumn, CategoryListParams } from "@superapp/shared-types";
 import { cn, getStorageItem, setStorageItem } from "@/utils";
 import { STORAGE_KEYS } from "@/config";
-import { useResource, useSort, useDebounce, useAuth, useExcelExport } from "@/hooks";
+import { useResource, useSort, useDebounce, useAuth, useExcelExport, useResponsiveView, useInfiniteResource } from "@/hooks";
 
 
 import { categoryService } from "@/services";
@@ -38,6 +38,8 @@ import { CategoryForm } from "./components/CategoryForm";
 import { CategoryRow } from "./components/CategoryRow";
 import { CategorySkeleton } from "./components/CategorySkeleton";
 import { CategoryTableSkeleton } from "./components/CategoryTableSkeleton";
+import { CategoryMobileList } from "./components/CategoryMobileList";
+import { CategoryMobileCardSkeletonList } from "./components/CategoryMobileCardSkeleton";
 import { CATEGORY_ICONS, type CategoryIcon } from './components/icons';
 
 // Define Resource Types
@@ -102,6 +104,29 @@ export default function CategoriesPage() {
        sort: sortConfig.field,
        order: sortConfig.order
     }
+  });
+
+  // Responsive View - auto-switch to mobile view on small screens
+  const { effectiveView, isMobile } = useResponsiveView(viewMode);
+
+  // Infinite scroll for mobile - only pass required props
+  const infiniteProps = {
+    items: categories,
+    total,
+    queryParams,
+    fetchItems,
+    isLoadingMore,
+  };
+  
+  const {
+    allItems: mobileCategories,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useInfiniteResource({
+    resourceHook: infiniteProps,
+    enabled: isMobile,
+    pageSize: 10,
   });
 
   // Permissions
@@ -351,16 +376,17 @@ export default function CategoriesPage() {
       {/* Resource Toolbar */}
       <ResourceToolbar
         resource="categories"
-        itemCount={categories.length}
+        itemCount={isMobile ? mobileCategories.length : categories.length}
         totalItems={total}
         canSelect={canSelect}
         selectedCount={selectedIds.length}
-        totalListItems={categories.length}
+        totalListItems={isMobile ? mobileCategories.length : categories.length}
         onSelectAll={handleSelectAll}
         viewMode={viewMode}
         onViewModeChange={handleViewModeChange}
         showArchived={showArchived}
         onShowArchivedChange={(checked) => { setShowArchived(checked); setSelectedIds([]); }}
+        isMobile={isMobile}
         batchActions={
           <BatchActionButtons
             resource="categories"
@@ -386,11 +412,11 @@ export default function CategoriesPage() {
           className="min-h-[400px]"
         >
         { (loading && categories.length === 0) || isRefreshing ? (
-           viewMode === 'table' ? (
-              // Using helper or specialized skeleton if needed, otherwise Generic Skeleton works 
-              // but we don't have DataTableSkeleton yet potentially matching columns perfectly without config
-              // reusing CategoryTableSkeleton for now as it matches layout close enough or manual mapping
-                <CategoryTableSkeleton />
+           // Skeleton loading based on view mode
+           effectiveView === 'mobile' ? (
+             <CategoryMobileCardSkeletonList count={5} />
+           ) : effectiveView === 'table' ? (
+             <CategoryTableSkeleton />
            ) : (
              <div className="space-y-0.5">
                {Array.from({ length: 5 }).map((_, i) => <CategorySkeleton key={i} />)}
@@ -410,9 +436,24 @@ export default function CategoriesPage() {
                )}
              </CardContent>
            </Card>
-        ) : (
+         ) : (
           <div className="space-y-2">
-            {viewMode === "table" ? (
+            {/* Mobile View with Infinite Scroll */}
+            {effectiveView === 'mobile' ? (
+              <CategoryMobileList
+                categories={mobileCategories}
+                hasNextPage={hasNextPage}
+                isFetchingNextPage={isFetchingNextPage}
+                fetchNextPage={fetchNextPage}
+                isLoading={loading}
+                selectedIds={canSelect ? selectedIds : []}
+                onSelect={canSelect ? handleSelectOne : undefined}
+                onEdit={handleEdit}
+                onDelete={(id) => { setDeleteId(id); }}
+                onRestore={(id) => { setRestoreId(id); }}
+                onDuplicate={onDuplicate}
+              />
+            ) : effectiveView === 'table' ? (
                <DataTable
                  data={categories}
                  columns={columns}
@@ -444,8 +485,8 @@ export default function CategoriesPage() {
                ))
             )}
 
-             {/* Pagination */}
-             {Math.ceil(total / (queryParams.limit || 10)) > 1 && (
+             {/* Pagination - Hide on mobile (uses infinite scroll instead) */}
+             {!isMobile && Math.ceil(total / (queryParams.limit || 10)) > 1 && (
                <div className="mt-4 relative">
                  {isLoadingMore && (
                    <div className="absolute inset-0 flex items-center justify-center bg-background/50 rounded-lg z-10">

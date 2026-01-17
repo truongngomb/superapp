@@ -43,7 +43,8 @@
   "list": {
     "empty": "No {{entities}} found",
     "empty_search": "No matching {{entities}} found",
-    "add_first": "Add first {{entity}}"
+    "add_first": "Add first {{entity}}",
+    "end_of_list": "You've reached the end"
   },
   "form": {
     "add_title": "Add New {{entity}}",
@@ -185,5 +186,7 @@
     "collapse_all": "Collapse All"
   },
   "archived": "Archived",
-  "no_roles": "No roles"
+  "no_roles": "No roles",
+  "deleted": "Deleted",
+  "duplicate": "Duplicate"
 }

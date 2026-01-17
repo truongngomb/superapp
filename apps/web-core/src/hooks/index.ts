@@ -15,6 +15,9 @@ export * from './useResource';
 export type { UseResourceReturn } from './useResource';
 export * from './useResourceService';
 export * from './usePreferenceSync';
+export * from './useMediaQuery';
+export * from './useResponsiveView';
+export * from './useInfiniteResource';
 
 // Re-exports from core-logic package
 export {

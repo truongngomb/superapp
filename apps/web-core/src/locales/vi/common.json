@@ -44,7 +44,8 @@
   "list": {
     "empty": "Chưa có {{entities}} nào",
     "empty_search": "Không tìm thấy {{entities}} phù hợp",
-    "add_first": "Thêm {{entity}} đầu tiên"
+    "add_first": "Thêm {{entity}} đầu tiên",
+    "end_of_list": "Đã hiển thị hết"
   },
   "form": {
     "add_title": "Thêm mới {{entity}}",
@@ -191,5 +192,7 @@
     "collapse_all": "Thu gọn tất cả"
   },
   "archived": "Đã lưu trữ",
-  "no_roles": "Chưa có vai trò"
+  "no_roles": "Chưa có vai trò",
+  "deleted": "Đã xóa",
+  "duplicate": "Sao chép"
 }

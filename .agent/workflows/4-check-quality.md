@@ -48,6 +48,15 @@ Kiểm tra CHẤT LƯỢNG CODE và ĐỘ ĐỒNG NHẤT (Consistency) tuyệt �
     - Khi search không thấy: Hiện message `list.empty_search`.
     - Có nút "Add First" nếu user có quyền create.
 
+### 6. Responsive & Mobile View
+- [ ] **useResponsiveView**: Sử dụng hook để auto-detect mobile và switch view mode.
+- [ ] **Mobile Card Component**: Có `FeatureMobileCard.tsx` với layout phù hợp màn hình nhỏ.
+- [ ] **Mobile Skeleton**: Có `FeatureMobileCardSkeleton.tsx` match với mobile card.
+- [ ] **Infinite Scroll**: Mobile view sử dụng `useInfiniteResource` thay vì pagination.
+- [ ] **ViewSwitcher Hidden**: Trên mobile, ViewSwitcher bị ẩn (pass `isMobile` prop).
+- [ ] **Batch Actions**: Chỉ hiện icon trên mobile (`hidden sm:inline` cho text).
+- [ ] **Toolbar Layout**: Total items nằm cùng dòng với Select All.
+
 ---
 
 ## PHẦN II: KIỂM TRA CODE STRUCTURE
@@ -60,6 +69,8 @@ Kiểm tra CHẤT LƯỢNG CODE và ĐỘ ĐỒNG NHẤT (Consistency) tuyệt �
 
 ### 2. Hooks & State
 - [ ] Sử dụng `useResource` hoặc `useResourceService` để tối ưu quản lý state?
+- [ ] Responsive: Sử dụng `useResponsiveView` để auto-switch mobile/desktop.
+- [ ] Infinite: Sử dụng `useInfiniteResource` cho mobile infinite scroll.
 - [ ] Lưu trạng thái (Sort, ViewMode) vào LocalStorage thông qua `STORAGE_KEYS` (@/config) và `getStorageItem/setStorageItem` (@/utils).
 
 ### 3. Service & API
@@ -70,6 +81,7 @@ Kiểm tra CHẤT LƯỢNG CODE và ĐỘ ĐỒNG NHẤT (Consistency) tuyệt �
 - [ ] **Không hardcode text**: Tuyệt đối không còn text cứng trong JSX.
 - [ ] **Cấu trúc JSON**: Key nằm trong `locales/{en|vi|ko}/*.json`. 
 - [ ] **Prefix**: Sử dụng `{feature}.{screen}.{element}` hoặc `common:*`.
+- [ ] **Mobile-specific keys**: Đã thêm `list.end_of_list`, `deleted`, `duplicate` nếu cần.
 
 ---
 
@@ -92,8 +104,8 @@ pnpm --filter web-core exec tsc --noEmit
 
 // turbo
 ```bash
-# Kiểm tra Lint cho web-core
-pnpm lint --filter web-core
+# Kiểm tra Lint cho web-core (chạy từ thư mục apps/web-core)
+cd apps/web-core && npx eslint . --max-warnings 0
 ```
 
 ---
@@ -103,7 +115,7 @@ Trả về báo cáo theo cấu trúc:
 
 1. **Kết quả Check Tự động**: [PASS / FAIL] (Kèm log nếu fail)
 2. **Đồng nhất UI (Standard/Modern)**: [PASS / MISMATCH]
-3. **I18n status**: [DONE / MISSING KEYS]
-4. **Backend/Database Integrity**: [READY / ACTION REQUIRED]
-5. **Kết luận**: [READY] hoặc [NEEDS WORK] (Ghi rõ lý do)
-
+3. **Responsive/Mobile**: [PASS / MISSING COMPONENTS]
+4. **I18n status**: [DONE / MISSING KEYS]
+5. **Backend/Database Integrity**: [READY / ACTION REQUIRED]
+6. **Kết luận**: [READY] hoặc [NEEDS WORK] (Ghi rõ lý do)

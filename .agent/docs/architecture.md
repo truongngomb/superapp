@@ -93,32 +93,65 @@ Route → Middleware → Controller → Service → PocketBase
     - Auth check
     - RBAC check
     - Validation
-```
 
 ## Feature Pattern (SSoT: Categories)
 
-Mỗi feature mới PHẢI đồng nhất với Category Management:
-
-```
 Feature/
-├── FeaturePage.tsx          # Main page component
+├── FeaturePage.tsx                     # Main page component
 └── components/
-    ├── FeatureForm.tsx      # Add/Edit form
-    ├── FeatureTable.tsx     # Table view
-    ├── FeatureRow.tsx       # Card/Row view
-    └── FeatureSkeleton.tsx  # Loading skeleton
+    ├── FeatureForm.tsx                 # Add/Edit form
+    ├── FeatureTable.tsx                # Table view
+    ├── FeatureTableSkeleton.tsx        # Table skeleton view
+    ├── FeatureRow.tsx                  # Card/Row view
+    ├── FeatureSkeleton.tsx             # Loading skeleton
+    ├── FeatureMobileCard.tsx           # Mobile card view (optional)
+    ├── FeatureMobileCardSkeleton.tsx   # Mobile skeleton (optional)
+    └── FeatureMobileList.tsx           # Mobile list with infinite scroll (optional)
 ```
 
 ### Required Capabilities
 - [ ] CRUD operations
-- [ ] Pagination (server-side)
+- [ ] Pagination (server-side) - desktop
+- [ ] Infinite scroll (mobile) - via `useInfiniteResource`
 - [ ] Search & Filter
 - [ ] Batch actions (Delete, Restore, Status)
 - [ ] Soft delete with Trash view
 - [ ] Excel export
 - [ ] i18n with entity interpolation
-- [ ] Loading skeletons
+- [ ] Loading skeletons (desktop + mobile)
 - [ ] Permission guards
+- [ ] Responsive view switching (via `useResponsiveView`)
+
+### Responsive View Pattern
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    FeaturePage.tsx                      │
+│  ┌────────────────────────────────────────────────────┐ │
+│  │  useResponsiveView(viewMode)                       │ │
+│  │  → effectiveView: 'mobile' | 'table' | 'list'      │ │
+│  │  → isMobile: boolean                               │ │
+│  └────────────────────────────────────────────────────┘ │
+│                         ↓                               │
+│   ┌──────────────┐   ┌──────────────┐   ┌────────────┐  │
+│   │ Mobile View  │   │ Table View   │   │ List View  │  │
+│   │ (< 768px)    │   │ (Desktop)    │   │ (Desktop)  │  │
+│   │              │   │              │   │            │  │
+│   │ MobileCard   │   │ DataTable    │   │ FeatureRow │  │
+│   │ MobileList   │   │              │   │            │  │
+│   │ + InfScroll  │   │ + Pagination │   │ + Paginate │  │
+│   └──────────────┘   └──────────────┘   └────────────┘  │
+└─────────────────────────────────────────────────────────┘
+```
+
+### Responsive Hooks
+
+| Hook | Purpose |
+|------|---------|
+| `useMediaQuery` | Detect screen size via CSS media queries |
+| `useIsMobile` | Returns true if screen < 768px |
+| `useResponsiveView` | Auto-select view mode based on screen size |
+| `useInfiniteResource` | Extend useResource with infinite scroll |
 
 ## Shared Packages
 

@@ -38,7 +38,8 @@
   "list": {
     "empty": "등록된 {{entities}} 없음",
     "empty_search": "일치하는 {{entities}} 없음",
-    "add_first": "첫 번째 {{entity}} 추가"
+    "add_first": "첫 번째 {{entity}} 추가",
+    "end_of_list": "끝까지 표시되었습니다"
   },
   "form": {
     "add_title": "새 {{entity}} 추가",
@@ -183,5 +184,7 @@
     "view_raw": "원시 JSON 데이터",
     "expand_all": "모두 펼치기",
     "collapse_all": "모두 접기"
-  }
+  },
+  "deleted": "삭제됨",
+  "duplicate": "복제"
 }
