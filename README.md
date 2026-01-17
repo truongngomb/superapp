@@ -9,6 +9,7 @@ my-project/
 ├── apps/
 │   ├── api-server/          # Backend API (Express, PocketBase)
 │   └── web-core/            # Frontend SPA (React, Vite, Capacitor)
+├── deploy/                  # Docker & Deployment configuration
 ├── packages/
 │   ├── shared-types/        # Shared TypeScript types & Zod schemas
 │   ├── core-logic/          # Shared hooks & utilities
@@ -20,6 +21,13 @@ my-project/
 - **[apps/web-core/](apps/web-core/README.md)**: Frontend application (React 19, TS, Vite, Capacitor)
 - **[apps/api-server/](apps/api-server/README.md)**: Backend application (Node.js, Express, PocketBase)
 
+## � Technology Stack
+
+- **Frontend**: React 19, TypeScript, Vite, TanStack Query, Shadcn UI (TailwindCSS)
+- **Backend**: Node.js, Express, PocketBase (Auth/DB), Scalar (API Docs)
+- **Mobile**: Capacitor (Android/iOS)
+- **Infrastructure**: Docker, Nginx
+
 ## ✨ Features
 
 - **Authentication**: Google OAuth, session management
@@ -28,6 +36,8 @@ my-project/
 - **Role Management**: Permissions configuration
 - **Category Management**: Single Source of Truth (SSoT) pattern
 - **Activity Logs**: Audit trail for all actions
+- **System Settings**: Configurable system parameters
+- **API Documentation**: Interactive documentation via Scalar
 - **Internationalization**: 3 languages (EN, VI, KO)
 - **Responsive UI**: Mobile-first with responsive components
 - **Dark/Light Theme**: System and manual toggle
@@ -92,6 +102,16 @@ pnpm android:open
 # Open Xcode (macOS only)
 pnpm ios:open
 ```
+
+## 🐳 Docker Deployment
+
+The project includes a production-ready Docker setup serving both frontend and backend.
+
+See **[deploy/DEPLOYMENT.md](deploy/DEPLOYMENT.md)** for detailed instructions on:
+- Building the Docker image
+- Running locally with Docker
+- Deploying to EasyPanel
+- Environment configurations
 
 ## 🔒 Security
 
