@@ -292,7 +292,7 @@ export default function UsersPage() {
       id: 'actions',
       header: t('common:actions.label'),
       align: 'right',
-      width: '120px',
+      width: '160px',
       cell: ({ row }) => {
         const user = row.original;
         return (

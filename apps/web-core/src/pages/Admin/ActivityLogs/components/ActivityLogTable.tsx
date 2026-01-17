@@ -107,7 +107,7 @@ export function ActivityLogTable({
       accessorKey: 'created',
       header: t('table.time'),
       enableSorting: true,
-      width: '180px',
+      width: '200px',
       cell: ({ row }) => {
         const log = row.original;
         return (

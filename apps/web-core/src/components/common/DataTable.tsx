@@ -239,7 +239,8 @@ function DataTableInner<T>({
             <div
               key={cell.id}
               className={cn(
-                "px-4 text-sm truncate h-full flex items-center",
+                "px-4 text-sm h-full flex items-center",
+                cell.column.id !== 'actions' && "truncate",
                 colDef.align === 'center' && "justify-center text-center",
                 colDef.align === 'right' && "justify-end text-right",
                 colDef.className
@@ -366,7 +367,8 @@ function DataTableInner<T>({
                     <div
                       key={cell.id}
                       className={cn(
-                        "px-4 text-sm truncate h-full flex items-center",
+                        "px-4 text-sm h-full flex items-center",
+                        cell.column.id !== 'actions' && "truncate",
                         colDef.align === 'center' && "justify-center text-center",
                         colDef.align === 'right' && "justify-end text-right",
                         colDef.className

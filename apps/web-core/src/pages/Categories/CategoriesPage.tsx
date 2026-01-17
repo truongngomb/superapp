@@ -255,7 +255,7 @@ export default function CategoriesPage() {
       id: 'actions',
       header: t('common:actions.label'),
       align: 'right',
-      size: 120,
+      size: 160,
       cell: ({ row }) => {
         const category = row.original;
         return (

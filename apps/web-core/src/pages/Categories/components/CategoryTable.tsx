@@ -58,7 +58,7 @@ export function CategoryTable({
             <th className="w-32 h-12 px-4 text-left font-medium">
               {t('common:status')}
             </th>
-            <th className="w-32 h-12 px-4 text-right font-medium">
+            <th className="w-40 h-12 px-4 text-right font-medium">
               {t('common:actions.label')}
             </th>
           </tr>

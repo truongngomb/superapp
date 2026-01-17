@@ -224,7 +224,7 @@ export default function RolesPage() {
       id: 'actions',
       header: t('common:actions.label'),
       align: 'right',
-      width: '160px',
+      width: '180px',
       cell: ({ row }) => {
         const role = row.original;
         return (
