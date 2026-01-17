@@ -5,25 +5,12 @@
 import { adminPb, ensureAdminAuth } from '../config/index.js';
 import { CollectionNames } from '../database/collections/index.js';
 import { createLogger } from '../utils/index.js';
+import { SettingVisibility, type SettingVisibilityType, type SettingItem } from '@superapp/shared-types';
+
+// Re-export for convenience
+export { SettingVisibility, type SettingVisibilityType, type SettingItem };
 
 const log = createLogger('SettingsService');
-
-/**
- * Setting visibility levels
- */
-export const SettingVisibility = {
-  PUBLIC: 'public',
-  ADMIN: 'admin',
-  SECRET: 'secret',
-} as const;
-
-export type SettingVisibilityType = typeof SettingVisibility[keyof typeof SettingVisibility];
-
-export interface SettingItem {
-  key: string;
-  value: unknown;
-  visibility: SettingVisibilityType;
-}
 
 /**
  * Settings Service

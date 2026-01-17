@@ -11,7 +11,6 @@ export * from './ColorPicker';
 export * from './LanguageSwitcher';
 export * from './Toast';
 export * from './DataTable';
-export * from './Avatar';
 export * from './ResourceToolbar';
 export * from './BatchActionButtons';
 export * from './PageHeader';

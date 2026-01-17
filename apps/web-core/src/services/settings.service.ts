@@ -3,12 +3,10 @@
  * Frontend service for interacting with the settings API
  */
 import { api } from '@/config';
+import type { SettingItem } from '@superapp/shared-types';
 
-export interface SettingItem {
-  key: string;
-  value: unknown;
-  visibility?: 'public' | 'admin' | 'secret';
-}
+// Re-export for convenience
+export type { SettingItem };
 
 export const settingsService = {
   /**

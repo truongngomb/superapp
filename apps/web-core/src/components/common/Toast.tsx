@@ -1,8 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertCircle, CheckCircle, Info, X, XCircle } from 'lucide-react';
 import { cn } from '@/utils';
-
-type ToastType = 'success' | 'error' | 'warning' | 'info';
+import type { ToastType } from '@superapp/shared-types';
 
 interface ToastProps {
   message: string;

@@ -1,3 +1,31 @@
+// ============================================================================
+// Settings Types
+// ============================================================================
+
+/**
+ * Setting visibility levels
+ */
+export const SettingVisibility = {
+  PUBLIC: 'public',
+  ADMIN: 'admin',
+  SECRET: 'secret',
+} as const;
+
+export type SettingVisibilityType = typeof SettingVisibility[keyof typeof SettingVisibility];
+
+/**
+ * Setting item structure
+ */
+export interface SettingItem {
+  key: string;
+  value: unknown;
+  visibility?: SettingVisibilityType;
+}
+
+// ============================================================================
+// System Stats Types
+// ============================================================================
+
 export interface SystemStats {
   cpu: {
     manufacturer: string;

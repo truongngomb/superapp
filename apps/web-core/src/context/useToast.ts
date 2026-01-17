@@ -1,6 +1,8 @@
 import { createContext, useContext } from 'react';
+import type { ToastType } from '@superapp/shared-types';
 
-export type ToastType = 'success' | 'error' | 'warning' | 'info';
+// Re-export for convenience
+export type { ToastType };
 
 export interface ToastOptions {
   message: string;
