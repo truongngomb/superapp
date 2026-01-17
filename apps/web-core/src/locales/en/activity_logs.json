@@ -9,5 +9,18 @@
     "resource": "Resource",
     "details": "Details",
     "time": "Time"
+  },
+  "actions": {
+    "create": "Create",
+    "update": "Update",
+    "delete": "Delete",
+    "login": "Login",
+    "logout": "Logout"
+  },
+  "resources": {
+    "users": "Users",
+    "categories": "Categories",
+    "roles": "Roles",
+    "activity_logs": "Activity Logs"
   }
 }

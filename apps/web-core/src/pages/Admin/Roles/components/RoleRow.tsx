@@ -45,7 +45,7 @@ export function RoleRow({ index, style, data, isSelected, onSelect }: RoleRowPro
             variant="ghost"
             size="sm"
             onClick={(e) => { e.stopPropagation(); data.onDuplicate?.(role); }}
-            aria-label={t('common:duplicate', { defaultValue: 'Duplicate' })}
+            aria-label={t('common:duplicate')}
           >
             <Copy className="w-4 h-4 text-blue-500" />
           </Button>
@@ -63,7 +63,7 @@ export function RoleRow({ index, style, data, isSelected, onSelect }: RoleRowPro
                   data.onRestore(role.id);
                 }
             }}
-            aria-label={t('common:restore', { defaultValue: 'Restore' })}
+            aria-label={t('common:restore')}
           >
             <RotateCcw className="w-4 h-4 text-primary" />
           </Button>

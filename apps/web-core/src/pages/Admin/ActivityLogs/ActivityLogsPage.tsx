@@ -125,7 +125,7 @@ export default function ActivityLogsPage() {
     fileNamePrefix: 'activity_logs',
     sheetName: t('activity_logs:title'),
     columns: [
-      { key: '#', header: t('common:order', { defaultValue: '#' }), width: 8 },
+      { key: '#', header: t('common:order'), width: 8 },
       { key: 'expand.user.name', header: t('activity_logs:table.user'), width: 20 },
       { key: 'action', header: t('activity_logs:table.action'), width: 12 },
       { key: 'resource', header: t('activity_logs:table.resource'), width: 15 },
@@ -145,8 +145,8 @@ export default function ActivityLogsPage() {
     // Translate action and resource for export
     const translatedData = allData.map(log => ({
       ...log,
-      action: t(`activity_logs:actions.${log.action}`, { defaultValue: log.action.toUpperCase() }),
-      resource: t(`activity_logs:resources.${log.resource}`, { defaultValue: log.resource })
+      action: t(`activity_logs:actions.${log.action}`),
+      resource: t(`activity_logs:resources.${log.resource}`)
     }));
 
     await exportToExcel(translatedData as unknown as ActivityLog[]);
@@ -170,8 +170,8 @@ export default function ActivityLogsPage() {
                 onClick={() => { void handleExport(); }}
                 disabled={exporting || logs.length === 0}
                 className="h-10 w-10 p-0 text-[#217346] hover:bg-[#217346]/10"
-                title={t('common:export', { defaultValue: 'Export Excel' })}
-                aria-label={t('common:export', { defaultValue: 'Export Excel' })}
+                title={t('common:export_excel')}
+                aria-label={t('common:export_excel')}
               >
                 {exporting ? (
                   <Loader2 className="w-6 h-6 animate-spin" />

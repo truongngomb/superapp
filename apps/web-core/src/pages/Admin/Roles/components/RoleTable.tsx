@@ -134,7 +134,7 @@ export function RoleTable({
                           variant="ghost"
                           size="sm"
                           onClick={() => { onDuplicate(role); }}
-                          aria-label={t('common:duplicate', { defaultValue: 'Duplicate' })}
+                          aria-label={t('common:duplicate')}
                         >
                           <Copy className="w-4 h-4 text-blue-500" />
                         </Button>
@@ -147,7 +147,7 @@ export function RoleTable({
                           variant="ghost"
                           size="sm"
                           onClick={() => { onRestore(role.id); }}
-                          aria-label={t('common:restore', { defaultValue: 'Restore' })}
+                          aria-label={t('common:restore')}
                         >
                           <RotateCcw className="w-4 h-4 text-primary" />
                         </Button>

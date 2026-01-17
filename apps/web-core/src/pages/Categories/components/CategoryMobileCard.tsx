@@ -142,7 +142,7 @@ export function CategoryMobileCard({
               <div className="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0">
                 <FileText className="w-3.5 h-3.5 text-blue-400" />
               </div>
-              <span className="text-sm">{t('categories:form.description', { defaultValue: 'Description' })}:</span>
+              <span className="text-sm">{t('common:form.description')}:</span>
             </div>
             <span className="ml-auto text-sm font-semibold text-foreground text-right max-w-[60%] truncate">
               {category.description}

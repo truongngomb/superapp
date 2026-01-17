@@ -53,7 +53,7 @@ export function UserRow({ index, style, data, isSelected, onSelect }: UserRowPro
             variant="ghost"
             size="sm"
             onClick={(e) => { e.stopPropagation(); data.onRestore(user.id); }}
-            aria-label={t('common:restore', { defaultValue: 'Restore' })}
+            aria-label={t('common:restore')}
           >
             <RotateCcw className="w-4 h-4 text-primary" />
           </Button>
@@ -64,7 +64,7 @@ export function UserRow({ index, style, data, isSelected, onSelect }: UserRowPro
           variant="ghost"
           size="sm"
           onClick={(e) => { e.stopPropagation(); data.onDelete(user.id); }}
-          aria-label={user.isDeleted ? t('common:delete') : t('common:archive', { defaultValue: 'Archive' })}
+          aria-label={user.isDeleted ? t('common:delete') : t('common:archive')}
         >
           <Trash2 className={cn("w-4 h-4", user.isDeleted ? "text-red-700" : "text-red-500")} />
         </Button>
@@ -93,7 +93,7 @@ export function UserRow({ index, style, data, isSelected, onSelect }: UserRowPro
           <span>{user.name || user.email}</span>
           {user.isDeleted && (
             <Badge variant="danger" size="sm">
-              {t('common:archived', { defaultValue: 'Archived' })}
+              {t('common:archived')}
             </Badge>
           )}
         </div>

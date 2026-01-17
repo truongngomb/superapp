@@ -516,7 +516,7 @@ export default function RolesPage() {
 
        <ConfirmModal
         isOpen={!!restoreId}
-        title={t("common:restore", { defaultValue: "Restore" })}
+        title={t("common:restore")}
         message={t("common:confirmation.restore", { entity: t("roles:entity") })}
         confirmText={t("common:confirm")}
         cancelText={t("common:cancel")}

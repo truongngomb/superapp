@@ -49,8 +49,10 @@
   },
   "form": {
     "add_title": "Thêm mới {{entity}}",
-    "edit_title": "Chỉnh sửa {{entity}}"
+    "edit_title": "Chỉnh sửa {{entity}}",
+    "description": "Mô tả"
   },
+  "role": "Vai trò",
   "actions": {
     "label": "Thao tác",
     "create": "Tạo",
@@ -194,5 +196,8 @@
   "archived": "Đã lưu trữ",
   "no_roles": "Chưa có vai trò",
   "deleted": "Đã xóa",
-  "duplicate": "Sao chép"
+  "duplicate": "Sao chép",
+  "archive": "Lưu trữ",
+  "password": "Mật khẩu",
+  "password_confirm": "Xác nhận mật khẩu"
 }

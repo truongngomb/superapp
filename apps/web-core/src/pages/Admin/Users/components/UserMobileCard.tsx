@@ -131,7 +131,7 @@ export function UserMobileCard({
               <div className="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0">
                 <Mail className="w-3.5 h-3.5 text-blue-400" />
               </div>
-              <span className="text-sm">{t('users:form.email', { defaultValue: 'Email' })}:</span>
+              <span className="text-sm">{t('common:email')}:</span>
             </div>
             <span className="ml-auto text-sm font-semibold text-foreground text-right truncate max-w-[60%]">
               {user.email}
@@ -144,7 +144,7 @@ export function UserMobileCard({
              <div className="w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0">
                <Shield className="w-3.5 h-3.5 text-purple-400" />
              </div>
-             <span className="text-sm">{t('users:form.role', { defaultValue: 'Role' })}:</span>
+             <span className="text-sm">{t('common:role')}:</span>
            </div>
            <div className="ml-auto flex flex-wrap justify-end gap-1 max-w-[70%]">
              {user.roles && user.roles.length > 0 ? (

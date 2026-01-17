@@ -172,8 +172,8 @@ export function UserTable({
                       variant="ghost"
                       size="sm"
                       onClick={() => { onDelete(user.id); }}
-                      aria-label={user.isDeleted ? t('common:delete') : t('common:archive', { defaultValue: 'Archive' })}
-                      title={user.isDeleted ? t('common:delete') : t('common:archive', { defaultValue: 'Archive' })}
+                      aria-label={user.isDeleted ? t('common:delete') : t('common:archive')}
+                      title={user.isDeleted ? t('common:delete') : t('common:archive')}
                     >
                       <Trash2 className={cn("w-4 h-4", user.isDeleted ? "text-red-700" : "text-red-500")} />
                     </Button>

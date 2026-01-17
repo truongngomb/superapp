@@ -120,7 +120,7 @@ export function ActivityLogMobileCard({
            </div>
            <div className="flex-1 text-right">
               <Badge className={cn("text-xs capitalize border shadow-none", actionColor)}>
-                 {t(`activity_logs:actions.${log.action}`, { defaultValue: log.action })}
+                 {t(`activity_logs:actions.${log.action}`)}
               </Badge>
            </div>
         </div>
@@ -133,7 +133,7 @@ export function ActivityLogMobileCard({
            <div className="flex-1 text-right">
               <Badge variant="secondary" className="text-xs capitalize inline-flex items-center gap-1">
                  <Activity className="w-3 h-3 opacity-70" />
-                 {t(`activity_logs:resources.${log.resource}`, { defaultValue: log.resource })}
+                 {t(`activity_logs:resources.${log.resource}`)}
               </Badge>
            </div>
         </div>

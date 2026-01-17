@@ -9,5 +9,18 @@
     "resource": "리소스",
     "details": "세부 정보",
     "time": "시간"
+  },
+  "actions": {
+    "create": "생성",
+    "update": "수정",
+    "delete": "삭제",
+    "login": "로그인",
+    "logout": "로그아웃"
+  },
+  "resources": {
+    "users": "사용자",
+    "categories": "카테고리",
+    "roles": "역할",
+    "activity_logs": "활동 로그"
   }
 }

@@ -48,8 +48,10 @@
   },
   "form": {
     "add_title": "Add New {{entity}}",
-    "edit_title": "Edit {{entity}}"
+    "edit_title": "Edit {{entity}}",
+    "description": "Description"
   },
+  "role": "Role",
   "actions": {
     "label": "Actions",
     "create": "Create",
@@ -188,5 +190,8 @@
   "archived": "Archived",
   "no_roles": "No roles",
   "deleted": "Deleted",
-  "duplicate": "Duplicate"
+  "duplicate": "Duplicate",
+  "archive": "Archive",
+  "password": "Password",
+  "password_confirm": "Confirm Password"
 }

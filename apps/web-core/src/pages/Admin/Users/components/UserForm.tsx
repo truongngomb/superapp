@@ -121,19 +121,19 @@ export function UserForm({ user, onSubmit, onClose, loading, isOpen }: UserFormP
               required
             />
             <Input
-              label={t('common:password', { defaultValue: 'Password' })}
+              label={t('common:password')}
               type="password"
               value={password}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setPassword(e.target.value); }}
               required
             />
             <Input
-              label={t('common:password_confirm', { defaultValue: 'Confirm Password' })}
+              label={t('common:password_confirm')}
               type="password"
               value={passwordConfirm}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setPasswordConfirm(e.target.value); }}
               required
-              error={password !== passwordConfirm && passwordConfirm !== '' ? t('auth:error.password_mismatch', { defaultValue: 'Passwords do not match' }) : undefined}
+              error={password !== passwordConfirm && passwordConfirm !== '' ? t('auth:error.password_mismatch') : undefined}
             />
           </>
         )}

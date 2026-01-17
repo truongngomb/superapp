@@ -74,7 +74,7 @@ export function ActivityLogTable({
           log.action === 'login' && "bg-purple-500/10 text-purple-500 border-purple-500/20",
           log.action === 'logout' && "bg-orange-500/10 text-orange-500 border-orange-500/20",
         )}>
-          {t(`actions.${log.action}`, { defaultValue: log.action.toUpperCase() })}
+          {t(`activity_logs:actions.${log.action}`)}
         </span>
       )}
     },
@@ -86,7 +86,7 @@ export function ActivityLogTable({
         const log = row.original;
         return (
         <span className="capitalize text-muted-foreground">
-          {t(`resources.${log.resource}`, { defaultValue: log.resource })}
+          {t(`activity_logs:resources.${log.resource}`)}
         </span>
       )}
     },

@@ -253,8 +253,8 @@ export default function ApiDocsPage() {
                 ? 'bg-background text-primary shadow-sm'
                 : 'text-muted hover:text-foreground hover:bg-muted/30'
             )}
-            title={t('api_docs.view_reference', { defaultValue: 'Interactive Reference' })}
-            aria-label={t('api_docs.view_reference', { defaultValue: 'Interactive Reference' })}
+            title={t('api_docs:view_reference')}
+            aria-label={t('api_docs:view_reference')}
             aria-pressed={viewMode === 'reference'}
           >
             <BookOpen className="w-4 h-4" />
@@ -271,8 +271,8 @@ export default function ApiDocsPage() {
                 ? 'bg-background text-primary shadow-sm'
                 : 'text-muted hover:text-foreground hover:bg-muted/30'
             )}
-            title={t('api_docs.view_raw', { defaultValue: 'Raw JSON' })}
-            aria-label={t('api_docs.view_raw', { defaultValue: 'Raw JSON' })}
+            title={t('api_docs:view_raw')}
+            aria-label={t('api_docs:view_raw')}
             aria-pressed={viewMode === 'raw'}
           >
             <FileJson className="w-4 h-4" />
