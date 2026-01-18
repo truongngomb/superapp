@@ -8,19 +8,26 @@
   
   "form": {
     "title": "Title",
+    "title_placeholder": "Ex: About Us",
     "slug": "URL Slug",
+    "slug_placeholder": "ex: about-us",
     "slug_help": "Unique identifier for URL (e.g., about-us)",
     "auto_generate_slug": "Auto-generate from title",
     "content": "Content",
     "excerpt": "Excerpt",
+    "excerpt_placeholder": "Short summary for SEO and previews...",
     "icon": "Icon",
+    "icon_placeholder": "e.g. settings, home (Lucide icon name)",
     "cover_image": "Cover Image",
     "show_in_menu": "Show in Menu",
     "menu_position": "Menu Position",
     "parent_page": "Parent Page",
     "order": "Order",
     "published": "Published",
-    "published_help": "Visible to public"
+    "published_help": "Visible to public",
+    "settings": "Settings",
+    "assets": "Assets",
+    "select_position": "Select position"
   },
   
   "menu_position": {

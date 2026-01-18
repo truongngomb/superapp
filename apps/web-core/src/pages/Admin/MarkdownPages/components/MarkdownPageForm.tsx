@@ -167,7 +167,7 @@ export function MarkdownPageForm({
               <label className="text-sm font-medium">{t('form.title')}</label>
               <Input
                 {...register('title')}
-                placeholder="Ex: About Us"
+                placeholder={t('form.title_placeholder')}
                 error={errors.title?.message}
                 autoFocus
               />
@@ -184,7 +184,7 @@ export function MarkdownPageForm({
                 <Input
                   {...register('slug')}
                   className="pl-9 pr-10"
-                  placeholder="ex: about-us"
+                  placeholder={t('form.slug_placeholder')}
                   error={errors.slug?.message}
                 />
                 <Button
@@ -226,7 +226,7 @@ export function MarkdownPageForm({
               <label className="text-sm font-medium">{t('form.excerpt')}</label>
               <Textarea
                 {...register('excerpt')}
-                placeholder="Short summary for SEO and previews..."
+                placeholder={t('form.excerpt_placeholder')}
                 rows={3}
               />
             </div>
@@ -239,7 +239,7 @@ export function MarkdownPageForm({
             <div className="bg-surface/50 p-4 rounded-lg border space-y-4">
               <h3 className="font-semibold text-sm flex items-center gap-2">
                 <FileText className="w-4 h-4" />
-                Settings
+                {t('form.settings')}
               </h3>
               
               <div className="flex items-center justify-between">
@@ -284,7 +284,7 @@ export function MarkdownPageForm({
                       render={({ field }) => (
                         <Select value={field.value} onValueChange={field.onChange}>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select position" />
+                            <SelectValue placeholder={t('form.select_position')} />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="header">{t('menu_position.header')}</SelectItem>
@@ -311,7 +311,7 @@ export function MarkdownPageForm({
             <div className="bg-surface/50 p-4 rounded-lg border space-y-4">
               <h3 className="font-semibold text-sm flex items-center gap-2">
                 <ImageIcon className="w-4 h-4" />
-                Assets
+                {t('form.assets')}
               </h3>
 
               <div className="space-y-2">
@@ -335,7 +335,7 @@ export function MarkdownPageForm({
                 <label className="text-xs font-medium">{t('form.icon')}</label>
                 <Input
                   {...register('icon')}
-                  placeholder="e.g. settings, home (Lucide icon name)"
+                  placeholder={t('form.icon_placeholder')}
                 />
               </div>
             </div>
@@ -346,10 +346,10 @@ export function MarkdownPageForm({
         {/* Footer Actions */}
         <div className="flex justify-end gap-3 pt-4 border-t">
           <Button type="button" variant="outline" onClick={onClose} disabled={submitting}>
-            {t('common:action.cancel')}
+            {t('common:actions.cancel')}
           </Button>
           <Button type="submit" loading={submitting}>
-            {isEdit ? t('common:action.save') : t('common:action.create')}
+            {isEdit ? t('common:actions.save') : t('common:actions.create')}
           </Button>
         </div>
       </form>

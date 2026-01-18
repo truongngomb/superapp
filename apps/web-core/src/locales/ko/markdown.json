@@ -8,19 +8,26 @@
   
   "form": {
     "title": "제목",
+    "title_placeholder": "예: 회사 소개",
     "slug": "URL 슬러그",
+    "slug_placeholder": "예: about-us",
     "slug_help": "URL용 고유 식별자 (예: about-us)",
     "auto_generate_slug": "제목에서 자동 생성",
     "content": "내용",
     "excerpt": "요약",
+    "excerpt_placeholder": "SEO 및 미리보기를 위한 짧은 요약...",
     "icon": "아이콘",
+    "icon_placeholder": "예: settings, home (Lucide 아이콘 이름)",
     "cover_image": "커버 이미지",
     "show_in_menu": "메뉴에 표시",
     "menu_position": "메뉴 위치",
     "parent_page": "상위 페이지",
     "order": "순서",
     "published": "게시됨",
-    "published_help": "공개적으로 표시"
+    "published_help": "공개적으로 표시",
+    "settings": "설정",
+    "assets": "에셋",
+    "select_position": "위치 선택"
   },
   
   "menu_position": {

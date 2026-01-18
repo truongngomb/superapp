@@ -117,7 +117,7 @@ export function UserForm({ user, onSubmit, onClose, loading, isOpen }: UserFormP
               type="email"
               value={email}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setEmail(e.target.value); }}
-              placeholder="example@domain.com"
+              placeholder={t('users:form.email_placeholder')}
               required
             />
             <Input

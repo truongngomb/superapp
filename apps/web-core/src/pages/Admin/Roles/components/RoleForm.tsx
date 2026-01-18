@@ -133,7 +133,7 @@ export function RoleForm({ role, onSubmit, onClose, loading, isOpen }: RoleFormP
           <div className="border border-border rounded-lg p-4 space-y-4 bg-background">
             {resources.map(resource => (
               <div key={resource} className="border-b border-border pb-3 last:border-0 last:pb-0">
-                <div className="font-medium capitalize mb-2 text-foreground">{resource}</div>
+                <div className="font-medium capitalize mb-2 text-foreground">{t(`common:resources.${resource}`)}</div>
                 <div className="flex flex-wrap gap-4">
                   {PERMISSIONS.ACTIONS.map(action => {
                     const isChecked = formData.permissions[resource]?.includes(action);
@@ -145,7 +145,7 @@ export function RoleForm({ role, onSubmit, onClose, loading, isOpen }: RoleFormP
                           onChange={() => { handleTogglePermission(resource, action); }}
                           className="rounded border-border"
                         />
-                        <span className="capitalize">{action}</span>
+                        <span className="capitalize">{t(`common:actions.${action}`)}</span>
                       </label>
                     );
                   })}

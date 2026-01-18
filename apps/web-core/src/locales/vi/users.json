@@ -9,6 +9,7 @@
     "name_label": "Tên",
     "name_placeholder": "Nhập tên người dùng",
     "email_label": "Email",
+    "email_placeholder": "vi-du@domain.com",
     "role_label": "Vai trò",
     "roles_label": "Vai trò",
     "no_role": "Chưa có vai trò",

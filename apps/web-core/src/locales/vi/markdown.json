@@ -8,19 +8,26 @@
   
   "form": {
     "title": "Tiêu đề",
+    "title_placeholder": "VD: Giới thiệu",
     "slug": "Đường dẫn (Slug)",
+    "slug_placeholder": "vd: gioi-thieu",
     "slug_help": "Định danh duy nhất trên URL (vd: gioi-thieu)",
     "auto_generate_slug": "Tự động tạo từ tiêu đề",
     "content": "Nội dung",
     "excerpt": "Tóm tắt",
+    "excerpt_placeholder": "Tóm tắt ngắn gọn cho SEO và xem trước...",
     "icon": "Biểu tượng",
+    "icon_placeholder": "VD: settings, home (tên icon Lucide)",
     "cover_image": "Ảnh bìa",
     "show_in_menu": "Hiện trên menu",
     "menu_position": "Vị trí menu",
     "parent_page": "Trang cha",
     "order": "Thứ tự",
     "published": "Đã xuất bản",
-    "published_help": "Hiển thị công khai"
+    "published_help": "Hiển thị công khai",
+    "settings": "Cài đặt",
+    "assets": "Tài nguyên",
+    "select_position": "Chọn vị trí"
   },
   
   "menu_position": {

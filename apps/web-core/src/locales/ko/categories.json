@@ -10,6 +10,7 @@
     "desc_label": "설명",
     "desc_placeholder": "설명 입력",
     "color_label": "색상",
+    "icon_label": "아이콘",
     "active_label": "활성",
     "active_description": "카테고리가 표시되고 사용 가능함",
     "copy_suffix": " (사본)"

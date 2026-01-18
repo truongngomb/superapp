@@ -10,6 +10,7 @@
     "desc_label": "Mô tả",
     "desc_placeholder": "Nhập mô tả",
     "color_label": "Màu sắc",
+    "icon_label": "Biểu tượng",
     "active_label": "Hoạt động",
     "active_description": "Danh mục hiển thị và có thể sử dụng",
     "copy_suffix": " (Bản sao)"

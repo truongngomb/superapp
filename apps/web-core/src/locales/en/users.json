@@ -9,6 +9,7 @@
     "name_label": "Name",
     "name_placeholder": "Enter user name",
     "email_label": "Email",
+    "email_placeholder": "example@domain.com",
     "role_label": "Role",
     "roles_label": "Roles",
     "no_role": "No roles assigned",

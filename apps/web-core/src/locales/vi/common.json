@@ -84,7 +84,8 @@
     "users": "Người dùng",
     "categories": "Danh mục",
     "roles": "Vai trò",
-    "activity_logs": "Nhật ký"
+    "activity_logs": "Nhật ký",
+    "markdown_pages": "Trang Markdown"
   },
   "remove_success": "Đã xóa thành công",
   "remove_error": "Lỗi khi xóa",

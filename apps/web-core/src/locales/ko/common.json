@@ -78,7 +78,8 @@
     "users": "사용자",
     "categories": "카테고리",
     "roles": "역할",
-    "activity_logs": "활동 로그"
+    "activity_logs": "활동 로그",
+    "markdown_pages": "마크다운 페이지"
   },
   "success": "성공",
   "name": "이름",

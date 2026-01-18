@@ -92,7 +92,7 @@ export function CategoryForm({ isOpen, category, onSubmit, onClose, loading }: C
           </div>
 
           <div className="flex flex-col gap-1.5">
-             <label className="text-sm font-medium text-foreground">{t('categories:form.active_label', { defaultValue: 'Status' })}</label>
+             <label className="text-sm font-medium text-foreground">{t('categories:form.active_label')}</label>
              <Toggle
                 checked={formData.isActive ?? true}
                 onChange={(checked) => { setFormData({ ...formData, isActive: checked }); }}
@@ -103,7 +103,7 @@ export function CategoryForm({ isOpen, category, onSubmit, onClose, loading }: C
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-foreground">{t('categories:form.icon_label', { defaultValue: 'Icon' })}</label>
+          <label className="text-sm font-medium text-foreground">{t('categories:form.icon_label')}</label>
           <IconPicker 
             value={formData.icon} 
             onChange={(icon) => { setFormData({ ...formData, icon }); }} 

@@ -10,6 +10,7 @@
     "desc_label": "Description",
     "desc_placeholder": "Enter description",
     "color_label": "Color",
+    "icon_label": "Icon",
     "active_label": "Active",
     "active_description": "Category is visible and available for use",
     "copy_suffix": " (Copy)"

@@ -83,7 +83,8 @@
     "users": "Users",
     "categories": "Categories",
     "roles": "Roles",
-    "activity_logs": "Activity Logs"
+    "activity_logs": "Activity Logs",
+    "markdown_pages": "Markdown Pages"
   },
   "success": "Success",
   "name": "Name",
