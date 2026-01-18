@@ -2,7 +2,9 @@ import { useCallback, useMemo, useState, useRef } from 'react';
 import { useOnClickOutside } from '@superapp/core-logic';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/utils';
 import { ChevronDown } from 'lucide-react';
+import { Button } from './index';
 
 const LANGUAGES = {
   vi: { flag: 'vn', name: 'Tiếng Việt' },
@@ -43,18 +45,18 @@ export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <motion.button
-        type="button"
-        whileTap={{ scale: 0.95 }}
+      <Button
+        variant="ghost"
+        size="sm"
         onClick={() => { setIsOpen(!isOpen); }}
-        className={`p-2 rounded-lg transition-colors flex items-center gap-1 ${className || 'hover:bg-surface'}`}
+        className={cn('flex items-center gap-1', className || 'hover:bg-surface')}
         aria-label={t('actions_menu.change_language')}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
       >
         <span className={`fi fi-${currentLang.flag} text-lg`} />
         <ChevronDown className={`w-3 h-3 text-muted transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-      </motion.button>
+      </Button>
 
       <AnimatePresence>
         {isOpen && (
@@ -70,18 +72,21 @@ export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
               const lang = LANGUAGES[langCode];
               const isActive = langCode === currentLangCode;
               return (
-                <button
+                <Button
                   key={langCode}
-                  type="button"
+                  variant="ghost"
+                  size="sm"
                   role="option"
                   aria-selected={isActive}
                   onClick={() => { handleSelect(langCode); }}
-                  className={`w-full px-3 py-2 flex items-center gap-2 text-sm transition-colors
-                    ${isActive ? 'bg-primary/10 text-primary' : 'hover:bg-surface text-foreground'}`}
+                  className={cn(
+                    'w-full justify-start gap-2',
+                    isActive ? 'bg-primary/10 text-primary' : 'text-foreground'
+                  )}
                 >
                   <span className={`fi fi-${lang.flag}`} />
                   <span>{lang.name}</span>
-                </button>
+                </Button>
               );
             })}
           </motion.div>

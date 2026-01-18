@@ -1,4 +1,11 @@
 import { useTranslation } from 'react-i18next';
+import { 
+  Select, 
+  SelectTrigger, 
+  SelectValue, 
+  SelectContent, 
+  SelectItem 
+} from '@/components/common';
 
 interface LayoutResourceRowProps {
   resource: string;
@@ -18,15 +25,19 @@ export function LayoutResourceRow({ resource, currentMode, onModeChange }: Layou
         <span className="font-medium font-mono">{resource}</span>
       </div>
       <div className="flex items-center justify-end w-[250px]">
-         <select
+         <Select
           value={currentMode}
-          onChange={(e) => { onModeChange(resource, e.target.value); }}
-          className="w-auto bg-background border border-border rounded-lg px-3 py-1.5 text-sm h-9 focus:ring-1 focus:ring-primary focus:border-primary"
+          onValueChange={(value) => { onModeChange(resource, value); }}
         >
-          <option value="default">{t('settings:layout.modes.default')} ({t('settings:layout.global_layout')})</option>
-          <option value="standard">{t('settings:layout.modes.standard')}</option>
-          <option value="modern">{t('settings:layout.modes.modern')}</option>
-        </select>
+          <SelectTrigger className="w-full">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="default">{t('settings:layout.modes.default')} ({t('settings:layout.global_layout')})</SelectItem>
+            <SelectItem value="standard">{t('settings:layout.modes.standard')}</SelectItem>
+            <SelectItem value="modern">{t('settings:layout.modes.modern')}</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );

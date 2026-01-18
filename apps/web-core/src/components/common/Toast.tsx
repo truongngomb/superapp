@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { AlertCircle, CheckCircle, Info, X, XCircle } from 'lucide-react';
 import { cn } from '@/utils';
 import type { ToastType } from '@superapp/shared-types';
+import { Button } from './index';
 
 interface ToastProps {
   message: string;
@@ -43,12 +44,14 @@ export function Toast({ message, type = 'info', visible, onClose }: ToastProps) 
         >
           <Icon className="w-5 h-5 flex-shrink-0" />
           <p className="flex-1 text-sm font-medium">{message}</p>
-          <button
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={onClose}
-            className="p-1 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+            className="p-1 h-8 w-8 rounded-full hover:bg-black/10 dark:hover:bg-white/10"
           >
             <X className="w-4 h-4" />
-          </button>
+          </Button>
         </motion.div>
       )}
     </AnimatePresence>

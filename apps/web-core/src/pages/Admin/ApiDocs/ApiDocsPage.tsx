@@ -13,6 +13,7 @@ import { useTheme } from '@/context';
 import { env, STORAGE_KEYS } from '@/config';
 import { getStorageItem, setStorageItem, cn } from '@/utils';
 import { useLayoutMode } from '@/hooks';
+import { Button } from '@/components/common';
 import { useToast } from '@/context';
 import { useEffect } from 'react';
 
@@ -242,13 +243,14 @@ export default function ApiDocsPage() {
       {/* View Mode Switcher */}
       <div className="flex items-center justify-end gap-2 px-4 py-3 border-b border-gray-200 dark:border-gray-800">
         <div className="flex items-center gap-1 bg-muted/20 rounded-lg p-1">
-          <button
+          <Button
             type="button"
+            variant="ghost"
             onClick={() => {
               handleViewModeChange('reference');
             }}
             className={cn(
-              'px-3 py-2 rounded-md transition-colors flex items-center gap-2 text-sm font-medium',
+              'px-3 py-2 transition-colors flex items-center gap-2 text-sm font-medium h-9',
               viewMode === 'reference'
                 ? 'bg-background text-primary shadow-sm'
                 : 'text-muted hover:text-foreground hover:bg-muted/30'
@@ -259,14 +261,15 @@ export default function ApiDocsPage() {
           >
             <BookOpen className="w-4 h-4" />
             <span className="hidden sm:inline">{t('api_docs.view_reference')}</span>
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
+            variant="ghost"
             onClick={() => {
               handleViewModeChange('raw');
             }}
             className={cn(
-              'px-3 py-2 rounded-md transition-colors flex items-center gap-2 text-sm font-medium',
+              'px-3 py-2 transition-colors flex items-center gap-2 text-sm font-medium h-9',
               viewMode === 'raw'
                 ? 'bg-background text-primary shadow-sm'
                 : 'text-muted hover:text-foreground hover:bg-muted/30'
@@ -277,7 +280,7 @@ export default function ApiDocsPage() {
           >
             <FileJson className="w-4 h-4" />
             <span className="hidden sm:inline">{t('api_docs.view_raw')}</span>
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -315,43 +318,49 @@ export default function ApiDocsPage() {
               <div className="absolute top-4 right-8 flex items-center gap-2 z-10">
                 {!!parsedData && (
                   <>
-                    <button
+                    <Button
                       type="button"
+                      variant="outline"
+                      size="sm"
                       onClick={() => {
                         setDefaultExpanded(true);
                         setTreeKey(prev => prev + 1);
                       }}
-                      className="px-3 py-1.5 bg-background border border-border rounded-md text-xs font-medium hover:bg-muted transition-colors shadow-sm flex items-center gap-1.5"
+                      className="bg-background shadow-sm flex items-center gap-1.5 h-8"
                       title={t('api_docs.expand_all')}
                     >
                       <Maximize2 className="w-3.5 h-3.5" />
                       <span className="hidden md:inline">{t('api_docs.expand_all')}</span>
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       type="button"
+                      variant="outline"
+                      size="sm"
                       onClick={() => {
                         setDefaultExpanded(false);
                         setTreeKey(prev => prev + 1);
                       }}
-                      className="px-3 py-1.5 bg-background border border-border rounded-md text-xs font-medium hover:bg-muted transition-colors shadow-sm flex items-center gap-1.5"
+                      className="bg-background shadow-sm flex items-center gap-1.5 h-8"
                       title={t('api_docs.collapse_all')}
                     >
                       <Minimize2 className="w-3.5 h-3.5" />
                       <span className="hidden md:inline">{t('api_docs.collapse_all')}</span>
-                    </button>
+                    </Button>
                   </>
                 )}
-                <button
+                <Button
                   type="button"
+                  variant="outline"
+                  size="sm"
                   onClick={() => {
                     void navigator.clipboard.writeText(rawJson).then(() => {
                       toast.success(t('toast.copy_success'));
                     });
                   }}
-                  className="px-3 py-1.5 bg-background border border-border rounded-md text-xs font-medium hover:bg-muted transition-colors shadow-sm flex items-center gap-1.5"
+                  className="bg-background shadow-sm flex items-center gap-1.5 h-8"
                 >
                   {t('copy')}
-                </button>
+                </Button>
               </div>
             )}
           </div>

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { cn } from '@/utils';
+import { Button } from '@/components/common';
 import { NAVIGATION_ITEMS } from '@/config/navigation';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
 
@@ -44,12 +45,14 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                 </div>
                 <span className="text-xl font-bold text-gradient">SuperApp</span>
               </div>
-              <button
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={onClose}
-                className="p-2 rounded-lg hover:bg-surface transition-colors"
+                className="p-2 h-9 w-9"
               >
                 <X className="w-5 h-5 text-muted" />
-              </button>
+              </Button>
             </div>
 
             {/* Navigation */}

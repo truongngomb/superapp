@@ -56,20 +56,24 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, 
                 </h3>
               </div>
               <div className="flex items-center gap-1">
-                <button 
+                <Button 
+                  variant="ghost"
+                  size="sm"
                   onClick={() => { void refetch(); }}
-                  className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+                  className="p-2 h-8 w-8"
                   disabled={isLoading}
                   title={t('common:refresh')}
                 >
                   <RefreshCw className={cn("w-4 h-4", isLoading && "animate-spin")} />
-                </button>
-                <button 
+                </Button>
+                <Button 
+                  variant="ghost"
+                  size="sm"
                   onClick={onClose}
-                  className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+                  className="p-2 h-8 w-8"
                 >
                   <X className="w-4 h-4" />
-                </button>
+                </Button>
               </div>
             </div>
 
@@ -88,12 +92,14 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, 
                     <BellOff className="w-8 h-8" />
                   </div>
                   <p className="text-sm text-red-600 font-medium">{error}</p>
-                  <button 
+                  <Button 
+                    variant="link"
+                    size="sm"
                     onClick={() => { void refetch(); }}
-                    className="mt-4 text-xs text-indigo-600 hover:text-indigo-700 font-semibold"
+                    className="mt-4 text-xs font-semibold"
                   >
                     {t('common:retry')}
-                  </button>
+                  </Button>
                 </div>
               ) : logs.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 px-6 text-center">

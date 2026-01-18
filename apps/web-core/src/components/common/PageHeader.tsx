@@ -57,18 +57,20 @@ export function PageHeader({
           <p className="text-muted mt-1">{t(subtitleKey)}</p>
         </div>
         <PermissionGuard resource={resource} action="view">
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={onExport}
             disabled={exporting || itemCount === 0}
-            className="p-2 rounded-lg hover:bg-[#217346]/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="p-2 h-10 w-10 hover:bg-[#217346]/10"
           >
             {exporting ? (
               <Loader2 className="w-6 h-6 animate-spin text-[#217346]" />
             ) : (
               <FileSpreadsheet className="w-6 h-6 text-[#217346]" />
             )}
-          </button>
+          </Button>
         </PermissionGuard>
       </div>
       <PermissionGuard resource={resource} action="create">

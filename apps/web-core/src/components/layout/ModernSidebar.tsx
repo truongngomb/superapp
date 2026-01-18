@@ -11,6 +11,7 @@ import { cn } from '@/utils';
 import { NAVIGATION_ITEMS } from '@/config/navigation';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
 import { useAuth } from '@/hooks';
+import { Button } from '@/components/common';
 
 interface ModernSidebarProps {
   open: boolean;
@@ -51,11 +52,11 @@ export function ModernSidebar({ open, onClose, className, desktopOpen = true }: 
       >
         <div className="flex flex-col h-full w-72 overflow-hidden bg-gradient-to-b from-background to-surface/50">
            {/* Mobile Header (Close Button) */}
-           <div className="lg:hidden flex items-center justify-end p-2">
-              <button onClick={onClose} className="p-2 text-muted-foreground hover:bg-surface rounded-full">
-                 <X className="w-5 h-5" />
-              </button>
-           </div>
+            <div className="lg:hidden flex items-center justify-end p-2">
+               <Button variant="ghost" size="sm" onClick={onClose} className="p-2 text-muted-foreground h-9 w-9">
+                  <X className="w-5 h-5" />
+               </Button>
+            </div>
 
            {/* User Profile Card (Prominent) */}
            <div className="p-6 flex flex-col items-center border-b border-border">

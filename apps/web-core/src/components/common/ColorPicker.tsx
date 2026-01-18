@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { Copy, Check, Palette, Pipette } from 'lucide-react';
 import { cn } from '@/utils';
 import { useToast } from '@/context';
+import { Button, Input } from './index';
 
 // ============================================================================
 // Types
@@ -267,13 +268,14 @@ export function ColorPicker({
             <label className="text-sm font-medium text-foreground">{label}</label>
           )}
           {canSwitchMode && (
-            <button
+            <Button
+              variant="ghost"
+              size="sm"
               type="button"
               onClick={toggleMode}
               disabled={disabled}
               className={cn(
-                'p-1.5 rounded-md text-muted hover:text-foreground hover:bg-muted/10',
-                'transition-colors text-xs flex items-center gap-1',
+                'text-muted hover:text-foreground h-8',
                 disabled && 'opacity-50 cursor-not-allowed'
               )}
               title={mode === 'picker' 
@@ -292,7 +294,7 @@ export function ColorPicker({
                   <span className="hidden sm:inline">{t('picker', { defaultValue: 'Picker' })}</span>
                 </>
               )}
-            </button>
+            </Button>
           )}
         </div>
       )}
@@ -333,30 +335,23 @@ export function ColorPicker({
           {/* Hex Input */}
           {showHexInput && (
             <div className="flex-1 relative">
-              <input
+              <Input
                 type="text"
                 value={hexInput}
                 onChange={handleHexInputChange}
                 disabled={disabled}
                 placeholder="#FFFFFFFF"
                 maxLength={9}
-                className={cn(
-                  'w-full px-3 py-2.5 pr-10 rounded-lg font-mono text-sm uppercase',
-                  'bg-surface border border-border',
-                  'text-foreground placeholder:text-muted',
-                  'transition-all duration-200',
-                  'focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20',
-                  disabled && 'opacity-50 cursor-not-allowed'
-                )}
+                className="font-mono text-sm uppercase pr-10"
               />
-              <button
+              <Button
+                variant="ghost"
+                size="sm"
                 type="button"
                 onClick={() => { void handleCopy(); }}
                 disabled={disabled}
                 className={cn(
-                  'absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-md',
-                  'text-muted hover:text-foreground hover:bg-muted/10',
-                  'transition-colors',
+                  'absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 p-0',
                   disabled && 'pointer-events-none'
                 )}
                 title={t('copy', { defaultValue: 'Copy' })}
@@ -366,7 +361,7 @@ export function ColorPicker({
                 ) : (
                   <Copy className="w-4 h-4" />
                 )}
-              </button>
+              </Button>
             </div>
           )}
         </div>
@@ -408,30 +403,23 @@ export function ColorPicker({
                 style={{ backgroundColor: toHex8(hex6, alpha) }}
               />
               <div className="flex-1 relative">
-                <input
+                <Input
                   type="text"
                   value={hexInput}
                   onChange={handleHexInputChange}
                   disabled={disabled}
                   placeholder="#FFFFFFFF"
                   maxLength={9}
-                  className={cn(
-                    'w-full px-3 py-2 pr-10 rounded-lg font-mono text-sm uppercase',
-                    'bg-surface border border-border',
-                    'text-foreground placeholder:text-muted',
-                    'transition-all duration-200',
-                    'focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20',
-                    disabled && 'opacity-50 cursor-not-allowed'
-                  )}
+                  className="font-mono text-sm uppercase pr-10"
                 />
-                <button
+                <Button
+                  variant="ghost"
+                  size="sm"
                   type="button"
                   onClick={() => { void handleCopy(); }}
                   disabled={disabled}
                   className={cn(
-                    'absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-md',
-                    'text-muted hover:text-foreground hover:bg-muted/10',
-                    'transition-colors',
+                    'absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 p-0',
                     disabled && 'pointer-events-none'
                   )}
                   title={t('copy', { defaultValue: 'Copy' })}
@@ -441,7 +429,7 @@ export function ColorPicker({
                   ) : (
                     <Copy className="w-4 h-4" />
                   )}
-                </button>
+                </Button>
               </div>
             </div>
           )}

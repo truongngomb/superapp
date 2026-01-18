@@ -135,10 +135,11 @@ export function LayoutSettings() {
           <div className="space-y-4">
             <h3 className="font-medium text-foreground">{t('settings:layout.global_layout')}</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <button
+              <Button
+                variant="ghost"
                 onClick={() => { setLayoutConfig({ ...layoutConfig, global: 'standard' }); }}
                 className={cn(
-                  "relative p-4 rounded-xl border-2 text-left transition-all",
+                  "relative p-4 rounded-xl border-2 text-left transition-all h-auto block w-full",
                   layoutConfig.global === 'standard' 
                     ? "border-primary bg-primary/5 ring-1 ring-primary/20" 
                     : "border-border hover:border-muted text-muted-foreground hover:text-foreground"
@@ -151,11 +152,12 @@ export function LayoutSettings() {
                 )}
                 <div className="font-bold mb-1">{t('settings:layout.modes.standard')}</div>
                 <div className="text-xs opacity-70">{t('settings:layout.modes.standard_desc')}</div>
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="ghost"
                 onClick={() => { setLayoutConfig({ ...layoutConfig, global: 'modern' }); }}
                 className={cn(
-                  "relative p-4 rounded-xl border-2 text-left transition-all",
+                  "relative p-4 rounded-xl border-2 text-left transition-all h-auto block w-full",
                   layoutConfig.global === 'modern' 
                     ? "border-primary bg-primary/5 ring-1 ring-primary/20" 
                     : "border-border hover:border-muted text-muted-foreground hover:text-foreground"
@@ -168,7 +170,7 @@ export function LayoutSettings() {
                 )}
                 <div className="font-bold mb-1">{t('settings:layout.modes.modern')}</div>
                 <div className="text-xs opacity-70">{t('settings:layout.modes.modern_desc')}</div>
-              </button>
+              </Button>
             </div>
           </div>
 

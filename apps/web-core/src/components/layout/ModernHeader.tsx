@@ -23,6 +23,7 @@ import { useAuth, useActivityLogContext } from '@/hooks';
 import { useTheme } from '@/context';
 import { LanguageSwitcher } from '../common/LanguageSwitcher';
 import { NotificationCenter } from '../notifications/NotificationCenter';
+import { Button } from '../common';
 import { useLayout } from '@/hooks';
 
 interface ModernHeaderProps {
@@ -69,12 +70,14 @@ export function ModernHeader({ onMenuToggle, menuOpen, onSidebarToggle, isSideba
         <div 
           className="flex items-center gap-4 px-4 h-full transition-[width,padding] duration-300 ease-in-out overflow-hidden border-border lg:w-72 lg:px-6 shrink-0"
         >
-          <button
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={onMenuToggle}
-            className="p-1 rounded-md hover:bg-surface transition-colors lg:hidden"
+            className="lg:hidden"
           >
             {menuOpen ? <X className="w-6 h-6 text-muted-foreground" /> : <Menu className="w-6 h-6 text-muted-foreground" />}
-          </button>
+          </Button>
           
           <Link to="/" className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
@@ -93,13 +96,15 @@ export function ModernHeader({ onMenuToggle, menuOpen, onSidebarToggle, isSideba
 
         {/* Center: Toggle Sidebar Button & Dynamic Content */}
         <div className="flex-1 hidden lg:flex items-center gap-4 px-4 min-w-0">
-          <button
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={onSidebarToggle}
-            className="p-2 rounded-lg hover:bg-surface text-muted-foreground hover:text-foreground transition-colors shrink-0"
+            className="text-muted-foreground hover:text-foreground shrink-0"
             title={isSidebarOpen ? t('common:hide_sidebar') : t('common:show_sidebar')}
           >
              {isSidebarOpen ? <PanelLeftClose className="w-6 h-6" /> : <PanelLeftOpen className="w-6 h-6" />}
-          </button>
+          </Button>
 
           {/* Dynamic Header Content (e.g., Sub-navigation) */}
           <div className="flex-1 flex items-center overflow-x-auto no-scrollbar py-2 min-w-0">
@@ -115,26 +120,32 @@ export function ModernHeader({ onMenuToggle, menuOpen, onSidebarToggle, isSideba
           <div className="flex items-center gap-1 sm:gap-2">
             <LanguageSwitcher className="text-foreground hover:bg-surface" />
 
-            <button
+            <Button
+               variant="ghost"
+               size="icon"
                onClick={toggleTheme}
-               className="p-2 rounded-full hover:bg-surface transition-colors text-foreground"
+               className="text-foreground"
                title={isDark ? t('switch_theme_light') : t('switch_theme_dark')}
             >
               {isDark ? <Sun className="w-5 h-5 text-muted-foreground" /> : <Moon className="w-5 h-5 text-muted-foreground" />}
-            </button>
+            </Button>
 
-            <button
+            <Button
+               variant="ghost"
+               size="icon"
                onClick={toggleFullscreen}
-               className="p-2 rounded-full hover:bg-surface transition-colors text-foreground hidden sm:block"
+               className="text-foreground hidden sm:flex"
             >
                {isFullscreen ? <Minimize className="w-5 h-5 text-muted-foreground" /> : <Maximize className="w-5 h-5 text-muted-foreground" />}
-            </button>
+            </Button>
 
             {isAuthenticated && (
               <div className="relative">
-                <button
+                <Button
+                  variant="ghost"
+                  size="icon"
                   onClick={() => { setIsNotificationsOpen(true); }}
-                  className="p-2 rounded-full hover:bg-surface transition-colors text-foreground relative"
+                  className="text-foreground relative"
                 >
                   <Bell className="w-5 h-5 text-muted-foreground" />
                   {unreadCount > 0 && (
@@ -142,7 +153,7 @@ export function ModernHeader({ onMenuToggle, menuOpen, onSidebarToggle, isSideba
                       {unreadCount > 9 ? '9+' : unreadCount}
                     </span>
                   )}
-                </button>
+                </Button>
               </div>
             )}
             
@@ -161,24 +172,26 @@ export function ModernHeader({ onMenuToggle, menuOpen, onSidebarToggle, isSideba
                    )}
                 </div>
                 
-                <button
+                <Button
+                  variant="ghost"
+                  size="sm"
                   onClick={handleLogout}
-                  className="ml-1 p-1.5 rounded-full hover:bg-surface transition-colors text-muted-foreground hover:text-red-500"
+                  className="ml-1 text-muted-foreground hover:text-red-500"
                   title={t('logout')}
                 >
                   <LogOut className="w-4 h-4" />
-                </button>
+                </Button>
               </div>
             )}
 
             {!isAuthenticated && (
               <Link to="/login" className="ml-2">
-                <button
+                <Button
                   type="button"
-                  className="px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary/90 transition-colors"
+                  className="px-4 py-2"
                 >
-                  {t('login', { defaultValue: 'Login' })}
-                </button>
+                  {t('auth:login')}
+                </Button>
               </Link>
             )}
           </div>

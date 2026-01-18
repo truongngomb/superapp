@@ -1,7 +1,19 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AlertCircle, Settings as SettingsIcon, Trash2, Database, Zap } from 'lucide-react';
-import { Card, CardHeader, CardContent, Toggle, Button, ConfirmModal } from '@/components/common';
+import { 
+  Card, 
+  CardHeader, 
+  CardContent, 
+  Toggle, 
+  Button, 
+  ConfirmModal,
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem
+} from '@/components/common';
 import { useSettings, useToast } from '@/hooks';
 import { settingsService } from '@/services/settings.service';
 import { BackupManager } from './BackupManager';
@@ -139,17 +151,21 @@ export function GeneralSettings() {
               </div>
             </div>
             <div className="flex items-center gap-2 w-full sm:w-auto">
-              <select
+              <Select
                 value={pruneDays}
-                onChange={(e) => {
-                  setPruneDays(e.target.value);
+                onValueChange={(value) => {
+                  setPruneDays(value);
                 }}
-                className="w-full sm:w-48 h-10 px-3 rounded-md border border-input bg-background text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                <option value="30">{t('settings:utilities.days_30')}</option>
-                <option value="60">{t('settings:utilities.days_60')}</option>
-                <option value="90">{t('settings:utilities.days_90')}</option>
-              </select>
+                <SelectTrigger className="w-full sm:w-48">
+                  <SelectValue placeholder={t('settings:utilities.days_30')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="30">{t('settings:utilities.days_30')}</SelectItem>
+                  <SelectItem value="60">{t('settings:utilities.days_60')}</SelectItem>
+                  <SelectItem value="90">{t('settings:utilities.days_90')}</SelectItem>
+                </SelectContent>
+              </Select>
               <Button 
                 variant="outline" 
                 onClick={handlePruneClick}

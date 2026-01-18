@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Smartphone, LayoutDashboard, Languages, Zap, Shield, ScrollText } from 'lucide-react';
-import { Button } from '@/components/common';
+import { Button, Card, CardContent } from '@/components/common';
 
 const features = [
   {
@@ -114,17 +114,20 @@ export function HomePage() {
             <motion.div
               key={feature.titleKey}
               variants={itemVariants}
-              className="card-hover p-5"
             >
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mb-4">
-                <Icon className="w-6 h-6 text-primary" />
-              </div>
-              <h3 className="text-lg font-semibold text-foreground mb-2">
-                {t(feature.titleKey)}
-              </h3>
-              <p className="text-sm text-muted">
-                {t(feature.descKey)}
-              </p>
+              <Card className="h-full hover:shadow-lg transition-all border-none bg-surface/50 backdrop-blur-sm">
+                <CardContent className="p-6">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mb-4">
+                    <Icon className="w-6 h-6 text-primary" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">
+                    {t(feature.titleKey)}
+                  </h3>
+                  <p className="text-sm text-muted">
+                    {t(feature.descKey)}
+                  </p>
+                </CardContent>
+              </Card>
             </motion.div>
           );
         })}
@@ -142,55 +145,61 @@ export function HomePage() {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Frontend */}
-          <div className="card-hover p-6 text-center">
-            <h3 className="text-lg font-semibold text-primary mb-4">
-              {t('home:tech_stack.frontend')}
-            </h3>
-            <div className="flex flex-wrap justify-center gap-2">
-              {(t('home:tech_stack.frontend_items', { returnObjects: true }) as string[]).map((tech) => (
-                <span
-                  key={tech}
-                  className="px-3 py-1.5 rounded-full bg-primary/10 text-xs font-medium text-foreground"
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
-          </div>
+          <Card className="hover:shadow-md transition-all">
+            <CardContent className="p-6 text-center">
+              <h3 className="text-lg font-semibold text-primary mb-4">
+                {t('home:tech_stack.frontend')}
+              </h3>
+              <div className="flex flex-wrap justify-center gap-2">
+                {(t('home:tech_stack.frontend_items', { returnObjects: true }) as string[]).map((tech) => (
+                  <span
+                    key={tech}
+                    className="px-3 py-1.5 rounded-full bg-primary/10 text-xs font-medium text-foreground"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Backend */}
-          <div className="card-hover p-6 text-center">
-            <h3 className="text-lg font-semibold text-secondary mb-4">
-              {t('home:tech_stack.backend')}
-            </h3>
-            <div className="flex flex-wrap justify-center gap-2">
-              {(t('home:tech_stack.backend_items', { returnObjects: true }) as string[]).map((tech) => (
-                <span
-                  key={tech}
-                  className="px-3 py-1.5 rounded-full bg-secondary/10 text-xs font-medium text-foreground"
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
-          </div>
+          <Card className="hover:shadow-md transition-all">
+            <CardContent className="p-6 text-center">
+              <h3 className="text-lg font-semibold text-secondary mb-4">
+                {t('home:tech_stack.backend')}
+              </h3>
+              <div className="flex flex-wrap justify-center gap-2">
+                {(t('home:tech_stack.backend_items', { returnObjects: true }) as string[]).map((tech) => (
+                  <span
+                    key={tech}
+                    className="px-3 py-1.5 rounded-full bg-secondary/10 text-xs font-medium text-foreground"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Mobile & PWA */}
-          <div className="card-hover p-6 text-center">
-            <h3 className="text-lg font-semibold text-accent mb-4">
-              {t('home:tech_stack.mobile')}
-            </h3>
-            <div className="flex flex-wrap justify-center gap-2">
-              {(t('home:tech_stack.mobile_items', { returnObjects: true }) as string[]).map((tech) => (
-                <span
-                  key={tech}
-                  className="px-3 py-1.5 rounded-full bg-accent/10 text-xs font-medium text-foreground"
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
-          </div>
+          <Card className="hover:shadow-md transition-all">
+            <CardContent className="p-6 text-center">
+              <h3 className="text-lg font-semibold text-accent mb-4">
+                {t('home:tech_stack.mobile')}
+              </h3>
+              <div className="flex flex-wrap justify-center gap-2">
+                {(t('home:tech_stack.mobile_items', { returnObjects: true }) as string[]).map((tech) => (
+                  <span
+                    key={tech}
+                    className="px-3 py-1.5 rounded-full bg-accent/10 text-xs font-medium text-foreground"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </motion.section>
 
