@@ -243,7 +243,9 @@ export enum PermissionResource {
   Roles = 'roles',
   Users = 'users',
   ActivityLogs = 'activity_logs',
+  MarkdownPages = 'markdown_pages',
   Dashboard = 'dashboard',
   Home = 'home',
   ApiDocs = 'api-docs',
 }
+

@@ -1,0 +1,42 @@
+{
+  "title": "Markdown Pages",
+  "name": "Markdown Pages",
+  "list_title": "Page Management",
+  "create_title": "Create Page",
+  "edit_title": "Edit Page",
+  "view_page": "View Page",
+  
+  "form": {
+    "title": "Title",
+    "slug": "URL Slug",
+    "slug_help": "Unique identifier for URL (e.g., about-us)",
+    "auto_generate_slug": "Auto-generate from title",
+    "content": "Content",
+    "excerpt": "Excerpt",
+    "icon": "Icon",
+    "cover_image": "Cover Image",
+    "show_in_menu": "Show in Menu",
+    "menu_position": "Menu Position",
+    "parent_page": "Parent Page",
+    "order": "Order",
+    "published": "Published",
+    "published_help": "Visible to public"
+  },
+  
+  "menu_position": {
+    "header": "Header",
+    "footer": "Footer",
+    "sidebar": "Sidebar"
+  },
+  
+  "errors": {
+    "slug_invalid": "Slug can only contain lowercase letters, numbers, and hyphens",
+    "slug_reserved": "This slug is reserved by system",
+    "menu_depth_exceeded": "Maximum menu depth is 2 levels"
+  },
+
+  "status": {
+    "published": "Published",
+    "draft": "Draft"
+  }
+}

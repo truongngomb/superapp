@@ -156,7 +156,8 @@ async function request<T>(
   let fetchOptions: RequestInit = {
     ...options,
     headers: {
-      'Content-Type': 'application/json',
+      // Default to JSON if not specified and not FormData
+      ...(!(options.body instanceof FormData) ? { 'Content-Type': 'application/json' } : {}),
       ...restConfig.headers,
     },
     credentials: 'include',
@@ -265,10 +266,20 @@ export const api = {
    * POST request
    */
   post<T>(endpoint: string, data?: unknown, config?: RequestConfig): Promise<T> {
+    const isFormData = data instanceof FormData;
     return request<T>(
       endpoint,
-      { method: 'POST', body: data ? JSON.stringify(data) : undefined },
-      config
+      { 
+        method: 'POST', 
+        body: isFormData ? data : (data ? JSON.stringify(data) : undefined) 
+      },
+      {
+        ...config,
+        headers: {
+          ...config?.headers,
+          ...(isFormData ? {} : { 'Content-Type': 'application/json' }), // Let browser set boundary for FormData
+        }
+      }
     );
   },
 
@@ -276,10 +287,20 @@ export const api = {
    * PUT request
    */
   put<T>(endpoint: string, data: unknown, config?: RequestConfig): Promise<T> {
+    const isFormData = data instanceof FormData;
     return request<T>(
       endpoint,
-      { method: 'PUT', body: JSON.stringify(data) },
-      config
+      { 
+        method: 'PUT', 
+        body: isFormData ? data : JSON.stringify(data) 
+      },
+      {
+        ...config,
+        headers: {
+          ...config?.headers,
+          ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
+        }
+      }
     );
   },
 
@@ -287,10 +308,20 @@ export const api = {
    * PATCH request
    */
   patch<T>(endpoint: string, data: unknown, config?: RequestConfig): Promise<T> {
+    const isFormData = data instanceof FormData;
     return request<T>(
       endpoint,
-      { method: 'PATCH', body: JSON.stringify(data) },
-      config
+      { 
+        method: 'PATCH', 
+        body: isFormData ? data : JSON.stringify(data) 
+      },
+      {
+        ...config,
+        headers: {
+          ...config?.headers,
+          ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
+        }
+      }
     );
   },
 

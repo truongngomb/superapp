@@ -38,3 +38,7 @@ export type {
 
 // System types
 export * from './system.js';
+
+// Markdown types
+export * from './markdown.js';
+

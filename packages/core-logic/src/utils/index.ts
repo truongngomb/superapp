@@ -12,3 +12,5 @@ export * from './string';
 export * from './object';
 export * from './async';
 export * from './security';
+export * from './slug';
+

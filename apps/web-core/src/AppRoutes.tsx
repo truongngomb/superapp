@@ -34,6 +34,13 @@ const SystemSettingsPage = lazy(
 const ApiDocsPage = lazy(
   () => import('@/pages/Admin/ApiDocs/ApiDocsPage')
 );
+const MarkdownPagesPage = lazy(
+  () => import('@/pages/Admin/MarkdownPages/MarkdownPagesPage')
+);
+const MarkdownViewerPage = lazy(
+  () => import('@/pages/MarkdownViewer/MarkdownViewerPage')
+);
+
 
 // ============================================================================
 // Helper Components
@@ -184,7 +191,31 @@ export function AppRoutes() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="markdown-pages"
+            element={
+              <ProtectedRoute
+                resource={PermissionResource.MarkdownPages}
+                action={PermissionAction.View}
+              >
+                <LazyPage>
+                  <MarkdownPagesPage />
+                </LazyPage>
+              </ProtectedRoute>
+            }
+          />
         </Route>
+
+        {/* Public Markdown Pages */}
+        <Route
+          path="pages/:slug"
+          element={
+            <LazyPage>
+              <MarkdownViewerPage />
+            </LazyPage>
+          }
+        />
+
 
         {/* Catch-all 404 */}
         <Route path="*" element={<NotFoundPage />} />

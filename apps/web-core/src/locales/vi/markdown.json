@@ -1,0 +1,42 @@
+{
+  "title": "Trang Markdown",
+  "name": "Trang Markdown",
+  "list_title": "Quản lý Trang",
+  "create_title": "Tạo Trang mới",
+  "edit_title": "Chỉnh sửa Trang",
+  "view_page": "Xem Trang",
+  
+  "form": {
+    "title": "Tiêu đề",
+    "slug": "Đường dẫn (Slug)",
+    "slug_help": "Định danh duy nhất trên URL (vd: gioi-thieu)",
+    "auto_generate_slug": "Tự động tạo từ tiêu đề",
+    "content": "Nội dung",
+    "excerpt": "Tóm tắt",
+    "icon": "Biểu tượng",
+    "cover_image": "Ảnh bìa",
+    "show_in_menu": "Hiện trên menu",
+    "menu_position": "Vị trí menu",
+    "parent_page": "Trang cha",
+    "order": "Thứ tự",
+    "published": "Đã xuất bản",
+    "published_help": "Hiển thị công khai"
+  },
+  
+  "menu_position": {
+    "header": "Đầu trang (Header)",
+    "footer": "Chân trang (Footer)",
+    "sidebar": "Thanh bên (Sidebar)"
+  },
+  
+  "errors": {
+    "slug_invalid": "Slug chỉ được chứa chữ thường, số và dấu gạch ngang",
+    "slug_reserved": "Slug này đã được hệ thống sử dụng",
+    "menu_depth_exceeded": "Menu chỉ hỗ trợ tối đa 2 cấp"
+  },
+
+  "status": {
+    "published": "Đã xuất bản",
+    "draft": "Nháp"
+  }
+}

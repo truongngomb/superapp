@@ -19,6 +19,7 @@ import usersEn from '../locales/en/users.json';
 import activityLogsEn from '../locales/en/activity_logs.json';
 import notificationsEn from '../locales/en/notifications.json';
 import settingsEn from '../locales/en/settings.json';
+import markdownEn from '../locales/en/markdown.json';
 
 // Import translation files - Vietnamese
 import commonVi from '../locales/vi/common.json';
@@ -30,6 +31,7 @@ import usersVi from '../locales/vi/users.json';
 import activityLogsVi from '../locales/vi/activity_logs.json';
 import notificationsVi from '../locales/vi/notifications.json';
 import settingsVi from '../locales/vi/settings.json';
+import markdownVi from '../locales/vi/markdown.json';
 
 // Import translation files - Korean
 import commonKo from '../locales/ko/common.json';
@@ -41,6 +43,7 @@ import usersKo from '../locales/ko/users.json';
 import activityLogsKo from '../locales/ko/activity_logs.json';
 import notificationsKo from '../locales/ko/notifications.json';
 import settingsKo from '../locales/ko/settings.json';
+import markdownKo from '../locales/ko/markdown.json';
 
 // Configure resources
 export const resources = {
@@ -54,6 +57,7 @@ export const resources = {
     activity_logs: activityLogsEn,
     notifications: notificationsEn,
     settings: settingsEn,
+    markdown: markdownEn,
   },
   vi: {
     common: commonVi,
@@ -65,6 +69,7 @@ export const resources = {
     activity_logs: activityLogsVi,
     notifications: notificationsVi,
     settings: settingsVi,
+    markdown: markdownVi,
   },
   ko: {
     common: commonKo,
@@ -76,6 +81,7 @@ export const resources = {
     activity_logs: activityLogsKo,
     notifications: notificationsKo,
     settings: settingsKo,
+    markdown: markdownKo,
   },
 } as const;
 
@@ -91,7 +97,8 @@ void i18n
   .init({
     resources,
     defaultNS: 'common',
-    ns: ['common', 'home', 'auth', 'categories', 'roles', 'users', 'activity_logs', 'notifications', 'settings'],
+    ns: ['common', 'home', 'auth', 'categories', 'roles', 'users', 'activity_logs', 'notifications', 'settings', 'markdown'],
+
     fallbackLng: 'en', // Default language if detection fails
     supportedLngs: ['en', 'vi', 'ko'],
     

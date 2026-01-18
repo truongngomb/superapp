@@ -11,7 +11,7 @@ import { fadeScale, delayedTransition } from '@/config';
 
 interface ResourceToolbarProps {
   /** The resource name for permission checks */
-  resource: 'categories' | 'roles' | 'users';
+  resource: 'categories' | 'roles' | 'users' | 'markdown_pages';
   /** Number of items in the list */
   itemCount: number;
   /** Total number of items (for display) */

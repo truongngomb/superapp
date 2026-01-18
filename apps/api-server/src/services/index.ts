@@ -6,3 +6,6 @@ export * from './category.service.js';
 export * from './role.service.js';
 export * from './user.service.js';
 export * from './realtime.service.js';
+export * from './settings.service.js';
+export * from './markdown.service.js';
+

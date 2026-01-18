@@ -9,6 +9,8 @@ export * from './useCategories';
 export * from './useUsers';
 export * from './useActivityLogs';
 export * from './useSettings';
+export * from './useMarkdownPages';
+
 export * from './useLayoutMode';
 export * from './useLayout';
 export * from './useResource';

@@ -17,6 +17,7 @@
     "@capacitor/android": "^8.0.1",
     "@capacitor/core": "^8.0.1",
     "@capacitor/ios": "^8.0.1",
+    "@hookform/resolvers": "^5.2.2",
     "@scalar/api-reference-react": "^0.8.23",
     "@superapp/core-logic": "workspace:*",
     "@superapp/shared-types": "workspace:*",
@@ -35,10 +36,12 @@
     "lucide-react": "^0.562.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
+    "react-hook-form": "^7.71.1",
     "react-i18next": "^16.5.2",
     "react-intersection-observer": "^10.0.2",
     "react-router-dom": "^7.12.0",
-    "react-window": "^2.2.5"
+    "react-window": "^2.2.5",
+    "zod": "^4.3.5"
   },
   "devDependencies": {
     "@capacitor/cli": "^8.0.1",

@@ -12,7 +12,7 @@ import { fadeSlideRight } from '@/config';
 
 interface BatchActionButtonsProps {
   /** The resource name for permission checks */
-  resource: 'categories' | 'roles' | 'users';
+  resource: 'categories' | 'roles' | 'users' | 'markdown_pages';
   /** Number of selected items */
   selectedCount: number;
   /** Whether archived items are currently shown */

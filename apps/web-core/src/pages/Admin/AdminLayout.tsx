@@ -1,6 +1,6 @@
 import { useMemo, useEffect } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
-import { Users, Shield, LayoutDashboard, FileClock, Settings } from 'lucide-react';
+import { Users, Shield, LayoutDashboard, FileClock, Settings, FileText } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/utils';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
@@ -22,7 +22,7 @@ interface NavItem {
 // ============================================================================
 
 export default function AdminLayout() {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation(['common', 'markdown']);
   const layoutMode = useLayoutMode();
   const { setHeaderContent } = useLayout();
 
@@ -50,6 +50,12 @@ export default function AdminLayout() {
       icon: <Shield className="w-4 h-4" />,
       label: t('roles'),
       resource: 'roles',
+    },
+    {
+      to: '/admin/markdown-pages',
+      icon: <FileText className="w-4 h-4" />,
+      label: t('markdown:title', { defaultValue: 'Markdown Pages' }),
+      resource: 'markdown_pages',
     },
     {
       to: '/admin/activity-logs',
