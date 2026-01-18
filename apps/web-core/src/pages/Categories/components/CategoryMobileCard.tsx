@@ -23,7 +23,7 @@ import { Checkbox, Button } from '@/components/common';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
 import { cn } from '@/utils';
 import type { Category } from '@superapp/shared-types';
-import { CATEGORY_ICONS, type CategoryIcon } from './icons';
+import { CATEGORY_ICONS, type CategoryIcon } from '@superapp/ui-kit';
 
 interface CategoryMobileCardProps {
   category: Category;

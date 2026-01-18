@@ -1,7 +1,8 @@
 import { Search, Check } from 'lucide-react';
-import { cn } from '@/utils';
+import { cn } from '../utils';
 import { useState } from 'react';
-import { Input, Button } from '@/components/common';
+import { Input } from './Input';
+import { Button } from './Button';
 import { useTranslation } from 'react-i18next';
 import { CATEGORY_ICONS } from './icons';
 
@@ -69,4 +70,3 @@ export function IconPicker({ value, onChange, color }: IconPickerProps) {
     </div>
   );
 }
-

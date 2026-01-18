@@ -24,4 +24,6 @@ export * from './MarkdownEditor';
 export * from './MarkdownRenderer';
 export * from './TableOfContents';
 export * from './FileUploader';
+export * from './IconPicker';
+export * from './icons';
 

@@ -40,7 +40,7 @@ import { CategorySkeleton } from "./components/CategorySkeleton";
 import { CategoryTableSkeleton } from "./components/CategoryTableSkeleton";
 import { CategoryMobileList } from "./components/CategoryMobileList";
 import { CategoryMobileCardSkeletonList } from "./components/CategoryMobileCardSkeleton";
-import { CATEGORY_ICONS, type CategoryIcon } from './components/icons';
+import { CATEGORY_ICONS, type CategoryIcon } from '@superapp/ui-kit';
 
 // Define Resource Types
 
