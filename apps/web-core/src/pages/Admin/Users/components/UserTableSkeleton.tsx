@@ -4,17 +4,16 @@ import { Skeleton } from '@/components/common';
  * UserTableSkeleton Component
  * 
  * Skeleton loading state for UserTable. Matches the structure of DataTable (CSS Grid).
- * Grid Template matches DataTable calculation: Selection(48px) Order(48px) Avatar(60px) Name(1.5fr) Email(2fr) Roles(1.5fr) Status(120px) Actions(120px)
+ * Grid Template matches DataTable: Selection(48px) Avatar(80px) Name(1.5fr) Email(2fr) Roles(1.5fr) Status(120px) Actions(160px)
  */
 export function UserTableSkeleton() {
-  // Exact string from DataTable logic for UsersPage columns
-  const gridTemplateColumns = "48px 48px 80px 1.5fr 2fr 1.5fr 120px 160px";
+  const gridTemplateColumns = "48px 80px 1.5fr 2fr 1.5fr 120px 160px";
 
   return (
     <div className="w-full overflow-hidden rounded-lg border border-border bg-card shadow-sm flex flex-col">
       {/* Header */}
       <div 
-        className="bg-background text-muted-foreground border-b border-border w-full hidden md:grid" // Match header visibility behavior or keep grid
+        className="bg-background text-muted-foreground border-b border-border w-full hidden md:grid" 
         style={{ display: 'grid', gridTemplateColumns }}
       >
         {/* Selection */}
@@ -22,14 +21,9 @@ export function UserTableSkeleton() {
            <Skeleton className="w-4 h-4 rounded" />
         </div>
 
-        {/* Order */}
-        <div className="px-2 py-3 flex items-center justify-center">
-           <Skeleton className="h-4 w-8" />
-        </div>
-
         {/* Avatar */}
-        <div className="px-4 py-3 flex items-center">
-           {/* No header text for avatar col usually */}
+        <div className="px-4 py-3 flex items-center justify-center">
+           <Skeleton className="w-10 h-10 rounded-full" />
         </div>
 
         {/* Name */}
@@ -38,8 +32,8 @@ export function UserTableSkeleton() {
         </div>
 
         {/* Email */}
-        <div className="px-4 py-3 items-center hidden md:flex">
-           <Skeleton className="h-4 w-40" />
+        <div className="px-4 py-3 hidden md:flex items-center">
+           <Skeleton className="h-4 w-48" />
         </div>
 
         {/* Roles */}
@@ -63,7 +57,7 @@ export function UserTableSkeleton() {
         {Array.from({ length: 5 }).map((_, i) => (
           <div 
             key={i} 
-            className="items-center h-[56px] border-b border-border/50 last:border-0 bg-background"
+            className="items-center h-[72px] border-b border-border/50 last:border-0 bg-background"
             style={{ display: 'grid', gridTemplateColumns }}
           >
             {/* Selection */}
@@ -71,19 +65,14 @@ export function UserTableSkeleton() {
               <Skeleton className="w-4 h-4 rounded" />
             </div>
 
-            {/* Order */}
-            <div className="px-2 flex items-center justify-center h-full">
-              <Skeleton className="h-4 w-6" />
-            </div>
-
             {/* Avatar */}
-            <div className="px-4 flex items-center h-full">
-              <Skeleton className="w-8 h-8 rounded-full" />
+            <div className="px-4 flex items-center justify-center h-full">
+              <Skeleton className="w-10 h-10 rounded-full" />
             </div>
 
             {/* Name */}
             <div className="px-4 flex items-center h-full">
-              <Skeleton className="h-4 w-32" />
+               <Skeleton className="h-4 w-32" />
             </div>
 
             {/* Email */}

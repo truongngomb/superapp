@@ -85,7 +85,7 @@ export function UserForm({ user, onSubmit, onClose, loading, isOpen }: UserFormP
             {user.avatar ? (
               <img
                 src={user.avatar}
-                alt={user.name || 'User'}
+                alt={user.name || t('users:entity')}
                 className="w-12 h-12 rounded-full object-cover"
               />
             ) : (

@@ -146,6 +146,7 @@
     "system_access_denied": "Không thể truy cập thông tin hệ thống",
     "system_access_denied_desc": "Không thể tải trạng thái hệ thống. Vui lòng kiểm tra quyền truy cập hoặc thử lại sau."
   },
+  "unknown_user": "Người dùng không xác định",
   "users": "Người dùng",
   "roles": "Vai trò",
   "activity_logs": "Nhật ký hoạt động",

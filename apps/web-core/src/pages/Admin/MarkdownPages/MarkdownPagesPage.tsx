@@ -34,6 +34,7 @@ import {
 import { MarkdownPageForm } from "./components/MarkdownPageForm";
 import { MarkdownPageTable } from "./components/MarkdownPageTable";
 import { MarkdownPageMobileCard } from "./components/MarkdownPageMobileCard";
+import { MarkdownPageTableSkeleton } from "./components/MarkdownPageTableSkeleton";
 import { MarkdownPage } from "@superapp/shared-types";
 
 export default function MarkdownPagesPage() {
@@ -242,11 +243,7 @@ export default function MarkdownPagesPage() {
            transition={{ duration: 0.2 }}
            className="flex-1 min-h-[400px]"
         >
-          {(loading && pages.length === 0) || isRefreshing ? (
-             <div className="flex justify-center items-center h-64">
-               <Loader2 className="w-8 h-8 animate-spin text-primary" />
-             </div>
-          ) : pages.length === 0 ? (
+          { pages.length === 0 && !loading && !isRefreshing ? (
              <Card className="py-12 text-center h-full flex flex-col justify-center">
                <CardContent>
                  <FileText className="w-12 h-12 text-muted mx-auto mb-4" />
@@ -256,6 +253,15 @@ export default function MarkdownPagesPage() {
                </CardContent>
              </Card>
           ) : effectiveView === 'mobile' ? (
+             // Mobile Skeleton or List
+             (loading || isRefreshing) ? (
+                // Use a simple loading state for mobile if skeleton list not available or reuse card skeleton
+                <div className="space-y-3">
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <div key={i} className="h-40 bg-card rounded-lg border border-border animate-pulse" />
+                  ))}
+                </div>
+             ) : (
              <div className="space-y-3">
                {pages.map(page => (
                  <MarkdownPageMobileCard
@@ -269,7 +275,11 @@ export default function MarkdownPagesPage() {
                  />
                ))}
              </div>
+             )
           ) : (
+             (loading || isRefreshing) ? (
+                <MarkdownPageTableSkeleton />
+             ) : (
              <MarkdownPageTable
                data={pages}
                loading={loading}
@@ -281,6 +291,7 @@ export default function MarkdownPagesPage() {
                onEdit={(p) => { setEditingPage(p); setShowForm(true); }}
                onDelete={(p) => { setDeleteId(p.id); }}
              />
+             )
           )}
 
           {/* Pagination */}

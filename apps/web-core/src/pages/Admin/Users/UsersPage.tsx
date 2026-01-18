@@ -1,14 +1,11 @@
-import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { AnimatePresence, motion as framerMotion } from 'framer-motion';
 import { 
   Users, 
-  Loader2, 
+  Loader2,
+  FileSpreadsheet, 
   Plus, 
-  Trash2,
-  FileSpreadsheet,
-  Edit2,
-  Shield,
-  RotateCcw
+
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { 
@@ -18,10 +15,8 @@ import {
   ConfirmModal, 
   Pagination, 
   type ViewMode,
-  DataTable,
-  type Column,
-  Badge,
-  Avatar,
+
+
   ResourceToolbar,
   BatchActionButtons,
   SearchFilterBar
@@ -29,7 +24,7 @@ import {
 import { PermissionGuard } from '@/components/common/PermissionGuard';
 import { useSort, useDebounce, useAuth, useResource, useToast, useExcelExport, useResponsiveView, useInfiniteResource } from '@/hooks';
 import type { User, SortColumn, UserCreateInput, UserListParams, UserUpdateInput, Role } from '@superapp/shared-types';
-import { cn, getStorageItem, setStorageItem } from '@/utils';
+import { getStorageItem, setStorageItem } from '@/utils';
 import { STORAGE_KEYS } from '@/config';
 
 
@@ -37,6 +32,7 @@ import { STORAGE_KEYS } from '@/config';
 // ...
 
 import { UserRow } from './components/UserRow';
+import { UserTable } from './components/UserTable';
 import { UserForm } from './components/UserForm';
 import { RoleSelectModal } from '@/pages/Admin/Roles/components/RoleSelectModal';
 import { userService, roleService } from '@/services';
@@ -258,100 +254,7 @@ export default function UsersPage() {
 
 
 
-  // Columns Configuration
-  const columns: Column<User>[] = useMemo(() => [
-    {
-      accessorKey: 'avatar',
-      header: '',
-      width: '80px',
-      className: 'px-4 justify-center',
-      cell: ({ row }) => <Avatar src={row.original.avatar} name={row.original.name} />
-    },
-    {
-      accessorKey: 'name',
-      header: t('common:name'),
-      enableSorting: true,
-      width: '1.5fr',
-      className: 'font-medium'
-    },
-    {
-       accessorKey: 'email',
-       header: t('common:email'),
-       enableSorting: true,
-       width: '2fr',
-       className: 'hidden md:flex text-muted-foreground'
-    },
-    {
-       accessorKey: 'roles',
-       header: t('users:form.role_label'),
-       width: '1.5fr',
-       cell: ({ row }) => {
-         const user = row.original;
-         return (
-         <div className="flex flex-wrap gap-1">
-           {user.roles && user.roles.length > 0 ? (
-             user.roles.map((roleId) => {
-               const role = roles.find(r => r.id === roleId);
-               return (
-                <Badge key={roleId} variant="secondary" className="text-xs">
-                  {role ? role.name : roleId}
-                </Badge>
-               );
-             })
-           ) : (
-             <span className="text-muted-foreground text-xs italic">{t('common:no_roles')}</span>
-           )}
-         </div>
-       )}
-    },
-    {
-      accessorKey: 'isActive',
-      header: t('common:status'),
-      enableSorting: true,
-      width: '120px',
-      cell: ({ row }) => row.original.isActive ? 
-        <Badge variant="success" size="sm">{t('common:active')}</Badge> : 
-        <Badge variant="danger" size="sm">{t('common:inactive')}</Badge>
-    },
-    {
-      id: 'actions',
-      header: t('common:actions.label'),
-      align: 'right',
-      width: '160px',
-      cell: ({ row }) => {
-        const user = row.original;
-        return (
-        <div className="flex items-center justify-end gap-1">
-          {!user.isDeleted && (
-            <>
-               <PermissionGuard resource="users" action="update">
-                 <Button variant="ghost" size="sm" onClick={() => { setEditingUser(user); setShowForm(true); }} aria-label={t('common:edit')}>
-                   <Edit2 className="w-4 h-4" />
-                 </Button>
-               </PermissionGuard>
-               <PermissionGuard resource="users" action="update">
-                  <Button variant="ghost" size="sm" onClick={() => { setAssigningUser(user); }} aria-label={t('users:assign_role_btn')}>
-                    <Shield className="w-4 h-4 text-blue-500" />
-                  </Button>
-               </PermissionGuard>
-            </>
-          )}
-          {user.isDeleted && (
-             <PermissionGuard resource="users" action="update">
-               <Button variant="ghost" size="sm" onClick={() => { setRestoreId(user.id); }} aria-label={t('common:restore')}>
-                 <RotateCcw className="w-4 h-4 text-primary" />
-               </Button>
-             </PermissionGuard>
-          )}
-          <PermissionGuard resource="users" action="delete">
-             <Button variant="ghost" size="sm" onClick={() => { setDeleteId(user.id); }} aria-label={t('common:delete')}>
-               <Trash2 className={cn("w-4 h-4", user.isDeleted ? "text-red-700" : "text-red-500")} />
-             </Button>
-          </PermissionGuard>
-        </div>
-      )}
-    }
-  ], [t, roles]);
+
 
   const sortColumns: SortColumn[] = [
     { field: 'name', label: t('common:name') },
@@ -487,17 +390,21 @@ export default function UsersPage() {
                  onRestore={(id) => { setRestoreId(id); }}
                />
              ) : effectiveView === 'table' ? (
-                <DataTable
+                <UserTable
                   data={users}
-                  columns={columns}
-                  keyExtractor={(user) => user.id}
-                  selectedIds={canSelect ? selectedIds : undefined}
-                  onSelectAll={canSelect ? handleSelectAll : undefined}
-                  onSelectOne={canSelect ? handleSelectOne : undefined}
-                  sortColumn={sortConfig.field}
-                  sortDirection={sortConfig.order}
+                  loading={loading}
+                  selectedIds={canSelect ? selectedIds : []}
+                  onSelectAll={handleSelectAll}
+                  onSelect={handleSelectOne}
+                  sort={sortConfig}
                   onSort={handleSort}
+                  onEdit={(u) => { setEditingUser(u); setShowForm(true); }}
+                  onAssignRole={(u) => { setAssigningUser(u); }}
+                  onDelete={(id) => { setDeleteId(id); }}
+                  onRestore={(id) => { setRestoreId(id); }}
                   currentPage={queryParams.page}
+                  canSelect={canSelect}
+                  roles={roles}
                 />
              ) : (
                 users.map((user, index) => (

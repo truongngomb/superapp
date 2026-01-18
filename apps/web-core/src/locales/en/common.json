@@ -140,6 +140,7 @@
     "system_access_denied": "System Information Unavailable",
     "system_access_denied_desc": "Unable to access system information. Please check your permissions or try again later."
   },
+  "unknown_user": "Unknown User",
   "users": "Users",
   "roles": "Roles",
   "activity_logs": "Activity Logs",

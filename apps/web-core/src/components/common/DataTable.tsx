@@ -19,17 +19,17 @@ const VirtualList = List as any;
 
 // Re-export specific type for usage in other files
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type DataTableColumn<T> = ColumnDef<T, any>;
-
-// Legacy compatibility for the plan mostly, but encouraging use of DataTableColumn
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Column<T> = ColumnDef<T, any> & {
+export type DataTableColumn<T> = ColumnDef<T, any> & {
   // Add legacy props if strictly needed during migration, otherwise prefer standard ColumnDef
   className?: string; // used for cell styling
   align?: 'left' | 'center' | 'right';
   hidden?: boolean;
   width?: string | number;
+  wrap?: boolean;
 };
+
+// Legacy compatibility for the plan mostly, but encouraging use of DataTableColumn
+export type Column<T> = DataTableColumn<T>;
 
 export interface DataTableProps<T> {
   data: T[];
@@ -352,7 +352,7 @@ function DataTableInner<T>({
                <div
                 key={row.id}
                 className={cn(
-                  "items-center hover:bg-muted/5 transition-colors group h-[56px] border-b border-border/50 last:border-0",
+                  "items-center hover:bg-muted/5 transition-colors group min-h-[56px] border-b border-border/50 last:border-0 py-1",
                   row.getIsSelected() && "bg-primary/5"
                 )}
                 style={{
@@ -368,7 +368,7 @@ function DataTableInner<T>({
                       key={cell.id}
                       className={cn(
                         "px-4 text-sm h-full flex items-center",
-                        cell.column.id !== 'actions' && "truncate",
+                        cell.column.id !== 'actions' && !colDef.wrap && "truncate",
                         colDef.align === 'center' && "justify-center text-center",
                         colDef.align === 'right' && "justify-end text-right",
                         colDef.className

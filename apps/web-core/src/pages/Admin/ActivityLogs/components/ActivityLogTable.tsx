@@ -26,8 +26,7 @@ export function ActivityLogTable({
   onSort,
   isLoading
 }: ActivityLogTableProps) {
-  const { t, i18n } = useTranslation('activity_logs');
-  const { t: tCommon } = useTranslation('common');
+  const { t, i18n } = useTranslation(['activity_logs', 'common']);
 
   const columns: Column<ActivityLog>[] = useMemo(() => [
     {
@@ -54,7 +53,7 @@ export function ActivityLogTable({
             )}
           </div>
           <div className="flex flex-col min-w-0">
-            <span className="font-medium truncate">{log.expand?.user?.name || 'Unknown User'}</span>
+            <span className="font-medium truncate">{log.expand?.user?.name || t('common:unknown_user')}</span>
           </div>
         </div>
       )}
@@ -74,7 +73,7 @@ export function ActivityLogTable({
           log.action === 'login' && "bg-purple-500/10 text-purple-500 border-purple-500/20",
           log.action === 'logout' && "bg-orange-500/10 text-orange-500 border-orange-500/20",
         )}>
-          {t(`activity_logs:actions.${log.action}`)}
+          {t(`common:actions.${log.action}`)}
         </span>
       )}
     },
@@ -86,7 +85,7 @@ export function ActivityLogTable({
         const log = row.original;
         return (
         <span className="capitalize text-muted-foreground">
-          {t(`activity_logs:resources.${log.resource}`)}
+          {t(`common:resources.${log.resource}`)}
         </span>
       )}
     },
@@ -135,7 +134,7 @@ export function ActivityLogTable({
       sortDirection={sortConfig?.order}
       onSort={onSort}
       isLoading={isLoading}
-      emptyMessage={tCommon('no_data')}
+      emptyMessage={t('common:no_data')}
     />
   );
 }

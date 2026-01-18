@@ -1,14 +1,11 @@
-import { useState, useMemo, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { AnimatePresence, motion as framerMotion } from "framer-motion";
 import {
   Plus,
   Shield,
   Loader2,
-  Trash2,
   FileSpreadsheet,
-  Edit2,
-  RotateCcw,
-  Copy
+
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import {
@@ -18,21 +15,20 @@ import {
   ConfirmModal,
   Pagination,
   type ViewMode,
-  DataTable,
-  type Column,
-  Badge,
+
   ResourceToolbar,
   BatchActionButtons,
   SearchFilterBar
 } from "@/components/common";
 import { PermissionGuard } from "@/components/common/PermissionGuard";
 import type { Role, SortColumn, CreateRoleInput, UpdateRoleInput, RoleListParams } from "@superapp/shared-types";
-import { cn, getStorageItem, setStorageItem } from "@/utils";
+import { getStorageItem, setStorageItem } from "@/utils";
 import { STORAGE_KEYS } from "@/config";
 import { useSort, useDebounce, useAuth, useResource, useExcelExport, useResponsiveView, useInfiniteResource } from "@/hooks";
 import { roleService } from "@/services";
 import { RoleForm } from "./components/RoleForm";
 import { RoleRow } from "./components/RoleRow";
+import { RoleTable } from "./components/RoleTable";
 import { RoleTableSkeleton } from "./components/RoleTableSkeleton";
 import { RoleRowSkeleton } from "./components/RoleRowSkeleton";
 import { RoleMobileList } from "./components/RoleMobileList";
@@ -220,76 +216,6 @@ export default function RolesPage() {
     });
   }, [t, handleCreate]);
 
-  // Columns Configuration
-  const columns: Column<Role>[] = useMemo(() => [
-    {
-      accessorKey: 'name',
-      header: t('roles:form.name_label'),
-      enableSorting: true,
-      width: '200px',
-      className: 'font-medium'
-    },
-    {
-      accessorKey: 'description',
-      header: t('roles:form.desc_label'),
-      width: '2fr',
-      className: 'hidden md:flex text-muted-foreground',
-      cell: ({ row }) => <span className="line-clamp-1">{row.original.description || '-'}</span>
-    },
-    {
-      accessorKey: 'isActive',
-      header: t('common:status'),
-      enableSorting: true,
-      width: '120px',
-      cell: ({ row }) => row.original.isActive ? 
-        <Badge variant="success" size="sm">{t('common:active')}</Badge> : 
-        <Badge variant="danger" size="sm">{t('common:inactive')}</Badge>
-    },
-    {
-      id: 'actions',
-      header: t('common:actions.label'),
-      align: 'right',
-      width: '180px',
-      cell: ({ row }) => {
-        const role = row.original;
-        return (
-        <div className="flex items-center justify-end gap-1">
-          {!role.isDeleted && (
-            <PermissionGuard resource="roles" action="update">
-              <Button variant="ghost" size="sm" onClick={() => { setEditingRole(role); setShowForm(true); }} aria-label={t('common:edit')}>
-                <Edit2 className="w-4 h-4" />
-              </Button>
-            </PermissionGuard>
-          )}
-          {!role.isDeleted && (
-             <PermissionGuard resource="roles" action="create">
-               <Button variant="ghost" size="sm" onClick={() => { void onDuplicate(role); }} aria-label={t('common:duplicate')}>
-                 <Copy className="w-4 h-4 text-blue-500" />
-               </Button>
-             </PermissionGuard>
-          )}
-          {role.isDeleted && (
-            <PermissionGuard resource="roles" action="update">
-              <Button variant="ghost" size="sm" onClick={() => { setRestoreId(role.id); }} aria-label={t('common:restore')}>
-                <RotateCcw className="w-4 h-4 text-primary" />
-              </Button>
-            </PermissionGuard>
-          )}
-          <PermissionGuard resource="roles" action="delete">
-             <Button 
-               variant="ghost" 
-               size="sm" 
-               onClick={() => { setDeleteId(role.id); }}
-               aria-label={t('common:delete')}
-             >
-               <Trash2 className={cn('w-4 h-4', role.isDeleted ? 'text-red-700' : 'text-red-500')} />
-             </Button>
-          </PermissionGuard>
-        </div>
-      )}
-    }
-  ], [t, onDuplicate]);
-
   const sortColumns: SortColumn[] = [
     { field: "name", label: t("roles:form.name_label") },
     { field: "isActive", label: t("common:status") },
@@ -423,17 +349,29 @@ export default function RolesPage() {
                  onDuplicate={(r) => { void onDuplicate(r); }}
                />
              ) : viewMode === "table" ? (
-                <DataTable
+                <RoleTable
                   data={roles}
-                  columns={columns}
-                  keyExtractor={(item) => item.id}
-                  selectedIds={canSelect ? selectedIds : undefined}
-                  onSelectAll={canSelect ? handleSelectAll : undefined}
-                  onSelectOne={canSelect ? handleSelectOne : undefined}
-                  sortColumn={sortConfig.field}
-                  sortDirection={sortConfig.order}
+                  loading={loading}
+                  selectedIds={canSelect ? selectedIds : []}
+                  onSelectAll={handleSelectAll}
+                  onSelect={handleSelectOne}
+                  sort={sortConfig}
                   onSort={handleSort}
+                  onEdit={(r) => { setEditingRole(r); setShowForm(true); }}
+                  onDuplicate={(r) => {
+                     // Handle Duplicate logic
+                     // ...
+                     setEditingRole({
+                       ...r,
+                       id: '',
+                       name: `${r.name} (Copy)`,
+                     });
+                     setShowForm(true);
+                  }}
+                  onDelete={(id) => { setDeleteId(id); }}
+                  onRestore={(id) => { setRestoreId(id); }}
                   currentPage={queryParams.page}
+                  canSelect={canSelect}
                 />
              ) : (
                 roles.map((role, index) => (

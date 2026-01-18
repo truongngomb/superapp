@@ -1,13 +1,14 @@
+
 import { Skeleton } from '@/components/common';
 
 /**
  * RoleTableSkeleton Component
  * 
- * Skeleton loading state for RoleTable. Matches the structure of RoleTable (CSS Grid).
- * Grid Template: Selection(48px) Order(48px) Name(200px) Description(2fr) Status(120px) Actions(160px)
+ * Skeleton loading state for RoleTable. Matches the structure of DataTable (CSS Grid).
+ * Grid Template matches DataTable: Selection(48px) Name(1.5fr) Description(2fr) Permissions(150px) Status(120px) Actions(160px)
  */
 export function RoleTableSkeleton() {
-  const gridTemplateColumns = "48px 48px 200px 2fr 120px 180px";
+  const gridTemplateColumns = "48px 1.5fr 2fr 150px 120px 160px";
 
   return (
     <div className="w-full overflow-hidden rounded-lg border border-border bg-card shadow-sm flex flex-col">
@@ -20,22 +21,27 @@ export function RoleTableSkeleton() {
         <div className="px-2 py-3 flex items-center justify-center border-r border-transparent">
            <Skeleton className="w-4 h-4 rounded" />
         </div>
-        {/* Order */}
-        <div className="px-2 py-3 flex items-center justify-center">
-           <Skeleton className="h-4 w-8" />
-        </div>
+
         {/* Name */}
         <div className="px-4 py-3 flex items-center">
-           <Skeleton className="h-4 w-24" />
-        </div>
-        {/* Description */}
-        <div className="px-4 py-3 items-center hidden md:flex">
            <Skeleton className="h-4 w-32" />
         </div>
+
+        {/* Description */}
+        <div className="px-4 py-3 flex items-center">
+           <Skeleton className="h-4 w-48" />
+        </div>
+
+        {/* Permissions */}
+        <div className="px-4 py-3 hidden md:flex items-center">
+           <Skeleton className="h-4 w-24" />
+        </div>
+
         {/* Status */}
         <div className="px-4 py-3 flex items-center">
            <Skeleton className="h-4 w-16" />
         </div>
+
         {/* Actions */}
         <div className="px-4 py-3 flex items-center justify-end">
            <Skeleton className="h-4 w-16 ml-auto" />
@@ -54,22 +60,30 @@ export function RoleTableSkeleton() {
             <div className="px-2 flex items-center justify-center h-full">
               <Skeleton className="w-4 h-4 rounded" />
             </div>
-            {/* Order */}
-            <div className="px-2 flex items-center justify-center h-full">
-              <Skeleton className="h-4 w-6" />
-            </div>
+
             {/* Name */}
             <div className="px-4 flex items-center h-full">
-              <Skeleton className="h-4 w-32" />
+               <div className="flex items-center gap-2">
+                 <Skeleton className="w-4 h-4 rounded" />
+                 <Skeleton className="h-4 w-32" />
+               </div>
             </div>
+
             {/* Description */}
-            <div className="px-4 items-center h-full hidden md:flex">
-               <Skeleton className="h-4 w-48" />
+            <div className="px-4 flex items-center h-full">
+               <Skeleton className="h-4 w-64" />
             </div>
+
+            {/* Permissions */}
+            <div className="px-4 items-center h-full hidden md:flex">
+               <Skeleton className="h-5 w-24 rounded-full" />
+            </div>
+
             {/* Status */}
             <div className="px-4 flex items-center h-full">
                <Skeleton className="h-5 w-16 rounded-full" />
             </div>
+
             {/* Actions */}
             <div className="px-4 flex items-center justify-end h-full">
               <div className="flex items-center gap-1">

@@ -33,13 +33,14 @@ export function MarkdownPageTable({
   onEdit,
   onDelete
 }: MarkdownPageTableProps) {
-  const { t } = useTranslation(['markdown', 'common']);
+  const { t, i18n } = useTranslation(['markdown', 'common']);
 
   const columns = useMemo<DataTableColumn<MarkdownPage>[]>(() => [
     {
       id: 'title',
       header: () => t('form.title'),
       size: 300,
+      wrap: true,
       cell: ({ row }) => (
         <div className="flex items-center gap-3">
           {row.original.coverImage ? (
@@ -54,9 +55,9 @@ export function MarkdownPageTable({
                <FileText className="w-4 h-4" />
              </div>
           )}
-          <div>
-            <div className="font-medium text-foreground">{row.original.title}</div>
-            <div className="text-xs text-muted">/{row.original.slug}</div>
+          <div className="min-w-0 flex-1">
+            <div className="font-medium text-foreground whitespace-normal break-words leading-tight mb-0.5">{row.original.title}</div>
+            <div className="text-xs text-muted whitespace-normal break-all">/{row.original.slug}</div>
           </div>
         </div>
       )
@@ -89,7 +90,7 @@ export function MarkdownPageTable({
       id: 'updated',
       header: () => t('common:updated'),
       size: 150,
-      cell: ({ row }) => new Date(row.original.updated).toLocaleDateString()
+      cell: ({ row }) => new Date(row.original.updated).toLocaleDateString(i18n.language)
     },
     {
       id: 'actions',
@@ -126,7 +127,7 @@ export function MarkdownPageTable({
         </div>
       )
     }
-  ] as DataTableColumn<MarkdownPage>[], [t, onEdit, onDelete]);
+  ] as DataTableColumn<MarkdownPage>[], [t, i18n.language, onEdit, onDelete]);
 
   return (
     <DataTable<MarkdownPage>

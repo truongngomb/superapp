@@ -1,181 +1,157 @@
-import { Edit2, Trash2, RotateCcw, Copy } from 'lucide-react';
+
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Checkbox, Badge } from '@/components/common';
+import { Edit2, Copy, Trash2, RotateCcw, Shield } from 'lucide-react';
+import { Button, Badge, DataTable, type DataTableColumn } from '@/components/common';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
 import { cn } from '@/utils';
 import type { Role } from '@superapp/shared-types';
 
 interface RoleTableProps {
-  roles: Role[];
+  data: Role[];
+  loading: boolean;
   selectedIds: string[];
-  currentPage?: number;
-  perPage?: number;
-  /** When undefined, checkbox column is hidden */
-  onSelectAll?: (checked: boolean) => void;
-  /** When undefined, row checkboxes are hidden */
-  onSelectOne?: (id: string, checked: boolean) => void;
+  sort: { field: string; order: 'asc' | 'desc' };
+  onSort: (field: string) => void;
+  onSelect: (id: string, checked: boolean) => void;
+  onSelectAll: (checked: boolean) => void;
   onEdit: (role: Role) => void;
+  onDuplicate: (role: Role) => void;
   onDelete: (id: string) => void;
-  onRestore?: (id: string) => void;
-  onDuplicate?: (role: Role) => void;
+  onRestore: (id: string) => void;
+  currentPage?: number;
+  canSelect?: boolean;
 }
 
-/**
- * RoleTable Component
- * 
- * Table view for roles with columns: Checkbox, Name, Description, Permissions count, Status, Actions
- */
 export function RoleTable({
-  roles,
+  data,
+  loading,
   selectedIds,
-  currentPage = 1,
-  perPage = 10,
-  onSelectOne,
+  sort,
+  onSort,
+  onSelect,
+  onSelectAll,
   onEdit,
+  onDuplicate,
   onDelete,
   onRestore,
-  onDuplicate,
+  currentPage = 1,
+  canSelect = true,
 }: RoleTableProps) {
   const { t } = useTranslation(['roles', 'common']);
 
+  const columns = useMemo<DataTableColumn<Role>[]>(() => [
+    {
+      accessorKey: 'name',
+      header: t('common:name'),
+      enableSorting: true,
+      width: '1.5fr',
+      className: 'font-medium',
+      cell: ({ row }) => (
+        <div className="flex items-center gap-2">
+            <Shield className="w-4 h-4 text-primary" />
+            <span>{row.original.name}</span>
+        </div>
+      )
+    },
+    {
+       accessorKey: 'description',
+       header: t('common:description'),
+       enableSorting: false,
+       width: '2fr',
+       className: 'text-muted-foreground truncate'
+    },
+    {
+       id: 'permissions',
+       header: t('roles:form.permissions_label'),
+       width: '150px',
+       className: 'hidden md:flex',
+       cell: ({ row }) => {
+         const permissions = row.original.permissions;
+         const count = Object.entries(permissions).filter(([, actions]) => actions.length > 0).length;
+         return (
+           <Badge variant="secondary" className="font-normal">
+             {count} {t('roles:permissions_count', { count })}
+           </Badge>
+         );
+       }
+    },
+    {
+      accessorKey: 'isActive',
+      header: t('common:status'),
+      enableSorting: true,
+      size: 120,
+      cell: ({ row }) => row.original.isActive ? 
+        <Badge variant="success" size="sm">{t('common:active')}</Badge> : 
+        <Badge variant="danger" size="sm">{t('common:inactive')}</Badge>
+    },
+    {
+      id: 'actions',
+      header: t('common:actions.label'),
+      size: 160,
+      cell: ({ row }) => {
+        const role = row.original;
+        // isSystem property does not exist on Role type yet
+        const isSystem = false; 
+        return (
+        <div className="flex items-center justify-end gap-1">
+          {!role.isDeleted && (
+            <>
+               <PermissionGuard resource="roles" action="update">
+                 <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => { onEdit(role); }} 
+                    disabled={isSystem}
+                    aria-label={t('common:edit')}
+                 >
+                   <Edit2 className="w-4 h-4" />
+                 </Button>
+               </PermissionGuard>
+               <PermissionGuard resource="roles" action="create">
+                  <Button variant="ghost" size="sm" onClick={() => { onDuplicate(role); }} aria-label={t('common:duplicate')}>
+                    <Copy className="w-4 h-4 text-blue-500" />
+                  </Button>
+               </PermissionGuard>
+            </>
+          )}
+          {role.isDeleted && (
+             <PermissionGuard resource="roles" action="update">
+               <Button variant="ghost" size="sm" onClick={() => { onRestore(role.id); }} aria-label={t('common:restore')}>
+                 <RotateCcw className="w-4 h-4 text-primary" />
+               </Button>
+             </PermissionGuard>
+          )}
+          <PermissionGuard resource="roles" action="delete">
+             <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => { onDelete(role.id); }} 
+                disabled={isSystem}
+                aria-label={t('common:delete')}
+             >
+               <Trash2 className={cn("w-4 h-4", role.isDeleted ? "text-red-700" : "text-red-500")} />
+             </Button>
+          </PermissionGuard>
+        </div>
+      )}
+    }
+  ], [t, onEdit, onDuplicate, onDelete, onRestore]);
+
   return (
-    <div className="w-full overflow-auto rounded-lg border border-border bg-card shadow-sm">
-      <table className="w-full text-left border-collapse">
-        <thead className="bg-background text-muted-foreground">
-          <tr>
-            <th className="w-12 h-12 px-4 text-left">
-              {/* Select All hidden as it is handled by outer component */}
-            </th>
-            <th className="w-12 h-12 px-4 text-center font-medium">
-              {t('common:order')}
-            </th>
-            <th className="h-12 px-4 text-left font-medium">
-              {t('common:name')}
-            </th>
-            <th className="h-12 px-4 text-left font-medium hidden md:table-cell">
-              {t('roles:form.desc_label')}
-            </th>
-            <th className="h-12 px-4 text-left font-medium hidden lg:table-cell">
-              {t('roles:form.permissions_label')}
-            </th>
-            <th className="w-32 h-12 px-4 text-left font-medium">
-              {t('common:status')}
-            </th>
-            <th className="w-48 h-12 px-4 text-right font-medium">
-              {t('common:actions.label')}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {roles.map((role, index) => {
-            const isSelected = selectedIds.includes(role.id);
-            const permissionsCount = Object.entries(role.permissions)
-              .filter(([, actions]) => actions.length > 0)
-              .length;
-            const orderNumber = (currentPage - 1) * perPage + index + 1;
-
-            return (
-              <tr
-                key={role.id}
-                className={cn(
-                  'border-t border-border transition-colors hover:bg-muted/5',
-                  isSelected && 'bg-primary/5'
-                )}
-              >
-                <td className="p-4 align-middle">
-                  {onSelectOne && (
-                    <Checkbox
-                      checked={isSelected}
-                      onChange={(checked) => { onSelectOne(role.id, checked); }}
-                    />
-                  )}
-                </td>
-                <td className="p-4 align-middle text-center text-muted-foreground">
-                  {orderNumber}
-                </td>
-                <td className="p-4 align-middle">
-                  <span className="font-medium text-foreground">{role.name}</span>
-                </td>
-                <td className="p-4 align-middle hidden md:table-cell">
-                  <span className="text-muted-foreground line-clamp-1">
-                    {role.description || '-'}
-                  </span>
-                </td>
-                <td className="p-4 align-middle hidden lg:table-cell">
-                  <span className="text-muted-foreground text-xs">
-                    {permissionsCount} {t('roles:list.resources_configured')}
-                  </span>
-                </td>
-                <td className="p-4 align-middle">
-                  {role.isActive ? (
-                    <Badge variant="success" size="sm">{t('common:active')}</Badge>
-                  ) : (
-                    <Badge variant="danger" size="sm">{t('common:inactive')}</Badge>
-                  )}
-                </td>
-                <td className="p-4 align-middle">
-                  <div className="flex items-center justify-end gap-1">
-                    {!role.isDeleted && (
-                      <PermissionGuard resource="roles" action="update">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => { onEdit(role); }}
-                          aria-label={t('common:edit')}
-                        >
-                          <Edit2 className="w-4 h-4" />
-                        </Button>
-                      </PermissionGuard>
-                    )}
-
-                    {!role.isDeleted && onDuplicate && (
-                      <PermissionGuard resource="roles" action="create">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => { onDuplicate(role); }}
-                          aria-label={t('common:duplicate')}
-                        >
-                          <Copy className="w-4 h-4 text-blue-500" />
-                        </Button>
-                      </PermissionGuard>
-                    )}
-
-                    {role.isDeleted && onRestore && (
-                      <PermissionGuard resource="roles" action="update">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => { onRestore(role.id); }}
-                          aria-label={t('common:restore')}
-                        >
-                          <RotateCcw className="w-4 h-4 text-primary" />
-                        </Button>
-                      </PermissionGuard>
-                    )}
-
-                    <PermissionGuard resource="roles" action="delete">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => { onDelete(role.id); }}
-                        aria-label={t('common:delete')}
-                      >
-                        <Trash2
-                          className={cn(
-                            'w-4 h-4',
-                            role.isDeleted ? 'text-red-700' : 'text-red-500'
-                          )}
-                        />
-                      </Button>
-                    </PermissionGuard>
-                  </div>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+    <DataTable<Role>
+      data={data}
+      columns={columns}
+      keyExtractor={(role) => role.id}
+      selectedIds={canSelect ? selectedIds : undefined}
+      onSelectAll={canSelect ? onSelectAll : undefined}
+      onSelectOne={canSelect ? onSelect : undefined}
+      sortColumn={sort.field}
+      sortDirection={sort.order}
+      onSort={onSort}
+      currentPage={currentPage}
+      showSelectAll={true}
+      isLoading={loading}
+    />
   );
 }

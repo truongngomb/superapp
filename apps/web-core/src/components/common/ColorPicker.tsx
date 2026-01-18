@@ -238,10 +238,10 @@ export function ColorPicker({
     try {
       await navigator.clipboard.writeText(hexInput);
       setCopied(true);
-      toast.success(t('color_copied', { defaultValue: 'Copied!' }));
+      toast.success(t('color_copied'));
       setTimeout(() => { setCopied(false); }, 2000);
     } catch {
-      toast.error(t('copy_failed', { defaultValue: 'Copy failed' }));
+      toast.error(t('copy_failed'));
     }
   };
   
@@ -279,19 +279,19 @@ export function ColorPicker({
                 disabled && 'opacity-50 cursor-not-allowed'
               )}
               title={mode === 'picker' 
-                ? t('switch_to_presets', { defaultValue: 'Switch to color palette' })
-                : t('switch_to_picker', { defaultValue: 'Switch to color picker' })
+                ? t('switch_to_presets')
+                : t('switch_to_picker')
               }
             >
               {mode === 'picker' ? (
                 <>
                   <Palette className="w-4 h-4" />
-                  <span className="hidden sm:inline">{t('presets', { defaultValue: 'Palette' })}</span>
+                  <span className="hidden sm:inline">{t('presets')}</span>
                 </>
               ) : (
                 <>
                   <Pipette className="w-4 h-4" />
-                  <span className="hidden sm:inline">{t('picker', { defaultValue: 'Picker' })}</span>
+                  <span className="hidden sm:inline">{t('picker')}</span>
                 </>
               )}
             </Button>
@@ -354,7 +354,7 @@ export function ColorPicker({
                   'absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 p-0',
                   disabled && 'pointer-events-none'
                 )}
-                title={t('copy', { defaultValue: 'Copy' })}
+                title={t('copy')}
               >
                 {copied ? (
                   <Check className="w-4 h-4 text-green-500" />
@@ -422,7 +422,7 @@ export function ColorPicker({
                     'absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 p-0',
                     disabled && 'pointer-events-none'
                   )}
-                  title={t('copy', { defaultValue: 'Copy' })}
+                  title={t('copy')}
                 >
                   {copied ? (
                     <Check className="w-4 h-4 text-green-500" />
@@ -440,7 +440,7 @@ export function ColorPicker({
       {showOpacity && (
         <div className="flex items-center gap-3">
           <span className="text-sm text-muted min-w-[60px]">
-            {t('opacity', { defaultValue: 'Opacity' })}
+            {t('opacity')}
           </span>
           <input
             type="range"

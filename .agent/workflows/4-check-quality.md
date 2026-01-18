@@ -83,6 +83,18 @@ Kiểm tra CHẤT LƯỢNG CODE và ĐỘ ĐỒNG NHẤT (Consistency) tuyệt �
 - [ ] **Prefix**: Sử dụng `{feature}.{screen}.{element}` hoặc `common:*`.
 - [ ] **Mobile-specific keys**: Đã thêm `list.end_of_list`, `deleted`, `duplicate` nếu cần.
 
+### 5. Standardization & UI Compliance (BẮT BUỘC)
+- [ ] **Component-First Policy**: Mọi thành phần UI phải được import từ `@superapp/ui-kit` hoặc `@/components/common`.
+    - ⛔ **CẤM**: Các thẻ HTML thuần (`button`, `input`, `table`...) khi đã có Component thay thế.
+    - ✅ **DÙNG**: `Button`, `Input`, `Select`, `DataTable`, `Card`, `Modal`...
+- [ ] **Unified Patterns**:
+    - **View Strategy**:
+        - **Table View**: BẮT BUỘC dùng `DataTable` (Desktop/Tablet).
+        - **Mobile View**: BẮT BUỘC dùng `MobileCard` component (tách biệt với Table).
+        - **List View** (Optional): Dùng layout Flex/Grid custom nếu cần.
+    - **Feedback**: BẮT BUỘC dùng `Context/Toast` hoặc `Alert Component`.
+- [ ] **Design Tokens**: Sử dụng utility class chuẩn (text-primary, bg-surface...) thay vì hardcode màu/size.
+
 ---
 
 ## PHẦN III: KIỂM TRA BACKEND (POCKETBASE)
