@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/common';
 
 export function RoleMobileCardSkeleton() {
   return (
-    <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
+    <div className="bg-card border rounded-lg shadow-sm overflow-hidden">
       {/* Header */}
       <div className="p-4 pb-3">
         <div className="flex items-center gap-3">
@@ -28,10 +28,14 @@ export function RoleMobileCardSkeleton() {
       </div>
 
       {/* Info Rows */}
-      <div className="mx-4 mb-4 p-3 rounded-lg bg-muted/50">
-        <div className="flex items-start gap-3">
-           <Skeleton className="w-6 h-6 rounded-full" />
-           <Skeleton className="w-full h-8" />
+      <div className="mx-4 mb-4">
+        {/* Description Row */}
+        <div className="flex items-center bg-gray-100 dark:bg-gray-700/30 rounded mb-2 p-2">
+          <div className="flex items-center gap-3">
+             <Skeleton className="w-6 h-6 rounded-full" />
+             <Skeleton className="w-24 h-4" />
+          </div>
+          <Skeleton className="ml-auto w-40 h-4" />
         </div>
       </div>
 

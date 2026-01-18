@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/common';
  * Grid Template: Order(48px) User(250px) Action(140px) Resource(140px) Details(1.5fr) Time(180px)
  */
 export function ActivityLogTableSkeleton() {
-  const gridTemplateColumns = "48px 250px 140px 140px 1.5fr 180px";
+  const gridTemplateColumns = "48px 250px 140px 140px 1.5fr 200px";
 
   return (
     <div className="w-full overflow-hidden rounded-lg border border-border bg-card shadow-sm flex flex-col">

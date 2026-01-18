@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/common';
 
 export function UserMobileCardSkeleton() {
   return (
-    <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
+    <div className="bg-card border rounded-lg shadow-sm overflow-hidden">
       {/* Header */}
       <div className="p-4 pb-3">
         <div className="flex items-center gap-3">
@@ -31,17 +31,25 @@ export function UserMobileCardSkeleton() {
       </div>
 
       {/* Info Rows */}
-      <div className="mx-4 mb-4 p-3 rounded-lg bg-muted/50 space-y-3">
-        <div className="flex items-center gap-3">
-           <Skeleton className="w-6 h-6 rounded-full" />
-           <Skeleton className="w-32 h-4" />
+      <div className="mx-4 mb-4">
+        {/* Email Row */}
+        <div className="flex items-center bg-gray-100 dark:bg-gray-700/30 rounded mb-2 p-2">
+           <div className="flex items-center gap-3">
+              <Skeleton className="w-6 h-6 rounded-full" />
+              <Skeleton className="w-20 h-4" />
+           </div>
+           <Skeleton className="ml-auto w-32 h-4" />
         </div>
         
-        <div className="flex items-center gap-3 border-t border-border pt-2">
-           <Skeleton className="w-6 h-6 rounded-full" />
-           <div className="flex gap-2">
-              <Skeleton className="w-16 h-5 rounded-full" />
-              <Skeleton className="w-12 h-5 rounded-full" />
+        {/* Roles Row */}
+        <div className="flex items-center bg-gray-100 dark:bg-gray-700/30 rounded mb-2 p-2">
+           <div className="flex items-center gap-3">
+              <Skeleton className="w-6 h-6 rounded-full" />
+              <Skeleton className="w-20 h-4" />
+           </div>
+           <div className="ml-auto flex gap-1">
+              <Skeleton className="w-16 h-6 rounded-full" />
+              <Skeleton className="w-12 h-6 rounded-full" />
            </div>
         </div>
       </div>

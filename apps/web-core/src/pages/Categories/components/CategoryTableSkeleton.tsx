@@ -2,7 +2,7 @@ import { Skeleton } from '@/components/common';
 
 export function CategoryTableSkeleton() {
   // Selection(48px) Order(48px) Icon(60px) Name(200px) Description(2fr) Status(120px) Actions(120px)
-  const gridTemplateColumns = "48px 48px 60px 200px 2fr 120px 120px";
+  const gridTemplateColumns = "48px 48px 60px 200px 2fr 120px 160px";
 
   return (
     <div className="w-full overflow-hidden rounded-lg border border-border bg-card shadow-sm flex flex-col">

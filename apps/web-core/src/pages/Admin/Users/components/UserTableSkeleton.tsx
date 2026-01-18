@@ -8,7 +8,7 @@ import { Skeleton } from '@/components/common';
  */
 export function UserTableSkeleton() {
   // Exact string from DataTable logic for UsersPage columns
-  const gridTemplateColumns = "48px 48px 60px 1.5fr 2fr 1.5fr 120px 120px";
+  const gridTemplateColumns = "48px 48px 80px 1.5fr 2fr 1.5fr 120px 160px";
 
   return (
     <div className="w-full overflow-hidden rounded-lg border border-border bg-card shadow-sm flex flex-col">

@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/common';
  * Grid Template: Selection(48px) Order(48px) Name(200px) Description(2fr) Status(120px) Actions(160px)
  */
 export function RoleTableSkeleton() {
-  const gridTemplateColumns = "48px 48px 200px 2fr 120px 160px";
+  const gridTemplateColumns = "48px 48px 200px 2fr 120px 180px";
 
   return (
     <div className="w-full overflow-hidden rounded-lg border border-border bg-card shadow-sm flex flex-col">
