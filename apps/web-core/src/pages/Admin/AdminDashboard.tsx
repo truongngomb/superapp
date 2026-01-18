@@ -32,7 +32,7 @@ interface DashboardStats {
 // ============================================================================
 
 export default function AdminDashboard() {
-  const { t } = useTranslation(['common']);
+  const { t } = useTranslation(['common', 'categories', 'activity_logs']);
   const [stats, setStats] = useState<DashboardStats>({ users: 0, roles: 0, categories: 0, activityLogs: 0 });
   const [systemStats, setSystemStats] = useState<SystemStats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -192,6 +192,7 @@ export default function AdminDashboard() {
           {[
             {
               label: t('users'),
+              description: t('admin_dashboard.manage_users_desc'),
               value: stats.users,
               icon: <Users className="w-6 h-6" />,
               color: 'from-blue-500 to-blue-600',
@@ -199,6 +200,7 @@ export default function AdminDashboard() {
             },
             {
               label: t('roles'),
+              description: t('admin_dashboard.manage_roles_desc'),
               value: stats.roles,
               icon: <Shield className="w-6 h-6" />,
               color: 'from-purple-500 to-purple-600',
@@ -212,17 +214,20 @@ export default function AdminDashboard() {
               transition={{ delay: index * 0.1 }}
             >
               <Link to={stat.link}>
-                <Card className="hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer overflow-hidden">
-                  <CardContent className="p-0">
-                    <div className="flex items-center gap-4 p-5">
-                      <div className={`p-3 rounded-xl bg-gradient-to-br ${stat.color} text-white shadow-lg`}>
+                <Card className="hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer overflow-hidden h-full">
+                  <CardContent className="p-0 h-full flex flex-col">
+                    <div className="flex items-start gap-4 p-5 flex-1">
+                      <div className={`p-3 rounded-xl bg-gradient-to-br ${stat.color} text-white shadow-lg mt-1`}>
                         {stat.icon}
                       </div>
-                      <div className="flex-1">
-                        <p className="text-sm text-muted">{stat.label}</p>
-                        <p className="text-3xl font-bold text-foreground">{stat.value}</p>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-1">{stat.label}</p>
+                        <p className="text-3xl font-bold text-foreground mb-2">{stat.value}</p>
+                        <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                          {stat.description}
+                        </p>
                       </div>
-                      <TrendingUp className="w-5 h-5 text-muted" />
+                      <TrendingUp className="w-5 h-5 text-muted shrink-0" />
                     </div>
                     <div className={`h-1 bg-gradient-to-r ${stat.color}`} />
                   </CardContent>
@@ -243,6 +248,7 @@ export default function AdminDashboard() {
           {[
             {
               label: t('categories'),
+              description: t('categories:subtitle'),
               value: stats.categories,
               icon: <FolderTree className="w-6 h-6" />,
               color: 'from-emerald-500 to-emerald-600',
@@ -250,6 +256,7 @@ export default function AdminDashboard() {
             },
             {
               label: t('activity_logs'),
+              description: t('activity_logs:subtitle'),
               value: stats.activityLogs,
               icon: <Activity className="w-6 h-6" />,
               color: 'from-amber-500 to-amber-600',
@@ -263,17 +270,20 @@ export default function AdminDashboard() {
               transition={{ delay: 0.2 + index * 0.1 }}
             >
               <Link to={stat.link}>
-                <Card className="hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer overflow-hidden">
-                  <CardContent className="p-0">
-                    <div className="flex items-center gap-4 p-5">
-                      <div className={`p-3 rounded-xl bg-gradient-to-br ${stat.color} text-white shadow-lg`}>
+                <Card className="hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer overflow-hidden h-full">
+                  <CardContent className="p-0 h-full flex flex-col">
+                    <div className="flex items-start gap-4 p-5 flex-1">
+                      <div className={`p-3 rounded-xl bg-gradient-to-br ${stat.color} text-white shadow-lg mt-1`}>
                         {stat.icon}
                       </div>
-                      <div className="flex-1">
-                        <p className="text-sm text-muted">{stat.label}</p>
-                        <p className="text-3xl font-bold text-foreground">{stat.value}</p>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-1">{stat.label}</p>
+                        <p className="text-3xl font-bold text-foreground mb-2">{stat.value}</p>
+                        <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                          {stat.description}
+                        </p>
                       </div>
-                      <TrendingUp className="w-5 h-5 text-muted" />
+                      <TrendingUp className="w-5 h-5 text-muted shrink-0" />
                     </div>
                     <div className={`h-1 bg-gradient-to-r ${stat.color}`} />
                   </CardContent>

@@ -52,14 +52,12 @@ class PermissionService {
         log.debug(`Fetched ${String(roles?.length ?? 0)} roles for user ${userId}`);
       }
 
-      if (!roles || roles.length === 0) {
-        return {};
-      }
+      
+      // Start with Authenticated role permissions (common for all logged-in users)
+      const mergedPermissions: RolePermissions = await this.getAuthenticatedRolePermissions();
 
-      // Merge permissions from all roles (union)
-      const mergedPermissions: RolePermissions = {};
-
-      for (const role of roles) {
+      if (roles && roles.length > 0) {
+        for (const role of roles) {
         let perms: unknown = role['permissions'];
 
         // Handle potential string serialization from PocketBase
@@ -96,6 +94,7 @@ class PermissionService {
           }
         }
       }
+    }
 
       if (config.isDevelopment) {
         log.debug(`Merged permissions for user ${userId}:`, mergedPermissions);
@@ -116,13 +115,32 @@ class PermissionService {
    * @returns RolePermissions for the Public role, or empty object if not found
    */
   async getPublicRolePermissions(): Promise<RolePermissions> {
-    const cacheKey = 'public_role_permissions';
+    return this.getSpecialRolePermissions('Public');
+  }
+
+  /**
+   * Get permissions for the Authenticated role (for all logged-in users)
+   * 
+   * Fetches the "Authenticated" role from database and returns its permissions.
+   * Results are cached for 60 seconds to minimize database queries.
+   * 
+   * @returns RolePermissions for the Authenticated role, or empty object if not found
+   */
+  async getAuthenticatedRolePermissions(): Promise<RolePermissions> {
+    return this.getSpecialRolePermissions('Authenticated');
+  }
+
+  /**
+   * Helper to get permissions for a special system role by name
+   */
+  private async getSpecialRolePermissions(roleName: string): Promise<RolePermissions> {
+    const cacheKey = `special_role_perms_${roleName}`;
     const cached = cache.get<RolePermissions>(cacheKey);
     if (cached) return cached;
 
     const pbAvailable = await checkPocketBaseHealth();
     if (!pbAvailable) {
-      log.warn('Database unavailable, returning empty public permissions');
+      log.warn(`Database unavailable, returning empty ${roleName} permissions`);
       return {};
     }
 
@@ -130,19 +148,19 @@ class PermissionService {
       // Ensure adminPb is authenticated before querying
       await ensureAdminAuth();
       
-      const publicRole = await adminPb.collection(Collections.ROLES)
-        .getFirstListItem('name = "Public" && isActive = true && isDeleted = false', {
+      const role = await adminPb.collection(Collections.ROLES)
+        .getFirstListItem(`name = "${roleName}" && isActive = true && isDeleted = false`, {
           requestKey: null,
         });
 
-      let permissions = publicRole['permissions'] as unknown;
+      let permissions = role['permissions'] as unknown;
 
       // Handle potential string serialization from PocketBase
       if (typeof permissions === 'string') {
         try {
           permissions = JSON.parse(permissions) as unknown;
         } catch {
-          log.error('Failed to parse Public role permissions JSON');
+          log.error(`Failed to parse ${roleName} role permissions JSON`);
           return {};
         }
       }
@@ -157,12 +175,13 @@ class PermissionService {
       cache.set(cacheKey, rolePerms, 60);
 
       if (config.isDevelopment) {
-        log.debug('Public role permissions:', rolePerms);
+        log.debug(`${roleName} role permissions:`, rolePerms);
       }
 
       return rolePerms;
-    } catch (error) {
-      log.debug('Failed to fetch Public role permissions (role may not exist)', error);
+    } catch {
+      // It is normal for roles to not exist if not created yet
+      log.debug(`Failed to fetch ${roleName} role permissions (role may not exist)`);
       return {};
     }
   }
@@ -179,3 +198,6 @@ export const getUserPermissions = permissionService.getUserPermissions.bind(perm
 
 /** Get permissions for the Public role (guest users) */
 export const getPublicRolePermissions = permissionService.getPublicRolePermissions.bind(permissionService);
+
+/** Get permissions for the Authenticated role (logged-in users) */
+export const getAuthenticatedRolePermissions = permissionService.getAuthenticatedRolePermissions.bind(permissionService);

@@ -25,6 +25,11 @@ export function useLayoutMode() {
     if (path.startsWith('/admin/')) {
       pathsToCheck.push(path.replace('/admin', ''));
     }
+    
+    // Map markdown viewer pages to markdown_pages resource layout
+    if (path.startsWith('/pages/')) {
+      pathsToCheck.push('/markdown_pages');
+    }
 
     // Find best match (longest prefix)
     const pageOverrides = layoutConfig.pages;

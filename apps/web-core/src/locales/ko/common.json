@@ -83,6 +83,7 @@
   },
   "success": "성공",
   "name": "이름",
+  "description": "설명",
   "order": "#",
   "status": "상태",
   "created": "생성일",

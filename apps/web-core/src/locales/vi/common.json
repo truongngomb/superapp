@@ -96,6 +96,7 @@
   },
   "success": "Thành công",
   "name": "Tên",
+  "description": "Mô tả",
   "order": "#",
   "status": "Trạng thái",
   "created": "Ngày tạo",

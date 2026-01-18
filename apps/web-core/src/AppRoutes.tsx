@@ -91,6 +91,21 @@ export function AppRoutes() {
           }
         />
 
+        {/* Protected Markdown Management Route */}
+        <Route
+          path="markdown-pages"
+          element={
+            <ProtectedRoute
+              resource={PermissionResource.MarkdownManage}
+              action={PermissionAction.View}
+            >
+              <LazyPage>
+                <MarkdownPagesPage />
+              </LazyPage>
+            </ProtectedRoute>
+          }
+        />
+
         {/* Guest Only Routes */}
         <Route
           path="login"
@@ -191,28 +206,21 @@ export function AppRoutes() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="markdown-pages"
-            element={
-              <ProtectedRoute
-                resource={PermissionResource.MarkdownPages}
-                action={PermissionAction.View}
-              >
-                <LazyPage>
-                  <MarkdownPagesPage />
-                </LazyPage>
-              </ProtectedRoute>
-            }
-          />
+
         </Route>
 
-        {/* Public Markdown Pages */}
+        {/* Markdown Pages (Protected by Role Permissions) */}
         <Route
           path="pages/:slug"
           element={
-            <LazyPage>
-              <MarkdownViewerPage />
-            </LazyPage>
+            <ProtectedRoute
+              resource={PermissionResource.MarkdownPages}
+              action={PermissionAction.View}
+            >
+              <LazyPage>
+                <MarkdownViewerPage />
+              </LazyPage>
+            </ProtectedRoute>
           }
         />
 

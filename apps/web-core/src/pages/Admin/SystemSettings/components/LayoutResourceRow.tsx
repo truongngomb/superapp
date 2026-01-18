@@ -32,7 +32,7 @@ export function LayoutResourceRow({ resource, currentMode, onModeChange }: Layou
           <SelectTrigger className="w-full">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-background">
             <SelectItem value="default">{t('settings:layout.modes.default')} ({t('settings:layout.global_layout')})</SelectItem>
             <SelectItem value="standard">{t('settings:layout.modes.standard')}</SelectItem>
             <SelectItem value="modern">{t('settings:layout.modes.modern')}</SelectItem>

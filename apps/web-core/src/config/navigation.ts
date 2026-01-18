@@ -1,4 +1,4 @@
-import { Home, Folder, Settings } from 'lucide-react';
+import { Home, Folder, Settings, FileText } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 import type { ParseKeys } from 'i18next';
@@ -22,9 +22,15 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
   },
   { 
     path: '/categories', 
-    labelKey: 'categories', 
+    labelKey: 'categories:title', 
     icon: Folder,
     permission: { resource: 'categories', action: 'view' }
+  },
+  { 
+    path: '/markdown-pages', 
+    labelKey: 'markdown:title', 
+    icon: FileText,
+    permission: { resource: 'markdown_manage', action: 'view' }
   },
   { 
     path: '/admin', 

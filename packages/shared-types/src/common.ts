@@ -271,5 +271,6 @@ export enum PermissionResource {
   Dashboard = 'dashboard',
   Home = 'home',
   ApiDocs = 'api-docs',
+  MarkdownManage = 'markdown_manage',
 }
 
