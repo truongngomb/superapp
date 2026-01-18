@@ -71,7 +71,8 @@
     "move_up": "Move Up",
     "move_down": "Move Down",
     "remove": "Remove",
-    "go_home": "Go to Home"
+    "go_home": "Go to Home",
+    "manage": "Manage"
   },
   "data_table": {
     "select_row": "Select row",
@@ -80,11 +81,16 @@
     "table_label": "Data Table"
   },
   "resources": {
+    "all": "All Modules",
     "users": "Users",
     "categories": "Categories",
     "roles": "Roles",
     "activity_logs": "Activity Logs",
-    "markdown_pages": "Markdown Pages"
+    "markdown_pages": "Markdown Pages",
+    "dashboard": "Dashboard",
+    "home": "Home",
+    "api-docs": "API Documentation",
+    "markdown_manage": "Manage Markdown"
   },
   "success": "Success",
   "name": "Name",

@@ -66,7 +66,8 @@
     "move_up": "위로 이동",
     "move_down": "아래로 이동",
     "remove": "제거",
-    "go_home": "홈으로 이동"
+    "go_home": "홈으로 이동",
+    "manage": "관리"
   },
   "data_table": {
     "select_row": "행 선택",
@@ -75,11 +76,16 @@
     "table_label": "데이터 테이블"
   },
   "resources": {
+    "all": "전체",
     "users": "사용자",
     "categories": "카테고리",
     "roles": "역할",
     "activity_logs": "활동 로그",
-    "markdown_pages": "마크다운 페이지"
+    "markdown_pages": "마크다운 페이지",
+    "dashboard": "대시보드",
+    "home": "홈",
+    "api-docs": "API 문서",
+    "markdown_manage": "마크다운 관리"
   },
   "success": "성공",
   "name": "이름",

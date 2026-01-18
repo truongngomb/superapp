@@ -72,7 +72,8 @@
     "move_up": "Di chuyển lên",
     "move_down": "Di chuyển xuống",
     "remove": "Gỡ bỏ",
-    "go_home": "Về trang chủ"
+    "go_home": "Về trang chủ",
+    "manage": "Quản trị"
   },
   "data_table": {
     "select_row": "Chọn dòng",
@@ -81,11 +82,16 @@
     "table_label": "Bảng dữ liệu"
   },
   "resources": {
+    "all": "Tất cả",
     "users": "Người dùng",
     "categories": "Danh mục",
     "roles": "Vai trò",
     "activity_logs": "Nhật ký",
-    "markdown_pages": "Trang Markdown"
+    "markdown_pages": "Trang Markdown",
+    "dashboard": "Tổng quan",
+    "home": "Trang chủ",
+    "api-docs": "Tài liệu API",
+    "markdown_manage": "Quản lý Markdown"
   },
   "remove_success": "Đã xóa thành công",
   "remove_error": "Lỗi khi xóa",
