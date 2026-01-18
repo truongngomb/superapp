@@ -26,9 +26,9 @@ markdownRouter.get(
   asyncHandler(markdownController.getBySlug)
 );
 
-/** GET /markdown-pages/menu/:position - Get menu tree */
+/** GET /markdown-pages/menu - Get menu tree */
 markdownRouter.get(
-  '/menu/:position',
+  '/menu',
   asyncHandler(markdownController.getMenuTree)
 );
 

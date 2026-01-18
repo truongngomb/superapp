@@ -20,21 +20,18 @@
     "icon_placeholder": "VD: settings, home (tên icon Lucide)",
     "cover_image": "Ảnh bìa",
     "show_in_menu": "Hiện trên menu",
-    "menu_position": "Vị trí menu",
+    "is_title": "Là tiêu đề mục (Không click được)",
+    "menu_title": "Tên trên Menu",
+    "menu_title_placeholder": "Tên ngắn gọn hiển thị (tùy chọn)",
     "parent_page": "Trang cha",
+    "select_parent": "Chọn trang cha...",
+    "none": "Không có",
     "order": "Thứ tự",
     "published": "Đã xuất bản",
     "published_help": "Hiển thị công khai",
     "settings": "Cài đặt",
     "assets": "Tài nguyên",
-    "select_position": "Chọn vị trí",
     "has_cover": "Có ảnh bìa"
-  },
-  
-  "menu_position": {
-    "header": "Đầu trang (Header)",
-    "footer": "Chân trang (Footer)",
-    "sidebar": "Thanh bên (Sidebar)"
   },
   
   "errors": {

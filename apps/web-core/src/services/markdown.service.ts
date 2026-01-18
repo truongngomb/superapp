@@ -10,8 +10,7 @@ import type {
   MarkdownPageUpdateInput, 
   MarkdownPageListParams, 
   PaginatedMarkdownPages,
-  MarkdownMenuItem,
-  MenuPositionType
+  MarkdownMenuItem
 } from '@superapp/shared-types';
 
 interface ServiceConfig extends Omit<RequestConfig, 'signal'> {
@@ -35,7 +34,6 @@ export const markdownService = {
       if (params?.search) queryParams.append('search', params.search);
       if (params?.isPublished !== undefined) queryParams.append('isPublished', params.isPublished.toString());
       if (params?.showInMenu !== undefined) queryParams.append('showInMenu', params.showInMenu.toString());
-      if (params?.menuPosition) queryParams.append('menuPosition', params.menuPosition);
 
       const queryString = queryParams.toString();
       const endpoint = queryString 
@@ -97,14 +95,18 @@ export const markdownService = {
   },
 
   /**
-   * Get menu tree by position
+   * Get menu tree
    */
-  async getMenuTree(position: MenuPositionType, config?: ServiceConfig): Promise<MarkdownMenuItem[]> {
+  async getMenuTree(config?: ServiceConfig): Promise<MarkdownMenuItem[]> {
     const { controller, clear } = createAbortController(config?.timeout ?? env.API_REQUEST_TIMEOUT);
     
     try {
       // Access public endpoint
-      return await api.get<MarkdownMenuItem[]>(`${API_ENDPOINTS.MARKDOWN_PAGES}/menu/${position}`, {
+      // Assuming api-server route will change to /markdown-pages/menu or just return filtered tree
+      // But for now let's just use a general menu endpoint if user wants to keep the tree functionality but without position.
+      // If the user wants to remove menuPosition completely, getMenuTree logic on backend probably needs adjustment to not wait for position.
+      // Let's assume we fetch ALL menu items
+      return await api.get<MarkdownMenuItem[]>(`${API_ENDPOINTS.MARKDOWN_PAGES}/menu`, {
         signal: config?.signal ?? controller.signal,
       });
     } finally {

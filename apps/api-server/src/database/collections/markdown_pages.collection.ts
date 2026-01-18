@@ -8,7 +8,6 @@ import {
   textField, 
   editorField,
   fileField,
-  selectField,
   relationField,
   numberField,
   dateField,
@@ -21,6 +20,8 @@ export const markdownPagesCollection: BaseCollectionSchema = {
 
   fields: [
     textField('title', { required: true }),
+    textField('menuTitle'),
+    boolField('isTitle'),
     textField('slug', { required: true, pattern: '^[a-z0-9-]+$' }),
     editorField('content'),
     textField('excerpt'),
@@ -31,7 +32,6 @@ export const markdownPagesCollection: BaseCollectionSchema = {
       maxSize: 5242880 // 5MB
     }),
     boolField('showInMenu'),
-    selectField('menuPosition', ['header', 'footer', 'sidebar'], { maxSelect: 1 }),
     relationField('parentId', 'markdown_pages', { maxSelect: 1, cascadeDelete: false }),
     numberField('order'),
     boolField('isPublished'),

@@ -8,9 +8,8 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, User } from 'lucide-react';
 import { cn } from '@/utils';
-import { NAVIGATION_ITEMS } from '@/config/navigation';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
-import { useAuth } from '@/hooks';
+import { useAuth, useAppMenu } from '@/hooks';
 import { Button } from '@/components/common';
 
 interface ModernSidebarProps {
@@ -24,6 +23,7 @@ export function ModernSidebar({ open, onClose, className, desktopOpen = true }: 
   const { t } = useTranslation(['common', 'users', 'roles', 'categories', 'home', 'auth']);
   const location = useLocation();
   const { user } = useAuth();
+  const { menuItems } = useAppMenu();
 
   return (
     <>
@@ -76,28 +76,72 @@ export function ModernSidebar({ open, onClose, className, desktopOpen = true }: 
 
            {/* Navigation */}
            <nav className="flex-1 overflow-y-auto py-6 px-3 space-y-1">
-              {NAVIGATION_ITEMS.map((item) => {
+              {menuItems.map((item) => {
                  const Icon = item.icon;
                  const isActive = item.matchPrefix 
                    ? location.pathname.startsWith(item.path)
                    : location.pathname === item.path;
+                   
+                 // Simple recursive render for children could go here, but for now max 2 levels
+                 // We will render parent then cached children if any (simplified)
+                 
+                 let link;
+                 
+                 if (item.isTitle) {
+                    link = (
+                        <div key={item.path} className="px-4 py-2 mt-4 mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider cursor-default">
+                           {item.label}
+                        </div>
+                    );
+                 } else {
+                     link = (
+                       <Link
+                         key={item.path}
+                         to={item.path}
+                         onClick={() => { if(window.innerWidth < 1024) onClose(); }}
+                         className={cn(
+                           'px-4 py-3 rounded-lg text-sm font-medium transition-colors',
+                           'flex items-center gap-3',
+                           isActive
+                             ? 'bg-primary/10 text-primary'
+                             : 'text-muted-foreground hover:text-foreground hover:bg-surface'
+                         )}
+                       >
+                         <Icon className="w-5 h-5" />
+                         <span className="truncate">{item.label}</span>
+                       </Link>
+                     );
+                 }
 
-                 const link = (
-                   <Link
-                     key={item.path}
-                     to={item.path}
-                     onClick={() => { if(window.innerWidth < 1024) onClose(); }}
-                     className={cn(
-                       'px-4 py-3 rounded-lg text-sm font-medium transition-colors',
-                       'flex items-center gap-3',
-                       isActive
-                         ? 'bg-primary/10 text-primary'
-                         : 'text-muted-foreground hover:text-foreground hover:bg-surface'
+                 const content = (
+                   <div key={item.path}>
+                     {link}
+                     {/* Render Children (Level 2) - Indented */}
+                     {item.children && item.children.length > 0 && (
+                        <div className="ml-4 mt-1 space-y-1 border-l border-border pl-2">
+                          {item.children.map(child => {
+                            const ChildIcon = child.icon;
+                            const isChildActive = location.pathname === child.path;
+                            return (
+                              <Link
+                                key={child.path}
+                                to={child.path}
+                                onClick={() => { if(window.innerWidth < 1024) onClose(); }}
+                                className={cn(
+                                  'flex items-center gap-3 px-4 py-2 rounded-lg text-sm transition-colors',
+                                  isChildActive
+                                    ? 'text-primary font-medium bg-primary/5'
+                                    : 'text-muted-foreground hover:text-foreground hover:bg-surface'
+                                )}
+                              >
+                                <ChildIcon className="w-4 h-4" />
+                                <span className="truncate">{child.label}</span>
+                              </Link>
+                            );
+                          })}
+                        </div>
                      )}
-                   >
-                     <Icon className="w-5 h-5" />
-                     {t(item.labelKey)}
-                   </Link>
+                   </div>
                  );
 
                  if (item.permission) {
@@ -107,12 +151,12 @@ export function ModernSidebar({ open, onClose, className, desktopOpen = true }: 
                        resource={item.permission.resource}
                        action={item.permission.action}
                      >
-                       {link}
+                       {content}
                      </PermissionGuard>
                    );
                  }
 
-                 return link;
+                 return content;
               })}
            </nav>
            

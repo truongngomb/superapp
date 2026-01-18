@@ -1,7 +1,7 @@
 import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'react-i18next';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { z } from 'zod';
 import { 
   MarkdownPageCreateSchema, 
@@ -11,26 +11,27 @@ import {
 import { 
   Button, 
   Input, 
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
   Textarea, 
   Toggle, 
   Modal, 
   FileUploader, 
-  MarkdownEditor
+  MarkdownEditor,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
 } from '@superapp/ui-kit';
 import { generateSlug } from '@superapp/core-logic';
 import { useMarkdownPages } from '@/hooks';
 import { useToast } from '@/context';
-import { Wand2, Image as ImageIcon, FileText, Link as LinkIcon } from 'lucide-react';
+import { Wand2, Image as ImageIcon, FileText, Link as LinkIcon, Folder } from 'lucide-react';
 
 // Extend schema with required boolean defaults
 const FormSchema = MarkdownPageCreateSchema.extend({
   coverImage: z.union([z.string(), z.any()]).optional(), // Allow File object
   isDeleted: z.boolean().default(false),
+  isTitle: z.boolean().default(false),
   showInMenu: z.boolean().default(false),
   order: z.number().default(0),
   isPublished: z.boolean().default(true),
@@ -53,8 +54,9 @@ export function MarkdownPageForm({
 }: MarkdownPageFormProps) {
   const { t } = useTranslation(['markdown', 'common']);
   const toast = useToast();
-  const { createPage, updatePage, submitting } = useMarkdownPages();
+  const { createPage, updatePage, submitting, getAllPages } = useMarkdownPages();
   const isEdit = !!initialData;
+  const [parentOptions, setParentOptions] = useState<{ value: string; label: string }[]>([]);
 
   const {
     register,
@@ -68,12 +70,13 @@ export function MarkdownPageForm({
     resolver: zodResolver(FormSchema) as any, // Cast due to extended schema
     defaultValues: {
       title: '',
+      menuTitle: '',
       slug: '',
       content: '',
       excerpt: '',
       icon: '',
+      isTitle: false,
       showInMenu: false,
-      menuPosition: undefined,
       parentId: parentId || '', // Use parentId if provided
       order: 0,
       isPublished: true,
@@ -97,6 +100,23 @@ export function MarkdownPageForm({
     }
   }, [title, isEdit, open, setValue, slug]);
 
+  // Fetch parent pages options
+  useEffect(() => {
+    if (open) {
+      void getAllPages().then(pages => {
+        if (!Array.isArray(pages)) return;
+        
+        const options = pages
+          .filter(p => !isEdit || p.id !== initialData.id) // Exclude self
+          .map(p => ({
+             value: p.id,
+             label: p.title 
+          }));
+        setParentOptions(options);
+      });
+    }
+  }, [open, getAllPages, isEdit, initialData]);
+
   // Reset form when modal opens/closes
   useEffect(() => {
     if (open) {
@@ -104,12 +124,13 @@ export function MarkdownPageForm({
       const timer = setTimeout(() => {
         reset({
           title: '',
+          menuTitle: '',
           slug: '',
           content: '',
           excerpt: '',
           icon: '',
+          isTitle: false,
           showInMenu: false,
-          menuPosition: undefined,
           parentId: parentId || undefined, // Use undefined for no parent
           order: 0,
           isPublished: true,
@@ -129,10 +150,9 @@ export function MarkdownPageForm({
     // Prepare payload
     let payload: MarkdownPageCreateInput | FormData;
 
-    // Clean up menuPosition if not shown
+    // Clean up data
     const finalData = {
       ...data,
-      menuPosition: data.showInMenu ? data.menuPosition : undefined,
       parentId: data.parentId || undefined,
     };
 
@@ -309,6 +329,39 @@ export function MarkdownPageForm({
               </div>
 
               <div className="flex items-center justify-between border-t pt-3">
+                 <label className="text-sm font-medium flex items-center gap-2">
+                    <Folder className="w-4 h-4 text-muted" />
+                    {t('form.parent_page')}
+                 </label>
+              </div>
+              <Controller
+                 name="parentId"
+                 control={control}
+                 render={({ field }) => (
+                    <Select
+                       value={field.value || '_none_'}
+                       onValueChange={(val) => {
+                          field.onChange(val === '_none_' ? '' : val);
+                       }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder={t('form.select_parent', 'Select parent page...')} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="_none_">
+                             {t('form.none', 'None')}
+                        </SelectItem>
+                         {parentOptions.map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                               {option.label}
+                            </SelectItem>
+                         ))}
+                      </SelectContent>
+                    </Select>
+                 )}
+              />
+
+              <div className="flex items-center justify-between border-t pt-3">
                 <label className="text-sm cursor-pointer" htmlFor="showInMenu">
                   {t('form.show_in_menu')}
                 </label>
@@ -326,26 +379,27 @@ export function MarkdownPageForm({
 
               {showInMenu && (
                 <div className="space-y-3 pt-2 animate-in fade-in slide-in-from-top-2">
-                  <div className="space-y-1">
-                    <label className="text-xs text-muted">{t('form.menu_position')}</label>
-                    <Controller
-                      name="menuPosition"
-                      control={control}
-                      render={({ field }) => (
-                        <Select value={field.value} onValueChange={field.onChange}>
-                          <SelectTrigger>
-                            <SelectValue placeholder={t('form.select_position')} />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="header">{t('menu_position.header')}</SelectItem>
-                            <SelectItem value="footer">{t('menu_position.footer')}</SelectItem>
-                            <SelectItem value="sidebar">{t('menu_position.sidebar')}</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      )}
-                    />
+                  <div className="flex items-center justify-between">
+                     <label className="text-sm cursor-pointer" htmlFor="isTitle">
+                        {t('form.is_title')}
+                     </label>
+                     <Controller
+                        name="isTitle"
+                        control={control}
+                        render={({ field }) => (
+                           <Toggle checked={field.value} onChange={field.onChange} />
+                        )}
+                     />
                   </div>
                   
+                  <div className="space-y-1">
+                    <label className="text-xs text-muted">{t('form.menu_title')}</label>
+                    <Input
+                      {...register('menuTitle')}
+                      placeholder={t('form.menu_title_placeholder')}
+                    />
+                  </div>
+
                   <div className="space-y-1">
                     <label className="text-xs text-muted">{t('form.order')}</label>
                     <Input

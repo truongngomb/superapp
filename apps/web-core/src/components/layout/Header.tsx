@@ -15,12 +15,12 @@ import { LanguageSwitcher } from '../common/LanguageSwitcher';
 import { PermissionGuard } from '../common/PermissionGuard';
 import { NotificationCenter } from '../notifications/NotificationCenter';
 import { Bell } from 'lucide-react';
-import { NAVIGATION_ITEMS } from '@/config/navigation';
+import { useAppMenu } from '@/hooks';
 
 // ============================================================================
 // ============================================================================
 // Types
-// ============================================================================
+import type { AppMenuItem } from '@/hooks';
 
 interface HeaderProps {
   onMenuToggle?: () => void;
@@ -39,13 +39,25 @@ const ICON_CLASS = 'w-5 h-5 text-muted';
 // ============================================================================
 
 interface NavLinkProps {
-  link: typeof NAVIGATION_ITEMS[number];
+  link: AppMenuItem;
   isActive: boolean;
   label: string;
 }
 
 function NavLink({ link, isActive, label }: NavLinkProps) {
   const Icon = link.icon;
+  
+  if (link.isTitle) {
+    return (
+       <div className={cn(
+          'px-4 py-2 text-xs font-bold uppercase tracking-wider text-muted-foreground mt-2 mb-1 cursor-default',
+          'flex items-center gap-1.5'
+       )}>
+          <span className="truncate">{label}</span>
+       </div>
+    );
+  }
+
   const content = (
     <Link
       to={link.path}
@@ -114,6 +126,7 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
   const { isDark, toggleTheme } = useTheme();
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const { unreadCount } = useActivityLogContext();
+  const { menuItems } = useAppMenu();
 
   const handleLogout = useCallback(() => {
     void logout()
@@ -124,7 +137,7 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
       });
   }, [logout]);
 
-  const isLinkActive = useCallback((link: typeof NAVIGATION_ITEMS[number]) => {
+  const isLinkActive = useCallback((link: AppMenuItem) => {
     if (link.matchPrefix) {
       return location.pathname.startsWith(link.path);
     }
@@ -158,12 +171,12 @@ export function Header({ onMenuToggle, menuOpen }: HeaderProps) {
               />
             ))
           ) : (
-            NAVIGATION_ITEMS.map((link) => (
+            menuItems.map((link) => (
               <NavLink
                 key={link.path}
                 link={link}
                 isActive={isLinkActive(link)}
-                label={t(link.labelKey)}
+                label={link.label}
               />
             ))
           )}

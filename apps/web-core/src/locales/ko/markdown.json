@@ -20,21 +20,18 @@
     "icon_placeholder": "예: settings, home (Lucide 아이콘 이름)",
     "cover_image": "커버 이미지",
     "show_in_menu": "메뉴에 표시",
-    "menu_position": "메뉴 위치",
+    "is_title": "섹션 제목입니다 (클릭 불가)",
+    "menu_title": "메뉴 제목",
+    "menu_title_placeholder": "메뉴용 짧은 제목 (선택 사항)",
     "parent_page": "상위 페이지",
+    "select_parent": "상위 페이지 선택...",
+    "none": "없음",
     "order": "순서",
     "published": "게시됨",
     "published_help": "공개적으로 표시",
     "settings": "설정",
     "assets": "에셋",
-    "select_position": "위치 선택",
     "has_cover": "커버 이미지 있음"
-  },
-  
-  "menu_position": {
-    "header": "헤더",
-    "footer": "푸터",
-    "sidebar": "사이드바"
   },
   
   "errors": {

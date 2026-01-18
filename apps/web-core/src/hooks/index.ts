@@ -10,6 +10,7 @@ export * from './useUsers';
 export * from './useActivityLogs';
 export * from './useSettings';
 export * from './useMarkdownPages';
+export * from './useAppMenu';
 
 export * from './useLayoutMode';
 export * from './useLayout';

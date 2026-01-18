@@ -4,7 +4,7 @@
  */
 import { Request, Response, NextFunction } from 'express';
 import { markdownService } from '../services/markdown.service.js';
-import { MarkdownPageCreateInput, MarkdownPageUpdateInput, MenuPositionType } from '@superapp/shared-types';
+import { MarkdownPageCreateInput, MarkdownPageUpdateInput } from '@superapp/shared-types';
 import { PermissionResource, PermissionAction } from '@superapp/shared-types';
 import { hasPermission, ForbiddenError } from '../middleware/index.js';
 import { logger } from '../utils/index.js';
@@ -29,11 +29,10 @@ export const getBySlug = async (req: Request, res: Response, _next: NextFunction
 };
 
 /**
- * GET /markdown-pages/menu/:position - Get menu tree
+ * GET /markdown-pages/menu - Get menu tree
  */
-export const getMenuTree = async (req: Request, res: Response, _next: NextFunction) => {
-  const { position } = req.params;
-  const tree = await markdownService.getMenuTree(position as MenuPositionType);
+export const getMenuTree = async (_req: Request, res: Response, _next: NextFunction) => {
+  const tree = await markdownService.getMenuTree();
   res.json({ success: true, data: tree });
 };
 

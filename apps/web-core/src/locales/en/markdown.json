@@ -20,21 +20,18 @@
     "icon_placeholder": "e.g. settings, home (Lucide icon name)",
     "cover_image": "Cover Image",
     "show_in_menu": "Show in Menu",
-    "menu_position": "Menu Position",
+    "is_title": "Is Section Title",
+    "menu_title": "Menu Title",
+    "menu_title_placeholder": "Short title for menu (optional)",
     "parent_page": "Parent Page",
+    "select_parent": "Select parent page...",
+    "none": "None",
     "order": "Order",
     "published": "Published",
     "published_help": "Visible to public",
     "settings": "Settings",
     "assets": "Assets",
-    "select_position": "Select position",
     "has_cover": "Has cover image"
-  },
-  
-  "menu_position": {
-    "header": "Header",
-    "footer": "Footer",
-    "sidebar": "Sidebar"
   },
   
   "errors": {

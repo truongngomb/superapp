@@ -12,25 +12,19 @@ const BaseResourceSchema = z.object({
 });
 
 // ============================================================================
-// Enums
-// ============================================================================
-
-export const MenuPosition = z.enum(['header', 'footer', 'sidebar']);
-export type MenuPositionType = z.infer<typeof MenuPosition>;
-
-// ============================================================================
 // Schemas
 // ============================================================================
 
 export const MarkdownPageSchema = BaseResourceSchema.extend({
   title: z.string().min(1).max(200),
+  menuTitle: z.string().max(50).optional(),
+  isTitle: z.boolean().default(false),
   slug: z.string().min(1).max(100).regex(/^[a-z0-9-]+$/),
   content: z.string(),
   excerpt: z.string().max(500).optional(),
   icon: z.string().optional(),
   coverImage: z.string().optional(),
   showInMenu: z.boolean().default(false),
-  menuPosition: MenuPosition.optional(),
   parentId: z.string().optional(),
   order: z.number().default(0),
   isPublished: z.boolean().default(false),
@@ -72,6 +66,8 @@ export type MarkdownPageUpdateInput = z.infer<typeof MarkdownPageUpdateSchema>;
 export interface MarkdownMenuItem {
   id: string;
   title: string;
+  menuTitle?: string;
+  isTitle?: boolean;
   slug: string;
   icon?: string;
   order: number;
@@ -87,7 +83,6 @@ export interface MarkdownPageListParams {
   search?: string;
   isPublished?: boolean;
   showInMenu?: boolean;
-  menuPosition?: MenuPositionType;
   isActive?: boolean;
   isDeleted?: boolean;
 }

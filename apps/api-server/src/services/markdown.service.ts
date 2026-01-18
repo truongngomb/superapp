@@ -5,8 +5,7 @@
 import { BaseService } from './base.service.js';
 import type { 
   MarkdownPage, 
-  MarkdownMenuItem,
-  MenuPositionType
+  MarkdownMenuItem
 } from '@superapp/shared-types';
 
 export class MarkdownService extends BaseService<MarkdownPage> {
@@ -21,13 +20,14 @@ export class MarkdownService extends BaseService<MarkdownPage> {
       isDeleted: Boolean(record['isDeleted']),
       deletedAt: record['deletedAt'] ? (record['deletedAt'] as string) : null,
       title: (record['title'] as string) || '',
+      menuTitle: record['menuTitle'] ? (record['menuTitle'] as string) : undefined,
+      isTitle: Boolean(record['isTitle']),
       slug: (record['slug'] as string) || '',
       content: (record['content'] as string) || '',
       excerpt: record['excerpt'] ? (record['excerpt'] as string) : undefined,
       icon: record['icon'] ? (record['icon'] as string) : undefined,
       coverImage: record['coverImage'] ? (record['coverImage'] as string) : undefined,
       showInMenu: Boolean(record['showInMenu']),
-      menuPosition: record['menuPosition'] as MenuPositionType | undefined,
       parentId: record['parentId'] ? (record['parentId'] as string) : undefined,
       order: Number(record['order'] || 0),
       isPublished: Boolean(record['isPublished']),
@@ -51,12 +51,12 @@ export class MarkdownService extends BaseService<MarkdownPage> {
   }
 
   /**
-   * Get menu tree for specific position
+   * Get menu tree
    * Returns hierarchical structure of menu items
    */
-  async getMenuTree(position: MenuPositionType): Promise<MarkdownMenuItem[]> {
+  async getMenuTree(): Promise<MarkdownMenuItem[]> {
     const pages = await this.collection.getFullList<MarkdownPage>({
-      filter: `showInMenu = true && menuPosition = "${position}" && isPublished = true && isDeleted = false`,
+      filter: `showInMenu = true && isPublished = true && isDeleted = false`,
       sort: 'order',
     });
     
@@ -76,6 +76,8 @@ export class MarkdownService extends BaseService<MarkdownPage> {
       lookup.set(page.id, {
         id: page.id,
         title: page.title,
+        menuTitle: page.menuTitle,
+        isTitle: page.isTitle,
         slug: page.slug,
         icon: page.icon,
         order: page.order,

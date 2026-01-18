@@ -64,12 +64,12 @@ export function MarkdownPageTable({
     },
     {
       id: 'showInMenu',
-      header: () => t('form.menu_position'),
+      header: () => t('form.show_in_menu'),
       size: 150,
       cell: ({ row }) => (
-        row.original.showInMenu && row.original.menuPosition ? (
-          <Badge variant="secondary" className="capitalize">
-            {t(`menu_position.${row.original.menuPosition}`)}
+        row.original.showInMenu ? (
+          <Badge variant="secondary" className="bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400">
+             {t('form.show_in_menu')}
           </Badge>
         ) : (
           <span className="text-muted text-sm">-</span>

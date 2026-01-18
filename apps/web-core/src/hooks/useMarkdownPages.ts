@@ -6,8 +6,7 @@ import type {
   MarkdownPage, 
   MarkdownPageCreateInput, 
   MarkdownPageUpdateInput,
-  MarkdownPageListParams,
-  MenuPositionType
+  MarkdownPageListParams
 } from '@superapp/shared-types';
 import { logger } from '@superapp/core-logic';
 import { ApiException } from '@/config';
@@ -206,24 +205,31 @@ export function useMarkdownPages() {
   };
 
   // Additional helper to get all pages without pagination (for dropdowns)
-  const getAllPages = async () => {
+  const getAllPages = useCallback(async () => {
     try {
-      return await markdownService.getAll();
+      // Use getPage with high limit to get all pages sorted by title
+      const data = await markdownService.getPage({ 
+        page: 1, 
+        limit: 1000, 
+        sort: 'title',
+        order: 'asc'
+      });
+      return data.items;
     } catch (error) {
       logger.warn('useMarkdownPages', 'Failed to load all pages:', error);
       return [];
     }
-  };
+  }, []);
 
   // Helper for public menu
-  const getMenuTree = async (position: MenuPositionType) => {
+  const getMenuTree = useCallback(async () => {
     try {
-      return await markdownService.getMenuTree(position);
+      return await markdownService.getMenuTree();
     } catch (error) {
       logger.warn('useMarkdownPages', 'Failed to load menu tree:', error);
       return [];
     }
-  };
+  }, []);
 
   return {
     pages,

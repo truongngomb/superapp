@@ -55,9 +55,9 @@ export function MarkdownPageMobileCard({
                 <span className="font-mono bg-surface-muted px-1.5 py-0.5 rounded">
                   /{page.slug}
                 </span>
-                {page.showInMenu && page.menuPosition && (
-                  <Badge variant="secondary" className="text-[10px] h-4 px-1">
-                    {t(`menu_position.${page.menuPosition}`)}
+                {page.showInMenu && (
+                  <Badge variant="secondary" className="text-[10px] h-4 px-1 bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400">
+                     {t('form.show_in_menu')}
                   </Badge>
                 )}
               </div>
