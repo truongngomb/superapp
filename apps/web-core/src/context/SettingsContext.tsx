@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo, type ReactNode } from 'react';
 import { settingsService, type SettingItem } from '@/services';
-import { useToast } from '@/context';
-import { useAuth } from '@/hooks';
+import { useToast } from './useToast';
+import { useAuth } from '@/hooks/useAuth';
 import { SettingsContext } from './SettingsContext.base';
 
 export function SettingsProvider({ children }: { children: ReactNode }) {

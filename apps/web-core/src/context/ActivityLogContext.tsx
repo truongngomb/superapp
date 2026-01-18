@@ -4,7 +4,7 @@ import type { ActivityLog } from '@superapp/shared-types';
 import { logger } from '@/utils';
 import { ActivityLogContext } from './ActivityLogContext.base';
 import { useRealtime } from './RealtimeContext';
-import { useAuth } from '@/hooks';
+import { useAuth } from '@/hooks/useAuth';
 import { env } from '@/config';
 
 export const ActivityLogProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {

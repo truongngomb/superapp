@@ -10,7 +10,7 @@
 import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useToast } from '@/hooks';
+import { useToast } from '@/context/useToast';
 import { useTranslation } from 'react-i18next';
 import type { ResourceService } from './useResourceService';
 import type { BaseListParams } from '@superapp/shared-types';

@@ -6,7 +6,7 @@
 import { useState, useEffect, useCallback, useMemo, type ReactNode } from 'react';
 import { THEME, STORAGE_KEYS } from '@/config';
 import { getStorageItem, setStorageItem } from '@/utils';
-import { useAuth } from '@/hooks';
+import { useAuth } from '@/hooks/useAuth';
 import { ThemeContext } from './themeContext.internal';
 
 // ============================================================================
