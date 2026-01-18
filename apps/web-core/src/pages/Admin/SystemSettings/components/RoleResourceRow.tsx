@@ -1,6 +1,7 @@
 import { GripVertical, ArrowUp, ArrowDown, Trash2 } from 'lucide-react';
 import { Reorder, useDragControls } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { Button } from '@/components/common';
 
 interface RoleResourceRowProps {
   res: string;
@@ -35,29 +36,35 @@ export function RoleResourceRow({ res, index, total, onRemove, onMoveUp, onMoveD
         <span className="font-medium font-mono">{res}</span>
       </div>
       <div className="flex items-center gap-1">
-        <button
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={() => { onMoveUp(index); }}
           disabled={index === 0}
-          className="p-2 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-colors disabled:opacity-30 disabled:pointer-events-none"
+          className="h-9 w-9 p-0"
           title={t('common:actions.move_up')}
         >
           <ArrowUp className="w-4 h-4" />
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={() => { onMoveDown(index); }}
           disabled={index === total - 1}
-          className="p-2 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-colors disabled:opacity-30 disabled:pointer-events-none"
+          className="h-9 w-9 p-0"
           title={t('common:actions.move_down')}
         >
           <ArrowDown className="w-4 h-4" />
-        </button>
-        <button 
+        </Button>
+        <Button 
+          variant="ghost"
+          size="sm"
           onClick={() => { onRemove(res); }}
-          className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors ml-1"
+          className="h-9 w-9 p-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors ml-1"
           title={t('common:actions.remove')}
         >
           <Trash2 className="w-4 h-4" />
-        </button>
+        </Button>
       </div>
     </Reorder.Item>
   );

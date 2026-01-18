@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Input, Modal, Toggle } from '@/components/common';
+import { Button, Input, Modal, Toggle, Checkbox } from '@/components/common';
 import { PERMISSIONS } from '@/config/constants';
 import { type Role, type CreateRoleInput, PermissionAction, type PermissionResource } from '@superapp/shared-types';
 import { useSettings } from '@/hooks';
@@ -138,15 +138,13 @@ export function RoleForm({ role, onSubmit, onClose, loading, isOpen }: RoleFormP
                   {PERMISSIONS.ACTIONS.map(action => {
                     const isChecked = formData.permissions[resource]?.includes(action);
                     return (
-                      <label key={action} className="flex items-center gap-2 text-sm cursor-pointer text-foreground">
-                        <input 
-                          type="checkbox"
-                          checked={isChecked || false}
-                          onChange={() => { handleTogglePermission(resource, action); }}
-                          className="rounded border-border"
-                        />
-                        <span className="capitalize">{t(`common:actions.${action}`)}</span>
-                      </label>
+                      <Checkbox 
+                        key={action}
+                        checked={isChecked || false}
+                        onChange={() => { handleTogglePermission(resource, action); }}
+                        label={t(`common:actions.${action}`)}
+                        className="capitalize"
+                      />
                     );
                   })}
                 </div>

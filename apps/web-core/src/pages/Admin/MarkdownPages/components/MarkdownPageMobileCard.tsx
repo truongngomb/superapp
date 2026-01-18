@@ -1,5 +1,5 @@
 import { MarkdownPage } from '@superapp/shared-types';
-import { Badge, Button } from '@superapp/ui-kit';
+import { Badge, Button, Checkbox } from '@superapp/ui-kit';
 import { Edit, Trash2, Globe, FileText, Image as ImageIcon } from 'lucide-react';
 import { cn } from '@superapp/core-logic';
 import { useTranslation } from 'react-i18next';
@@ -36,12 +36,10 @@ export function MarkdownPageMobileCard({
         {/* Checkbox (if select mode) */}
         {onSelect && (
           <div className="pt-1" onClick={(e) => { e.stopPropagation(); }}>
-             <input
-              type="checkbox"
-              className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-              checked={isSelected}
-              onChange={(e) => { onSelect(e.target.checked); }}
-            />
+              <Checkbox
+                checked={isSelected || false}
+                onChange={onSelect}
+              />
           </div>
         )}
 

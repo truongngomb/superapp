@@ -311,14 +311,14 @@ export default function RolesPage() {
             <p className="text-muted mt-1">{t("roles:subtitle")}</p>
           </div>
            <PermissionGuard resource="roles" action="view">
-             <button
-              type="button"
+             <Button
+              variant="ghost"
               onClick={() => void handleExport()}
               disabled={exporting || roles.length === 0}
-              className="p-2 rounded-lg hover:bg-[#217346]/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="h-10 w-10 p-0 text-[#217346] hover:bg-[#217346]/10"
              >
-               {exporting ? <Loader2 className="w-6 h-6 animate-spin text-[#217346]" /> : <FileSpreadsheet className="w-6 h-6 text-[#217346]" />}
-             </button>
+               {exporting ? <Loader2 className="w-6 h-6 animate-spin" /> : <FileSpreadsheet className="w-6 h-6" />}
+             </Button>
            </PermissionGuard>
         </div>
         <PermissionGuard resource="roles" action="create">
