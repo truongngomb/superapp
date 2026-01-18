@@ -138,7 +138,7 @@ export default function MarkdownPagesPage() {
   // Excel Export
   const { exportToExcel, exporting } = useExcelExport<MarkdownPage>({
     fileNamePrefix: "markdown-pages",
-    sheetName: "Pages",
+    sheetName: t("name"),
     columns: [
       { key: "title", header: t("form.title"), width: 30 },
       { key: "slug", header: t("form.slug"), width: 20 },

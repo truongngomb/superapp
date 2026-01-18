@@ -27,7 +27,8 @@
     "published_help": "Visible to public",
     "settings": "Settings",
     "assets": "Assets",
-    "select_position": "Select position"
+    "select_position": "Select position",
+    "has_cover": "Has cover image"
   },
   
   "menu_position": {

@@ -27,7 +27,8 @@
     "published_help": "Hiển thị công khai",
     "settings": "Cài đặt",
     "assets": "Tài nguyên",
-    "select_position": "Chọn vị trí"
+    "select_position": "Chọn vị trí",
+    "has_cover": "Có ảnh bìa"
   },
   
   "menu_position": {

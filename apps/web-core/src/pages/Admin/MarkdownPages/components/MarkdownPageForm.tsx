@@ -156,11 +156,25 @@ export function MarkdownPageForm({
       onClose={onClose}
       title={isEdit ? t('edit_title') : t('create_title')}
       size="full"
+      footer={
+        <div className="flex justify-end gap-3 w-full">
+          <Button type="button" variant="outline" onClick={onClose} disabled={submitting}>
+            {t('common:actions.cancel')}
+          </Button>
+          <Button type="submit" form="markdown-page-form" loading={submitting}>
+            {isEdit ? t('common:actions.save') : t('common:actions.create')}
+          </Button>
+        </div>
+      }
     >
-      <form onSubmit={(e) => { e.preventDefault(); void handleSubmit(onSubmit)(e); }} className="space-y-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <form 
+        id="markdown-page-form"
+        onSubmit={(e) => { e.preventDefault(); void handleSubmit(onSubmit)(e); }} 
+        className="space-y-4"
+      >
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
           {/* Left Column: Main Content */}
-          <div className="lg:col-span-2 space-y-4">
+          <div className="lg:col-span-3 space-y-4">
             
             {/* Title */}
             <div className="space-y-2">
@@ -233,7 +247,7 @@ export function MarkdownPageForm({
           </div>
 
           {/* Right Column: Settings */}
-          <div className="space-y-6">
+          <div className="space-y-4">
             
             {/* Publish Status */}
             <div className="bg-surface/50 p-4 rounded-lg border space-y-4">
@@ -342,17 +356,9 @@ export function MarkdownPageForm({
 
           </div>
         </div>
-
-        {/* Footer Actions */}
-        <div className="flex justify-end gap-3 pt-4 border-t">
-          <Button type="button" variant="outline" onClick={onClose} disabled={submitting}>
-            {t('common:actions.cancel')}
-          </Button>
-          <Button type="submit" loading={submitting}>
-            {isEdit ? t('common:actions.save') : t('common:actions.create')}
-          </Button>
-        </div>
       </form>
+
     </Modal>
+
   );
 }

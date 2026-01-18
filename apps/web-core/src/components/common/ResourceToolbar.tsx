@@ -62,10 +62,12 @@ export function ResourceToolbar({
       ? true 
       : 'indeterminate';
 
+  const toolbarItemClass = 'flex items-center h-10 px-3 bg-surface rounded-lg';
+
   return (
     <div className="flex items-center justify-between gap-4 mb-2 md:mb-4">
       {/* Left side: Select All, View Switcher (desktop), Show Archived */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         <AnimatePresence mode="popLayout">
           {itemCount > 0 && canSelect && (
             <motion.div
@@ -75,7 +77,7 @@ export function ResourceToolbar({
               animate="animate"
               exit="exit"
               transition={{ duration: 0.2 }}
-              className="flex items-center p-4 bg-surface rounded-lg"
+              className={toolbarItemClass}
             >
               <Checkbox
                 triState
@@ -95,7 +97,11 @@ export function ResourceToolbar({
             animate={{ opacity: 1, x: 0 }}
             transition={delayedTransition(0.1)}
           >
-            <ViewSwitcher value={viewMode} onChange={onViewModeChange} />
+            <ViewSwitcher 
+              value={viewMode} 
+              onChange={onViewModeChange} 
+              className="h-10 bg-surface shadow-none px-1.5"
+            />
           </motion.div>
         )}
 
@@ -110,6 +116,7 @@ export function ResourceToolbar({
               onChange={onShowArchivedChange}
               label={t('show_archived')}
               hideLabelOnMobile
+              className="bg-surface" // Ensure it matches
             />
           </motion.div>
         </PermissionGuard>

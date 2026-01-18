@@ -27,7 +27,8 @@
     "published_help": "공개적으로 표시",
     "settings": "설정",
     "assets": "에셋",
-    "select_position": "위치 선택"
+    "select_position": "위치 선택",
+    "has_cover": "커버 이미지 있음"
   },
   
   "menu_position": {

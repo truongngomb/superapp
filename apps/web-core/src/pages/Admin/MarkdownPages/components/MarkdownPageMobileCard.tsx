@@ -55,9 +55,9 @@ export function MarkdownPageMobileCard({
                 <span className="font-mono bg-surface-muted px-1.5 py-0.5 rounded">
                   /{page.slug}
                 </span>
-                {page.showInMenu && (
+                {page.showInMenu && page.menuPosition && (
                   <Badge variant="secondary" className="text-[10px] h-4 px-1">
-                    {page.menuPosition}
+                    {t(`menu_position.${page.menuPosition}`)}
                   </Badge>
                 )}
               </div>
@@ -68,10 +68,10 @@ export function MarkdownPageMobileCard({
           <div className="flex flex-wrap gap-2 text-xs text-muted">
             <span className="flex items-center gap-1">
               <FileText className="w-3 h-3" />
-              Ver: {page.updated ? new Date(page.updated).toLocaleDateString() : 'N/A'}
+              {t('common:table.updated')}: {page.updated ? new Date(page.updated).toLocaleDateString() : 'N/A'}
             </span>
             {page.coverImage && (
-              <span className="flex items-center gap-1" title="Has cover image">
+              <span className="flex items-center gap-1" title={t('form.has_cover')}>
                 <ImageIcon className="w-3 h-3" />
               </span>
             )}

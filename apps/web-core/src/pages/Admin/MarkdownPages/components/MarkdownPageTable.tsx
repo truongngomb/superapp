@@ -39,7 +39,7 @@ export function MarkdownPageTable({
     {
       id: 'title',
       header: () => t('form.title'),
-      size: 250,
+      size: 300,
       cell: ({ row }) => (
         <div className="flex items-center gap-3">
           {row.original.coverImage ? (
@@ -66,9 +66,9 @@ export function MarkdownPageTable({
       header: () => t('form.menu_position'),
       size: 150,
       cell: ({ row }) => (
-        row.original.showInMenu ? (
+        row.original.showInMenu && row.original.menuPosition ? (
           <Badge variant="secondary" className="capitalize">
-            {row.original.menuPosition}
+            {t(`menu_position.${row.original.menuPosition}`)}
           </Badge>
         ) : (
           <span className="text-muted text-sm">-</span>
@@ -78,7 +78,7 @@ export function MarkdownPageTable({
     {
       id: 'isPublished',
       header: () => t('form.published'),
-      size: 120,
+      size: 150,
       cell: ({ row }) => (
         <Badge variant={row.original.isPublished ? 'success' : 'secondary'}>
           {row.original.isPublished ? t('status.published') : t('status.draft')}
@@ -87,14 +87,14 @@ export function MarkdownPageTable({
     },
     {
       id: 'updated',
-      header: () => t('common:table.updated'),
+      header: () => t('common:updated'),
       size: 150,
       cell: ({ row }) => new Date(row.original.updated).toLocaleDateString()
     },
     {
       id: 'actions',
-      header: () => t('common:table.actions'),
-      size: 120,
+      header: () => t('common:actions.label'),
+      size: 130,
       cell: ({ row }) => (
         <div className="flex justify-end gap-2">
           <Button

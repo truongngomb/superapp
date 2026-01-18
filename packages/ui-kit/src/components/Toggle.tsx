@@ -19,14 +19,16 @@ interface ToggleProps {
   description?: string;
   /** Disable the toggle */
   disabled?: boolean;
+  /** Additional classes */
+  className?: string;
 }
 
-export function Toggle({ checked, onChange, label, hideLabelOnMobile = false, description, disabled }: ToggleProps) {
+export function Toggle({ checked, onChange, label, hideLabelOnMobile = false, description, disabled, className }: ToggleProps) {
   return (
-    <div className="flex items-center justify-between p-3 bg-surface rounded-lg gap-2">
+    <div className={cn("flex items-center justify-between px-3 py-2 bg-surface rounded-lg gap-2 min-h-10", className)}>
       {(label || description) && (
         <div className={cn(hideLabelOnMobile && 'hidden sm:inline')}>
-          {label && <label className={cn('font-medium text-foreground')}>{label}</label>}
+          {label && <label className={cn('font-medium text-foreground text-sm')}>{label}</label>}
           {description && <p className="text-sm text-muted">{description}</p>}
         </div>
       )}
@@ -36,7 +38,7 @@ export function Toggle({ checked, onChange, label, hideLabelOnMobile = false, de
         aria-checked={checked}
         disabled={disabled}
         onClick={() => { onChange(!checked); }}
-        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+        className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${
           checked ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'
         } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
       >

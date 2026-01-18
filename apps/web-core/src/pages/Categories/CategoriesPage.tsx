@@ -1,14 +1,10 @@
-import { useState, useMemo, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { AnimatePresence, motion as framerMotion } from "framer-motion";
 import {
   Plus,
   Folder,
-  Edit2,
-  Copy,
-  RotateCcw,
-  Trash2,
   Loader2,
   FileSpreadsheet,
 } from "lucide-react";
@@ -19,16 +15,13 @@ import {
   ConfirmModal,
   Pagination,
   type ViewMode,
-  DataTable,
-  type Column,
-  Badge,
   ResourceToolbar,
   BatchActionButtons,
   SearchFilterBar
 } from "@/components/common";
 import { PermissionGuard } from "@/components/common/PermissionGuard";
 import type { Category, CreateCategoryInput, SortColumn, CategoryListParams } from "@superapp/shared-types";
-import { cn, getStorageItem, setStorageItem } from "@/utils";
+import { getStorageItem, setStorageItem } from "@/utils";
 import { STORAGE_KEYS } from "@/config";
 import { useResource, useSort, useDebounce, useAuth, useExcelExport, useResponsiveView, useInfiniteResource } from "@/hooks";
 
@@ -36,11 +29,11 @@ import { useResource, useSort, useDebounce, useAuth, useExcelExport, useResponsi
 import { categoryService } from "@/services";
 import { CategoryForm } from "./components/CategoryForm";
 import { CategoryRow } from "./components/CategoryRow";
+import { CategoryTable } from "./components/CategoryTable";
 import { CategorySkeleton } from "./components/CategorySkeleton";
 import { CategoryTableSkeleton } from "./components/CategoryTableSkeleton";
 import { CategoryMobileList } from "./components/CategoryMobileList";
 import { CategoryMobileCardSkeletonList } from "./components/CategoryMobileCardSkeleton";
-import { CATEGORY_ICONS, type CategoryIcon } from '@superapp/ui-kit';
 
 // Define Resource Types
 
@@ -233,94 +226,6 @@ export default function CategoriesPage() {
     setShowForm(true);
   }, [t]);
 
-  // Columns Configuration for DataTable
-  const columns: Column<Category>[] = useMemo(() => [
-    {
-      accessorKey: 'icon',
-      header: '',
-      size: 60,
-      className: 'px-4',
-      cell: ({ row }) => {
-        const item = row.original;
-        const IconComponent = (CATEGORY_ICONS[item.icon] || CATEGORY_ICONS.folder) as CategoryIcon;
-        return (
-          <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center"
-            style={{ backgroundColor: item.color + '20' }}
-          >
-            <IconComponent className="w-4 h-4" style={{ color: item.color }} />
-          </div>
-        );
-      }
-    },
-    {
-      accessorKey: 'name',
-      header: t('common:name'),
-      enableSorting: true,
-      size: 200,
-      className: 'font-medium'
-    },
-    {
-      accessorKey: 'description',
-      header: t('categories:form.desc_label'),
-      width: '2fr',
-      className: 'hidden md:flex text-muted-foreground',
-      cell: ({ row }) => <span className="line-clamp-1">{row.original.description || '-'}</span>
-    },
-    {
-      accessorKey: 'isActive',
-      header: t('common:status'),
-      enableSorting: true,
-      size: 120,
-      cell: ({ row }) => row.original.isActive ? 
-        <Badge variant="success" size="sm">{t('common:active')}</Badge> : 
-        <Badge variant="danger" size="sm">{t('common:inactive')}</Badge>
-    },
-    {
-      id: 'actions',
-      header: t('common:actions.label'),
-      align: 'right',
-      size: 160,
-      cell: ({ row }) => {
-        const category = row.original;
-        return (
-          <div className="flex items-center justify-end gap-1">
-            {!category.isDeleted && (
-              <PermissionGuard resource="categories" action="update">
-                <Button variant="ghost" size="sm" onClick={() => { handleEdit(category); }} aria-label={t('common:edit')}>
-                  <Edit2 className="w-4 h-4" />
-                </Button>
-              </PermissionGuard>
-            )}
-            {!category.isDeleted && (
-               <PermissionGuard resource="categories" action="create">
-                 <Button variant="ghost" size="sm" onClick={() => { onDuplicate(category); }} aria-label={t('common:duplicate')}>
-                   <Copy className="w-4 h-4 text-blue-500" />
-                 </Button>
-               </PermissionGuard>
-            )}
-            {category.isDeleted && (
-              <PermissionGuard resource="categories" action="update">
-                <Button variant="ghost" size="sm" onClick={() => { setRestoreId(category.id); }} aria-label={t('common:restore')}>
-                  <RotateCcw className="w-4 h-4 text-primary" />
-                </Button>
-              </PermissionGuard>
-            )}
-            <PermissionGuard resource="categories" action="delete">
-               <Button 
-                 variant="ghost" 
-                 size="sm" 
-                 onClick={() => { setDeleteId(category.id); }}
-                 aria-label={t('common:delete')}
-               >
-                 <Trash2 className={cn('w-4 h-4', category.isDeleted ? 'text-red-700' : 'text-red-500')} />
-               </Button>
-            </PermissionGuard>
-          </div>
-        );
-      }
-    }
-  ], [t, handleEdit, onDuplicate]);
 
   const sortColumns: SortColumn[] = [
     { field: "name", label: t("common:name") },
@@ -454,18 +359,21 @@ export default function CategoriesPage() {
                 onDuplicate={onDuplicate}
               />
             ) : effectiveView === 'table' ? (
-               <DataTable
-                 data={categories}
-                 columns={columns}
-                 keyExtractor={(item) => item.id}
-                 selectedIds={canSelect ? selectedIds : undefined}
-                 onSelectAll={canSelect ? handleSelectAll : undefined}
-                 onSelectOne={canSelect ? handleSelectOne : undefined}
-                 sortColumn={sortConfig.field}
-                 sortDirection={sortConfig.order}
-                 onSort={handleSort}
-                 currentPage={queryParams.page}
-               />
+                <CategoryTable
+                  data={categories}
+                  loading={loading}
+                  selectedIds={selectedIds}
+                  onSelectAll={handleSelectAll}
+                  onSelect={handleSelectOne}
+                  sort={sortConfig}
+                  onSort={handleSort}
+                  onEdit={handleEdit}
+                  onDelete={(id) => { setDeleteId(id); }}
+                  onRestore={(id) => { setRestoreId(id); }}
+                  onDuplicate={onDuplicate}
+                  currentPage={queryParams.page}
+                  canSelect={canSelect}
+                />
             ) : (
                categories.map((category, index) => (
                  <CategoryRow
