@@ -9,7 +9,8 @@ import {
   UserBatchRestoreSchema, 
   UserRoleAssignmentSchema 
 } from '../schemas/index.js';
-import { Resources, Actions } from '../types/index.js';
+import { PermissionResource, PermissionAction } from '@superapp/shared-types';
+
 
 export const usersRouter: Router = Router();
 
@@ -39,21 +40,24 @@ usersRouter.put(
 /** GET /users - List all users */
 usersRouter.get(
   '/',
-  requirePermission(Resources.USERS, Actions.VIEW),
+  requirePermission(PermissionResource.Users, PermissionAction.View),
+
   asyncHandler(userController.getAll)
 );
 
 /** GET /users/export - Export users */
 usersRouter.get(
   '/export',
-  requirePermission(Resources.USERS, Actions.VIEW),
+  requirePermission(PermissionResource.Users, PermissionAction.View),
+
   asyncHandler(userController.getAllForExport)
 );
 
 /** POST / - Create new user */
 usersRouter.post(
   '/',
-  requirePermission(Resources.USERS, Actions.CREATE),
+  requirePermission(PermissionResource.Users, PermissionAction.Create),
+
   validateBody(UserCreateSchema),
   asyncHandler(userController.create)
 );
@@ -62,7 +66,8 @@ usersRouter.post(
 usersRouter.post(
   '/batch-delete',
   batchOperationLimit,
-  requirePermission(Resources.USERS, Actions.DELETE),
+  requirePermission(PermissionResource.Users, PermissionAction.Delete),
+
   validateBody(UserBatchDeleteSchema),
   asyncHandler(userController.batchDelete)
 );
@@ -71,7 +76,8 @@ usersRouter.post(
 usersRouter.post(
   '/batch-status',
   batchOperationLimit,
-  requirePermission(Resources.USERS, Actions.UPDATE),
+  requirePermission(PermissionResource.Users, PermissionAction.Update),
+
   validateBody(UserBatchUpdateStatusSchema),
   asyncHandler(userController.batchUpdateStatus)
 );
@@ -80,7 +86,8 @@ usersRouter.post(
 usersRouter.post(
   '/batch-restore',
   batchOperationLimit,
-  requirePermission(Resources.USERS, Actions.UPDATE),
+  requirePermission(PermissionResource.Users, PermissionAction.Update),
+
   validateBody(UserBatchRestoreSchema),
   asyncHandler(userController.batchRestore)
 );
@@ -88,14 +95,16 @@ usersRouter.post(
 /** GET /users/:id - Get user by ID */
 usersRouter.get(
   '/:id',
-  requirePermission(Resources.USERS, Actions.VIEW),
+  requirePermission(PermissionResource.Users, PermissionAction.View),
+
   asyncHandler(userController.getById)
 );
 
 /** PUT /users/:id - Update user */
 usersRouter.put(
   '/:id',
-  requirePermission(Resources.USERS, Actions.UPDATE),
+  requirePermission(PermissionResource.Users, PermissionAction.Update),
+
   validateBody(UserUpdateSchema),
   asyncHandler(userController.update)
 );
@@ -103,14 +112,16 @@ usersRouter.put(
 /** POST /users/:id/restore - Restore soft-deleted user */
 usersRouter.post(
   '/:id/restore',
-  requirePermission(Resources.USERS, Actions.UPDATE),
+  requirePermission(PermissionResource.Users, PermissionAction.Update),
+
   asyncHandler(userController.restore)
 );
 
 /** DELETE /users/:id - Delete user */
 usersRouter.delete(
   '/:id',
-  requirePermission(Resources.USERS, Actions.DELETE),
+  requirePermission(PermissionResource.Users, PermissionAction.Delete),
+
   asyncHandler(userController.remove)
 );
 
@@ -121,7 +132,8 @@ usersRouter.delete(
 /** PUT /users/:id/roles - Assign roles to user (replaces all) */
 usersRouter.put(
   '/:id/roles',
-  requirePermission(Resources.USERS, Actions.UPDATE),
+  requirePermission(PermissionResource.Users, PermissionAction.Update),
+
   validateBody(UserRoleAssignmentSchema),
   asyncHandler(userController.assignRoles)
 );
@@ -129,20 +141,23 @@ usersRouter.put(
 /** POST /users/:id/roles/:roleId - Add a single role to user */
 usersRouter.post(
   '/:id/roles/:roleId',
-  requirePermission(Resources.USERS, Actions.UPDATE),
+  requirePermission(PermissionResource.Users, PermissionAction.Update),
+
   asyncHandler(userController.addRole)
 );
 
 /** DELETE /users/:id/roles/:roleId - Remove a specific role from user */
 usersRouter.delete(
   '/:id/roles/:roleId',
-  requirePermission(Resources.USERS, Actions.UPDATE),
+  requirePermission(PermissionResource.Users, PermissionAction.Update),
+
   asyncHandler(userController.removeRole)
 );
 
 /** DELETE /users/:id/roles - Remove all roles from user */
 usersRouter.delete(
   '/:id/roles',
-  requirePermission(Resources.USERS, Actions.UPDATE),
+  requirePermission(PermissionResource.Users, PermissionAction.Update),
+
   asyncHandler(userController.removeAllRoles)
 );

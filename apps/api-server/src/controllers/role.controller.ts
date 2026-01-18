@@ -5,7 +5,8 @@
  */
 import { Request, Response } from 'express';
 import { roleService } from '../services/index.js';
-import { RoleCreateInput, RoleUpdateInput, Resources, Actions } from '../types/index.js';
+import { RoleCreateInput, RoleUpdateInput } from '../types/index.js';
+import { PermissionResource, PermissionAction } from '@superapp/shared-types';
 import { hasPermission, ForbiddenError } from '../middleware/index.js';
 import { logger } from '../utils/index.js';
 
@@ -21,7 +22,8 @@ export const getAll = async (req: Request, res: Response) => {
 
   // Security: Restricted access to trashed items (isDeleted=true)
   if (isDeleted === 'true') {
-     const canManage = hasPermission(req.user?.permissions || {}, Resources.ROLES, Actions.MANAGE);
+     const canManage = hasPermission(req.user?.permissions || {}, PermissionResource.Roles, PermissionAction.Manage);
+
      if (!canManage) {
        throw new ForbiddenError('You do not have permission to view deleted roles');
      }

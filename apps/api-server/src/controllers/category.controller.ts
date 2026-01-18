@@ -5,7 +5,8 @@
  */
 import { Request, Response, NextFunction } from 'express';
 import { categoryService } from '../services/index.js';
-import { CategoryCreateInput, CategoryUpdateInput, Resources, Actions } from '../types/index.js';
+import { CategoryCreateInput, CategoryUpdateInput } from '../types/index.js';
+import { PermissionResource, PermissionAction } from '@superapp/shared-types';
 import { hasPermission, ForbiddenError } from '../middleware/index.js';
 import { logger } from '../utils/index.js';
 
@@ -22,7 +23,8 @@ export const getAll = async (req: Request, res: Response, _next: NextFunction) =
   // Security: Restricted access to trashed items (isDeleted=true)
   // Only admins or users with 'manage' permission can view deleted items
   if (isDeleted === 'true') {
-    const canManage = hasPermission(req.user?.permissions || {}, Resources.CATEGORIES, Actions.MANAGE);
+    const canManage = hasPermission(req.user?.permissions || {}, PermissionResource.Categories, PermissionAction.Manage);
+
     if (!canManage) {
       throw new ForbiddenError('You do not have permission to view deleted categories');
     }
@@ -61,7 +63,8 @@ export const getAllForExport = async (req: Request, res: Response, _next: NextFu
 
   // Security: Restricted access to trashed items (isDeleted=true)
   if (isDeleted === 'true') {
-    const canManage = hasPermission(req.user?.permissions || {}, Resources.CATEGORIES, Actions.MANAGE);
+    const canManage = hasPermission(req.user?.permissions || {}, PermissionResource.Categories, PermissionAction.Manage);
+
     if (!canManage) {
       throw new ForbiddenError('You do not have permission to view deleted categories');
     }

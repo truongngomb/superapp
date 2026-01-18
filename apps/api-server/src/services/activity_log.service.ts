@@ -1,6 +1,6 @@
 import { BaseService } from './base.service.js';
 import { Collections, CacheKeys, config } from '../config/index.js';
-import type { ActivityLog, ActivityLogInput } from '../types/index.js';
+import type { ActivityLog, ActivityLogInput } from '@superapp/shared-types';
 
 // Re-export types for backwards compatibility
 export type { ActivityLog, ActivityLogInput };

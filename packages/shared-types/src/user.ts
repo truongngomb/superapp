@@ -15,6 +15,37 @@ export interface User extends BaseEntity {
   preferences?: Record<string, unknown>;
 }
 
+/**
+ * Authenticated user extension
+ */
+export interface AuthUser extends User {
+  permissions: Record<string, string[]>;
+  isGuest?: boolean;
+}
+
+/**
+ * Auth Status response
+ */
+export interface AuthStatusResponse {
+  user: AuthUser | null;
+  isAuthenticated: boolean;
+}
+
+// Backend uses alias UserSession
+export type UserSession = AuthStatusResponse;
+
+/**
+ * OAuth Login Response
+ */
+export interface LoginResponse {
+  token: string;
+  userId: string;
+}
+
+// Backend uses alias AuthResult
+export type AuthResult = LoginResponse;
+
+
 // ============================================================================
 // Input/DTO Types
 // ============================================================================
@@ -71,3 +102,38 @@ export interface UserListParams {
   isActive?: boolean;
   isDeleted?: boolean;
 }
+
+// ============================================================================
+// Auth Request Types
+// ============================================================================
+
+/**
+ * Email/Password login input
+ */
+export interface LoginInput {
+  email: string;
+  password: string;
+}
+
+/**
+ * Registration input
+ */
+export interface RegisterInput {
+  email: string;
+  password: string;
+  name?: string;
+}
+
+/**
+ * OAuth provider names
+ */
+export type OAuthProvider = 'google' | 'github' | 'facebook';
+
+/**
+ * OAuth config response
+ */
+export interface OAuthConfigResponse {
+  clientId: string;
+  redirectUri: string;
+}
+

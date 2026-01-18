@@ -5,7 +5,7 @@
  * Supports multiple roles per user with permission merging (union).
  */
 import { Collections, adminPb, checkPocketBaseHealth, config, cache, ensureAdminAuth } from '../config/index.js';
-import type { RolePermissions } from '../types/index.js';
+import type { RolePermissions } from '@superapp/shared-types';
 import { createLogger } from '../utils/index.js';
 
 // =============================================================================

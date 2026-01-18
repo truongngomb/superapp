@@ -27,6 +27,22 @@ export interface ActivityLog {
   details?: Record<string, unknown>;
 }
 
+// ============================================================================
+// Input/DTO Types
+// ============================================================================
+
+/**
+ * Input for creating an activity log entry
+ */
+export interface ActivityLogInput {
+  user?: string;
+  action: ActivityLogAction;
+  resource: string;
+  recordId?: string;
+  message: string;
+  details?: Record<string, unknown>;
+}
+
 /**
  * Paginated activity logs response
  */

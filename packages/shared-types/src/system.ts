@@ -22,6 +22,15 @@ export interface SettingItem {
   visibility?: SettingVisibilityType;
 }
 
+/**
+ * Input for updating a setting
+ */
+export interface SettingUpdateInput {
+  key: string;
+  value: unknown;
+  visibility?: SettingVisibilityType;
+}
+
 // ============================================================================
 // System Stats Types
 // ============================================================================
@@ -63,3 +72,14 @@ export interface SystemStats {
     arch: string;
   };
 }
+
+// ============================================================================
+// Backup Types
+// ============================================================================
+
+export interface BackupInfo {
+  name: string;
+  size: number;
+  modified: string;
+}
+

@@ -25,38 +25,41 @@ export type {
   UpdateInput,
 } from './common.js';
 
-// Category types
+// Category types - imported directly from shared-types
 export type {
   Category,
   CategoryCreateInput,
   CategoryUpdateInput,
-} from './category.js';
+} from '@superapp/shared-types';
 
-// Role & Permission types
+// Role & Permission types - imported directly from shared-types
 export type {
-  Resource,
-  Action,
-  RolePermissions,
   Role,
   RoleCreateInput,
   RoleUpdateInput,
-} from './role.js';
-export { Resources, Actions } from './role.js';
+  RolePermissions,
+} from '@superapp/shared-types';
+// Re-export Enums
+export {
+  PermissionResource as Resources, // Aliased for backward compatibility if needed, though we updated controllers to use Enum directly, some might still rely on it? No, controllers use Enum.
+  PermissionAction as Actions,     // But the grep showed references in routes/controllers that we might have missed or are partial matches.
+  PermissionResource,
+  PermissionAction,
+} from '@superapp/shared-types';
 
-// User & Auth types
+// User & Auth types - imported directly from shared-types
 export type {
   User,
   AuthUser,
-  UserSession,
-  AuthResult,
   UserCreateInput,
   UserUpdateInput,
   UserRoleAssignment,
-} from './user.js';
+  UserSession,
+} from '@superapp/shared-types';
 
-// Activity Log types
+// Activity Log types - imported directly from shared-types
 export type {
-  ActivityLogAction,
   ActivityLog,
   ActivityLogInput,
-} from './activity_log.js';
+} from '@superapp/shared-types';
+

@@ -5,7 +5,7 @@
  */
 import { BaseService } from './base.service.js';
 import { Collections, CacheKeys, cache } from '../config/index.js';
-import type { Role, RolePermissions } from '../types/index.js';
+import type { Role, RolePermissions } from '@superapp/shared-types';
 
 // =============================================================================
 // Service Implementation

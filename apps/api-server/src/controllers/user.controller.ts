@@ -3,10 +3,9 @@ import { userService } from '../services/index.js';
 import { 
   UserCreateInput, 
   UserUpdateInput, 
-  UserRoleAssignment, 
-  Resources, 
-  Actions 
+  UserRoleAssignment 
 } from '../types/index.js';
+import { PermissionResource, PermissionAction } from '@superapp/shared-types';
 import { hasPermission, ForbiddenError } from '../middleware/index.js';
 import { logger } from '../utils/index.js';
 
@@ -22,7 +21,8 @@ export const getAll = async (req: Request, res: Response, _next: NextFunction) =
 
   // Security: Restricted access to trashed items (isDeleted=true)
   if (isDeleted === 'true') {
-    const canManage = hasPermission(req.user?.permissions || {}, Resources.USERS, Actions.MANAGE);
+    const canManage = hasPermission(req.user?.permissions || {}, PermissionResource.Users, PermissionAction.Manage);
+
     if (!canManage) {
       throw new ForbiddenError('You do not have permission to view deleted users');
     }
@@ -57,7 +57,8 @@ export const getAllForExport = async (req: Request, res: Response, _next: NextFu
 
   // Security check for deleted items
   if (isDeleted === 'true') {
-    const canManage = hasPermission(req.user?.permissions || {}, Resources.USERS, Actions.MANAGE);
+    const canManage = hasPermission(req.user?.permissions || {}, PermissionResource.Users, PermissionAction.Manage);
+
     if (!canManage) {
       throw new ForbiddenError('You do not have permission to view deleted users');
     }

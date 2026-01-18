@@ -6,7 +6,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { pb } from '../config/database.js';
 import { getUserPermissions, getPublicRolePermissions } from '../services/permission.service.js';
-import { AuthUser, User } from '../types/index.js';
+import type { User } from '@superapp/shared-types';
 import { UnauthorizedError } from './errorHandler.js';
 import { logger } from '../utils/index.js';
 
@@ -14,14 +14,7 @@ import { logger } from '../utils/index.js';
 // Express Type Augmentation
 // =============================================================================
 
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace Express {
-    interface Request {
-      user?: AuthUser;
-    }
-  }
-}
+
 
 // =============================================================================
 // Constants
@@ -57,9 +50,14 @@ export const authenticate = async (
         req.user = {
           id: 'guest',
           email: '',
+          name: 'Guest',
           roles: [],
           permissions: guestPermissions,
           isGuest: true,
+          created: '',
+          updated: '',
+          isActive: true,
+          isDeleted: false,
         };
       }
     } catch (error) {
@@ -87,6 +85,11 @@ export const authenticate = async (
       id: model.id,
       email: model.email,
       roles: model.roles,
+      name: model.name || '',
+      created: model.created || '',
+      updated: model.updated || '',
+      isActive: model.isActive || true,
+      isDeleted: model.isDeleted || false,
       permissions,
     };
   } catch (error) {
@@ -137,7 +140,7 @@ export const requireAdmin = (
 
   // Check if user has admin role or specific system permission
   const roles = req.user.roles || [];
-  const permissions = req.user.permissions || {};
+  const permissions = req.user.permissions;
   
   const hasAdminRole = roles.some(role => role === 'admin' || role === 'SUPER_ADMIN');
   const hasSystemView = permissions['system']?.includes('view');

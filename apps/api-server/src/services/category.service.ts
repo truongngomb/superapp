@@ -6,7 +6,7 @@
  */
 import { BaseService } from './base.service.js';
 import { Collections, CacheKeys } from '../config/index.js';
-import type { Category } from '../types/index.js';
+import type { Category } from '@superapp/shared-types';
 
 // =============================================================================
 // Service Implementation

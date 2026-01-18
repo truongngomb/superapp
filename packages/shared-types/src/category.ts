@@ -46,6 +46,13 @@ export interface UpdateCategoryInput {
 }
 
 // ============================================================================
+// Alias Types (for Backend Consistency)
+// ============================================================================
+
+export type CategoryCreateInput = CreateCategoryInput;
+export type CategoryUpdateInput = UpdateCategoryInput;
+
+// ============================================================================
 // Query Types
 // ============================================================================
 

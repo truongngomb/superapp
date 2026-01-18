@@ -7,7 +7,8 @@ import { Router } from 'express';
 import { asyncHandler, requirePermission, validateBody, batchOperationLimit } from '../middleware/index.js';
 import { categoryController } from '../controllers/index.js';
 import { CategoryCreateSchema, CategoryUpdateSchema, BatchDeleteSchema, BatchUpdateStatusSchema, BatchRestoreSchema } from '../schemas/index.js';
-import { Resources, Actions } from '../types/index.js';
+import { PermissionResource, PermissionAction } from '@superapp/shared-types';
+
 
 export const categoriesRouter: Router = Router();
 
@@ -18,14 +19,16 @@ export const categoriesRouter: Router = Router();
 /** GET /categories - List all categories */
 categoriesRouter.get(
   '/',
-  requirePermission(Resources.CATEGORIES, Actions.VIEW),
+  requirePermission(PermissionResource.Categories, PermissionAction.View),
+
   asyncHandler(categoryController.getAll)
 );
 
 /** GET /categories/export - Get all categories for export (no pagination) */
 categoriesRouter.get(
   '/export',
-  requirePermission(Resources.CATEGORIES, Actions.VIEW),
+  requirePermission(PermissionResource.Categories, PermissionAction.View),
+
   asyncHandler(categoryController.getAllForExport)
 );
 
@@ -37,7 +40,8 @@ categoriesRouter.get(
 categoriesRouter.post(
   '/batch-delete',
   batchOperationLimit,
-  requirePermission(Resources.CATEGORIES, Actions.DELETE),
+  requirePermission(PermissionResource.Categories, PermissionAction.Delete),
+
   validateBody(BatchDeleteSchema),
   asyncHandler(categoryController.batchDelete)
 );
@@ -46,7 +50,8 @@ categoriesRouter.post(
 categoriesRouter.post(
   '/batch-status',
   batchOperationLimit,
-  requirePermission(Resources.CATEGORIES, Actions.UPDATE),
+  requirePermission(PermissionResource.Categories, PermissionAction.Update),
+
   validateBody(BatchUpdateStatusSchema),
   asyncHandler(categoryController.batchUpdateStatus)
 );
@@ -55,7 +60,8 @@ categoriesRouter.post(
 categoriesRouter.post(
   '/batch-restore',
   batchOperationLimit,
-  requirePermission(Resources.CATEGORIES, Actions.UPDATE),
+  requirePermission(PermissionResource.Categories, PermissionAction.Update),
+
   validateBody(BatchRestoreSchema),
   asyncHandler(categoryController.batchRestore)
 );
@@ -64,14 +70,16 @@ categoriesRouter.post(
 /** GET /categories/:id - Get category by ID */
 categoriesRouter.get(
   '/:id',
-  requirePermission(Resources.CATEGORIES, Actions.VIEW),
+  requirePermission(PermissionResource.Categories, PermissionAction.View),
+
   asyncHandler(categoryController.getById)
 );
 
 /** POST /categories - Create new category */
 categoriesRouter.post(
   '/',
-  requirePermission(Resources.CATEGORIES, Actions.CREATE),
+  requirePermission(PermissionResource.Categories, PermissionAction.Create),
+
   validateBody(CategoryCreateSchema),
   asyncHandler(categoryController.create)
 );
@@ -79,7 +87,8 @@ categoriesRouter.post(
 /** PUT /categories/:id - Update category */
 categoriesRouter.put(
   '/:id',
-  requirePermission(Resources.CATEGORIES, Actions.UPDATE),
+  requirePermission(PermissionResource.Categories, PermissionAction.Update),
+
   validateBody(CategoryUpdateSchema),
   asyncHandler(categoryController.update)
 );
@@ -87,13 +96,15 @@ categoriesRouter.put(
 /** POST /categories/:id/restore - Restore soft-deleted category */
 categoriesRouter.post(
   '/:id/restore',
-  requirePermission(Resources.CATEGORIES, Actions.UPDATE),
+  requirePermission(PermissionResource.Categories, PermissionAction.Update),
+
   asyncHandler(categoryController.restore)
 );
 
 /** DELETE /categories/:id - Delete category */
 categoriesRouter.delete(
   '/:id',
-  requirePermission(Resources.CATEGORIES, Actions.DELETE),
+  requirePermission(PermissionResource.Categories, PermissionAction.Delete),
+
   asyncHandler(categoryController.remove)
 );

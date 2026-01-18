@@ -7,7 +7,8 @@ import { Router } from 'express';
 import { asyncHandler, requirePermission, validateBody, batchOperationLimit } from '../middleware/index.js';
 import { roleController } from '../controllers/index.js';
 import { RoleCreateSchema, RoleUpdateSchema, BatchDeleteSchema, BatchUpdateStatusSchema, BatchRestoreSchema } from '../schemas/index.js';
-import { Resources, Actions } from '../types/index.js';
+import { PermissionResource, PermissionAction } from '@superapp/shared-types';
+
 
 export const rolesRouter: Router = Router();
 
@@ -18,14 +19,16 @@ export const rolesRouter: Router = Router();
 /** GET /roles - List all roles */
 rolesRouter.get(
   '/',
-  requirePermission(Resources.ROLES, Actions.VIEW),
+  requirePermission(PermissionResource.Roles, PermissionAction.View),
+
   asyncHandler(roleController.getAll)
 );
 
 /** GET /roles/export - Export roles to Excel (must be before /:id) */
 rolesRouter.get(
   '/export',
-  requirePermission(Resources.ROLES, Actions.VIEW),
+  requirePermission(PermissionResource.Roles, PermissionAction.View),
+
   asyncHandler(roleController.getAllForExport)
 );
 
@@ -33,7 +36,8 @@ rolesRouter.get(
 rolesRouter.post(
   '/batch-delete',
   batchOperationLimit,
-  requirePermission(Resources.ROLES, Actions.DELETE),
+  requirePermission(PermissionResource.Roles, PermissionAction.Delete),
+
   validateBody(BatchDeleteSchema),
   asyncHandler(roleController.batchDelete)
 );
@@ -42,7 +46,8 @@ rolesRouter.post(
 rolesRouter.post(
   '/batch-status',
   batchOperationLimit,
-  requirePermission(Resources.ROLES, Actions.UPDATE),
+  requirePermission(PermissionResource.Roles, PermissionAction.Update),
+
   validateBody(BatchUpdateStatusSchema),
   asyncHandler(roleController.batchUpdateStatus)
 );
@@ -51,7 +56,8 @@ rolesRouter.post(
 rolesRouter.post(
   '/batch-restore',
   batchOperationLimit,
-  requirePermission(Resources.ROLES, Actions.UPDATE),
+  requirePermission(PermissionResource.Roles, PermissionAction.Update),
+
   validateBody(BatchRestoreSchema),
   asyncHandler(roleController.batchRestore)
 );
@@ -59,14 +65,16 @@ rolesRouter.post(
 /** GET /roles/:id - Get role by ID */
 rolesRouter.get(
   '/:id',
-  requirePermission(Resources.ROLES, Actions.VIEW),
+  requirePermission(PermissionResource.Roles, PermissionAction.View),
+
   asyncHandler(roleController.getById)
 );
 
 /** POST /roles - Create new role */
 rolesRouter.post(
   '/',
-  requirePermission(Resources.ROLES, Actions.CREATE),
+  requirePermission(PermissionResource.Roles, PermissionAction.Create),
+
   validateBody(RoleCreateSchema),
   asyncHandler(roleController.create)
 );
@@ -74,7 +82,8 @@ rolesRouter.post(
 /** PUT /roles/:id - Update role */
 rolesRouter.put(
   '/:id',
-  requirePermission(Resources.ROLES, Actions.UPDATE),
+  requirePermission(PermissionResource.Roles, PermissionAction.Update),
+
   validateBody(RoleUpdateSchema),
   asyncHandler(roleController.update)
 );
@@ -82,13 +91,15 @@ rolesRouter.put(
 /** DELETE /roles/:id - Delete role */
 rolesRouter.delete(
   '/:id',
-  requirePermission(Resources.ROLES, Actions.DELETE),
+  requirePermission(PermissionResource.Roles, PermissionAction.Delete),
+
   asyncHandler(roleController.remove)
 );
 
 /** POST /roles/:id/restore - Restore soft-deleted role */
 rolesRouter.post(
   '/:id/restore',
-  requirePermission(Resources.ROLES, Actions.UPDATE),
+  requirePermission(PermissionResource.Roles, PermissionAction.Update),
+
   asyncHandler(roleController.restore)
 );

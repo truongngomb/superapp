@@ -7,7 +7,7 @@ import { Request, Response } from 'express';
 import { activityLogService } from '../services/index.js';
 import { sanitizePocketBaseFilter } from '../utils/index.js';
 import { hasPermission, ForbiddenError } from '../middleware/index.js';
-import { Resources, Actions } from '../types/index.js';
+import { PermissionResource, PermissionAction } from '@superapp/shared-types';
 
 // =============================================================================
 // Handlers
@@ -18,7 +18,8 @@ import { Resources, Actions } from '../types/index.js';
  */
 export const getAll = async (req: Request, res: Response) => {
   // Security: Check for view permission explicitly in handler (consistency with Category SSoT)
-  const canView = hasPermission(req.user?.permissions || {}, Resources.ACTIVITY_LOGS, Actions.VIEW);
+  const canView = hasPermission(req.user?.permissions || {}, PermissionResource.ActivityLogs, PermissionAction.View);
+
   if (!canView) {
     throw new ForbiddenError('You do not have permission to view activity logs');
   }
@@ -53,7 +54,8 @@ export const getAll = async (req: Request, res: Response) => {
  */
 export const getAllForExport = async (req: Request, res: Response) => {
   // Security: Check for view permission explicitly in handler
-  const canView = hasPermission(req.user?.permissions || {}, Resources.ACTIVITY_LOGS, Actions.VIEW);
+  const canView = hasPermission(req.user?.permissions || {}, PermissionResource.ActivityLogs, PermissionAction.View);
+
   if (!canView) {
     throw new ForbiddenError('You do not have permission to view activity logs');
   }

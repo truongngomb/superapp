@@ -4,7 +4,7 @@
  * Provides permission-based access control for routes.
  */
 import { Request, Response, NextFunction } from 'express';
-import { Resource, Action } from '../types/index.js';
+import { PermissionResource, PermissionAction } from '@superapp/shared-types';
 import { config } from '../config/index.js';
 import { UnauthorizedError, ForbiddenError } from './errorHandler.js';
 import { logger } from '../utils/index.js';
@@ -33,7 +33,8 @@ import { logger } from '../utils/index.js';
  * router.post('/categories', requirePermission('categories', 'create'), createCategory);
  * ```
  */
-export const requirePermission = (resource: Resource, action: Action) => {
+export const requirePermission = (resource: PermissionResource, action: PermissionAction) => {
+
   return (req: Request, _res: Response, next: NextFunction) => {
     const user = req.user;
 
@@ -42,7 +43,7 @@ export const requirePermission = (resource: Resource, action: Action) => {
       throw new UnauthorizedError('Please login to access this resource');
     }
 
-    const permissions = user.permissions || {};
+    const permissions = user.permissions;
 
     // Debug logging in development
     if (config.isDevelopment) {
@@ -73,9 +74,10 @@ export const requirePermission = (resource: Resource, action: Action) => {
  */
 export function hasPermission(
   permissions: Record<string, string[]>,
-  resource: Resource,
-  action: Action
+  resource: PermissionResource,
+  action: PermissionAction
 ): boolean {
+
   // 1. Check exact resource + action
   const resourceActions = permissions[resource] || [];
   if (resourceActions.includes(action)) {
@@ -112,8 +114,9 @@ export function hasPermission(
  * ```
  */
 export const requireAnyPermission = (
-  permissions: Array<{ resource: Resource; action: Action }>
+  permissions: Array<{ resource: PermissionResource; action: PermissionAction }>
 ) => {
+
   return (req: Request, _res: Response, next: NextFunction) => {
     const user = req.user;
 
@@ -148,8 +151,9 @@ export const requireAnyPermission = (
  * ```
  */
 export const requireAllPermissions = (
-  permissions: Array<{ resource: Resource; action: Action }>
+  permissions: Array<{ resource: PermissionResource; action: PermissionAction }>
 ) => {
+
   return (req: Request, _res: Response, next: NextFunction) => {
     const user = req.user;
 

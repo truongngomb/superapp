@@ -6,7 +6,8 @@
 import express from 'express';
 import { asyncHandler, authenticate, requirePermission } from '../middleware/index.js';
 import * as activityLogController from '../controllers/activity_log.controller.js';
-import { Resources, Actions } from '../types/index.js';
+import { PermissionResource, PermissionAction } from '@superapp/shared-types';
+
 
 export const activityLogsRouter: express.Router = express.Router();
 
@@ -18,7 +19,8 @@ export const activityLogsRouter: express.Router = express.Router();
 activityLogsRouter.get(
   '/export',
   authenticate,
-  requirePermission(Resources.ACTIVITY_LOGS, Actions.VIEW),
+  requirePermission(PermissionResource.ActivityLogs, PermissionAction.View),
+
   asyncHandler(activityLogController.getAllForExport)
 );
 
@@ -26,6 +28,7 @@ activityLogsRouter.get(
 activityLogsRouter.get(
   '/',
   authenticate,
-  requirePermission(Resources.ACTIVITY_LOGS, Actions.VIEW),
+  requirePermission(PermissionResource.ActivityLogs, PermissionAction.View),
+
   asyncHandler(activityLogController.getAll)
 );

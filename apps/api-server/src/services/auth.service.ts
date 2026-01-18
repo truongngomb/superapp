@@ -5,7 +5,7 @@
  */
 import { pb, config, Collections } from '../config/index.js';
 import { permissionService } from './permission.service.js';
-import type { UserSession } from '../types/index.js';
+import type { UserSession, User } from '@superapp/shared-types';
 import { createLogger } from '../utils/index.js';
 
 // =============================================================================
@@ -117,22 +117,27 @@ class AuthService {
 
       // Fetch fresh user data from PocketBase
       const authData = await pb.collection(Collections.USERS).authRefresh();
-      const user = authData.record;
+      const user = authData.record as unknown as User;
 
       // Avatar URL calc removed as unused and creating issues
       
       const permissions = await permissionService.getUserPermissions(user.id);
 
+
       return {
         user: {
           id: user.id,
-          email: user['email'] as string,
-          name: user['name'] as string,
+          email: user.email,
+          name: user.name,
           avatar: user.avatar 
-            ? (String(user.avatar).startsWith('http') 
-              ? String(user.avatar) 
-              : `${config.pocketbaseUrl}/api/files/${Collections.USERS}/${user.id}/${user.avatar as string}`)
+            ? (user.avatar.startsWith('http') 
+              ? user.avatar 
+              : `${config.pocketbaseUrl}/api/files/${Collections.USERS}/${user.id}/${user.avatar}`)
             : undefined,
+          created: user.created,
+          updated: user.updated,
+          isActive: user.isActive,
+          isDeleted: user.isDeleted,
           permissions,
         },
         isAuthenticated: true,

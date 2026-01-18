@@ -6,7 +6,7 @@
 import { BaseService } from './base.service.js';
 import { Collections, CacheKeys } from '../config/index.js';
 import { BadRequestError } from '../middleware/index.js';
-import type { User, UserUpdateInput, UserRoleAssignment } from '../types/index.js';
+import type { User, UserUpdateInput, UserRoleAssignment } from '@superapp/shared-types';
 
 // =============================================================================
 // Types
