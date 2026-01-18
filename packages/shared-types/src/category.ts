@@ -2,7 +2,7 @@
  * Category Types
  */
 
-import type { BaseEntity, PaginatedResponse } from './common.js';
+import type { BaseEntity, PaginatedResponse, BaseListParams } from './common.js';
 
 // ============================================================================
 // Entity
@@ -59,15 +59,8 @@ export type CategoryUpdateInput = UpdateCategoryInput;
 /**
  * Category list parameters for pagination and sorting
  */
-export interface CategoryListParams {
-  page?: number;
-  limit?: number;
-  sort?: string;
-  order?: 'asc' | 'desc';
-  search?: string;
+export interface CategoryListParams extends BaseListParams {
   color?: string;
-  isActive?: boolean;
-  isDeleted?: boolean;
 }
 
 /**

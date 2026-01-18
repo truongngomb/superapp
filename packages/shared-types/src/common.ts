@@ -39,8 +39,8 @@ export type DeepReadonly<T> = {
 export interface PaginationParams {
   page?: number;
   limit?: number;
-  sortBy?: string;
-  sortOrder?: 'asc' | 'desc';
+  sort?: string;
+  order?: 'asc' | 'desc';
 }
 
 /**
@@ -63,6 +63,7 @@ export interface ApiResponse<T = unknown> {
   success: true;
   data: T;
   message?: string;
+  code?: string;
 }
 
 /**
@@ -101,6 +102,19 @@ export interface SearchParams extends PaginationParams {
 // Entity Types
 // ============================================================================
 
+/**
+ * Base List parameters for UI hooks (sync with PocketBase/BackEnd)
+ */
+export interface BaseListParams {
+  page?: number;
+  limit?: number;
+  sort?: string;
+  order?: 'asc' | 'desc';
+  search?: string;
+  isActive?: boolean;
+  isDeleted?: boolean;
+}
+
 
 // ============================================================================
 // Entity Types
@@ -131,6 +145,16 @@ export interface MinimalEntity {
  * Timestamps only
  */
 export type Timestamps = Pick<BaseEntity, 'created' | 'updated'>;
+
+/**
+ * Input type for creating entities (omits auto-generated fields)
+ */
+export type CreateInput<T extends BaseEntity> = Omit<T, keyof BaseEntity>;
+
+/**
+ * Input type for updating entities (partial, omits auto-generated fields)
+ */
+export type UpdateInput<T extends BaseEntity> = Partial<Omit<T, keyof BaseEntity>>;
 
 
 

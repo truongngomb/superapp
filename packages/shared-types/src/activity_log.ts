@@ -1,4 +1,4 @@
-import type { PaginatedResponse } from './common.js';
+import type { PaginatedResponse, BaseListParams } from './common.js';
 
 // ============================================================================
 // Entity
@@ -48,10 +48,4 @@ export interface ActivityLogInput {
  */
 export type PaginatedActivityLogs = PaginatedResponse<ActivityLog>;
 
-export interface ActivityLogParams {
-  page?: number;
-  limit?: number;
-  sort?: string;
-  order?: 'asc' | 'desc';
-  search?: string;
-}
+export type ActivityLogParams = BaseListParams;

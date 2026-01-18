@@ -13,6 +13,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@/hooks';
 import { useTranslation } from 'react-i18next';
 import type { ResourceService } from './useResourceService';
+import type { BaseListParams } from '@superapp/shared-types';
 
 // ============================================================================
 // Types
@@ -24,13 +25,6 @@ interface UseResourceOptions<T, CreateInput, UpdateInput, ListParams> {
   resourceName: string; // e.g., 'categories', 'users' for i18n and query keys
 }
 
-export interface BaseListParams {
-  page?: number;
-  limit?: number;
-  sort?: string;
-  order?: 'asc' | 'desc';
-  search?: string;
-}
 
 export interface UseResourceReturn<T, CreateInput, UpdateInput, ListParams> {
   items: T[];

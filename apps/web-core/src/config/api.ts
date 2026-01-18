@@ -72,15 +72,8 @@ export class ApiException extends Error {
   }
 }
 
-/**
- * Generic API response wrapper from server
- */
-export interface ApiResponse<T> {
-  data: T;
-  success: boolean;
-  message?: string;
-  code?: string;
-}
+import type { ApiResponse } from '@superapp/shared-types';
+export type { ApiResponse };
 
 // ============================================================================
 // Request Interceptors

@@ -1,4 +1,4 @@
-import { BaseEntity, PaginatedResponse } from './common.js';
+import { BaseEntity, PaginatedResponse, BaseListParams } from './common.js';
 
 /**
  * User entity from API
@@ -93,15 +93,7 @@ export type PaginatedUsers = PaginatedResponse<User>;
 /**
  * User list query parameters
  */
-export interface UserListParams {
-  page?: number;
-  limit?: number;
-  sort?: string;
-  order?: 'asc' | 'desc';
-  search?: string;
-  isActive?: boolean;
-  isDeleted?: boolean;
-}
+export type UserListParams = BaseListParams;
 
 // ============================================================================
 // Auth Request Types

@@ -2,7 +2,7 @@
  * Role Types
  */
 
-import type { BaseEntity, PaginatedResponse } from './common.js';
+import type { BaseEntity, PaginatedResponse, BaseListParams } from './common.js';
 import { PermissionAction, PermissionResource } from './common.js';
 
 // ============================================================================
@@ -75,15 +75,7 @@ export type UpdateRoleInput = RoleUpdateInput;
 /**
  * Role list parameters for pagination and sorting
  */
-export interface RoleListParams {
-  page?: number;
-  limit?: number;
-  sort?: string;
-  order?: 'asc' | 'desc';
-  search?: string;
-  isActive?: boolean;
-  isDeleted?: boolean;
-}
+export type RoleListParams = BaseListParams;
 
 /**
  * Paginated role response

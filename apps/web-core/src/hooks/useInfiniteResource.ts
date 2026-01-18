@@ -5,7 +5,7 @@
  * Accumulates items across pages when in infinite scroll mode.
  */
 import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
-import type { BaseListParams } from './useResource';
+import type { BaseListParams } from '@superapp/shared-types';
 
 /**
  * Minimal props needed from useResource for infinite scroll
