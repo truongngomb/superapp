@@ -5,10 +5,10 @@ import { Skeleton } from '@/components/common';
  * RoleTableSkeleton Component
  * 
  * Skeleton loading state for RoleTable. Matches the structure of DataTable (CSS Grid).
- * Grid Template matches DataTable: Selection(48px) Name(1.5fr) Description(2fr) Permissions(150px) Status(120px) Actions(160px)
+ * Grid Template matches DataTable: Selection(48px) Name(1.5fr) Description(2fr) Permissions(200px) Status(120px) Actions(160px)
  */
 export function RoleTableSkeleton() {
-  const gridTemplateColumns = "48px 1.5fr 2fr 150px 120px 160px";
+  const gridTemplateColumns = "48px 1.5fr 2fr 200px 120px 160px";
 
   return (
     <div className="w-full overflow-hidden rounded-lg border border-border bg-card shadow-sm flex flex-col">

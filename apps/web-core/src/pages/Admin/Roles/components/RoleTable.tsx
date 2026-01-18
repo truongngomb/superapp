@@ -64,7 +64,7 @@ export function RoleTable({
     {
        id: 'permissions',
        header: t('roles:form.permissions_label'),
-       width: '150px',
+       width: '200px',
        className: 'hidden md:flex',
        cell: ({ row }) => {
          const permissions = row.original.permissions;

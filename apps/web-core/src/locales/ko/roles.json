@@ -4,6 +4,7 @@
   "title": "역할 관리",
   "subtitle": "사용자 역할 및 권한 관리",
   "create_btn": "역할 생성",
+  "permissions_count": "권한",
   "loading": "역할 로딩 중...",
   "list": {
     "search_placeholder": "역할 검색...",

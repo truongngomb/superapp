@@ -4,6 +4,7 @@
   "title": "Quản lý Vai trò",
   "subtitle": "Quản lý vai trò và phân quyền",
   "create_btn": "Tạo Vai trò",
+  "permissions_count": "quyền",
   "list": {
     "resources_configured": "tài nguyên đã cấu hình"
   },

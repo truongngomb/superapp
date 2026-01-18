@@ -4,6 +4,7 @@
   "title": "Role Management",
   "subtitle": "Manage user roles and permissions",
   "create_btn": "Create Role",
+  "permissions_count": "permissions",
   "list": {
     "resources_configured": "resources configured"
   },
