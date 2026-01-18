@@ -23,7 +23,7 @@ const sizeClasses = {
   xl: 'max-w-2xl',
   '2xl': 'max-w-4xl',
   '3xl': 'max-w-6xl',
-  full: 'max-w-[95vw] h-[95vh] rounded-xl',
+  full: 'max-w-[95vw] rounded-xl',
 };
 
 export function Modal({

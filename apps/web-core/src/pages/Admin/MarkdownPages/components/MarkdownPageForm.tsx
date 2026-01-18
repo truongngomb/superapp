@@ -24,6 +24,7 @@ import {
 } from '@superapp/ui-kit';
 import { generateSlug } from '@superapp/core-logic';
 import { useMarkdownPages } from '@/hooks';
+import { useToast } from '@/context';
 import { Wand2, Image as ImageIcon, FileText, Link as LinkIcon } from 'lucide-react';
 
 // Extend schema with required boolean defaults
@@ -51,6 +52,7 @@ export function MarkdownPageForm({
   parentId 
 }: MarkdownPageFormProps) {
   const { t } = useTranslation(['markdown', 'common']);
+  const toast = useToast();
   const { createPage, updatePage, submitting } = useMarkdownPages();
   const isEdit = !!initialData;
 
@@ -98,18 +100,23 @@ export function MarkdownPageForm({
   // Reset form when modal opens/closes
   useEffect(() => {
     if (open) {
-      reset({
-        title: '',
-        slug: '',
-        content: '',
-        excerpt: '',
-        icon: '',
-        showInMenu: false,
-        menuPosition: undefined,
-        parentId: parentId || '',
-        isPublished: true,
-        ...initialData,
-      });
+      // Use set timeout to ensure the form is ready after modal animation
+      const timer = setTimeout(() => {
+        reset({
+          title: '',
+          slug: '',
+          content: '',
+          excerpt: '',
+          icon: '',
+          showInMenu: false,
+          menuPosition: undefined,
+          parentId: parentId || undefined, // Use undefined for no parent
+          order: 0,
+          isPublished: true,
+          ...initialData,
+        });
+      }, 0);
+      return () => { clearTimeout(timer); };
     }
   }, [open, initialData, parentId, reset]);
 
@@ -122,21 +129,31 @@ export function MarkdownPageForm({
     // Prepare payload
     let payload: MarkdownPageCreateInput | FormData;
 
+    // Clean up menuPosition if not shown
+    const finalData = {
+      ...data,
+      menuPosition: data.showInMenu ? data.menuPosition : undefined,
+      parentId: data.parentId || undefined,
+    };
+
     if (hasFile) {
       const formData = new FormData();
-      Object.entries(data).forEach(([key, value]) => {
+      Object.entries(finalData).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
           if (key === 'coverImage' && value instanceof File) {
             formData.append(key, value);
+          } else if (typeof value === 'boolean') {
+            formData.append(key, value ? 'true' : 'false');
           } else {
             formData.append(key, String(value));
           }
         }
       });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
-      payload = formData as any; // Cast for TS
+      payload = formData as any;
     } else {
-      payload = data as MarkdownPageCreateInput;
+      // If no file, use plain object for JSON submission
+      payload = finalData as MarkdownPageCreateInput;
     }
 
     if (isEdit) {
@@ -161,7 +178,22 @@ export function MarkdownPageForm({
           <Button type="button" variant="outline" onClick={onClose} disabled={submitting}>
             {t('common:actions.cancel')}
           </Button>
-          <Button type="submit" form="markdown-page-form" loading={submitting}>
+          <Button 
+            type="button" 
+            loading={submitting}
+            onClick={() => { 
+              void handleSubmit(onSubmit, (errors) => {
+                console.error('MarkdownPageForm validation errors:', errors);
+                // Extract the first error message safely
+                const errorValues = Object.values(errors);
+                if (errorValues.length > 0) {
+                  const firstError = errorValues[0];
+                  const message = firstError?.message;
+                  toast.error(typeof message === 'string' ? message : t('common:toast.error'));
+                }
+              })(); 
+            }}
+          >
             {isEdit ? t('common:actions.save') : t('common:actions.create')}
           </Button>
         </div>
@@ -169,12 +201,15 @@ export function MarkdownPageForm({
     >
       <form 
         id="markdown-page-form"
-        onSubmit={(e) => { e.preventDefault(); void handleSubmit(onSubmit)(e); }} 
+        onSubmit={(e) => {
+          e.preventDefault();
+          void handleSubmit(onSubmit)();
+        }}
         className="space-y-4"
       >
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
           {/* Left Column: Main Content */}
-          <div className="lg:col-span-3 space-y-4">
+          <div className="lg:col-span-3 space-y-6">
             
             {/* Title */}
             <div className="space-y-2">
@@ -241,13 +276,14 @@ export function MarkdownPageForm({
               <Textarea
                 {...register('excerpt')}
                 placeholder={t('form.excerpt_placeholder')}
-                rows={3}
+                className="resize-none"
+                rows={4}
               />
             </div>
           </div>
 
           {/* Right Column: Settings */}
-          <div className="space-y-4">
+          <aside className="lg:sticky lg:top-0 space-y-6">
             
             {/* Publish Status */}
             <div className="bg-surface/50 p-4 rounded-lg border space-y-4">
@@ -354,7 +390,7 @@ export function MarkdownPageForm({
               </div>
             </div>
 
-          </div>
+          </aside>
         </div>
       </form>
 

@@ -21,7 +21,8 @@ export function TableOfContents({ content, className }: TableOfContentsProps) {
   
   // Extract headings using useMemo instead of useEffect
   const items = useMemo(() => {
-    const headingRegex = /^(#{2,3})\s+(.+)$/gm;
+    // Support h1-h4 for ToC
+    const headingRegex = /^(#{1,4})\s+(.+)$/gm;
     const matches = [...content.matchAll(headingRegex)];
     
     return matches
@@ -29,11 +30,63 @@ export function TableOfContents({ content, className }: TableOfContentsProps) {
         const level = match[1] ? match[1].length : 2;
         const text = match[2] ? match[2].trim() : '';
         if (!text) return null;
-        const id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+        
+        // GitHub-style slugger (approximate)
+        // Match behavior: 
+        // 1. Lowercase
+        // 2. Remove standard punctuation including & (github-slugger strips these)
+        // 3. Replace spaces with dashes (this preserves double dashes if punctuation was removed between spaces)
+        const id = text
+          .toLowerCase()
+          .trim()
+          // Remove punctuation: dot, parens, &, etc. but KEEP dashes and underscores if part of word? 
+          // Actually github-slugger removes !"#$%&'()*+,./:;<=>?@[\]^`{|}~
+          .replace(/[!"#$%&'()*+,./:;<=>?@[\]^`{|}~]/g, '') 
+          // Replace space with dash
+          .replace(/\s/g, '-')
+          // Ensure no leading/trailing dashes
+          .replace(/^-+|-+$/g, '');
+          
         return { id, text, level };
       })
       .filter((item): item is TocItem => item !== null);
   }, [content]);
+
+  const scrollToId = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    e.preventDefault();
+    
+    // Attempt to find element with exact ID or normalized ID (collapse dashes)
+    let element = document.getElementById(id);
+    
+    // Fallback 1: Try collapsing dashes (a--b -> a-b)
+    if (!element) {
+      element = document.getElementById(id.replace(/-+/g, '-'));
+    }
+    
+    // Fallback 2: Try encoded & (sometimes raw IDs have different encoding?)
+    // Actually simpler: try just replacing all non-word chars with single dash
+    if (!element) {
+       const fallbackId = id.replace(/-+/g, '-');
+       element = document.getElementById(fallbackId);
+    }
+    
+    if (element) {
+      const offset = 100; // Header offset
+      const bodyRect = document.body.getBoundingClientRect().top;
+      const elementRect = element.getBoundingClientRect().top;
+      const elementPosition = elementRect - bodyRect;
+      const offsetPosition = elementPosition - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+      
+      // Update URL hash without jumping
+      window.history.pushState(null, '', `#${id}`);
+      setActiveId(id);
+    }
+  };
   
   useEffect(() => {
     // Track scroll position with IntersectionObserver
@@ -65,12 +118,24 @@ export function TableOfContents({ content, className }: TableOfContentsProps) {
       <h3 className="font-semibold mb-3">Table of Contents</h3>
       <ul className="space-y-1">
         {items.map(({ id, text, level }) => (
-          <li key={id} className={cn('text-sm', level === 3 && 'ml-4')}>
+          <li 
+            key={id} 
+            className={cn(
+              'text-sm transition-all',
+              level === 1 && 'font-semibold',
+              level === 2 && 'ml-2',
+              level === 3 && 'ml-6',
+              level === 4 && 'ml-10'
+            )}
+          >
             <a
               href={`#${id}`}
+              onClick={(e) => { scrollToId(e, id); }}
               className={cn(
-                'block py-1 hover:text-primary transition-colors',
-                activeId === id ? 'text-primary font-medium' : 'text-muted'
+                'block py-1 hover:text-primary transition-colors border-l-2 pl-4 -ml-4',
+                activeId === id 
+                  ? 'text-primary font-medium border-primary bg-primary/5' 
+                  : 'text-muted border-transparent hover:border-muted/30'
               )}
             >
               {text}
