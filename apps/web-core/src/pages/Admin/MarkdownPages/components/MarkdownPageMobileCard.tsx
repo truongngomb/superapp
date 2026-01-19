@@ -94,7 +94,7 @@ export function MarkdownPageMobileCard({
           className="h-8 w-8 p-0"
           onClick={(e) => {
             e.stopPropagation();
-            window.open(`/pages/${page.slug}`, '_blank');
+            window.open(`/pages/${page.slug as unknown as string}`, '_blank');
           }}
           disabled={!page.isPublished}
           title={t('view_page')}

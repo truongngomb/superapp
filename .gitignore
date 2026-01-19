@@ -54,3 +54,4 @@ ios/
 # Agent
 .agent/artifacts/
 .agent/plans/
+implementation_plan.md

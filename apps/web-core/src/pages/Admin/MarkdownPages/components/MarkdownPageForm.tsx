@@ -93,8 +93,7 @@ export function MarkdownPageForm({
     if (!open) return;
     
     // Only auto-generate if we are creating new page OR slug is empty
-    // And user hasn't manually edited slug (we assume raw match means auto)
-    if (!isEdit && title && (!slug || generateSlug(title).startsWith(slug))) {
+    if (!isEdit && generateSlug(title).startsWith(slug)) {
       const newSlug = generateSlug(title);
       setValue('slug', newSlug, { shouldValidate: true });
     }

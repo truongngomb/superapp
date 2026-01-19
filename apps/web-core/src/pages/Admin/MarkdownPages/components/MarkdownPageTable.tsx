@@ -102,7 +102,7 @@ export function MarkdownPageTable({
             variant="ghost"
             size="sm"
             className="h-8 w-8 p-0"
-            onClick={() => window.open(`/pages/${row.original.slug}`, '_blank')}
+            onClick={() => window.open(`/pages/${row.original.slug as unknown as string}`, '_blank')}
             disabled={!row.original.isPublished}
             title={t('view_page')}
           >

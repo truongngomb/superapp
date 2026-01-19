@@ -33,8 +33,11 @@ import {
 
 import { MarkdownPageForm } from "./components/MarkdownPageForm";
 import { MarkdownPageTable } from "./components/MarkdownPageTable";
+import { MarkdownPageRow } from "./components/MarkdownPageRow";
 import { MarkdownPageMobileCard } from "./components/MarkdownPageMobileCard";
+import { MarkdownPageSkeleton } from "./components/MarkdownPageSkeleton";
 import { MarkdownPageTableSkeleton } from "./components/MarkdownPageTableSkeleton";
+import { MarkdownPageMobileCardSkeletonList } from "./components/MarkdownPageMobileCardSkeleton";
 import { MarkdownPage } from "@superapp/shared-types";
 
 export default function MarkdownPagesPage() {
@@ -255,12 +258,7 @@ export default function MarkdownPagesPage() {
           ) : effectiveView === 'mobile' ? (
              // Mobile Skeleton or List
              (loading || isRefreshing) ? (
-                // Use a simple loading state for mobile if skeleton list not available or reuse card skeleton
-                <div className="space-y-3">
-                  {Array.from({ length: 3 }).map((_, i) => (
-                    <div key={i} className="h-40 bg-card rounded-lg border border-border animate-pulse" />
-                  ))}
-                </div>
+                <MarkdownPageMobileCardSkeletonList count={3} />
              ) : (
              <div className="space-y-3">
                {pages.map(page => (
@@ -276,7 +274,7 @@ export default function MarkdownPagesPage() {
                ))}
              </div>
              )
-          ) : (
+          ) : effectiveView === 'table' ? (
              (loading || isRefreshing) ? (
                 <MarkdownPageTableSkeleton />
              ) : (
@@ -292,6 +290,30 @@ export default function MarkdownPagesPage() {
                onDelete={(p) => { setDeleteId(p.id); }}
              />
              )
+          ) : (
+            // Desktop List View
+            (loading || isRefreshing) ? (
+               <div className="space-y-0.5">
+                 {Array.from({ length: 5 }).map((_, i) => <MarkdownPageSkeleton key={i} />)}
+               </div>
+            ) : (
+              <div className="space-y-2">
+                {pages.map((page, index) => (
+                  <MarkdownPageRow
+                    key={page.id}
+                    index={index}
+                    style={{}}
+                    data={{
+                      pages,
+                      onEdit: (p) => { setEditingPage(p); setShowForm(true); },
+                      onDelete: (p) => { setDeleteId(p.id); }
+                    }}
+                    isSelected={selectedIds.includes(page.id)}
+                    onSelect={(id, _checked) => { handleSelectOne(id); }}
+                  />
+                ))}
+              </div>
+            )
           )}
 
           {/* Pagination */}
