@@ -9,12 +9,13 @@ import { cn } from '@superapp/core-logic';
 
 interface FileUploaderProps {
   value?: File | string; // File object or URL
-  onChange: (file: File | null) => void;
+  onChange?: (file: File | null) => void;
   accept?: string;
   maxSize?: number; // in bytes
   label?: string;
   preview?: boolean;
   className?: string;
+  disabled?: boolean;
 }
 
 export function FileUploader({
@@ -25,6 +26,7 @@ export function FileUploader({
   label = 'Upload File',
   preview = true,
   className,
+  disabled = false,
 }: FileUploaderProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragActive, setDragActive] = useState(false);
@@ -35,6 +37,7 @@ export function FileUploader({
     : value;
   
   const handleFile = (file: File) => {
+    if (disabled || !onChange) return;
     setError('');
     
     // Validate file size
@@ -47,11 +50,13 @@ export function FileUploader({
   };
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (disabled) return;
     const file = e.target.files?.[0];
     if (file) handleFile(file);
   };
   
   const handleDrag = (e: React.DragEvent) => {
+    if (disabled) return;
     e.preventDefault();
     e.stopPropagation();
     if (e.type === 'dragenter' || e.type === 'dragover') {
@@ -62,6 +67,7 @@ export function FileUploader({
   };
   
   const handleDrop = (e: React.DragEvent) => {
+    if (disabled) return;
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
@@ -73,6 +79,7 @@ export function FileUploader({
   };
   
   const handleRemove = () => {
+    if (disabled || !onChange) return;
     onChange(null);
     if (inputRef.current) inputRef.current.value = '';
   };
@@ -85,17 +92,22 @@ export function FileUploader({
           <img 
             src={previewUrl} 
             alt="Preview" 
-            className="w-full h-48 object-cover rounded-lg"
+            className={cn(
+              "w-full h-48 object-contain rounded-lg",
+              disabled && "opacity-60"
+            )}
           />
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={handleRemove}
-            className="absolute top-2 right-2 bg-surface/90"
-          >
-            <X className="w-4 h-4" />
-          </Button>
+          {!disabled && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={handleRemove}
+              className="absolute top-2 right-2 bg-surface/90"
+            >
+              <X className="w-4 h-4" />
+            </Button>
+          )}
         </div>
       )}
       
@@ -103,22 +115,29 @@ export function FileUploader({
       {!previewUrl && (
         <div
           className={cn(
-            'border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors',
-            dragActive ? 'border-primary bg-primary/5' : 'border-border hover:border-primary',
+            'h-full border-2 border-dashed rounded-lg p-6 text-center transition-colors',
+            disabled 
+              ? 'border-border bg-muted/30 cursor-not-allowed opacity-60' 
+              : 'cursor-pointer hover:border-primary',
+            dragActive && !disabled && 'border-primary bg-primary/5',
             error && 'border-red-500'
           )}
           onDragEnter={handleDrag}
           onDragLeave={handleDrag}
           onDragOver={handleDrag}
           onDrop={handleDrop}
-          onClick={() => inputRef.current?.click()}
+          onClick={() => !disabled && inputRef.current?.click()}
         >
           <ImageIcon className="w-12 h-12 mx-auto mb-3 text-muted" />
           <p className="text-sm text-muted mb-2">{label}</p>
-          <p className="text-xs text-muted">or drag and drop</p>
-          <p className="text-xs text-muted mt-1">
-            Max {(maxSize / 1024 / 1024).toFixed(1)}MB
-          </p>
+          {!disabled && (
+            <>
+              <p className="text-xs text-muted">or drag and drop</p>
+              <p className="text-xs text-muted mt-1">
+                Max {(maxSize / 1024 / 1024).toFixed(1)}MB
+              </p>
+            </>
+          )}
         </div>
       )}
       
@@ -129,6 +148,7 @@ export function FileUploader({
         accept={accept}
         onChange={handleChange}
         className="hidden"
+        disabled={disabled}
       />
       
       {/* Error Message */}

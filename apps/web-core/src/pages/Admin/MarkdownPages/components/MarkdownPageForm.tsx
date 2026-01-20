@@ -1,12 +1,14 @@
 import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'react-i18next';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { z } from 'zod';
 import { 
   MarkdownPageCreateSchema, 
   type MarkdownPage,
-  type MarkdownPageCreateInput
+  type MarkdownPageCreateInput,
+  type SupportedLanguage,
+  type MarkdownPageTranslation
 } from '@superapp/shared-types';
 import { 
   Button, 
@@ -20,14 +22,19 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
+  SelectValue,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent
 } from '@superapp/ui-kit';
 import { generateSlug } from '@superapp/core-logic';
 import { useMarkdownPages } from '@/hooks';
 import { useToast } from '@/context';
-import { Wand2, Image as ImageIcon, FileText, Link as LinkIcon, Folder } from 'lucide-react';
+import { markdownService } from '@/services/markdown.service';
+import { Wand2, FileText, Link as LinkIcon, Folder, Copy } from 'lucide-react';
 
-// Extend schema with required boolean defaults
+// Extend schema with required boolean defaults and file handling
 const FormSchema = MarkdownPageCreateSchema.extend({
   coverImage: z.union([z.string(), z.any()]).optional(), // Allow File object
   isDeleted: z.boolean().default(false),
@@ -35,69 +42,125 @@ const FormSchema = MarkdownPageCreateSchema.extend({
   showInMenu: z.boolean().default(false),
   order: z.number().default(0),
   isPublished: z.boolean().default(true),
+  // Allow translations to be partial (empty strings allowed in form, filtered on submit)
+  translations: z.record(z.string(), z.object({
+    title: z.string(), 
+    slug: z.string().regex(/^[a-z0-9-]*$/, "Slug must be lowercase alphanumeric with hyphens (or empty)"),
+    content: z.string(),
+    excerpt: z.string().optional(),
+    menuTitle: z.string().optional(),
+  })),
 });
 
 type FormValues = z.infer<typeof FormSchema>;
+
 
 interface MarkdownPageFormProps {
   open: boolean;
   onClose: () => void;
   initialData?: MarkdownPage;
   parentId?: string; // For creating child pages
+  manageAllLanguages?: boolean; // If true, show all language tabs. If false, only show default language
 }
+
+const LANGUAGES: { value: SupportedLanguage; label: string }[] = [
+  { value: 'en', label: 'English' },
+  { value: 'vi', label: 'Tiếng Việt' },
+  { value: 'ko', label: 'Korean' }
+];
 
 export function MarkdownPageForm({ 
   open, 
   onClose, 
   initialData, 
-  parentId 
+  parentId,
+  manageAllLanguages = false // Default: only edit default language
 }: MarkdownPageFormProps) {
-  const { t } = useTranslation(['markdown', 'common']);
+  const { t, i18n } = useTranslation(['markdown', 'common']);
   const toast = useToast();
   const { createPage, updatePage, submitting, getAllPages } = useMarkdownPages();
   const isEdit = !!initialData;
   const [parentOptions, setParentOptions] = useState<{ value: string; label: string }[]>([]);
+  const [translating, setTranslating] = useState(false);
+
+  // Get current user language
+  const currentLang = (i18n.language.startsWith('vi') ? 'vi' : 
+                      i18n.language.startsWith('ko') ? 'ko' : 
+                      'en') as SupportedLanguage;
+
+  // Detect default language from translations or use current language
+  const [defaultLanguage, setDefaultLanguage] = useState<SupportedLanguage>(() => {
+    if (!initialData) return currentLang; // Use current language for new pages
+    
+    // Explicit default language from DB takes precedence
+    if (initialData.defaultLanguage) {
+      return initialData.defaultLanguage;
+    }
+
+    // Fallback: find first language with title + slug
+    for (const lang of LANGUAGES) {
+      const trans = initialData.translations[lang.value];
+      if (trans && trans.title && trans.slug) {
+        return lang.value;
+      }
+    }
+    return currentLang;
+  });
+
+  // Set active tab to default language initially
+  const [activeTab, setActiveTab] = useState<SupportedLanguage>(defaultLanguage);
+
+  // Track if slug is auto-generated (true) or manually edited (false) for each language
+  const isSlugAutoRef = useRef<Record<SupportedLanguage, boolean>>({
+    en: true,
+    vi: true,
+    ko: true,
+  });
 
   const {
     register,
     control,
     handleSubmit,
     setValue,
+    getValues,
     reset,
     formState: { errors }
   } = useForm<FormValues>({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
-    resolver: zodResolver(FormSchema) as any, // Cast due to extended schema
+    resolver: zodResolver(FormSchema) as any,
     defaultValues: {
-      title: '',
-      menuTitle: '',
-      slug: '',
-      content: '',
-      excerpt: '',
-      icon: '',
       isTitle: false,
       showInMenu: false,
-      parentId: parentId || '', // Use parentId if provided
+      parentId: parentId || '', 
       order: 0,
       isPublished: true,
+      translations: {
+        en: { title: '', slug: '', content: '', excerpt: '', menuTitle: '' },
+        vi: { title: '', slug: '', content: '', excerpt: '', menuTitle: '' },
+        ko: { title: '', slug: '', content: '', excerpt: '', menuTitle: '' },
+      },
       ...initialData,
     },
   });
 
-  const title = useWatch({ control, name: 'title' });
-  const slug = useWatch({ control, name: 'slug' });
-  const showInMenu = useWatch({ control, name: 'showInMenu' });
+  // Watch fields for current tab to handle auto-slug
+  const currentTitle = useWatch({ control, name: `translations.${activeTab}.title` });
+  const currentSlug = useWatch({ control, name: `translations.${activeTab}.slug` });
 
   // Auto-generate slug from title
   useEffect(() => {
     if (!open) return;
     
-    // Only auto-generate if we are creating new page OR slug is empty
-    if (!isEdit && generateSlug(title).startsWith(slug)) {
-      const newSlug = generateSlug(title);
-      setValue('slug', newSlug, { shouldValidate: true });
+    // Only auto-generate if NOT editing existing page (or if specific field is empty, but harder to track)
+    // Here we check if current slug matches generated version of title prefix, allowing user overrides
+    const generated = generateSlug(currentTitle || '');
+    if (!currentSlug || (currentSlug !== generated && generateSlug(currentSlug) === '')) {
+       // If empty, auto fill
+       if (currentTitle && !currentSlug) {
+         setValue(`translations.${activeTab}.slug`, generated, { shouldValidate: true });
+       }
     }
-  }, [title, isEdit, open, setValue, slug]);
+  }, [currentTitle, currentSlug, activeTab, open, setValue]); 
 
   // Fetch parent pages options
   useEffect(() => {
@@ -105,11 +168,18 @@ export function MarkdownPageForm({
       void getAllPages().then(pages => {
         if (!Array.isArray(pages)) return;
         
+        // Find best title for parent dropdown (prefer EN or VI)
+        const getTitle = (p: MarkdownPage) => 
+          p.translations['en']?.title || 
+          p.translations['vi']?.title || 
+          Object.values(p.translations)[0]?.title || 
+          p.id;
+
         const options = pages
           .filter(p => !isEdit || p.id !== initialData.id) // Exclude self
           .map(p => ({
              value: p.id,
-             label: p.title 
+             label: getTitle(p)
           }));
         setParentOptions(options);
       });
@@ -119,20 +189,20 @@ export function MarkdownPageForm({
   // Reset form when modal opens/closes
   useEffect(() => {
     if (open) {
-      // Use set timeout to ensure the form is ready after modal animation
+      const defaultTrans = { title: '', slug: '', content: '', excerpt: '', menuTitle: '' };
+      
       const timer = setTimeout(() => {
         reset({
-          title: '',
-          menuTitle: '',
-          slug: '',
-          content: '',
-          excerpt: '',
-          icon: '',
           isTitle: false,
           showInMenu: false,
-          parentId: parentId || undefined, // Use undefined for no parent
+          parentId: parentId || undefined,
           order: 0,
           isPublished: true,
+          translations: {
+            en: { ...defaultTrans, ...initialData?.translations.en },
+            vi: { ...defaultTrans, ...initialData?.translations.vi },
+            ko: { ...defaultTrans, ...initialData?.translations.ko },
+          },
           ...initialData,
         });
       }, 0);
@@ -140,18 +210,116 @@ export function MarkdownPageForm({
     }
   }, [open, initialData, parentId, reset]);
 
+  const handleAutoFill = async () => {
+    if (activeTab === defaultLanguage) {
+      toast.info(t('toast.already_default'));
+      return;
+    }
+
+    const translations = getValues('translations');
+    const sourceData = translations[defaultLanguage];
+
+    if (!sourceData || !sourceData.title.trim()) {
+      toast.warning(t('toast.no_default_content'));
+      return;
+    }
+
+    setTranslating(true);
+    try {
+      const translatedFields = await markdownService.translateContent({
+        title: sourceData.title,
+        slug: sourceData.slug,
+        content: sourceData.content,
+        excerpt: sourceData.excerpt || '',
+        menuTitle: sourceData.menuTitle || '',
+        fromLang: defaultLanguage,
+        toLang: activeTab,
+      });
+
+      // Set translated values
+      setValue(`translations.${activeTab}.title`, translatedFields.title, { shouldDirty: true });
+      
+      // Generate slug from title (consistent with manual title change) and reset auto-flag
+      setValue(`translations.${activeTab}.slug`, generateSlug(translatedFields.title), { shouldDirty: true });
+      isSlugAutoRef.current[activeTab] = true;
+
+      setValue(`translations.${activeTab}.content`, translatedFields.content, { shouldDirty: true });
+      if (translatedFields.excerpt) {
+        setValue(`translations.${activeTab}.excerpt`, translatedFields.excerpt, { shouldDirty: true });
+      }
+      if (translatedFields.menuTitle) {
+        setValue(`translations.${activeTab}.menuTitle`, translatedFields.menuTitle, { shouldDirty: true });
+      }
+
+      const sourceLabel = LANGUAGES.find(l => l.value === defaultLanguage)?.label;
+      const targetLabel = LANGUAGES.find(l => l.value === activeTab)?.label;
+      
+      toast.success(t('markdown:toast.auto_fill_success', { from: sourceLabel, to: targetLabel }));
+    } catch (error) {
+      console.error('Translation error:', error);
+      toast.error(t('toast.translation_error'));
+    } finally {
+      setTranslating(false);
+    }
+  };
+
   const onSubmit = async (data: FormValues) => {
     let success = false;
-
-    // Check if we need FormData (for file upload)
     const hasFile = data.coverImage instanceof File;
-    
-    // Prepare payload
     let payload: MarkdownPageCreateInput | FormData;
 
-    // Clean up data
+    // Validation logic depends on mode
+    const validTranslations: Record<string, MarkdownPageTranslation> = {};
+    
+    if (!manageAllLanguages) {
+      // CREATE or EDIT DEFAULT ONLY: Only validate and submit default language
+      const defaultTrans = data.translations[defaultLanguage];
+      if (defaultTrans && defaultTrans.title.trim() && defaultTrans.slug.trim()) {
+        validTranslations[defaultLanguage] = defaultTrans as MarkdownPageTranslation;
+      }
+    } else {
+      // MANAGE ALL LANGUAGES: Validate all languages (but only submit non-empty ones)
+      Object.entries(data.translations).forEach(([lang, t]) => {
+        if (t.title.trim() && t.slug.trim()) {
+          validTranslations[lang] = t as MarkdownPageTranslation;
+        }
+      });
+    }
+
+    if (Object.keys(validTranslations).length === 0) {
+      toast.error(t('errors.at_least_one_language'));
+      return;
+    }
+
+
+    // Detect default language
+    let detectedDefaultLang: SupportedLanguage;
+    
+    if (isEdit && initialData.defaultLanguage) {
+      // EDIT MODE: ALWAYS keep existing defaultLanguage
+      detectedDefaultLang = initialData.defaultLanguage;
+    } else if (!isEdit && validTranslations[currentLang]) {
+      // CREATE MODE: Use current language if it has content
+      detectedDefaultLang = currentLang;
+    } else {
+      // FALLBACK: Use first language with valid content
+      detectedDefaultLang = currentLang;
+      for (const lang of LANGUAGES) {
+        if (validTranslations[lang.value]) {
+          detectedDefaultLang = lang.value;
+          break;
+        }
+      }
+    }
+
+    // Update defaultLanguage state
+    setDefaultLanguage(detectedDefaultLang);
+
+    // Filtered data
     const finalData = {
       ...data,
+      translations: validTranslations,
+      defaultLanguage: detectedDefaultLang,
       parentId: data.parentId || undefined,
     };
 
@@ -161,6 +329,8 @@ export function MarkdownPageForm({
         if (value !== undefined && value !== null) {
           if (key === 'coverImage' && value instanceof File) {
             formData.append(key, value);
+          } else if (key === 'translations') {
+             formData.append(key, JSON.stringify(value));
           } else if (typeof value === 'boolean') {
             formData.append(key, value ? 'true' : 'false');
           } else {
@@ -168,11 +338,9 @@ export function MarkdownPageForm({
           }
         }
       });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
-      payload = formData as any;
+      payload = formData as unknown as MarkdownPageCreateInput;
     } else {
-      // If no file, use plain object for JSON submission
-      payload = finalData as MarkdownPageCreateInput;
+      payload = finalData as unknown as MarkdownPageCreateInput;
     }
 
     if (isEdit) {
@@ -202,13 +370,13 @@ export function MarkdownPageForm({
             loading={submitting}
             onClick={() => { 
               void handleSubmit(onSubmit, (errors) => {
-                console.error('MarkdownPageForm validation errors:', errors);
-                // Extract the first error message safely
-                const errorValues = Object.values(errors);
-                if (errorValues.length > 0) {
-                  const firstError = errorValues[0];
-                  const message = firstError?.message;
-                  toast.error(typeof message === 'string' ? message : t('common:toast.error'));
+                console.error('Validation errors:', errors);
+                // Simple error toast
+                const keys = Object.keys(errors.translations || {});
+                if (keys.length > 0) {
+                   toast.error(`Please check errors in ${keys.join(', ').toUpperCase()} tabs`);
+                } else {
+                   toast.error(t('common:toast.error'));
                 }
               })(); 
             }}
@@ -219,90 +387,291 @@ export function MarkdownPageForm({
       }
     >
       <form 
-        id="markdown-page-form"
-        onSubmit={(e) => {
-          e.preventDefault();
-          void handleSubmit(onSubmit)();
-        }}
-        className="space-y-4"
+        onSubmit={(e) => { e.preventDefault(); void handleSubmit(onSubmit)(); }}
+        className="h-full"
       >
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
-          {/* Left Column: Main Content */}
-          <div className="lg:col-span-3 space-y-6">
-            
-            {/* Title */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium">{t('form.title')}</label>
-              <Input
-                {...register('title')}
-                placeholder={t('form.title_placeholder')}
-                error={errors.title?.message}
-                autoFocus
-              />
-            </div>
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start h-full">
+          
+          {/* LEFT: Multi-language Content */}
+          <div className="lg:col-span-3 space-y-4 pb-6">
+            {/* CREATE MODE or EDIT DEFAULT ONLY: Show single language form */}
+            {!isEdit || !manageAllLanguages ? (
+              <div className="space-y-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <h3 className="text-sm font-medium text-muted">
+                    {isEdit 
+                      ? `${t('form.editing')}: ${LANGUAGES.find(l => l.value === defaultLanguage)?.label || defaultLanguage}`
+                      : `${t('form.default_language')}: ${LANGUAGES.find(l => l.value === defaultLanguage)?.label || defaultLanguage}`
+                    }
+                  </h3>
+                </div>
 
-            {/* Slug */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium flex items-center justify-between">
-                {t('form.slug')}
-                <span className="text-xs text-muted font-normal">{t('form.slug_help')}</span>
-              </label>
-              <div className="relative">
-                <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
-                <Input
-                  {...register('slug')}
-                  className="pl-9 pr-10"
-                  placeholder={t('form.slug_placeholder')}
-                  error={errors.slug?.message}
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="absolute right-1 top-1 h-8 w-8 p-0"
-                  onClick={() => { setValue('slug', generateSlug(title), { shouldValidate: true }); }}
-                  title={t('form.auto_generate_slug')}
-                >
-                  <Wand2 className="w-4 h-4 text-primary" />
-                </Button>
-              </div>
-            </div>
-
-            {/* Content Editor */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium">{t('form.content')}</label>
-              <div className="min-h-[400px]">
-                <Controller
-                  name="content"
-                  control={control}
-                  render={({ field }) => (
-                    <MarkdownEditor
-                      value={field.value}
-                      onChange={field.onChange}
-                      height={400}
+                {/* Render form for default language only */}
+                <div className="space-y-6">
+                  {/* Title (Full Width) */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">
+                      {t('form.title')} <span className="text-red-500">*</span>
+                    </label>
+                    <Input
+                      {...register(`translations.${defaultLanguage}.title`)}
+                      placeholder={t('form.title_placeholder')}
+                      error={errors.translations?.[defaultLanguage]?.title?.message}
+                      onChange={(e) => {
+                        setValue(`translations.${defaultLanguage}.title`, e.target.value);
+                        if (isSlugAutoRef.current[defaultLanguage]) {
+                          const newSlug = generateSlug(e.target.value);
+                          setValue(`translations.${defaultLanguage}.slug`, newSlug);
+                        }
+                      }}
                     />
-                  )}
-                />
-                {errors.content && (
-                  <p className="text-sm text-red-500 mt-1">{errors.content.message}</p>
-                )}
+                  </div>
+
+                  {/* Slug & Excerpt (left) | Cover Image (right) */}
+                  <div className="grid grid-cols-3 gap-6">
+                    {/* Left column: Slug & Excerpt */}
+                    <div className="col-span-2 space-y-4">
+                      {/* Slug */}
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium flex items-center justify-between">
+                          <span>{t('form.slug')} <span className="text-red-500">*</span></span>
+                          <span className="text-xs text-muted font-normal">{t('form.slug_help')}</span>
+                        </label>
+                        <div className="relative">
+                          <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
+                          <Input
+                            {...register(`translations.${defaultLanguage}.slug`)}
+                            className="pl-9 pr-10"
+                            placeholder={t('form.slug_placeholder')}
+                            error={errors.translations?.[defaultLanguage]?.slug?.message}
+                            onFocus={() => { isSlugAutoRef.current[defaultLanguage] = false; }}
+                            onChange={() => { isSlugAutoRef.current[defaultLanguage] = false; }}
+                          />
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="absolute right-1 top-1 h-8 w-8 p-0"
+                            onClick={() => { 
+                              const tVal = getValues(`translations.${defaultLanguage}.title`);
+                              setValue(`translations.${defaultLanguage}.slug`, generateSlug(tVal), { shouldValidate: true }); 
+                            }}
+                            title={t('form.auto_generate_slug')}
+                          >
+                            <Wand2 className="w-4 h-4 text-primary" />
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* Excerpt */}
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">{t('form.excerpt')}</label>
+                        <Textarea
+                          {...register(`translations.${defaultLanguage}.excerpt`)}
+                          placeholder={t('form.excerpt_placeholder')}
+                          className="resize-none"
+                          rows={3}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Right column: Cover Image */}
+                    <div className="col-span-1 flex">
+                      <div className="space-y-2 flex-1 flex flex-col">
+                        <label className="text-sm font-medium">{t('form.cover_image')}</label>
+                        <Controller
+                          name="coverImage"
+                          control={control}
+                          render={({ field }) => (
+                            <FileUploader
+                              value={field.value as File | string | undefined}
+                              onChange={field.onChange}
+                              preview
+                              label={t('form.cover_image')}
+                              className="w-full h-full"
+                            />
+                          )}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">{t('form.content')}</label>
+                    <div className="min-h-[400px]">
+                      <Controller
+                        name={`translations.${defaultLanguage}.content`}
+                        control={control}
+                        render={({ field }) => (
+                          <MarkdownEditor
+                            value={field.value}
+                            onChange={field.onChange}
+                            height={400}
+                          />
+                        )}
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-            
-            {/* Excerpt */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium">{t('form.excerpt')}</label>
-              <Textarea
-                {...register('excerpt')}
-                placeholder={t('form.excerpt_placeholder')}
-                className="resize-none"
-                rows={4}
-              />
-            </div>
+            ) : (
+              /* MANAGE ALL LANGUAGES MODE: Show all language tabs */
+              <Tabs value={activeTab} onValueChange={(v: string) => {setActiveTab(v as SupportedLanguage);}} className="w-full">
+                <div className="flex items-center justify-between border-b mb-6">
+                  <TabsList className="h-auto bg-transparent p-0 rounded-none w-auto justify-start">
+                    {LANGUAGES.map(lang => (
+                      <TabsTrigger 
+                        key={lang.value} 
+                        value={lang.value} 
+                        className="rounded-none border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground shadow-none transition-none data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none flex items-center gap-2"
+                      >
+                        {lang.label}
+                        {lang.value === defaultLanguage && <span className="text-xs opacity-70">({t('common:default')})</span>}
+                        {errors.translations?.[lang.value] && <span className="w-1.5 h-1.5 rounded-full bg-red-500" />}
+                      </TabsTrigger>
+                    ))}
+                  </TabsList>
+                  
+                  {/* Only show Auto-fill button if NOT on default language tab */}
+                  {activeTab !== defaultLanguage && (
+                    <Button 
+                      type="button" 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => { void handleAutoFill(); }}
+                      disabled={translating || submitting}
+                      loading={translating}
+                      title={t('form.auto_fill_tooltip')}
+                    >
+                      <Copy className="w-4 h-4 mr-2" />
+                      {t('form.auto_fill')}
+                    </Button>
+                  )}
+                </div>
+
+               {LANGUAGES.map(lang => (
+                 <TabsContent key={lang.value} value={lang.value} className="space-y-6 animate-in fade-in slide-in-from-bottom-2">
+                    {/* Title (Full Width) */}
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">
+                        {t('form.title')} <span className="text-red-500">*</span>
+                      </label>
+                      <Input
+                        {...register(`translations.${lang.value}.title`)}
+                        placeholder={t('form.title_placeholder')}
+                        error={errors.translations?.[lang.value]?.title?.message}
+                        onChange={(e) => {
+                          setValue(`translations.${lang.value}.title`, e.target.value);
+                          if (isSlugAutoRef.current[lang.value]) {
+                            const newSlug = generateSlug(e.target.value);
+                            setValue(`translations.${lang.value}.slug`, newSlug);
+                          }
+                        }}
+                      />
+                    </div>
+
+                    {/* Slug & Excerpt (left) | Cover Image (right) */}
+                    <div className="grid grid-cols-3 gap-6">
+                      {/* Left column: Slug & Excerpt */}
+                      <div className="col-span-2 space-y-4">
+                        {/* Slug */}
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium flex items-center justify-between">
+                            <span>{t('form.slug')} <span className="text-red-500">*</span></span>
+                            <span className="text-xs text-muted font-normal">{t('form.slug_help')}</span>
+                          </label>
+                          <div className="relative">
+                            <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
+                            <Input
+                              {...register(`translations.${lang.value}.slug`)}
+                              className="pl-9 pr-10"
+                              placeholder={t('form.slug_placeholder')}
+                              error={errors.translations?.[lang.value]?.slug?.message}
+                              onFocus={() => { isSlugAutoRef.current[lang.value] = false; }}
+                              onChange={() => { isSlugAutoRef.current[lang.value] = false; }}
+                            />
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              className="absolute right-1 top-1 h-8 w-8 p-0"
+                              onClick={() => { 
+                                const tVal = getValues(`translations.${lang.value}.title`);
+                                setValue(`translations.${lang.value}.slug`, generateSlug(tVal), { shouldValidate: true }); 
+                              }}
+                              title={t('form.auto_generate_slug')}
+                            >
+                              <Wand2 className="w-4 h-4 text-primary" />
+                            </Button>
+                          </div>
+                        </div>
+
+                        {/* Excerpt */}
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium">{t('form.excerpt')}</label>
+                          <Textarea
+                            {...register(`translations.${lang.value}.excerpt`)}
+                            placeholder={t('form.excerpt_placeholder')}
+                            className="resize-none"
+                            rows={3}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Right column: Cover Image (Shared - editable only in default language) */}
+                      <div className="col-span-1 flex">
+                        <div className="space-y-2 flex-1 flex flex-col">
+                          <label className="text-sm font-medium">
+                            {t('form.cover_image')}
+                            {lang.value !== defaultLanguage && (
+                              <span className="text-xs text-muted ml-2">({t('common:shared')})</span>
+                            )}
+                          </label>
+                          <Controller
+                            name="coverImage"
+                            control={control}
+                            render={({ field }) => (
+                              <FileUploader
+                                value={field.value as File | string | undefined}
+                                onChange={lang.value === defaultLanguage ? field.onChange : undefined}
+                                preview
+                                label={t('form.cover_image')}
+                                className="w-full h-full"
+                                disabled={lang.value !== defaultLanguage}
+                              />
+                            )}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                   <div className="space-y-2">
+                     <label className="text-sm font-medium">{t('form.content')}</label>
+                     <div className="min-h-[400px]">
+                       <Controller
+                         name={`translations.${lang.value}.content`}
+                         control={control}
+                         render={({ field }) => (
+                           <MarkdownEditor
+                             value={field.value}
+                             onChange={field.onChange}
+                             height={400}
+                           />
+                         )}
+                       />
+                     </div>
+                   </div>
+
+                 </TabsContent>
+               ))}
+             </Tabs>
+            )}
           </div>
 
-          {/* Right Column: Settings */}
-          <aside className="lg:sticky lg:top-0 space-y-6">
+          {/* RIGHT: Global Settings */}
+          <aside className="lg:sticky lg:top-0 space-y-6 pb-6">
             
             {/* Publish Status */}
             <div className="bg-surface/50 p-4 rounded-lg border space-y-4">
@@ -327,6 +696,38 @@ export function MarkdownPageForm({
                 />
               </div>
 
+              {/* Show in Menu */}
+              <div className="flex items-center justify-between border-t pt-3">
+                <label className="text-sm cursor-pointer" htmlFor="showInMenu">
+                  {t('form.show_in_menu')}
+                </label>
+                <Controller
+                  name="showInMenu"
+                  control={control}
+                  render={({ field }) => (
+                    <Toggle
+                      checked={field.value}
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
+              </div>
+
+              {/* Is Title */}
+              <div className="flex items-center justify-between border-t pt-3">
+                <label className="text-sm cursor-pointer" htmlFor="isTitle">
+                  {t('form.is_title')}
+                </label>
+                <Controller
+                  name="isTitle"
+                  control={control}
+                  render={({ field }) => (
+                    <Toggle checked={field.value} onChange={field.onChange} />
+                  )}
+                />
+              </div>
+
+              {/* Parent Page */}
               <div className="flex items-center justify-between border-t pt-3">
                  <label className="text-sm font-medium flex items-center gap-2">
                     <Folder className="w-4 h-4 text-muted" />
@@ -344,11 +745,11 @@ export function MarkdownPageForm({
                        }}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder={t('form.select_parent', 'Select parent page...')} />
+                        <SelectValue placeholder={t('form.select_parent')} />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="_none_">
-                             {t('form.none', 'None')}
+                             {t('common:none')}
                         </SelectItem>
                          {parentOptions.map((option) => (
                             <SelectItem key={option.value} value={option.value}>
@@ -360,45 +761,9 @@ export function MarkdownPageForm({
                  )}
               />
 
-              <div className="flex items-center justify-between border-t pt-3">
-                <label className="text-sm cursor-pointer" htmlFor="showInMenu">
-                  {t('form.show_in_menu')}
-                </label>
-                <Controller
-                  name="showInMenu"
-                  control={control}
-                  render={({ field }) => (
-                    <Toggle
-                      checked={field.value}
-                      onChange={field.onChange}
-                    />
-                  )}
-                />
-              </div>
 
-              {showInMenu && (
-                <div className="space-y-3 pt-2 animate-in fade-in slide-in-from-top-2">
-                  <div className="flex items-center justify-between">
-                     <label className="text-sm cursor-pointer" htmlFor="isTitle">
-                        {t('form.is_title')}
-                     </label>
-                     <Controller
-                        name="isTitle"
-                        control={control}
-                        render={({ field }) => (
-                           <Toggle checked={field.value} onChange={field.onChange} />
-                        )}
-                     />
-                  </div>
-                  
-                  <div className="space-y-1">
-                    <label className="text-xs text-muted">{t('form.menu_title')}</label>
-                    <Input
-                      {...register('menuTitle')}
-                      placeholder={t('form.menu_title_placeholder')}
-                    />
-                  </div>
-
+              {/* Order, Menu Title, and Icon */}
+               <div className="space-y-3 pt-2 border-t">
                   <div className="space-y-1">
                     <label className="text-xs text-muted">{t('form.order')}</label>
                     <Input
@@ -406,48 +771,30 @@ export function MarkdownPageForm({
                       {...register('order', { valueAsNumber: true })}
                     />
                   </div>
-                </div>
-              )}
-            </div>
 
-            {/* Assets */}
-            <div className="bg-surface/50 p-4 rounded-lg border space-y-4">
-              <h3 className="font-semibold text-sm flex items-center gap-2">
-                <ImageIcon className="w-4 h-4" />
-                {t('form.assets')}
-              </h3>
-
-              <div className="space-y-2">
-                <label className="text-xs font-medium">{t('form.cover_image')}</label>
-                <Controller
-                  name="coverImage"
-                  control={control}
-                  render={({ field }) => (
-                    <FileUploader
-                      value={field.value as File | string | undefined}
-                      onChange={field.onChange}
-                      preview
-                      label={t('form.cover_image')}
-                      className="w-full"
+                  {/* Menu Title (Per-Language) */}
+                  <div className="space-y-1">
+                    <label className="text-xs text-muted">{t('form.menu_title')}</label>
+                    <Input
+                      {...register(manageAllLanguages ? `translations.${activeTab}.menuTitle` : `translations.${defaultLanguage}.menuTitle`)}
+                      placeholder={t('form.menu_title_placeholder')}
                     />
-                  )}
-                />
-              </div>
+                  </div>
 
-              <div className="space-y-2">
-                <label className="text-xs font-medium">{t('form.icon')}</label>
-                <Input
-                  {...register('icon')}
-                  placeholder={t('form.icon_placeholder')}
-                />
-              </div>
+                  {/* Icon (Global) */}
+                  <div className="space-y-1">
+                    <label className="text-xs text-muted">{t('form.icon')}</label>
+                    <Input
+                      {...register('icon')}
+                      placeholder={t('form.icon_placeholder')}
+                    />
+                  </div>
+               </div>
             </div>
 
           </aside>
         </div>
       </form>
-
     </Modal>
-
   );
 }

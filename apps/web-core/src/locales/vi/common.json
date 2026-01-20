@@ -208,5 +208,10 @@
   "duplicate": "Sao chép",
   "archive": "Lưu trữ",
   "password": "Mật khẩu",
-  "password_confirm": "Xác nhận mật khẩu"
+  "password_confirm": "Xác nhận mật khẩu",
+  "untitled": "Chưa đặt tiêu đề",
+  "none": "Không có",
+  "n_a": "N/A",
+  "default": "Mặc định",
+  "shared": "Dùng chung"
 }

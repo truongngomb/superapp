@@ -34,6 +34,7 @@ export const markdownService = {
       if (params?.search) queryParams.append('search', params.search);
       if (params?.isPublished !== undefined) queryParams.append('isPublished', params.isPublished.toString());
       if (params?.showInMenu !== undefined) queryParams.append('showInMenu', params.showInMenu.toString());
+      if (params?.isDeleted !== undefined) queryParams.append('isDeleted', params.isDeleted.toString());
 
       const queryString = queryParams.toString();
       const endpoint = queryString 
@@ -161,5 +162,64 @@ export const markdownService = {
    */
   async batchUpdateStatus(ids: string[], isActive: boolean): Promise<void> {
     return api.post(`${API_ENDPOINTS.MARKDOWN_PAGES}/batch-status`, { ids, isActive });
+  },
+
+  /**
+   * Get all pages for export (matches useResource pattern)
+   */
+  async getAllForExport(params?: MarkdownPageListParams, config?: ServiceConfig): Promise<MarkdownPage[]> {
+    const { controller, clear } = createAbortController(config?.timeout ?? env.API_REQUEST_TIMEOUT);
+    
+    try {
+      const queryParams = new URLSearchParams();
+      if (params?.sort) queryParams.append('sort', params.sort);
+      if (params?.order) queryParams.append('order', params.order);
+      if (params?.search) queryParams.append('search', params.search);
+      if (params?.isPublished !== undefined) queryParams.append('isPublished', params.isPublished.toString());
+      if (params?.isDeleted !== undefined) queryParams.append('isDeleted', params.isDeleted.toString());
+      
+      // Add limit 1000 for export
+      queryParams.append('limit', '1000');
+
+      const queryString = queryParams.toString();
+      const endpoint = queryString 
+        ? `${API_ENDPOINTS.MARKDOWN_PAGES}?${queryString}` 
+        : API_ENDPOINTS.MARKDOWN_PAGES;
+
+      const response = await api.get<PaginatedMarkdownPages>(endpoint, {
+        signal: config?.signal ?? controller.signal,
+      });
+      return response.items;
+    } finally {
+      clear();
+    }
+  },
+
+  /**
+   * Auto-translate content
+   */
+  async translateContent(fields: {
+    title: string;
+    slug: string;
+    content: string;
+    excerpt?: string;
+    menuTitle?: string;
+    fromLang: 'en' | 'vi' | 'ko';
+    toLang: 'en' | 'vi' | 'ko';
+  }): Promise<{
+    title: string;
+    slug: string;
+    content: string;
+    excerpt?: string;
+    menuTitle?: string;
+  }> {
+    const response = await api.post<{
+      title: string;
+      slug: string;
+      content: string;
+      excerpt?: string;
+      menuTitle?: string;
+    }>(`${API_ENDPOINTS.MARKDOWN_PAGES}/translate`, fields);
+    return response;
   },
 };

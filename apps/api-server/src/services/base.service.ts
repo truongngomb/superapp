@@ -272,7 +272,11 @@ export abstract class BaseService<T extends MinimalEntity> {
       return this.mapRecord(record);
     } catch (error) {
       if (error instanceof NotFoundError) throw error;
-      throw new NotFoundError(`${this.collectionName} with id '${id}' not found`);
+      // Only wrap as NotFoundError if status is 404
+      if ((error as { status?: number }).status === 404) {
+        throw new NotFoundError(`${this.collectionName} with id '${id}' not found`);
+      }
+      throw error;
     }
   }
 

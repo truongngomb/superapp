@@ -16,6 +16,47 @@ export { schemas, CategorySchemas, RoleSchemas } from '../schemas/index.js';
 // =============================================================================
 
 /**
+ * Parse FormData JSON fields
+ * Handles JSON-stringified fields from multipart/form-data
+ */
+export function parseFormData() {
+  return (req: Request, _res: Response, next: NextFunction) => {
+    // Only process if content-type is multipart/form-data
+    const contentType = req.headers['content-type'] || '';
+    if (!contentType.includes('multipart/form-data')) {
+      next();
+      return;
+    }
+
+    // Type guard for body
+    const body = req.body as Record<string, unknown>;
+
+    // Parse JSON fields if they exist
+    if (body.translations && typeof body.translations === 'string') {
+      try {
+        body.translations = JSON.parse(body.translations) as unknown;
+      } catch {
+        // If parse fails, leave as-is and let validation catch it
+      }
+    }
+
+    // Convert boolean strings to actual booleans
+    const boolFields = ['isDeleted', 'isTitle', 'showInMenu', 'isPublished'];
+    for (const field of boolFields) {
+      if (body[field] === 'true') body[field] = true;
+      if (body[field] === 'false') body[field] = false;
+    }
+
+    // Convert number strings to numbers
+    if (body.order && typeof body.order === 'string') {
+      body.order = parseInt(body.order, 10);
+    }
+
+    next();
+  };
+}
+
+/**
  * Validate request body against a Zod schema
  * 
  * @example

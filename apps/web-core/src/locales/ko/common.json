@@ -200,5 +200,10 @@
   "duplicate": "복제",
   "archive": "보관",
   "password": "비밀번호",
-  "password_confirm": "비밀번호 확인"
+  "password_confirm": "비밀번호 확인",
+  "untitled": "제목 없음",
+  "none": "없음",
+  "n_a": "N/A",
+  "default": "기본",
+  "shared": "공유됨"
 }

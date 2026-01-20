@@ -1,17 +1,17 @@
 /**
  * Markdown Pages Collection
+ * I18n-ready with nested translations structure
  */
 import type { BaseCollectionSchema } from '../collection.schema.js';
 import { 
   autodateField, 
   boolField, 
   textField, 
-  editorField,
   fileField,
   relationField,
   numberField,
   dateField,
-  uniqueIndex
+  jsonField
 } from '../collection.schema.js';
 
 export const markdownPagesCollection: BaseCollectionSchema = {
@@ -19,12 +19,15 @@ export const markdownPagesCollection: BaseCollectionSchema = {
   type: 'base',
 
   fields: [
-    textField('title', { required: true }),
-    textField('menuTitle'),
+    // I18n: Nested translations object
+    // Structure: { en: { title, slug, content, excerpt, menuTitle }, vi: {...}, ko: {...} }
+    jsonField('translations', { required: true }),
+    
+    // Default language for this page (en, vi, ko)
+    textField('defaultLanguage'),
+    
+    // Global settings (not language-specific)
     boolField('isTitle'),
-    textField('slug', { required: true, pattern: '^[a-z0-9-]+$' }),
-    editorField('content'),
-    textField('excerpt'),
     textField('icon'),
     fileField('coverImage', { 
       maxSelect: 1,
@@ -43,7 +46,8 @@ export const markdownPagesCollection: BaseCollectionSchema = {
   ],
 
   indexes: [
-    uniqueIndex('markdown_pages', 'slug'),
+    // Note: Cannot create unique index on nested JSON field
+    // Slug uniqueness will be validated in service layer
   ],
 
   listRule: null,

@@ -23,6 +23,7 @@
     "is_title": "Is Section Title",
     "menu_title": "Menu Title",
     "menu_title_placeholder": "Short title for menu (optional)",
+    "menu_title_help": "Override the title displayed in navigation menu",
     "parent_page": "Parent Page",
     "select_parent": "Select parent page...",
     "none": "None",
@@ -31,17 +32,31 @@
     "published_help": "Visible to public",
     "settings": "Settings",
     "assets": "Assets",
-    "has_cover": "Has cover image"
+    "has_cover": "Has cover image",
+    "auto_fill": "Auto-fill from Default",
+    "auto_fill_tooltip": "Auto-translate content from default language",
+    "manage_translations": "Manage Translations",
+    "default_language": "Default Language",
+    "editing": "Editing",
+    "translation_count": "{{count}}/3 languages"
   },
   
   "errors": {
     "slug_invalid": "Slug can only contain lowercase letters, numbers, and hyphens",
     "slug_reserved": "This slug is reserved by system",
-    "menu_depth_exceeded": "Maximum menu depth is 2 levels"
+    "menu_depth_exceeded": "Maximum menu depth is 2 levels",
+    "at_least_one_language": "Please provide content for at least one language (Title & Slug required)"
   },
 
   "status": {
     "published": "Published",
     "draft": "Draft"
+  },
+
+  "toast": {
+    "auto_fill_success": "Auto-translated from {{from}} to {{to}}",
+    "no_default_content": "No default language content available",
+    "already_default": "This is the default language",
+    "translation_error": "Translation failed. Please try again."
   }
 }

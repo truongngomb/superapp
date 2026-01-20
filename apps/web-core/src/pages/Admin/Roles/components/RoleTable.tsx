@@ -150,7 +150,6 @@ export function RoleTable({
       sortDirection={sort.order}
       onSort={onSort}
       currentPage={currentPage}
-      showSelectAll={true}
       isLoading={loading}
     />
   );

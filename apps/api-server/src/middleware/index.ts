@@ -44,6 +44,7 @@ export {
   validateBody,
   validateQuery,
   validateParams,
+  parseFormData,
   // Common schemas
   schemas,
   CategorySchemas,
@@ -59,3 +60,9 @@ export {
   batchOperationLimit,
   standardRateLimit,
 } from './rateLimit.js';
+
+// File Upload
+export {
+  upload,
+  uploadOptional,
+} from './upload.js';

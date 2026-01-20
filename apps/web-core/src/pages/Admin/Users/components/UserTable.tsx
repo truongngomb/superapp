@@ -146,7 +146,6 @@ export function UserTable({
       sortDirection={sort.order}
       onSort={onSort}
       currentPage={currentPage}
-      showSelectAll={true}
       isLoading={loading}
     />
   );

@@ -3,7 +3,7 @@
  * RESTful endpoints for markdown page management
  */
 import { Router } from 'express';
-import { asyncHandler, requirePermission, validateBody, batchOperationLimit } from '../middleware/index.js';
+import { asyncHandler, requirePermission, validateBody, parseFormData, uploadOptional, batchOperationLimit } from '../middleware/index.js';
 import * as markdownController from '../controllers/markdown.controller.js';
 import { 
   MarkdownPageCreateSchema, 
@@ -88,6 +88,8 @@ markdownRouter.get(
 markdownRouter.post(
   '/',
   requirePermission(PermissionResource.MarkdownPages, PermissionAction.Create),
+  uploadOptional,
+  parseFormData(),
   validateBody(MarkdownPageCreateSchema),
   asyncHandler(markdownController.create)
 );
@@ -96,6 +98,8 @@ markdownRouter.post(
 markdownRouter.put(
   '/:id',
   requirePermission(PermissionResource.MarkdownPages, PermissionAction.Update),
+  uploadOptional,
+  parseFormData(),
   validateBody(MarkdownPageUpdateSchema),
   asyncHandler(markdownController.update)
 );
@@ -105,6 +109,13 @@ markdownRouter.post(
   '/:id/restore',
   requirePermission(PermissionResource.MarkdownPages, PermissionAction.Update),
   asyncHandler(markdownController.restore)
+);
+
+/** POST /markdown-pages/translate - Auto-translate content */
+markdownRouter.post(
+  '/translate',
+  requirePermission(PermissionResource.MarkdownPages, PermissionAction.Update),
+  asyncHandler(markdownController.translateContent)
 );
 
 /** DELETE /markdown-pages/:id - Delete page */

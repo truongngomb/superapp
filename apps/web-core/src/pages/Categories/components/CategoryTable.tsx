@@ -147,7 +147,6 @@ export function CategoryTable({
       onSort={onSort}
       currentPage={currentPage}
       perPage={perPage}
-      showSelectAll={true}
     />
   );
 }

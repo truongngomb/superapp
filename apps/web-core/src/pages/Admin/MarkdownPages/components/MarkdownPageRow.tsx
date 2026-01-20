@@ -4,15 +4,17 @@ import { Button, DataRow } from '@/components/common';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
 import { cn } from '@/utils';
 import type { MarkdownPage } from '@superapp/shared-types';
-import { env } from '@/config';
 import { Avatar } from '@superapp/ui-kit';
+import { LanguageManagementButton } from './LanguageManagementButton';
+
 
 interface MarkdownPageRowProps {
   index: number;
   style: React.CSSProperties;
   data: {
     pages: MarkdownPage[];
-    onEdit: (page: MarkdownPage) => void;
+    onEdit: (page: MarkdownPage) => void; // Edit default language only
+    onManageTranslations: (page: MarkdownPage) => void; // Manage all languages
     onDelete: (page: MarkdownPage) => void;
   };
   isSelected?: boolean;
@@ -20,19 +22,29 @@ interface MarkdownPageRowProps {
 }
 
 export function MarkdownPageRow({ index, style, data, isSelected, onSelect }: MarkdownPageRowProps) {
-  const { t } = useTranslation(['markdown', 'common']);
+  const { t, i18n } = useTranslation(['markdown', 'common']);
   const page = data.pages[index];
   if (!page) return null;
 
+  const lang = i18n.language;
+  const trans = page.translations[lang] || page.translations['en'] || Object.values(page.translations)[0];
+  const title = trans?.title || t('common:untitled');
+  const slug = trans?.slug || '';
+
   const actions = (
     <div className="flex items-center gap-1">
+      <LanguageManagementButton 
+        page={page} 
+        onManageTranslations={data.onManageTranslations}
+      />
+
       <Button
         variant="ghost"
         size="sm"
         className="h-8 w-8 p-0"
         onClick={(e) => {
           e.stopPropagation();
-          window.open(`/pages/${page.slug as unknown as string}`, '_blank');
+          window.open(`/pages/${slug}`, '_blank');
         }}
         disabled={!page.isPublished}
         title={t('view_page')}
@@ -68,9 +80,9 @@ export function MarkdownPageRow({ index, style, data, isSelected, onSelect }: Ma
 
   const icon = page.coverImage ? (
     <Avatar 
-      src={`${env.API_BASE_URL}/api/files/markdown_pages/${page.id}/${page.coverImage}`} 
-      alt={page.title}
-      name={page.title}
+      src={page.coverImage} 
+      alt={title}
+      name={title}
       size="sm"
       className="w-10 h-10 rounded-lg"
     />
@@ -84,8 +96,8 @@ export function MarkdownPageRow({ index, style, data, isSelected, onSelect }: Ma
     <DataRow
       style={style}
       icon={icon}
-      title={page.title}
-      description={`/${page.slug as unknown as string}`}
+      title={title}
+      description={`/${slug}`}
       badges={
         <div className="flex items-center gap-2">
            {page.showInMenu && (
