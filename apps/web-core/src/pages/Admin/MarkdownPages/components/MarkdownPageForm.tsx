@@ -1,7 +1,7 @@
 import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'react-i18next';
-import { useEffect, useState, useRef, useMemo } from 'react';
+import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
 import { z } from 'zod';
 import { 
   MarkdownPageCreateSchema, 
@@ -31,10 +31,11 @@ import {
   CATEGORY_ICONS
 } from '@superapp/ui-kit';
 import { generateSlug } from '@superapp/core-logic';
-import { useMarkdownPages, useDebounce } from '@/hooks';
+import { useMarkdownPages, useDebounce, useMediaUpload } from '@/hooks';
 import { useToast } from '@/context';
 import { markdownService } from '@/services/markdown.service';
 import { Wand2, FileText, Link as LinkIcon, Folder, Copy, X } from 'lucide-react';
+import { MediaManagerModal } from '@/components/MediaManager/MediaManagerModal';
 
 // Extend schema with required boolean defaults and file handling
 // Schema for Type Inference only (Static)
@@ -83,10 +84,39 @@ export function MarkdownPageForm({
   const { t, i18n } = useTranslation(['markdown', 'common']);
   const toast = useToast();
   const { createPage, updatePage, submitting, getAllPages } = useMarkdownPages();
+  const { upload: uploadImage } = useMediaUpload(initialData?.id, 'markdown_page');
   const isEdit = !!initialData;
   const [parentOptions, setParentOptions] = useState<{ value: string; label: string }[]>([]);
   const [translating, setTranslating] = useState(false);
   const [iconPickerOpen, setIconPickerOpen] = useState(false);
+  
+  // Media Manager State
+  const [mediaManagerOpen, setMediaManagerOpen] = useState(false);
+  const mediaResolver = useRef<((url: string | undefined) => void) | null>(null);
+
+  const handleBrowseImage = useCallback((): Promise<string | undefined> => {
+    return new Promise((resolve) => {
+      mediaResolver.current = resolve;
+      setMediaManagerOpen(true);
+    });
+  }, []);
+
+  const handleMediaSelect = (url: string) => {
+    if (mediaResolver.current) {
+      mediaResolver.current(url);
+      mediaResolver.current = null;
+    }
+    setMediaManagerOpen(false);
+  };
+  
+  // Close handler for media manager (user cancelled)
+  const handleMediaClose = () => {
+    if (mediaResolver.current) {
+      mediaResolver.current(undefined);
+      mediaResolver.current = null;
+    }
+    setMediaManagerOpen(false);
+  };
 
   // Get current user language
   const currentLang = (i18n.language.startsWith('vi') ? 'vi' : 
@@ -435,6 +465,7 @@ export function MarkdownPageForm({
   };
 
   return (
+    <>
     <Modal
       isOpen={open}
       onClose={onClose}
@@ -581,6 +612,8 @@ export function MarkdownPageForm({
                             value={field.value}
                             onChange={field.onChange}
                             height={400}
+                            onImageUpload={uploadImage}
+                            onGalleryClick={handleBrowseImage}
                           />
                         )}
                       />
@@ -738,6 +771,8 @@ export function MarkdownPageForm({
                              value={field.value}
                              onChange={field.onChange}
                              height={400}
+                             onImageUpload={uploadImage}
+                             onGalleryClick={handleBrowseImage}
                            />
                          )}
                        />
@@ -919,5 +954,14 @@ export function MarkdownPageForm({
         </div>
       </form>
     </Modal>
+    
+    <MediaManagerModal 
+      open={mediaManagerOpen} 
+      onClose={handleMediaClose} 
+      onSelect={handleMediaSelect}
+      refId={initialData?.id}
+      refType="markdown_page"
+    />
+    </>
   );
 }

@@ -11,7 +11,7 @@ import cookieParser from 'cookie-parser';
 
 import { config, cache } from './config/index.js';
 import { authenticate, checkMaintenanceMode, errorHandler, NotFoundError, requireAdmin } from './middleware/index.js';
-import { authRouter, categoriesRouter, rolesRouter, usersRouter, activityLogsRouter, realtimeRouter, systemRouter, settingsRouter, markdownRouter } from './routes/index.js';
+import { authRouter, categoriesRouter, rolesRouter, usersRouter, activityLogsRouter, realtimeRouter, systemRouter, settingsRouter, markdownRouter, mediaRouter } from './routes/index.js';
 
 import { generateOpenApiDocument } from './docs/index.js';
 
@@ -97,6 +97,7 @@ function createApp(): Express {
   app.use('/api/system', systemRouter);
   app.use('/api/settings', settingsRouter);
   app.use('/api/markdown-pages', markdownRouter);
+  app.use('/api/media', mediaRouter);
 
 
   // =========================================================================

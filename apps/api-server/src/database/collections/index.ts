@@ -11,6 +11,7 @@ export { categoriesCollection } from './categories.collection.js';
 export { activity_logsCollection } from './activity_logs.collection.js';
 export { settingsCollection } from './settings.collection.js';
 export { markdownPagesCollection } from './markdown_pages.collection.js';
+export { mediaCollection } from './media.collection.js';
 
 import { usersCollection } from './users.collection.js';
 import { rolesCollection } from './roles.collection.js';
@@ -18,6 +19,7 @@ import { categoriesCollection } from './categories.collection.js';
 import { activity_logsCollection } from './activity_logs.collection.js';
 import { settingsCollection } from './settings.collection.js';
 import { markdownPagesCollection } from './markdown_pages.collection.js';
+import { mediaCollection } from './media.collection.js';
 
 /**
  * All collection schemas to be synced
@@ -29,6 +31,7 @@ export const allCollections: CollectionSchema[] = [
   activity_logsCollection,
   settingsCollection,
   markdownPagesCollection,
+  mediaCollection,
 ];
 
 /**
@@ -41,6 +44,7 @@ export const CollectionNames = {
   ACTIVITY_LOGS: 'activity_logs',
   SETTINGS: 'settings',
   MARKDOWN_PAGES: 'markdown_pages',
+  MEDIA: 'media',
 
 } as const;
 

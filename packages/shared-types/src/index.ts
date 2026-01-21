@@ -42,3 +42,6 @@ export * from './system.js';
 // Markdown types
 export * from './markdown.js';
 
+// Media types
+export * from './media.js';
+

@@ -99,7 +99,7 @@ function NavLink({ link, isActive, label }: NavLinkProps) {
                    <Link
                       key={child.path}
                       to={child.path}
-                      className="flex items-center gap-2 px-3 py-2 text-sm text-muted hover:text-foreground hover:bg-primary/10 rounded-md transition-colors"
+                      className="flex items-center gap-2 px-3 py-2 text-sm text-muted hover:text-foreground bg-background rounded-md transition-colors"
                    >
                       {ChildIcon && <ChildIcon className="w-4 h-4 text-muted-foreground" />}
                       <span className="truncate">{child.label}</span>

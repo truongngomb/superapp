@@ -11,6 +11,7 @@ export * from './useActivityLogs';
 export * from './useSettings';
 export * from './useMarkdownPages';
 export * from './useAppMenu';
+export { useMediaUpload } from './useMedia';
 
 export * from './useLayoutMode';
 export * from './useLayout';
