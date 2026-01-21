@@ -43,6 +43,7 @@ my-project/
 - **Dark/Light Theme**: System and manual toggle
 - **Excel Export**: Data export functionality
 - **Soft Delete**: Trash/Archive with restore capability
+- **Markdown CMS**: Multi-language content management with live preview and auto-translation
 
 ## 🚀 Quick Start
 

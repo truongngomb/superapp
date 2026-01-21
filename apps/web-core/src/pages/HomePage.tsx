@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Smartphone, LayoutDashboard, Languages, Zap, Shield, ScrollText } from 'lucide-react';
+import { ArrowRight, Smartphone, LayoutDashboard, ScrollText, FileText, Users, UserCog, Zap } from 'lucide-react';
 import { Button, Card, CardContent } from '@/components/common';
 
 const features = [
@@ -11,24 +11,24 @@ const features = [
     descKey: 'home:features.dashboard.description',
   },
   {
-    icon: Shield,
-    titleKey: 'home:features.security.title',
-    descKey: 'home:features.security.description',
+    icon: Users,
+    titleKey: 'home:features.user_mgmt.title',
+    descKey: 'home:features.user_mgmt.description',
+  },
+  {
+    icon: UserCog,
+    titleKey: 'home:features.role_mgmt.title',
+    descKey: 'home:features.role_mgmt.description',
+  },
+  {
+    icon: FileText,
+    titleKey: 'home:features.markdown_pages.title',
+    descKey: 'home:features.markdown_pages.description',
   },
   {
     icon: ScrollText,
     titleKey: 'home:features.activity_logs.title',
     descKey: 'home:features.activity_logs.description',
-  },
-  {
-    icon: Zap,
-    titleKey: 'home:features.performance.title',
-    descKey: 'home:features.performance.description',
-  },
-  {
-    icon: Languages,
-    titleKey: 'home:features.i18n.title',
-    descKey: 'home:features.i18n.description',
   },
   {
     icon: Smartphone,
@@ -66,8 +66,10 @@ export function HomePage() {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="text-center py-12 md:py-20"
+        className="relative text-center py-12 md:py-32 overflow-hidden"
       >
+        {/* Background Gradient Blob */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 blur-[120px] rounded-full -z-10 pointer-events-none" />
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}

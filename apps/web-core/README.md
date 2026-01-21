@@ -93,6 +93,7 @@ VITE_ENABLE_DEBUG=false
 | **Admin Dashboard** | Statistics and system status |
 | **Users** | CRUD, role assignment |
 | **Roles** | CRUD, permission configuration |
+| **Markdown Pages** | Multi-language CMS with preview |
 | **Activity Logs** | Audit trail viewer |
 | **System Settings** | Layout and app configuration |
 

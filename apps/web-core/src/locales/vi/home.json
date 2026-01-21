@@ -35,7 +35,7 @@
     },
     "performance": {
       "title": "Hiệu Năng Cực Đại",
-      "description": "Kiến trúc React 18 + Vite tối ưu hóa Core Web Vitals. Điểm Lighthouse 100/100 cho trải nghiệm mượt mà."
+      "description": "Kiến trúc React 19 + Vite tối ưu hóa Core Web Vitals. Điểm Lighthouse 100/100 cho trải nghiệm mượt mà."
     },
     "security": {
       "title": "Bảo Mật Enterprise",
@@ -44,6 +44,10 @@
     "cross_platform": {
       "title": "Đa Nền Tảng Hợp Nhất",
       "description": "Trải nghiệm đồng nhất trên Web, Android và iOS. Hỗ trợ PWA Offline-first hoạt động không cần mạng."
+    },
+    "markdown_pages": {
+      "title": "Quản lý Markdown CMS",
+      "description": "Quản lý nội dung Markdown đa ngôn ngữ với xem trước trực tiếp, tự động dịch và hiển thị tối ưu."
     }
   },
   "tech_stack": {
@@ -51,7 +55,7 @@
     "frontend": "Frontend",
     "backend": "Backend",
     "mobile": "Mobile & PWA",
-    "frontend_items": ["React 18", "TypeScript", "Vite", "TailwindCSS", "Framer Motion"],
+    "frontend_items": ["React 19", "TypeScript", "Vite", "TailwindCSS", "Framer Motion"],
     "backend_items": ["Node.js", "Express", "PocketBase", "Zod", "NodeCache"],
     "mobile_items": ["Capacitor", "Android", "iOS", "PWA"]
   },

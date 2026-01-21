@@ -35,7 +35,7 @@
     },
     "performance": {
       "title": "Peak Performance",
-      "description": "React 18 + Vite architecture optimized for Core Web Vitals. 100/100 Lighthouse score for fluid experience."
+      "description": "React 19 + Vite architecture optimized for Core Web Vitals. 100/100 Lighthouse score for fluid experience."
     },
     "security": {
       "title": "Enterprise Security",
@@ -44,6 +44,10 @@
     "cross_platform": {
       "title": "Unified Cross-Platform",
       "description": "Seamless experience across Web, Android, and iOS. Offline-first PWA support included."
+    },
+    "markdown_pages": {
+      "title": "Markdown CMS",
+      "description": "Multi-language Markdown content management with live preview, auto-translation, and optimized rendering."
     }
   },
   "tech_stack": {
@@ -51,7 +55,7 @@
     "frontend": "Frontend",
     "backend": "Backend",
     "mobile": "Mobile & PWA",
-    "frontend_items": ["React 18", "TypeScript", "Vite", "TailwindCSS", "Framer Motion"],
+    "frontend_items": ["React 19", "TypeScript", "Vite", "TailwindCSS", "Framer Motion"],
     "backend_items": ["Node.js", "Express", "PocketBase", "Zod", "NodeCache"],
     "mobile_items": ["Capacitor", "Android", "iOS", "PWA"]
   },

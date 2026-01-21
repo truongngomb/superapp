@@ -97,6 +97,11 @@
   "name": "Name",
   "description": "Description",
   "order": "#",
+  "maintenance": {
+    "title": "System Maintenance",
+    "message": "We are currently performing scheduled maintenance to upgrade our services. Please check back later.",
+    "retry": "Retry"
+  },
   "status": "Status",
   "created": "Created At",
   "updated": "Updated At",
