@@ -35,16 +35,24 @@ export class TranslationService {
     }
 
     try {
-      // For now, use a free translation approach
-      // In production, use @google-cloud/translate or similar
-      const translated = await this.translateWithGoogleAPI(text, fromLang, toLang);
-      
-      // If preserveMarkdown, restore markdown syntax
+      let textToTranslate = text;
+      const maskMap = new Map<string, string>();
+
+      // 1. Mask Markdown Code Blocks if needed
       if (preserveMarkdown) {
-        return { translatedText: this.preserveMarkdownFormat(text, translated) };
+        textToTranslate = this.maskMarkdown(text, maskMap);
+      }
+
+      // 2. Translate
+      const translated = await this.translateWithGoogleAPI(textToTranslate, fromLang, toLang);
+      
+      // 3. Unmask
+      let finalResult = translated;
+      if (preserveMarkdown) {
+        finalResult = this.unmaskMarkdown(translated, maskMap);
       }
       
-      return { translatedText: translated };
+      return { translatedText: finalResult };
     } catch (error) {
       console.error('Translation error:', error);
       // Fallback: return original text
@@ -53,19 +61,79 @@ export class TranslationService {
   }
 
   /**
+   * Mask sensitive markdown parts (Code blocks)
+   * Replaces ```code``` with __MD_CODE_BLOCK_N__
+   */
+  private maskMarkdown(text: string, maskMap: Map<string, string>): string {
+    let masked = text;
+    let counter = 0;
+
+    // Mask Code Blocks (``` ... ```)
+    masked = masked.replace(/```[\s\S]*?```/g, (match) => {
+      const key = `__MD_CODE_BLOCK_${(counter++).toString()}__`;
+      maskMap.set(key, match);
+      return key; // Google Translate treats CAPS_WITH_UNDERSCORES as names usually, but better to use something unique
+    });
+
+    // Mask Inline Code (`...`)
+    masked = masked.replace(/`[^`]+`/g, (match) => {
+       const key = `__MD_INLINE_CODE_${(counter++).toString()}__`;
+       maskMap.set(key, match);
+       return key;
+    });
+
+    return masked;
+  }
+
+  /**
+   * Restore masked parts
+   */
+  private unmaskMarkdown(text: string, maskMap: Map<string, string>): string {
+    let unmasked = text;
+    
+    // Restore all keys
+    maskMap.forEach((value, key) => {
+      // Create a regex to replace the key (handling potential spacing inserted by translator)
+      // Translator might verify to: __ MD_CODE_BLOCK_0 __
+      const escapedKey = key.replace(/_/g, ' ?_ ?'); // Allow spaces around underscores
+      const regex = new RegExp(escapedKey, 'g');
+      
+      // Use callback to avoid $ replacement issues in code content
+      unmasked = unmasked.replace(regex, () => value);
+    });
+
+    return unmasked;
+  }
+
+  /**
    * Translate using Google Translate (via unofficial API)
-   * TODO: Replace with official Google Cloud Translation API for production
+   * Uses POST to handle larger payloads
    */
   private async translateWithGoogleAPI(
     text: string,
     from: string,
     to: string
   ): Promise<string> {
-    // Using Google Translate unofficial endpoint
-    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${from}&tl=${to}&dt=t&q=${encodeURIComponent(text)}`;
+    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&dt=t`;
     
     try {
-      const response = await fetch(url);
+      const params = new URLSearchParams();
+      params.append('sl', from);
+      params.append('tl', to);
+      params.append('q', text);
+
+      const response = await fetch(url, {
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+         },
+         body: params
+      });
+
+      if (!response.ok) {
+         throw new Error(`Google Translate API Error: ${response.statusText}`);
+      }
+
       const data = await response.json() as unknown;
       
       if (Array.isArray(data) && Array.isArray(data[0])) {
@@ -74,37 +142,11 @@ export class TranslationService {
         return translations.map((item) => item[0]).join('');
       }
       
-      return text; // Fallback
-    } catch {
-      return text; // Fallback on error
+      return text; 
+    } catch (error) {
+      console.error('External Translation API Failed:', error);
+      throw error;
     }
-  }
-
-  /**
-   * Preserve markdown formatting in translated text
-   * This attempts to maintain headers, lists, links, code blocks, etc.
-   */
-  private preserveMarkdownFormat(original: string, translated: string): string {
-    // Simple heuristic: if original starts with markdown syntax, preserve it
-    const patterns = [
-      { regex: /^(#{1,6}\s+)/, type: 'heading' },      // # Heading
-      { regex: /^(\*\s+|-\s+|\d+\.\s+)/, type: 'list' }, // * List or 1. List
-      { regex: /^(>\s+)/, type: 'blockquote' },        // > Quote
-      { regex: /^(```[\s\S]*?```)/, type: 'codeblock' }, // ```code```
-    ];
-
-    for (const pattern of patterns) {
-      const match = original.match(pattern.regex);
-      if (match && match[1]) {
-        // Preserve the markdown prefix
-        const prefix = match[1];
-        if (!translated.startsWith(prefix)) {
-          return prefix + translated.replace(pattern.regex, '');
-        }
-      }
-    }
-
-    return translated;
   }
 
   /**
@@ -118,6 +160,11 @@ export class TranslationService {
     const results: Record<string, string> = {};
 
     for (const [key, value] of Object.entries(fields)) {
+      if (!value) {
+         results[key] = value;
+         continue;
+      }
+      
       const { translatedText } = await this.translate({
         text: value,
         fromLang,

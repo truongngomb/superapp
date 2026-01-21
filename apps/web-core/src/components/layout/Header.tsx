@@ -7,7 +7,7 @@ import { useCallback, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { LogOut, Menu, Moon, Sun, User, X } from 'lucide-react';
+import { LogOut, Menu, Moon, Sun, User, X, ChevronDown } from 'lucide-react';
 import { cn } from '@/utils';
 import { useAuth, useActivityLogContext } from '@/hooks';
 import { useTheme } from '@/context';
@@ -46,32 +46,70 @@ interface NavLinkProps {
 
 function NavLink({ link, isActive, label }: NavLinkProps) {
   const Icon = link.icon;
+  const hasChildren = link.children && link.children.length > 0;
+  const [isHovered, setIsHovered] = useState(false);
   
-  if (link.isTitle) {
-    return (
-       <div className={cn(
-          'px-4 py-2 text-xs font-bold uppercase tracking-wider text-muted-foreground mt-2 mb-1 cursor-default',
-          'flex items-center gap-1.5'
-       )}>
-          <span className="truncate">{label}</span>
-       </div>
-    );
-  }
+  const commonClasses = cn(
+    'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
+    'flex items-center gap-1.5',
+    // Only highlight active if it's a real link, or maybe highlight parent if child active?
+    // For now, keep simple:
+    isActive && !link.isTitle
+      ? 'bg-primary/10 text-primary'
+      : 'text-muted hover:text-foreground hover:bg-surface',
+     // If it's a title (no link) but has hover, make it look interactive
+     link.isTitle ? 'cursor-default' : 'cursor-pointer'
+  );
 
   const content = (
-    <Link
-      to={link.path}
-      className={cn(
-        'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
-        'flex items-center gap-1.5',
-        isActive
-          ? 'bg-primary/10 text-primary'
-          : 'text-muted hover:text-foreground hover:bg-surface'
-      )}
+    <div 
+      className="relative"
+      onMouseEnter={() => {setIsHovered(true)}}
+      onMouseLeave={() => {setIsHovered(false)}}
     >
-      <Icon className="w-4 h-4" />
-      {label}
-    </Link>
+      {link.isTitle ? (
+        <div className={commonClasses}>
+           {Icon && <Icon className="w-4 h-4" />}
+           {label}
+           {hasChildren && <ChevronDown className={cn("w-3 h-3 ml-0.5 transition-transform", isHovered ? "rotate-180" : "")} />}
+        </div>
+      ) : (
+        <Link
+          to={link.path}
+          className={commonClasses}
+        >
+          {Icon && <Icon className="w-4 h-4" />}
+          {label}
+          {hasChildren && <ChevronDown className={cn("w-3 h-3 ml-0.5 transition-transform", isHovered ? "rotate-180" : "")} />}
+        </Link>
+      )}
+      
+      {/* Submenu Dropdown */}
+      {hasChildren && (
+         <div className={cn(
+            "absolute left-0 top-full pt-2 w-48 z-50 transition-all duration-200 ease-in-out origin-top-left",
+            isHovered 
+                ? "opacity-100 translate-y-0 pointer-events-auto" 
+                : "opacity-0 -translate-y-2 pointer-events-none"
+         )}>
+            <div className="bg-popover border border-border rounded-lg shadow-lg overflow-hidden p-1">
+               {link.children?.map(child => {
+                 const ChildIcon = child.icon;
+                 return (
+                   <Link
+                      key={child.path}
+                      to={child.path}
+                      className="flex items-center gap-2 px-3 py-2 text-sm text-muted hover:text-foreground hover:bg-primary/10 rounded-md transition-colors"
+                   >
+                      {ChildIcon && <ChildIcon className="w-4 h-4 text-muted-foreground" />}
+                      <span className="truncate">{child.label}</span>
+                   </Link>
+                 );
+               })}
+            </div>
+         </div>
+      )}
+    </div>
   );
 
   // Wrap with PermissionGuard if permission is defined

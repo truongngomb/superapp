@@ -40,7 +40,7 @@ export function MarkdownPageTable({
     {
       id: 'title',
       header: () => t('form.title'),
-      size: 300,
+      size: 150,
       wrap: true,
       cell: ({ row }) => {
         const lang = i18n.language;
@@ -87,7 +87,7 @@ export function MarkdownPageTable({
     {
       id: 'isPublished',
       header: () => t('form.published'),
-      size: 140,
+      size: 120,
       cell: ({ row }) => (
         <Badge variant={row.original.isPublished ? 'success' : 'secondary'}>
           {row.original.isPublished ? t('status.published') : t('status.draft')}
@@ -97,13 +97,13 @@ export function MarkdownPageTable({
     {
       id: 'updated',
       header: () => t('common:updated'),
-      size: 150,
+      size: 120,
       cell: ({ row }) => new Date(row.original.updated).toLocaleDateString(i18n.language)
     },
     {
       id: 'actions',
       header: () => t('common:actions.label'),
-      size: 150,
+      size: 180,
       cell: ({ row }) => {
         const lang = i18n.language;
         const trans = row.original.translations[lang] || row.original.translations['en'] || Object.values(row.original.translations)[0];
@@ -116,7 +116,7 @@ export function MarkdownPageTable({
               size="sm"
               className="h-8 w-8 p-0"
               onClick={() => { onManageTranslations(row.original); }}
-              title={t('manage_translations')}
+              title={t('form.manage_translations')}
             >
               <Languages className="w-4 h-4 text-blue-500" />
             </Button>

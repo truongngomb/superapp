@@ -414,6 +414,7 @@ export default function MarkdownPagesPage() {
           }}
           initialData={editingPage}
           manageAllLanguages={manageAllLanguages}
+          onSuccess={() => void fetchItems()}
         />
       )}
 

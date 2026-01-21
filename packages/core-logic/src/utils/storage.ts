@@ -63,7 +63,7 @@ export function getStorageItem<T>(key: StorageKey, options?: StorageOptions): T 
  * Set item in storage with optional expiration
  */
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
-export function setStorageItem<T extends Record<string, unknown> | string | number | boolean | null>(
+export function setStorageItem<T extends Record<string, unknown> | unknown[] | string | number | boolean | null>(
   key: StorageKey,
   value: T,
   options?: StorageOptions

@@ -89,8 +89,9 @@ export function ModernSidebar({ open, onClose, className, desktopOpen = true }: 
                  
                  if (item.isTitle) {
                     link = (
-                        <div key={item.path} className="px-4 py-2 mt-4 mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider cursor-default">
-                           {item.label}
+                        <div key={item.path} className="px-4 py-2 mt-4 mb-2 flex items-center gap-2 text-xs font-semibold text-muted-foreground tracking-wider cursor-default">
+                           {Icon && <Icon className="w-4 h-4" />}
+                           <span>{item.label}</span>
                         </div>
                     );
                  } else {
@@ -107,7 +108,7 @@ export function ModernSidebar({ open, onClose, className, desktopOpen = true }: 
                              : 'text-muted-foreground hover:text-foreground hover:bg-surface'
                          )}
                        >
-                         <Icon className="w-5 h-5" />
+                         {Icon && <Icon className="w-5 h-5" />}
                          <span className="truncate">{item.label}</span>
                        </Link>
                      );
@@ -134,7 +135,7 @@ export function ModernSidebar({ open, onClose, className, desktopOpen = true }: 
                                     : 'text-muted-foreground hover:text-foreground hover:bg-surface'
                                 )}
                               >
-                                <ChildIcon className="w-4 h-4" />
+                                {ChildIcon && <ChildIcon className="w-4 h-4" />}
                                 <span className="truncate">{child.label}</span>
                               </Link>
                             );

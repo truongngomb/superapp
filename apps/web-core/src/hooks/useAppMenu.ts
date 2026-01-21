@@ -1,15 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useMarkdownPages } from './useMarkdownPages';
+import { useQuery } from '@tanstack/react-query';
+import { markdownService } from '@/services';
 import { NAVIGATION_ITEMS } from '@/config/navigation';
 import { MarkdownMenuItem } from '@superapp/shared-types';
 import * as LucideIcons from 'lucide-react';
 import { LucideIcon } from 'lucide-react';
+import { CATEGORY_ICONS } from '@superapp/ui-kit';
 
 export type AppMenuItem = {
   path: string;
   label: string;
-  icon: LucideIcon;
+  icon?: LucideIcon;
   permission?: {
     resource: string;
     action: string;
@@ -20,85 +22,90 @@ export type AppMenuItem = {
 };
 
 export function useAppMenu() {
-  const { t } = useTranslation(['common', 'categories', 'markdown']);
-  const { getMenuTree } = useMarkdownPages();
-  const [menuItems, setMenuItems] = useState<AppMenuItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { t, i18n } = useTranslation(['common', 'categories', 'markdown']);
 
+  // Fetch menu tree with caching
+  const { data: dynamicItems = [], isLoading } = useQuery({
+    queryKey: ['menu-tree'],
+    queryFn: () => markdownService.getMenuTree(),
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    retry: 1,
+    placeholderData: (previousData) => previousData, // Use cached data while re-fetching
+  });
 
-
-  useEffect(() => {
-    let mounted = true;
-
+  const menuItems = useMemo(() => {
     // Helper to convert MarkdownMenuItem to AppMenuItem
     const mapMarkdownToMenu = (item: MarkdownMenuItem): AppMenuItem => {
       // Dynamically resolve icon or default to FileText
-      // We assume item.icon is the string name of a Lucide icon
-      let IconComponent = LucideIcons.FileText;
-      if (item.icon && item.icon in LucideIcons) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-        IconComponent = (LucideIcons as any)[item.icon] as LucideIcon;
+      let IconComponent: LucideIcon | undefined = undefined;
+      
+      if (item.icon) {
+         // 1. Try CATEGORY_ICONS (prioritize picker keys)
+         if (CATEGORY_ICONS[item.icon]) {
+            IconComponent = CATEGORY_ICONS[item.icon] as LucideIcon;
+         } 
+         // 2. Try direct Lucide lookup (case-sensitive)
+         else if (item.icon in LucideIcons) {
+            const icons = LucideIcons as unknown as Record<string, unknown>;
+            IconComponent = icons[item.icon] as LucideIcon;
+         }
+         // 3. Try PascalCase fallback (e.g. "shopping_bag" -> "ShoppingBag")
+         else {
+            const pascalName = item.icon
+               .split('_')
+               .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+               .join('');
+            
+            if (pascalName in LucideIcons) {
+               const icons = LucideIcons as unknown as Record<string, unknown>;
+               IconComponent = icons[pascalName] as LucideIcon;
+            }
+         }
+      }
+
+      // Resolve Title and Slug based on Translation
+      let label = item.menuTitle || item.title;
+      let slug = item.slug;
+      
+      const currentLang = i18n.language;
+      if (item.translations && item.translations[currentLang]) {
+        const trans = item.translations[currentLang];
+        label = trans.menuTitle || trans.title;
+        slug = trans.slug;
       }
 
       return {
-        path: `/pages/${item.slug}`,
-        label: item.menuTitle || item.title,
+        path: `/pages/${slug}`,
+        label: label,
         isTitle: item.isTitle,
         icon: IconComponent,
         children: item.children?.map(mapMarkdownToMenu),
       };
     };
 
-    const fetchMenu = async () => {
-      try {
-        const dynamicMenuData = await getMenuTree();
-        
-        if (!mounted) return;
+    // Map static items
+    const staticItems: AppMenuItem[] = NAVIGATION_ITEMS.map(item => ({
+      path: item.path,
+      label: t(item.labelKey),
+      icon: item.icon,
+      permission: item.permission,
+      matchPrefix: item.matchPrefix,
+    }));
 
-        // Map static items
-        const staticItems: AppMenuItem[] = NAVIGATION_ITEMS.map(item => ({
-          path: item.path,
-          label: t(item.labelKey),
-          icon: item.icon,
-          permission: item.permission,
-          matchPrefix: item.matchPrefix,
-        }));
+    // Map dynamic items
+    const mappedDynamicItems = dynamicItems.map(mapMarkdownToMenu);
 
-        // Map dynamic items
-        const dynamicItems = dynamicMenuData.map(mapMarkdownToMenu);
+    // Merge: Insert dynamic items at index 1 (after Home).
+    const homeItem = staticItems.find(i => i.path === '/');
+    const otherItems = staticItems.filter(i => i.path !== '/');
+    
+    const merged: AppMenuItem[] = [];
+    if (homeItem) merged.push(homeItem);
+    merged.push(...mappedDynamicItems);
+    merged.push(...otherItems);
 
-        // Merge: Insert dynamic items at index 1 (after Home).
-        const homeItem = staticItems.find(i => i.path === '/');
-        const otherItems = staticItems.filter(i => i.path !== '/');
-        
-        const merged: AppMenuItem[] = [];
-        if (homeItem) merged.push(homeItem);
-        merged.push(...dynamicItems);
-        merged.push(...otherItems);
+    return merged;
+  }, [t, dynamicItems, i18n.language]);
 
-        setMenuItems(merged);
-      } catch (error) {
-        console.error('Failed to fetch menu tree:', error);
-        // Fallback to static only
-        const staticItems: AppMenuItem[] = NAVIGATION_ITEMS.map(item => ({
-          path: item.path,
-          label: t(item.labelKey),
-          icon: item.icon,
-          permission: item.permission,
-          matchPrefix: item.matchPrefix,
-        }));
-        setMenuItems(staticItems);
-      } finally {
-        if (mounted) setLoading(false);
-      }
-    };
-
-    void fetchMenu();
-
-    return () => {
-      mounted = false;
-    };
-  }, [t, getMenuTree]);
-
-  return { menuItems, loading };
+  return { menuItems, loading: isLoading && dynamicItems.length === 0 };
 }

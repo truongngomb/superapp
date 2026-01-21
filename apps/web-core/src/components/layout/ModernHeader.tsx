@@ -190,7 +190,7 @@ export function ModernHeader({ onMenuToggle, menuOpen, onSidebarToggle, isSideba
                   type="button"
                   className="px-4 py-2"
                 >
-                  {t('auth:login')}
+                  {t('common:login')}
                 </Button>
               </Link>
             )}

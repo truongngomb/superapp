@@ -58,6 +58,7 @@ export const STORAGE_KEYS = {
 
   LAYOUT_MODE: 'layout_mode',
   DESKTOP_SIDEBAR_OPEN: 'desktop_sidebar_open',
+  SETTINGS: 'app_settings',
 } as const;
 
 // Theme

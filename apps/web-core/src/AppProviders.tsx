@@ -14,6 +14,7 @@ import {
   ToastProvider,
   RealtimeProvider,
   SettingsProvider,
+  LayoutProvider,
 } from '@/context';
 import { ActivityLogProvider } from '@/context/ActivityLogContext';
 
@@ -34,11 +35,13 @@ export function AppProviders({ children }: AppProvidersProps) {
         <ThemeProvider>
           <ToastProvider>
             <SettingsProvider>
-              <RealtimeProvider>
-                <ActivityLogProvider>
-                  {children}
-                </ActivityLogProvider>
-              </RealtimeProvider>
+              <LayoutProvider>
+                <RealtimeProvider>
+                  <ActivityLogProvider>
+                    {children}
+                  </ActivityLogProvider>
+                </RealtimeProvider>
+              </LayoutProvider>
             </SettingsProvider>
           </ToastProvider>
         </ThemeProvider>

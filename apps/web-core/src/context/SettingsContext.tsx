@@ -3,9 +3,15 @@ import { settingsService, type SettingItem } from '@/services';
 import { useToast } from './useToast';
 import { useAuth } from '@/hooks/useAuth';
 import { SettingsContext } from './SettingsContext.base';
+import { getStorageItem, setStorageItem } from '@/utils';
+import { STORAGE_KEYS } from '@/config';
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
-  const [settings, setSettings] = useState<SettingItem[]>([]);
+  // Initialize from local storage if available to prevent layout flash
+  const [settings, setSettings] = useState<SettingItem[]>(() => {
+    return getStorageItem<SettingItem[]>(STORAGE_KEYS.SETTINGS) || [];
+  });
+  
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const { show } = useToast();
@@ -17,19 +23,26 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   }, [checkPermission]);
 
   const fetchSettings = useCallback(async () => {
-    setLoading(true);
+    // Only set loading if we don't have settings yet (silent refresh)
+    if (settings.length === 0) {
+      setLoading(true);
+    }
+    
     try {
       // Use getAll for admin, getPublic for regular users and guests
       const data = isAdmin 
         ? await settingsService.getAll()
         : await settingsService.getPublic();
+      
       setSettings(data);
+      // Persist to local storage
+      setStorageItem(STORAGE_KEYS.SETTINGS, data);
     } catch {
       show('Failed to fetch settings', 'error');
     } finally {
       setLoading(false);
     }
-  }, [show, isAdmin]);
+  }, [show, isAdmin, settings.length]);
 
   const updateSetting = useCallback(async (key: string, value: unknown) => {
     setSubmitting(true);

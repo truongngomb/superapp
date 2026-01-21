@@ -68,7 +68,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                 
                 if (item.isTitle) {
                    link = (
-                      <div key={item.path} className="px-4 py-2 mt-4 mb-2 text-xs font-bold text-muted uppercase tracking-wider cursor-default">
+                      <div key={item.path} className="px-4 py-2 mt-4 mb-2 text-xs font-bold text-muted tracking-wider cursor-default">
                          {item.label}
                       </div>
                    );
@@ -85,7 +85,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                             : 'text-muted hover:text-foreground hover:bg-surface'
                         )}
                       >
-                        <Icon className="w-5 h-5" />
+                        {Icon && <Icon className="w-5 h-5" />}
                         <span>{item.label}</span>
                         {isActive && (
                           <motion.div
@@ -118,7 +118,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                                   : 'text-muted hover:text-foreground hover:bg-surface'
                               )}
                             >
-                              <ChildIcon className="w-4 h-4" />
+                              {ChildIcon && <ChildIcon className="w-4 h-4" />}
                               <span>{child.label}</span>
                             </Link>
                           );

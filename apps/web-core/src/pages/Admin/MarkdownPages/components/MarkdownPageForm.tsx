@@ -1,7 +1,7 @@
 import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'react-i18next';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import { z } from 'zod';
 import { 
   MarkdownPageCreateSchema, 
@@ -26,33 +26,35 @@ import {
   Tabs,
   TabsList,
   TabsTrigger,
-  TabsContent
+  TabsContent,
+  IconPicker,
+  CATEGORY_ICONS
 } from '@superapp/ui-kit';
 import { generateSlug } from '@superapp/core-logic';
-import { useMarkdownPages } from '@/hooks';
+import { useMarkdownPages, useDebounce } from '@/hooks';
 import { useToast } from '@/context';
 import { markdownService } from '@/services/markdown.service';
-import { Wand2, FileText, Link as LinkIcon, Folder, Copy } from 'lucide-react';
+import { Wand2, FileText, Link as LinkIcon, Folder, Copy, X } from 'lucide-react';
 
 // Extend schema with required boolean defaults and file handling
-const FormSchema = MarkdownPageCreateSchema.extend({
-  coverImage: z.union([z.string(), z.any()]).optional(), // Allow File object
+// Schema for Type Inference only (Static)
+export const FormSchemaType = MarkdownPageCreateSchema.extend({
+  coverImage: z.union([z.string(), z.any()]).optional(), 
   isDeleted: z.boolean().default(false),
   isTitle: z.boolean().default(false),
   showInMenu: z.boolean().default(false),
   order: z.number().default(0),
   isPublished: z.boolean().default(true),
-  // Allow translations to be partial (empty strings allowed in form, filtered on submit)
   translations: z.record(z.string(), z.object({
     title: z.string(), 
-    slug: z.string().regex(/^[a-z0-9-]*$/, "Slug must be lowercase alphanumeric with hyphens (or empty)"),
+    slug: z.string(),
     content: z.string(),
     excerpt: z.string().optional(),
     menuTitle: z.string().optional(),
   })),
 });
 
-type FormValues = z.infer<typeof FormSchema>;
+type FormValues = z.infer<typeof FormSchemaType>;
 
 
 interface MarkdownPageFormProps {
@@ -61,6 +63,7 @@ interface MarkdownPageFormProps {
   initialData?: MarkdownPage;
   parentId?: string; // For creating child pages
   manageAllLanguages?: boolean; // If true, show all language tabs. If false, only show default language
+  onSuccess?: () => void;
 }
 
 const LANGUAGES: { value: SupportedLanguage; label: string }[] = [
@@ -74,7 +77,8 @@ export function MarkdownPageForm({
   onClose, 
   initialData, 
   parentId,
-  manageAllLanguages = false // Default: only edit default language
+  manageAllLanguages = false, // Default: only edit default language
+  onSuccess
 }: MarkdownPageFormProps) {
   const { t, i18n } = useTranslation(['markdown', 'common']);
   const toast = useToast();
@@ -82,6 +86,7 @@ export function MarkdownPageForm({
   const isEdit = !!initialData;
   const [parentOptions, setParentOptions] = useState<{ value: string; label: string }[]>([]);
   const [translating, setTranslating] = useState(false);
+  const [iconPickerOpen, setIconPickerOpen] = useState(false);
 
   // Get current user language
   const currentLang = (i18n.language.startsWith('vi') ? 'vi' : 
@@ -110,12 +115,31 @@ export function MarkdownPageForm({
   // Set active tab to default language initially
   const [activeTab, setActiveTab] = useState<SupportedLanguage>(defaultLanguage);
 
-  // Track if slug is auto-generated (true) or manually edited (false) for each language
+  // Track if slug should be auto-generated
+  // In Create mode: Default to true.
+  // In Edit mode: Default to false (preserve existing slug), unless user clears it.
   const isSlugAutoRef = useRef<Record<SupportedLanguage, boolean>>({
-    en: true,
-    vi: true,
-    ko: true,
+    en: !isEdit,
+    vi: !isEdit,
+    ko: !isEdit,
   });
+
+  // Schema with i18n validation messages
+  const formSchema = useMemo(() => MarkdownPageCreateSchema.extend({
+    coverImage: z.union([z.string(), z.any()]).optional(),
+    isDeleted: z.boolean().default(false),
+    isTitle: z.boolean().default(false),
+    showInMenu: z.boolean().default(false),
+    order: z.number().default(0),
+    isPublished: z.boolean().default(true),
+    translations: z.record(z.string(), z.object({
+      title: z.string(), 
+      slug: z.string().regex(/^[a-z0-9-]*$/, t('errors.slug_invalid')),
+      content: z.string(),
+      excerpt: z.string().optional(),
+      menuTitle: z.string().optional(),
+    })),
+  }), [t]);
 
   const {
     register,
@@ -127,7 +151,7 @@ export function MarkdownPageForm({
     formState: { errors }
   } = useForm<FormValues>({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
-    resolver: zodResolver(FormSchema) as any,
+    resolver: zodResolver(formSchema) as any,
     defaultValues: {
       isTitle: false,
       showInMenu: false,
@@ -146,21 +170,25 @@ export function MarkdownPageForm({
   // Watch fields for current tab to handle auto-slug
   const currentTitle = useWatch({ control, name: `translations.${activeTab}.title` });
   const currentSlug = useWatch({ control, name: `translations.${activeTab}.slug` });
+  
+  // Debounce the title for slug generation to avoid "laggy" input
+  const debouncedTitle = useDebounce(currentTitle, 500);
 
   // Auto-generate slug from title
   useEffect(() => {
     if (!open) return;
     
-    // Only auto-generate if NOT editing existing page (or if specific field is empty, but harder to track)
-    // Here we check if current slug matches generated version of title prefix, allowing user overrides
-    const generated = generateSlug(currentTitle || '');
-    if (!currentSlug || (currentSlug !== generated && generateSlug(currentSlug) === '')) {
-       // If empty, auto fill
-       if (currentTitle && !currentSlug) {
-         setValue(`translations.${activeTab}.slug`, generated, { shouldValidate: true });
-       }
+    // If we are in Edit mode, and the flag is false, DO NOT auto-update.
+    if (!isSlugAutoRef.current[activeTab]) return;
+
+    const generated = generateSlug(debouncedTitle || '');
+    
+    if (debouncedTitle) {
+      if (currentSlug !== generated) {
+        setValue(`translations.${activeTab}.slug`, generated, { shouldValidate: true });
+      }
     }
-  }, [currentTitle, currentSlug, activeTab, open, setValue]); 
+  }, [debouncedTitle, currentSlug, activeTab, open, setValue]);  
 
   // Fetch parent pages options
   useEffect(() => {
@@ -189,6 +217,7 @@ export function MarkdownPageForm({
   // Reset form when modal opens/closes
   useEffect(() => {
     if (open) {
+      setIconPickerOpen(false); // Reset icon picker
       const defaultTrans = { title: '', slug: '', content: '', excerpt: '', menuTitle: '' };
       
       const timer = setTimeout(() => {
@@ -257,6 +286,56 @@ export function MarkdownPageForm({
       toast.success(t('markdown:toast.auto_fill_success', { from: sourceLabel, to: targetLabel }));
     } catch (error) {
       console.error('Translation error:', error);
+      toast.error(t('toast.translation_error'));
+    } finally {
+      setTranslating(false);
+    }
+  };
+
+  const handleAutoFillAll = async () => {
+    const translations = getValues('translations');
+    const sourceData = translations[defaultLanguage];
+
+    if (!sourceData || !sourceData.title.trim()) {
+      toast.warning(t('toast.no_default_content'));
+      return;
+    }
+
+    setTranslating(true);
+    try {
+      const targetLangs = LANGUAGES.filter(l => l.value !== defaultLanguage);
+      
+      // Use Promise.all to fetch all translations in parallel
+      const results = await Promise.all(
+        targetLangs.map(async (lang) => {
+          const trans = await markdownService.translateContent({
+            title: sourceData.title,
+            slug: sourceData.slug,
+            content: sourceData.content,
+            excerpt: sourceData.excerpt || '',
+            menuTitle: sourceData.menuTitle || '',
+            fromLang: defaultLanguage,
+            toLang: lang.value,
+          });
+          return { lang: lang.value, trans };
+        })
+      );
+
+      // Batch updates
+      results.forEach(({ lang, trans }) => {
+        setValue(`translations.${lang}.title`, trans.title, { shouldDirty: true });
+        
+        setValue(`translations.${lang}.slug`, generateSlug(trans.title), { shouldDirty: true });
+        isSlugAutoRef.current[lang] = true;
+
+        setValue(`translations.${lang}.content`, trans.content, { shouldDirty: true });
+        if (trans.excerpt) setValue(`translations.${lang}.excerpt`, trans.excerpt, { shouldDirty: true });
+        if (trans.menuTitle) setValue(`translations.${lang}.menuTitle`, trans.menuTitle, { shouldDirty: true });
+      });
+
+      toast.success(t('markdown:toast.auto_fill_all_success'));
+    } catch (error) {
+      console.error('Batch translation error:', error);
       toast.error(t('toast.translation_error'));
     } finally {
       setTranslating(false);
@@ -350,6 +429,7 @@ export function MarkdownPageForm({
     }
 
     if (success) {
+      if (onSuccess) onSuccess();
       onClose();
     }
   };
@@ -374,7 +454,7 @@ export function MarkdownPageForm({
                 // Simple error toast
                 const keys = Object.keys(errors.translations || {});
                 if (keys.length > 0) {
-                   toast.error(`Please check errors in ${keys.join(', ').toUpperCase()} tabs`);
+                   toast.error(t('errors.check_tabs', { tabs: keys.join(', ').toUpperCase() }));
                 } else {
                    toast.error(t('common:toast.error'));
                 }
@@ -417,13 +497,6 @@ export function MarkdownPageForm({
                       {...register(`translations.${defaultLanguage}.title`)}
                       placeholder={t('form.title_placeholder')}
                       error={errors.translations?.[defaultLanguage]?.title?.message}
-                      onChange={(e) => {
-                        setValue(`translations.${defaultLanguage}.title`, e.target.value);
-                        if (isSlugAutoRef.current[defaultLanguage]) {
-                          const newSlug = generateSlug(e.target.value);
-                          setValue(`translations.${defaultLanguage}.slug`, newSlug);
-                        }
-                      }}
                     />
                   </div>
 
@@ -533,8 +606,8 @@ export function MarkdownPageForm({
                     ))}
                   </TabsList>
                   
-                  {/* Only show Auto-fill button if NOT on default language tab */}
-                  {activeTab !== defaultLanguage && (
+                  {/* Button Group: Auto-fill Single (Others) OR Auto-fill All (Default) */}
+                  {activeTab !== defaultLanguage ? (
                     <Button 
                       type="button" 
                       variant="ghost" 
@@ -546,6 +619,20 @@ export function MarkdownPageForm({
                     >
                       <Copy className="w-4 h-4 mr-2" />
                       {t('form.auto_fill')}
+                    </Button>
+                  ) : (
+                    <Button 
+                      type="button" 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => { void handleAutoFillAll(); }}
+                      disabled={translating || submitting}
+                      loading={translating}
+                      title={t('form.auto_fill_all_tooltip')}
+                      className="text-primary hover:text-primary hover:bg-primary/10"
+                    >
+                      <Copy className="w-4 h-4 mr-2" />
+                      {t('form.auto_fill_all')}
                     </Button>
                   )}
                 </div>
@@ -561,13 +648,6 @@ export function MarkdownPageForm({
                         {...register(`translations.${lang.value}.title`)}
                         placeholder={t('form.title_placeholder')}
                         error={errors.translations?.[lang.value]?.title?.message}
-                        onChange={(e) => {
-                          setValue(`translations.${lang.value}.title`, e.target.value);
-                          if (isSlugAutoRef.current[lang.value]) {
-                            const newSlug = generateSlug(e.target.value);
-                            setValue(`translations.${lang.value}.slug`, newSlug);
-                          }
-                        }}
                       />
                     </div>
 
@@ -784,9 +864,52 @@ export function MarkdownPageForm({
                   {/* Icon (Global) */}
                   <div className="space-y-1">
                     <label className="text-xs text-muted">{t('form.icon')}</label>
-                    <Input
-                      {...register('icon')}
-                      placeholder={t('form.icon_placeholder')}
+                    <Controller
+                      name="icon"
+                      control={control}
+                      render={({ field }) => {
+                        const SelectedIcon = field.value ? CATEGORY_ICONS[field.value] : null;
+                        return (
+                          <div className="space-y-2">
+                              <div className="flex items-center gap-2">
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    className="w-full justify-between"
+                                    onClick={() => {setIconPickerOpen(!iconPickerOpen); setValue('icon', '')}}
+                                  >
+                                    <span className="flex items-center gap-2">
+                                        {SelectedIcon ? <SelectedIcon className="w-4 h-4" /> : <span className="text-muted-foreground">{t('form.select_icon')}</span>}
+                                        {field.value && <span className="text-sm font-normal">{field.value}</span>}
+                                    </span>
+                                  </Button>
+                                  {field.value && (
+                                      <Button
+                                          type="button"
+                                          variant="ghost"
+                                          size="icon"
+                                          className="shrink-0"
+                                          onClick={() => {field.onChange(''); setIconPickerOpen(false)}}
+                                      >
+                                          <X className="w-4 h-4" />
+                                      </Button>
+                                  )}
+                              </div>
+                              
+                              {iconPickerOpen && (
+                                  <div className="border rounded-lg p-2 bg-surface animate-in fade-in slide-in-from-top-2">
+                                      <IconPicker 
+                                          value={field.value || ''} 
+                                          onChange={(val) => {
+                                              field.onChange(val);
+                                              setIconPickerOpen(false);
+                                          }}
+                                      />
+                                  </div>
+                              )}
+                          </div>
+                        );
+                      }}
                     />
                   </div>
                </div>
