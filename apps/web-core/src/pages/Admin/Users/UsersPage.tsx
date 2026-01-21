@@ -233,7 +233,7 @@ export default function UsersPage() {
     fileNamePrefix: 'users',
     sheetName: t('users:title'),
     columns: [
-      { key: '#', header: '#', width: 8 },
+      { key: '#', header: t('common:order'), width: 8 },
       { key: 'name', header: t('common:name'), width: 25 },
       { key: 'email', header: t('common:email'), width: 30 },
       { key: 'roleNames', header: t('users:form.role_label'), width: 20 },

@@ -189,11 +189,11 @@ export default function CategoriesPage() {
     fileNamePrefix: "categories",
     sheetName: t("categories:title"),
     columns: [
-      { key: "#", header: t("common:order", { defaultValue: "#" }), width: 8 },
+      { key: "#", header: t("common:order"), width: 8 },
       { key: "name", header: t("common:name"), width: 25 },
       { key: "description", header: t("categories:form.desc_label"), width: 40 },
       { key: "color", header: t("categories:form.color_label"), width: 15 },
-      { key: "icon", header: "Icon", width: 15 },
+      { key: "icon", header: t("common:icon"), width: 15 },
       { key: "isActive", header: t("common:status"), width: 12 },
     ],
   }) as { exportToExcel: (data: Category[]) => Promise<void> };
@@ -455,7 +455,7 @@ export default function CategoriesPage() {
 
        <ConfirmModal
         isOpen={!!restoreId}
-        title={t("common:restore", { defaultValue: "Restore" })}
+        title={t("common:restore")}
         message={t("common:confirmation.restore", { entity: t("categories:entity") })}
         confirmText={t("common:confirm")}
         cancelText={t("common:cancel")}

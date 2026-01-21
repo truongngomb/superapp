@@ -110,10 +110,10 @@ export default function MarkdownViewerPage() {
     return (
       <div className="container py-16 flex flex-col items-center justify-center text-center">
         <h1 className="text-4xl font-bold mb-4">404</h1>
-        <p className="text-xl text-muted mb-8">{t('common:error.page_not_found', 'Page Not Found')}</p>
+        <p className="text-xl text-muted mb-8">{t('common:page_not_found')}</p>
         <Button onClick={() => { window.history.back(); }} variant="outline">
           <ArrowLeft className="w-4 h-4 mr-2" />
-          {t('common:action.back', 'Go Back')}
+          {t('common:actions.back')}
         </Button>
       </div>
     );
@@ -152,7 +152,7 @@ export default function MarkdownViewerPage() {
                    {new Date(page.created).toLocaleDateString(i18n.language)}
                  </div>
                  {page.updated !== page.created && (
-                   <div className="flex items-center gap-1" title="Last updated">
+                   <div className="flex items-center gap-1" title={t('common:last_updated')}>
                      <Clock className="w-4 h-4" />
                      {new Date(page.updated).toLocaleDateString(i18n.language)}
                    </div>

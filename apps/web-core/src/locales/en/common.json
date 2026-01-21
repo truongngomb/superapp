@@ -72,6 +72,7 @@
     "move_down": "Move Down",
     "remove": "Remove",
     "go_home": "Go to Home",
+    "back": "Go Back",
     "manage": "Manage"
   },
   "data_table": {
@@ -207,5 +208,8 @@
   "none": "None",
   "n_a": "N/A",
   "default": "Default",
-  "shared": "Shared"
+  "shared": "Shared",
+  "icon": "Icon",
+  "last_updated": "Last updated",
+  "page_not_found": "Page Not Found"
 }

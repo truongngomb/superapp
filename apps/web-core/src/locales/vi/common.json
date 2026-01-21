@@ -73,6 +73,7 @@
     "move_down": "Di chuyển xuống",
     "remove": "Gỡ bỏ",
     "go_home": "Về trang chủ",
+    "back": "Quay lại",
     "manage": "Quản trị"
   },
   "data_table": {
@@ -213,5 +214,8 @@
   "none": "Không có",
   "n_a": "N/A",
   "default": "Mặc định",
-  "shared": "Dùng chung"
+  "shared": "Dùng chung",
+  "icon": "Biểu tượng",
+  "last_updated": "Cập nhật lần cuối",
+  "page_not_found": "Không tìm thấy trang"
 }

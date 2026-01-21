@@ -67,6 +67,7 @@
     "move_down": "아래로 이동",
     "remove": "제거",
     "go_home": "홈으로 이동",
+    "back": "돌아가기",
     "manage": "관리"
   },
   "data_table": {
@@ -205,5 +206,8 @@
   "none": "없음",
   "n_a": "N/A",
   "default": "기본",
-  "shared": "공유됨"
+  "shared": "공유됨",
+  "icon": "아이콘",
+  "last_updated": "마지막 업데이트",
+  "page_not_found": "페이지를 찾을 수 없습니다"
 }
