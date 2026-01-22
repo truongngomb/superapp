@@ -1,7 +1,7 @@
 import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'react-i18next';
-import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
+import { useEffect, useState, useRef, useMemo, useCallback, lazy, Suspense } from 'react';
 import { z } from 'zod';
 import { 
   MarkdownPageCreateSchema, 
@@ -17,7 +17,7 @@ import {
   Toggle, 
   Modal, 
   FileUploader, 
-  MarkdownEditor,
+  // MarkdownEditor, // Lazy loaded below
   Select,
   SelectContent,
   SelectItem,
@@ -34,8 +34,11 @@ import { generateSlug } from '@superapp/core-logic';
 import { useMarkdownPages, useDebounce, useMediaUpload } from '@/hooks';
 import { useToast } from '@/context';
 import { markdownService } from '@/services/markdown.service';
-import { Wand2, FileText, Link as LinkIcon, Folder, Copy, X } from 'lucide-react';
+import { Wand2, FileText, Link as LinkIcon, Folder, Copy, X, Loader2 } from 'lucide-react';
 import { MediaManagerModal } from '@/components/MediaManager/MediaManagerModal';
+
+// Lazy load the editor
+const LazyMarkdownEditor = lazy(() => import('@superapp/ui-kit').then(module => ({ default: module.MarkdownEditor })));
 
 // Extend schema with required boolean defaults and file handling
 // Schema for Type Inference only (Static)
@@ -615,13 +618,19 @@ export function MarkdownPageForm({
                         name={`translations.${defaultLanguage}.content`}
                         control={control}
                         render={({ field }) => (
-                          <MarkdownEditor
-                            value={field.value}
-                            onChange={field.onChange}
-                            height={400}
-                            onImageUpload={uploadImage}
-                            onGalleryClick={handleBrowseImage}
-                          />
+                          <Suspense fallback={
+                            <div className="h-[400px] w-full flex items-center justify-center border rounded-md bg-muted/20">
+                              <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+                            </div>
+                          }>
+                            <LazyMarkdownEditor
+                              value={field.value}
+                              onChange={field.onChange}
+                              height={400}
+                              onImageUpload={uploadImage}
+                              onGalleryClick={handleBrowseImage}
+                            />
+                          </Suspense>
                         )}
                       />
                     </div>
@@ -774,13 +783,19 @@ export function MarkdownPageForm({
                          name={`translations.${lang.value}.content`}
                          control={control}
                          render={({ field }) => (
-                           <MarkdownEditor
-                             value={field.value}
-                             onChange={field.onChange}
-                             height={400}
-                             onImageUpload={uploadImage}
-                             onGalleryClick={handleBrowseImage}
-                           />
+                           <Suspense fallback={
+                             <div className="h-[400px] w-full flex items-center justify-center border rounded-md bg-muted/20">
+                               <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+                             </div>
+                           }>
+                             <LazyMarkdownEditor
+                               value={field.value}
+                               onChange={field.onChange}
+                               height={400}
+                               onImageUpload={uploadImage}
+                               onGalleryClick={handleBrowseImage}
+                             />
+                           </Suspense>
                          )}
                        />
                      </div>

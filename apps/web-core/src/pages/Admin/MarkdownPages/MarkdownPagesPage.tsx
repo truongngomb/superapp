@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { AnimatePresence, motion } from "framer-motion";
@@ -40,13 +40,15 @@ import {
 } from "@/hooks";
 
 import { markdownService } from "@/services";
-import { MarkdownPageForm } from "./components/MarkdownPageForm";
+// MarkdownPageForm is lazy loaded below
 import { MarkdownPageTable } from "./components/MarkdownPageTable";
 import { MarkdownPageRow } from "./components/MarkdownPageRow";
 import { MarkdownPageMobileList } from "./components/MarkdownPageMobileList";
 import { MarkdownPageSkeleton } from "./components/MarkdownPageSkeleton";
 import { MarkdownPageTableSkeleton } from "./components/MarkdownPageTableSkeleton";
 import { MarkdownPageMobileCardSkeletonList } from "./components/MarkdownPageMobileCardSkeleton";
+
+const MarkdownPageForm = lazy(() => import("./components/MarkdownPageForm").then(module => ({ default: module.MarkdownPageForm })));
 
 export default function MarkdownPagesPage() {
   const { t } = useTranslation(["markdown", "common"]);
@@ -412,17 +414,19 @@ export default function MarkdownPagesPage() {
 
       {/* Form Modal */}
       {showForm && (
-        <MarkdownPageForm
-          open={showForm}
-          onClose={() => { 
-            setShowForm(false); 
-            setEditingPage(undefined); 
-            setManageAllLanguages(false);
-          }}
-          initialData={editingPage}
-          manageAllLanguages={manageAllLanguages}
-          onSuccess={() => void fetchItems()}
-        />
+        <Suspense fallback={null}>
+          <MarkdownPageForm
+            open={showForm}
+            onClose={() => { 
+              setShowForm(false); 
+              setEditingPage(undefined); 
+              setManageAllLanguages(false);
+            }}
+            initialData={editingPage}
+            manageAllLanguages={manageAllLanguages}
+            onSuccess={() => void fetchItems()}
+          />
+        </Suspense>
       )}
 
       {/* Confirm Modals */}
