@@ -1,0 +1,103 @@
+{
+  "$schema": "./schemas/brain.schema.json",
+  "meta": {
+    "schema_version": "1.1.0",
+    "awf_version": "3.4.0",
+    "created_at": "2026-01-22T21:00:00Z",
+    "updated_at": "2026-01-22T21:10:00Z"
+  },
+  "project": {
+    "name": "superapp",
+    "description": "SuperApp Monorepo - Enterprise Grade System",
+    "type": "fullstack",
+    "status": "development",
+    "repository": "local"
+  },
+  "tech_stack": {
+    "frontend": {
+      "framework": "React (Vite)",
+      "language": "TypeScript",
+      "ui_library": "Shadcn UI",
+      "state_management": "React Context / Zustand",
+      "styling": "TailwindCSS + clsx"
+    },
+    "backend": {
+      "framework": "Express",
+      "language": "TypeScript",
+      "runtime": "Node.js (API Gateway)"
+    },
+    "database": {
+      "type": "Embedded",
+      "orm": "PocketBase SDK",
+      "name": "PocketBase"
+    },
+    "infrastructure": {
+      "hosting": "Vercel / VPS",
+      "ci_cd": "GitHub Actions (Future)"
+    }
+  },
+  "architecture": {
+    "pattern": "Monorepo (Turborepo)",
+    "modules": [
+      {
+        "name": "apps/web-core",
+        "responsibility": "Main Client Application (React)",
+        "dependencies": ["packages/ui-kit", "packages/core-logic", "packages/shared-types"]
+      },
+      {
+        "name": "apps/api-server",
+        "responsibility": "API Gateway & Backend Logic (Express)",
+        "dependencies": ["packages/shared-types", "PocketBase"]
+      },
+      {
+        "name": "packages/ui-kit",
+        "responsibility": "Shared UI Components (Shadcn)",
+        "dependencies": []
+      },
+      {
+        "name": "packages/core-logic",
+        "responsibility": "Shared Business Logic & Hooks",
+        "dependencies": []
+      },
+      {
+        "name": "packages/shared-types",
+        "responsibility": "Shared TypeScript Interfaces (SSoT)",
+        "dependencies": []
+      }
+    ]
+  },
+  "features": [
+    {
+      "name": "Category Management",
+      "status": "implemented",
+      "spec_file": "Reference Implementation (SSoT)",
+      "files": [
+        "apps/web-core/src/pages/Categories/**",
+        "apps/api-server/src/services/category.service.ts"
+      ],
+      "notes": "Feature mẫu để copy patterns"
+    }
+  ],
+  "knowledge_items": {
+    "patterns": [
+      {
+        "name": "Service Pattern",
+        "description": "All API calls must go through Service classes",
+        "example_file": "apps/web-core/src/services/category.service.ts"
+      },
+      {
+        "name": "I18n Strict",
+        "description": "No hardcoded text. Use useTranslation hook.",
+        "example_file": "apps/web-core/src/locales/vi/category.json"
+      }
+    ],
+    "conventions": [
+      {
+        "area": "naming",
+        "convention": "PascalCase for Components, camelCase for logical files",
+        "example": "UserProfile.tsx vs useAuth.ts"
+      }
+    ]
+  },
+  "updated_at": "2026-01-22T21:10:00Z"
+}

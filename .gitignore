@@ -55,3 +55,6 @@ ios/
 .agent/artifacts/
 .agent/plans/
 implementation_plan.md
+.agent/test/
+.brain/preferences.json
+.brain/session.json

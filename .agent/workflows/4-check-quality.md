@@ -21,6 +21,10 @@ Kiểm tra CHẤT LƯỢNG CODE và ĐỘ ĐỒNG NHẤT (Consistency) tuyệt �
 ### 1. Automated Skill Check (CRITICAL)
 - [ ] **Performance**: Chạy skill `vercel-react-best-practices` để tìm Async Waterfall & Barrel Imports.
 - [ ] **Guidelines**: Chạy skill `web-design-guidelines` để check Accessibility (Focus, ARIA, Input types).
+- [ ] **Security Audit (AWF)**:
+  - Check hardcoded secrets (.env).
+  - Check Input Validation (Zod schema).
+  - Check Auth Middleware (mọi API private phải có guard).
 
 ### 2. Header & Layout
 - [ ] **Page Title & Subtitle**: Sử dụng i18n key `{feature}:title`.
@@ -131,3 +135,15 @@ Trả về báo cáo theo cấu trúc:
 4. **I18n status**: [DONE / MISSING KEYS]
 5. **Backend/Database Integrity**: [READY / ACTION REQUIRED]
 6. **Kết luận**: [READY] hoặc [NEEDS WORK] (Ghi rõ lý do)
+
+## BƯỚC V: MEMORY LOGGING
+Nếu có vấn đề không thể sửa ngay (NEEDS WORK nhẽ nhẹ hoặc Warning):
+- Ghi vào `.brain/session.json` -> `known_issues`:
+  ```json
+  {
+    "issue": "Performance warning on heavy list",
+    "component": "LargeDataTable",
+    "status": "pending_optimization"
+  }
+  ```
+- Để lần sau `/recap` sẽ nhắc nhở.
