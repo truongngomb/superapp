@@ -36,7 +36,7 @@ export function MarkdownRenderer({
     while ((match = imgRegex.exec(content)) !== null) {
       matches.push({
         alt: match[1] || 'Image',
-        src: match[2],
+        src: match[2] || '',
       });
     }
 

@@ -5,7 +5,7 @@ import { useSettings } from './useSettings';
 export type LayoutMode = 'standard' | 'modern';
 
 export function useLayoutMode() {
-  const { settings, getSettingValue } = useSettings();
+  const { getSettingValue } = useSettings();
   const location = useLocation();
 
   return useMemo(() => {
@@ -45,5 +45,5 @@ export function useLayoutMode() {
 
     // 3. Global default
     return layoutConfig.global as LayoutMode;
-  }, [settings, getSettingValue, location.pathname]);
+  }, [getSettingValue, location.pathname]);
 }

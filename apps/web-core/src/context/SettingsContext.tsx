@@ -1,5 +1,7 @@
-import { useState, useEffect, useCallback, useMemo, type ReactNode } from 'react';
+import { useCallback, useMemo, type ReactNode } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { settingsService, type SettingItem } from '@/services';
+import { queryKeys } from '@/config/queryClient';
 import { useToast } from './useToast';
 import { useAuth } from '@/hooks/useAuth';
 import { SettingsContext } from './SettingsContext.base';
@@ -7,13 +9,7 @@ import { getStorageItem, setStorageItem } from '@/utils';
 import { STORAGE_KEYS } from '@/config';
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
-  // Initialize from local storage if available to prevent layout flash
-  const [settings, setSettings] = useState<SettingItem[]>(() => {
-    return getStorageItem<SettingItem[]>(STORAGE_KEYS.SETTINGS) || [];
-  });
-  
-  const [loading, setLoading] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
+  const queryClient = useQueryClient();
   const { show } = useToast();
   const { checkPermission } = useAuth();
 
@@ -22,60 +18,75 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     return checkPermission('settings', 'read');
   }, [checkPermission]);
 
-  const fetchSettings = useCallback(async () => {
-    // Only set loading if we don't have settings yet (silent refresh)
-    if (settings.length === 0) {
-      setLoading(true);
-    }
-    
-    try {
-      // Use getAll for admin, getPublic for regular users and guests
+  // Determine query key based on permissions
+  const queryKey = useMemo(() => 
+    isAdmin ? queryKeys.settings.all : queryKeys.settings.public(), 
+  [isAdmin]);
+
+  // Query for fetching settings
+  const { 
+    data: settings, 
+    isLoading, 
+    refetch 
+  } = useQuery({
+    queryKey,
+    queryFn: async () => {
       const data = isAdmin 
         ? await settingsService.getAll()
         : await settingsService.getPublic();
       
-      setSettings(data);
       // Persist to local storage
       setStorageItem(STORAGE_KEYS.SETTINGS, data);
-    } catch {
-      show('Failed to fetch settings', 'error');
-    } finally {
-      setLoading(false);
-    }
-  }, [show, isAdmin, settings.length]);
+      return data;
+    },
+    // Use local storage as initial data to prevent layout flash
+    initialData: () => getStorageItem<SettingItem[]>(STORAGE_KEYS.SETTINGS) || [],
+    // Consider data fresh for 5 minutes
+    staleTime: 5 * 60 * 1000, 
+  });
+
+  // Mutation for updating settings
+  const updateMutation = useMutation({
+    mutationFn: async ({ key, value, visibility }: { key: string; value: unknown; visibility?: 'public' | 'admin' | 'secret' }) => {
+      await settingsService.update(key, value, visibility);
+    },
+    onSuccess: () => {
+      // Invalidate all settings queries to ensure freshness
+      void queryClient.invalidateQueries({ queryKey: queryKeys.settings.all });
+      show('Setting updated successfully', 'success');
+    },
+    onError: () => {
+      show('Failed to update setting', 'error');
+    },
+  });
 
   const updateSetting = useCallback(async (key: string, value: unknown, visibility?: 'public' | 'admin' | 'secret') => {
-    setSubmitting(true);
     try {
-      await settingsService.update(key, value, visibility);
-      await fetchSettings();
-      show('Setting updated successfully', 'success');
+      await updateMutation.mutateAsync({ key, value, visibility });
       return true;
     } catch {
-      show('Failed to update setting', 'error');
       return false;
-    } finally {
-      setSubmitting(false);
     }
-  }, [fetchSettings, show]);
+  }, [updateMutation]);
 
   const getSettingValue = useCallback(<T = unknown>(key: string, defaultValue: T): T => {
     const setting = settings.find(s => s.key === key);
     return setting ? (setting.value as T) : defaultValue;
   }, [settings]);
-
-  useEffect(() => {
-    void fetchSettings();
-  }, [fetchSettings]);
+  
+  // Expose fetchSettings manually if needed (aliased to refetch)
+  const fetchSettings = useCallback(async () => {
+    await refetch();
+  }, [refetch]);
 
   const contextValue = useMemo(() => ({
     settings,
-    loading,
-    submitting,
+    loading: isLoading, // Initial loading state
+    submitting: updateMutation.isPending,
     fetchSettings,
     updateSetting,
     getSettingValue
-  }), [settings, loading, submitting, fetchSettings, updateSetting, getSettingValue]);
+  }), [settings, isLoading, updateMutation.isPending, fetchSettings, updateSetting, getSettingValue]);
 
   return (
     <SettingsContext.Provider value={contextValue}>

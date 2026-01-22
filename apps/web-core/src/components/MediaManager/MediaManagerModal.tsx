@@ -1,11 +1,11 @@
 
-import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Modal, Button, FileUploader } from '@superapp/ui-kit';
 import { mediaService } from '@/services/media.service';
 import type { Media } from '@superapp/shared-types';
 import { Trash2, Check, Loader2 } from 'lucide-react';
 import { useToast } from '@/context';
+import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface MediaManagerModalProps {
   open: boolean;
@@ -18,69 +18,61 @@ interface MediaManagerModalProps {
 export function MediaManagerModal({ open, onClose, onSelect, refId, refType }: MediaManagerModalProps) {
   const { t } = useTranslation(['common']);
   const toast = useToast();
-  const [items, setItems] = useState<Media[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [total, setTotal] = useState(0);
-  const [page, setPage] = useState(1);
-  const [uploading, setUploading] = useState(false);
+  const queryClient = useQueryClient();
 
-  const fetchMedia = useCallback(async (pageNum = 1) => {
-    try {
-      setLoading(true);
-      const res = await mediaService.getList(pageNum, 20, refId, refType);
-      if (pageNum === 1) {
-        setItems(res.items);
-      } else {
-        setItems(prev => [...prev, ...res.items]);
-      }
-      setTotal(res.total);
-      setPage(pageNum);
-    } catch (error) {
-      console.error('Failed to fetch media', error);
-      toast.error(t('error.fetch_failed', { defaultValue: 'Connection error' }));
-    } finally {
-      setLoading(false);
-    }
-  }, [t, toast, refId, refType]);
+  // Infinite Query for Media List
+  const { 
+    data, 
+    fetchNextPage, 
+    hasNextPage, 
+    isFetchingNextPage, 
+    isLoading 
+  } = useInfiniteQuery({
+    queryKey: ['media', { refId, refType }],
+    queryFn: ({ pageParam }) => mediaService.getList(pageParam, 20, refId, refType),
+    getNextPageParam: (lastPage) => lastPage.page < lastPage.totalPages ? lastPage.page + 1 : undefined,
+    initialPageParam: 1,
+    enabled: open, // Only fetch when modal is open
+    staleTime: 1000 * 60, // 1 minute
+  });
 
-  useEffect(() => {
-    if (open) {
-      void fetchMedia(1);
-    }
-  }, [open, fetchMedia]);
+  const items = data?.pages.flatMap(page => page.items) || [];
+  const total = data?.pages[0]?.total || 0;
+
+  // Upload Mutation
+  const uploadMutation = useMutation({
+    mutationFn: (file: File) => mediaService.upload(file, refId, refType),
+    onSuccess: () => {
+      toast.success(t('success.upload', { defaultValue: 'Uploaded successfully' }));
+      void queryClient.invalidateQueries({ queryKey: ['media'] });
+    },
+    onError: (error) => {
+      console.error('Upload failed', error);
+      toast.error(t('error.upload_failed', { defaultValue: 'Upload failed' }));
+    },
+  });
+
+  // Delete Mutation
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => mediaService.delete(id),
+    onSuccess: () => {
+      toast.success(t('success.delete', { defaultValue: 'Deleted successfully' }));
+      void queryClient.invalidateQueries({ queryKey: ['media'] });
+    },
+    onError: (error) => {
+      console.error('Delete failed', error);
+      toast.error(t('error.delete_failed', { defaultValue: 'Delete failed' }));
+    },
+  });
 
   const handleUpload = async (file: File) => {
-    try {
-      setUploading(true);
-      await mediaService.upload(file, refId, refType);
-      toast.success(t('success.upload', { defaultValue: 'Uploaded successfully' }));
-      // Refresh list
-      void fetchMedia(1);
-    } catch (error) {
-      console.error('Upload failed', error);
-      // useMediaUpload hook handles toast mostly, but here we call service directly
-      toast.error(t('error.upload_failed', { defaultValue: 'Upload failed' }));
-    } finally {
-      setUploading(false);
-    }
+    await uploadMutation.mutateAsync(file);
   };
 
   const handleDelete = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
     if (!confirm(t('confirm_delete', { defaultValue: 'Are you sure you want to delete this image?' }))) return;
-
-    try {
-      await mediaService.delete(id);
-      setItems(prev => prev.filter(item => item.id !== id));
-      toast.success(t('success.delete', { defaultValue: 'Deleted successfully' }));
-    } catch (error) {
-      console.error('Delete failed', error);
-      toast.error(t('error.delete_failed', { defaultValue: 'Delete failed' }));
-    }
-  };
-
-  const handleLoadMore = () => {
-    void fetchMedia(page + 1);
+    await deleteMutation.mutateAsync(id);
   };
 
   return (
@@ -88,7 +80,7 @@ export function MediaManagerModal({ open, onClose, onSelect, refId, refType }: M
       isOpen={open}
       onClose={onClose}
       title="Media Library"
-      size="xl" // Assuming 'xl' is supported, or use 'lg'
+      size="xl"
       footer={
         <div className="flex justify-between w-full">
            <div className="text-sm text-muted flex items-center">
@@ -108,14 +100,14 @@ export function MediaManagerModal({ open, onClose, onSelect, refId, refType }: M
              onChange={(file) => {
                if (file instanceof File) void handleUpload(file);
              }}
-             disabled={uploading}
+             disabled={uploadMutation.isPending}
              className="w-full h-24"
           />
         </div>
 
         {/* Gallery Grid */}
         <div className="flex-1 overflow-y-auto min-h-0 border rounded-md p-4 bg-gray-50/50 dark:bg-gray-900/50">
-          {loading && page === 1 ? (
+          {isLoading ? (
              <div className="flex justify-center items-center h-full">
                <Loader2 className="w-8 h-8 animate-spin text-primary" />
              </div>
@@ -151,6 +143,7 @@ export function MediaManagerModal({ open, onClose, onSelect, refId, refType }: M
                       className="h-8 w-8 rounded-full"
                       onClick={(e) => void handleDelete(item.id, e)}
                       title="Delete"
+                      disabled={deleteMutation.isPending}
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -164,14 +157,14 @@ export function MediaManagerModal({ open, onClose, onSelect, refId, refType }: M
             </div>
           )}
           
-          {items.length < total && (
+          {hasNextPage && (
             <div className="flex justify-center mt-4 pb-2">
                <Button 
                  variant="ghost" 
-                 onClick={handleLoadMore} 
-                 disabled={loading}
+                 onClick={() => void fetchNextPage()} 
+                 disabled={isFetchingNextPage}
                >
-                 {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2"/> : null}
+                 {isFetchingNextPage ? <Loader2 className="w-4 h-4 animate-spin mr-2"/> : null}
                  Load More
                </Button>
             </div>

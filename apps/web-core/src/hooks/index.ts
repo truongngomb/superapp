@@ -22,6 +22,7 @@ export * from './usePreferenceSync';
 export * from './useMediaQuery';
 export * from './useResponsiveView';
 export * from './useInfiniteResource';
+export * from './usePageTitle';
 
 // Re-exports from core-logic package
 export {

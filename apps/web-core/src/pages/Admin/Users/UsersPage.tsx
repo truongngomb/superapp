@@ -1,4 +1,6 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { queryKeys } from '@/config/queryClient';
 import { AnimatePresence, motion as framerMotion } from 'framer-motion';
 import { 
   Users, 
@@ -23,7 +25,7 @@ import {
 } from '@/components/common';
 import { PermissionGuard } from '@/components/common/PermissionGuard';
 import { useSort, useDebounce, useAuth, useResource, useToast, useExcelExport, useResponsiveView, useInfiniteResource } from '@/hooks';
-import type { User, SortColumn, UserCreateInput, UserListParams, UserUpdateInput, Role } from '@superapp/shared-types';
+import type { User, SortColumn, UserCreateInput, UserListParams, UserUpdateInput } from '@superapp/shared-types';
 import { getStorageItem, setStorageItem } from '@/utils';
 import { STORAGE_KEYS } from '@/config';
 
@@ -78,18 +80,14 @@ export default function UsersPage() {
 
 
   // Roles for Assignment
-  const [roles, setRoles] = useState<Role[]>([]);
-  
-  const fetchRoles = useCallback(async () => {
-    try {
-      // Fetch all active roles for assignment
-      const response = await roleService.getPage({ page: 1, limit: 100, isDeleted: false });
-      setRoles(response.items);
-    } catch (error) {
-      console.error('Failed to fetch roles', error);
-      errorToast(t('toast.load_error'));
-    }
-  }, [errorToast, t]);
+  const { data: rolesResponse } = useQuery({
+    queryKey: queryKeys.roles.list({ page: 1, limit: 100, isDeleted: false }),
+    queryFn: () => roleService.getPage({ page: 1, limit: 100, isDeleted: false }),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  const roles = rolesResponse?.items || [];
+
 
   // Use Generic Resource Hook
   const {
@@ -166,11 +164,7 @@ export default function UsersPage() {
     isActive: boolean;
   } | null>(null);
 
-  // Fetch roles once on mount
-  useEffect(() => {
-    void fetchRoles();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
 
   const prevFiltersRef = useRef({
     search: debouncedSearchQuery,
