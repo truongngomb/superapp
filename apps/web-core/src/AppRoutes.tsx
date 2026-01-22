@@ -96,7 +96,7 @@ export function AppRoutes() {
           path="markdown-pages"
           element={
             <ProtectedRoute
-              resource={PermissionResource.MarkdownManage}
+              resource={PermissionResource.MarkdownPages}
               action={PermissionAction.View}
             >
               <LazyPage>
@@ -122,9 +122,14 @@ export function AppRoutes() {
         <Route
           path="admin"
           element={
-            <LazyPage>
-              <AdminLayout />
-            </LazyPage>
+            <ProtectedRoute
+              resource={PermissionResource.Dashboard}
+              action={PermissionAction.View}
+            >
+              <LazyPage>
+                <AdminLayout />
+              </LazyPage>
+            </ProtectedRoute>
           }
         >
           <Route index element={<Navigate to="dashboard" replace />} />
@@ -209,12 +214,12 @@ export function AppRoutes() {
 
         </Route>
 
-        {/* Markdown Pages (Protected by Role Permissions) */}
+        {/* Markdown Pages (Public Viewing) */}
         <Route
           path="pages/:slug"
           element={
             <ProtectedRoute
-              resource={PermissionResource.MarkdownPages}
+              resource={PermissionResource.MarkdownViewPages}
               action={PermissionAction.View}
             >
               <LazyPage>

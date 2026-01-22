@@ -88,10 +88,10 @@
     "roles": "Roles",
     "activity_logs": "Activity Logs",
     "markdown_pages": "Markdown Pages",
+    "markdown_view_pages": "Markdown Pages (View)",
     "dashboard": "Dashboard",
     "home": "Home",
-    "api-docs": "API Documentation",
-    "markdown_manage": "Manage Markdown"
+    "api-docs": "API Documentation"
   },
   "success": "Success",
   "name": "Name",

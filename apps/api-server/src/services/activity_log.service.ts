@@ -1,4 +1,4 @@
-import { BaseService } from './base.service.js';
+import { BaseService, type ListOptions, type PaginatedResult } from './base.service.js';
 import { Collections, CacheKeys, config } from '../config/index.js';
 import type { ActivityLog, ActivityLogInput } from '@superapp/shared-types';
 
@@ -57,7 +57,33 @@ export class ActivityLogService extends BaseService<ActivityLog> {
     return log;
   }
 
-  // getPage() is inherited from BaseService with defaultExpand = 'user'
+  // getPageOverride to optimize list view
+  async getPage(options: ListOptions = {}): Promise<PaginatedResult<ActivityLog>> {
+    const { page = 1, limit = config.itemsPerPage, sort, order = 'asc', filter, expand } = options;
+    
+    await this.ensureDbAvailable();
+    
+    const sortStr = sort ? `${order === 'desc' ? '-' : ''}${sort}` : '-created';
+    
+    // OPTIMIZATION: Only fetch lightweight fields for list view
+    // Exclude 'details' which can be huge JSON blobs containing full record states
+    const fields = 'id,user,action,resource,message,created,recordId,expand.user.name,expand.user.avatar,expand.user.collectionId,expand.user.id';
+
+    const result = await this.collection.getList(page, limit, {
+      sort: sortStr,
+      filter: this.combineFilters(filter),
+      expand: expand || this.defaultExpand,
+      fields: fields,
+    });
+
+    return {
+      items: result.items.map((r) => this.mapRecord(r)),
+      page: result.page,
+      limit: result.perPage,
+      total: result.totalItems,
+      totalPages: result.totalPages,
+    };
+  }
 
   /**
    * Sanitize log details to remove sensitive information

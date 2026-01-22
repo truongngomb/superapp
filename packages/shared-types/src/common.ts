@@ -268,9 +268,9 @@ export enum PermissionResource {
   Users = 'users',
   ActivityLogs = 'activity_logs',
   MarkdownPages = 'markdown_pages',
+  MarkdownViewPages = 'markdown_view_pages',
   Dashboard = 'dashboard',
   Home = 'home',
   ApiDocs = 'api-docs',
-  MarkdownManage = 'markdown_manage',
 }
 

@@ -32,8 +32,9 @@ export const getBySlug = async (req: Request, res: Response, _next: NextFunction
 /**
  * GET /markdown-pages/menu - Get menu tree
  */
-export const getMenuTree = async (_req: Request, res: Response, _next: NextFunction) => {
-  const tree = await markdownService.getMenuTree();
+export const getMenuTree = async (req: Request, res: Response, _next: NextFunction) => {
+  const lang = (req.query.lang as string) || 'en';
+  const tree = await markdownService.getMenuTree(lang);
   res.json({ success: true, data: tree });
 };
 

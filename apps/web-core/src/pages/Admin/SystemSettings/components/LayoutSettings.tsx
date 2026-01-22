@@ -63,7 +63,8 @@ export function LayoutSettings() {
   const handleSave = async () => {
     setSubmitting(true);
     try {
-      await updateSetting('layout_config', layoutConfig);
+      // Set visibility to 'public' so all users can see layout config
+      await updateSetting('layout_config', layoutConfig, 'public');
       setInitialLayoutConfig(JSON.parse(JSON.stringify(layoutConfig)) as typeof layoutConfig);
     } finally {
       setSubmitting(false);

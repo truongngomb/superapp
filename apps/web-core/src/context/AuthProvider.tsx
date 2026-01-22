@@ -11,7 +11,7 @@ import {
   type ReactNode,
 } from 'react';
 import { authService } from '@/services';
-import { logger, setStorageItem } from '@/utils';
+import { logger, setStorageItem, removeStorageItem } from '@/utils';
 import { ApiException, STORAGE_KEYS } from '@/config';
 import i18n from '@/config/i18n';
 import { useTranslation } from 'react-i18next';
@@ -96,6 +96,27 @@ export function AuthProvider({ children }: AuthProviderProps) {
     } catch (err) {
       logger.error('AuthContext', 'Logout failed:', err);
     } finally {
+      // Clear user-specific localStorage (but keep public settings like layout_config)
+      // Remove user preferences
+      removeStorageItem(STORAGE_KEYS.USER_PREFERENCES);
+      removeStorageItem(STORAGE_KEYS.AUTH_TOKEN);
+      
+      // Remove view mode preferences (user-specific)
+      removeStorageItem(STORAGE_KEYS.CATEGORIES_VIEW_MODE);
+      removeStorageItem(STORAGE_KEYS.CATEGORIES_SORT);
+      removeStorageItem(STORAGE_KEYS.USERS_VIEW_MODE);
+      removeStorageItem(STORAGE_KEYS.USERS_SORT);
+      removeStorageItem(STORAGE_KEYS.ROLES_VIEW_MODE);
+      removeStorageItem(STORAGE_KEYS.ROLES_SORT);
+      removeStorageItem(STORAGE_KEYS.ACTIVITY_LOGS_SORT);
+      removeStorageItem(STORAGE_KEYS.MARKDOWN_PAGES_VIEW_MODE);
+      removeStorageItem(STORAGE_KEYS.MARKDOWN_PAGES_SORT);
+      removeStorageItem(STORAGE_KEYS.API_DOCS_VIEW_MODE);
+      
+      // Keep SETTINGS (contains public layout_config)
+      // Keep THEME (user preference but harmless)
+      // Keep LAYOUT_MODE, DESKTOP_SIDEBAR_OPEN (UI state, harmless)
+      
       // Refresh auth state to load guest permissions
       await checkAuth();
     }

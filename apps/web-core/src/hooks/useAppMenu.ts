@@ -26,8 +26,8 @@ export function useAppMenu() {
 
   // Fetch menu tree with caching
   const { data: dynamicItems = [], isLoading } = useQuery({
-    queryKey: ['menu-tree'],
-    queryFn: () => markdownService.getMenuTree(),
+    queryKey: ['menu-tree', i18n.language],
+    queryFn: () => markdownService.getMenuTree(i18n.language),
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes
     retry: 1,
     placeholderData: (previousData) => previousData, // Use cached data while re-fetching
@@ -63,16 +63,9 @@ export function useAppMenu() {
          }
       }
 
-      // Resolve Title and Slug based on Translation
-      let label = item.menuTitle || item.title;
-      let slug = item.slug;
-      
-      const currentLang = i18n.language;
-      if (item.translations && item.translations[currentLang]) {
-        const trans = item.translations[currentLang];
-        label = trans.menuTitle || trans.title;
-        slug = trans.slug;
-      }
+      // Backend already resolved locale, use values directly
+      const label = item.menuTitle || item.title;
+      const slug = item.slug;
 
       return {
         path: `/pages/${slug}`,
@@ -105,7 +98,7 @@ export function useAppMenu() {
     merged.push(...otherItems);
 
     return merged;
-  }, [t, dynamicItems, i18n.language]);
+  }, [t, dynamicItems]);
 
   return { menuItems, loading: isLoading && dynamicItems.length === 0 };
 }

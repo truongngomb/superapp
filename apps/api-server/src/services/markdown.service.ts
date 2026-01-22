@@ -9,10 +9,22 @@ import type {
   MarkdownMenuItem,
   MarkdownPageTranslation 
 } from '@superapp/shared-types';
+import { getOrSet, invalidate } from '../config/index.js';
 
 export class MarkdownService extends BaseService<MarkdownPage> {
   protected readonly collectionName = 'markdown_pages';
   protected readonly cacheKey = 'markdown:pages';
+
+  /**
+   * Override invalidateCache to clear menu caches as well
+   */
+  protected invalidateCache(): void {
+    super.invalidateCache();
+    // Invalidate menu caches for all supported languages
+    invalidate('markdown:menu:en');
+    invalidate('markdown:menu:vi');
+    invalidate('markdown:menu:ko');
+  }
 
   async update(id: string, input: Partial<Omit<MarkdownPage, keyof MinimalEntity>> | FormData, actorId?: string, skipLog = false): Promise<MarkdownPage> {
     // Handle FormData (multipart/form-data)
@@ -140,12 +152,19 @@ export class MarkdownService extends BaseService<MarkdownPage> {
    * Returns hierarchical structure of menu items with localized titles
    */
   async getMenuTree(lang = 'en'): Promise<MarkdownMenuItem[]> {
-    const pages = await this.collection.getFullList<MarkdownPage>({
-      filter: `showInMenu = true && isPublished = true && isDeleted = false`,
-      sort: 'order',
-    });
-    
-    return this.buildMenuTree(pages.map(r => this.mapRecord(r as unknown as Record<string, unknown>)), lang);
+    return getOrSet(
+      `markdown:menu:${lang}`,
+      async () => {
+        const pages = await this.collection.getFullList<MarkdownPage>({
+          filter: `showInMenu = true && isPublished = true && isDeleted = false`,
+          sort: 'order',
+          fields: 'id,created,updated,translations,defaultLanguage,isTitle,icon,showInMenu,parentId,order',
+        });
+        
+        return this.buildMenuTree(pages.map(r => this.mapRecord(r as unknown as Record<string, unknown>)), lang);
+      },
+      3600 // Cache for 1 hour
+    );
   }
 
   /**
@@ -174,7 +193,7 @@ export class MarkdownService extends BaseService<MarkdownPage> {
         icon: page.icon,
         order: page.order,
         children: [],
-        translations: page.translations, // Keep raw for advanced UI usage
+        // translations removed to reduce payload size (only needed server-side)
       });
     });
     

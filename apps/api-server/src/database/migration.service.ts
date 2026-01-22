@@ -4,7 +4,7 @@
  * Handles syncing collection schemas from code to PocketBase.
  * Requires superuser authentication to create/update collections.
  */
-import { pb } from '../config/database.js';
+import { createPocketBaseClient } from '../config/database.js';
 import { config } from '../config/env.js';
 import { createLogger } from '../utils/index.js';
 import { allCollections } from './collections/index.js';
@@ -63,6 +63,9 @@ const log = createLogger('MigrationService');
 export class MigrationService {
   private authenticated = false;
   
+  // PocketBase client instance
+  private pb = createPocketBaseClient();
+
   // Cache for collection name → ID mapping (built when fetching collections)
   private collectionIdMap: Map<string, string> = new Map();
   // Cache for collection ID → name mapping (for reverse, building code from DB)
@@ -87,7 +90,7 @@ export class MigrationService {
     }
 
     try {
-      await pb.collection('_superusers').authWithPassword(adminEmail, adminPassword);
+      await this.pb.collection('_superusers').authWithPassword(adminEmail, adminPassword);
       this.authenticated = true;
       log.info('Authenticated as superuser');
     } catch (error) {
@@ -99,7 +102,7 @@ export class MigrationService {
    * Check if authenticated
    */
   isAuthenticated(): boolean {
-    return this.authenticated && pb.authStore.isValid;
+    return this.authenticated && this.pb.authStore.isValid;
   }
 
   // ===========================================================================
@@ -113,7 +116,7 @@ export class MigrationService {
   async getCurrentCollections(): Promise<PBCollection[]> {
     this.ensureAuthenticated();
     
-    const collections = await pb.collections.getFullList();
+    const collections = await this.pb.collections.getFullList();
     
     // Build the maps for relation field resolution
     this.collectionIdMap.clear();
@@ -134,7 +137,7 @@ export class MigrationService {
     this.ensureAuthenticated();
     
     try {
-      const collection = await pb.collections.getOne(name);
+      const collection = await this.pb.collections.getOne(name);
       return collection as unknown as PBCollection;
     } catch {
       return null;
@@ -391,7 +394,7 @@ export class MigrationService {
       log.debug('Creating collection:', JSON.stringify(createData, null, 2));
     }
 
-    await pb.collections.create(createData);
+    await this.pb.collections.create(createData);
   }
 
   /**
@@ -404,7 +407,7 @@ export class MigrationService {
       log.debug('Updating collection:', JSON.stringify(updateData, null, 2));
     }
 
-    await pb.collections.update(schema.name, updateData);
+    await this.pb.collections.update(schema.name, updateData);
   }
 
   /**
@@ -621,7 +624,7 @@ export class MigrationService {
           const seedModule = await import(pathToFileURL(path.join(seedsDir, file)).href) as { run?: (pb: any) => Promise<void> };
           
           if (typeof seedModule.run === 'function') {
-            await seedModule.run(pb);
+            await seedModule.run(this.pb);
             log.info(`✅ Seed ${file} completed.`);
           } else {
             log.warn(`⚠️ Skipped ${file}: No 'run' function exported.`);

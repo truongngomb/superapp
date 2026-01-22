@@ -84,7 +84,7 @@ export function MarkdownPageForm({
   const { t, i18n } = useTranslation(['markdown', 'common']);
   const toast = useToast();
   const { createPage, updatePage, submitting, getAllPages } = useMarkdownPages();
-  const { upload: uploadImage } = useMediaUpload(initialData?.id, 'markdown_page');
+  const { upload: uploadImage } = useMediaUpload(initialData?.id, 'markdown_pages');
   const isEdit = !!initialData;
   const [parentOptions, setParentOptions] = useState<{ value: string; label: string }[]>([]);
   const [translating, setTranslating] = useState(false);
@@ -386,6 +386,13 @@ export function MarkdownPageForm({
       if (defaultTrans && defaultTrans.title.trim() && defaultTrans.slug.trim()) {
         validTranslations[defaultLanguage] = defaultTrans as MarkdownPageTranslation;
       }
+
+      // Fix: Preserve other languages that have content when editing only default language
+      Object.entries(data.translations).forEach(([lang, t]) => {
+        if (lang !== defaultLanguage && t.title.trim() && t.slug.trim()) {
+          validTranslations[lang] = t as MarkdownPageTranslation;
+        }
+      });
     } else {
       // MANAGE ALL LANGUAGES: Validate all languages (but only submit non-empty ones)
       Object.entries(data.translations).forEach(([lang, t]) => {
@@ -960,7 +967,7 @@ export function MarkdownPageForm({
       onClose={handleMediaClose} 
       onSelect={handleMediaSelect}
       refId={initialData?.id}
-      refType="markdown_page"
+      refType="markdown_pages"
     />
     </>
   );

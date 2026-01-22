@@ -7,6 +7,7 @@ import {
   autodateField, 
   textField, 
   fileField,
+  relationField,
 } from '../collection.schema.js';
 
 export const mediaCollection: BaseCollectionSchema = {
@@ -34,8 +35,14 @@ export const mediaCollection: BaseCollectionSchema = {
     // Reference ID (e.g. MarkdownPage ID)
     textField('refId'),
 
-    // Reference Type (e.g. 'markdown_page')
+    // Reference Type (e.g. 'markdown_pages')
     textField('refType'),
+
+    // Owner (User who uploaded)
+    relationField('user', 'users', {
+      maxSelect: 1,
+      required: false, // Optional for existing data
+    }),
   ],
 
   indexes: [

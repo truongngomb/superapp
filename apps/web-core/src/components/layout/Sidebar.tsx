@@ -112,13 +112,13 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                               to={child.path}
                               onClick={onClose}
                               className={cn(
-                                'flex items-center gap-3 px-4 py-2 rounded-lg text-sm transition-colors',
+                                'flex items-center gap-3 px-4 py-2 rounded-lg transition-colors',
                                 isChildActive
                                   ? 'text-primary font-medium'
                                   : 'text-muted hover:text-foreground hover:bg-surface'
                               )}
                             >
-                              {ChildIcon && <ChildIcon className="w-4 h-4" />}
+                              {ChildIcon && <ChildIcon className="w-5 h-5" />}
                               <span>{child.label}</span>
                             </Link>
                           );

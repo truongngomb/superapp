@@ -9,9 +9,7 @@ export function useLayoutMode() {
   const location = useLocation();
 
   return useMemo(() => {
-    // 1. Check if settings are loaded
-    if (settings.length === 0) return 'standard';
-
+    // 1. Try to get layout config from settings (or localStorage cache)
     const layoutConfig = getSettingValue('layout_config', {
       global: 'standard',
       pages: {} as Record<string, string>
@@ -26,9 +24,9 @@ export function useLayoutMode() {
       pathsToCheck.push(path.replace('/admin', ''));
     }
     
-    // Map markdown viewer pages to markdown_pages resource layout
+    // Map markdown viewer pages to markdown_view_pages resource layout
     if (path.startsWith('/pages/')) {
-      pathsToCheck.push('/markdown_pages');
+      pathsToCheck.push('/markdown_view_pages');
     }
 
     // Find best match (longest prefix)

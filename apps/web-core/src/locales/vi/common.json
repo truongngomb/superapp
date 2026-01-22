@@ -89,10 +89,10 @@
     "roles": "Vai trò",
     "activity_logs": "Nhật ký",
     "markdown_pages": "Trang Markdown",
+    "markdown_view_pages": "Trang Markdown (Xem)",
     "dashboard": "Tổng quan",
     "home": "Trang chủ",
-    "api-docs": "Tài liệu API",
-    "markdown_manage": "Quản lý Markdown"
+    "api-docs": "Tài liệu API"
   },
   "remove_success": "Đã xóa thành công",
   "remove_error": "Lỗi khi xóa",

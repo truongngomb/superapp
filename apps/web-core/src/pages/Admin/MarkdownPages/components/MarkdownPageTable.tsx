@@ -9,14 +9,16 @@ import { DataTable, type DataTableColumn } from '@/components/common';
 import { MarkdownPage } from '@superapp/shared-types';
 import { Edit, Trash2, Globe, FileText, Languages } from 'lucide-react';
 
+import { PermissionGuard } from '@/components/common/PermissionGuard';
+
 interface MarkdownPageTableProps {
   data: MarkdownPage[];
   loading: boolean;
   selectedIds: string[];
   sort: { field: string; order: 'asc' | 'desc' | null };
   onSort: (field: string) => void;
-  onSelect: (id: string, checked: boolean) => void;
-  onSelectAll: (checked: boolean) => void;
+  onSelect?: (id: string, checked: boolean) => void;
+  onSelectAll?: (checked: boolean) => void;
   onEdit: (page: MarkdownPage) => void;
   onManageTranslations: (page: MarkdownPage) => void;
   onDelete: (page: MarkdownPage) => void;
@@ -111,15 +113,18 @@ export function MarkdownPageTable({
         
         return (
           <div className="flex justify-end gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 w-8 p-0"
-              onClick={() => { onManageTranslations(row.original); }}
-              title={t('form.manage_translations')}
-            >
-              <Languages className="w-4 h-4 text-blue-500" />
-            </Button>
+            <PermissionGuard resource="markdown_pages" action="update">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0"
+                onClick={() => { onManageTranslations(row.original); }}
+                title={t('form.manage_translations')}
+              >
+                <Languages className="w-4 h-4 text-blue-500" />
+              </Button>
+            </PermissionGuard>
+            
             <Button
               variant="ghost"
               size="sm"
@@ -130,22 +135,28 @@ export function MarkdownPageTable({
             >
               <Globe className="w-4 h-4 text-blue-500" />
             </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 w-8 p-0"
-              onClick={() => { onEdit(row.original); }}
-            >
-              <Edit className="w-4 h-4 text-yellow-600" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 w-8 p-0 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10"
-              onClick={() => { onDelete(row.original); }}
-            >
-              <Trash2 className="w-4 h-4" />
-            </Button>
+            
+            <PermissionGuard resource="markdown_pages" action="update">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0"
+                onClick={() => { onEdit(row.original); }}
+              >
+                <Edit className="w-4 h-4 text-yellow-600" />
+              </Button>
+            </PermissionGuard>
+
+            <PermissionGuard resource="markdown_pages" action="delete">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10"
+                onClick={() => { onDelete(row.original); }}
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </PermissionGuard>
           </div>
         );
       }

@@ -3,7 +3,7 @@ import { mediaService } from '../services/media.service.js';
 import { asyncHandler, BadRequestError } from '../middleware/errorHandler.js';
 import { requireAuth } from '../middleware/auth.js';
 import { createLogger } from '../utils/logger.js';
-import { upload } from '../middleware/upload.js';
+import { upload, validateFileTypes } from '../middleware/upload.js';
 
 const log = createLogger('MediaController');
 
@@ -15,6 +15,7 @@ export const mediaController = {
   upload: [
     requireAuth,
     upload.single('file'),
+    validateFileTypes,
     asyncHandler(async (req: Request, res: Response) => {
       // Extended request for Multer
       const file = (req as Request & { file?: Express.Multer.File }).file;
@@ -68,17 +69,22 @@ export const mediaController = {
       if (refId) filters.push(`refId = "${refId}"`);
       if (refType) filters.push(`refType = "${refType}"`);
       
-      const result = await mediaService.getPage({
-        page,
-        limit,
-        sort: '-created', // Newest first
-        filter: filters.length > 0 ? filters.join(' && ') : undefined,
-      });
+      try {
+        const result = await mediaService.getPage({
+          page,
+          limit,
+          sort: '-created', // Newest first
+          filter: filters.length > 0 ? filters.join(' && ') : undefined,
+        });
 
-      res.status(200).json({
-        success: true,
-        data: result,
-      });
+        res.status(200).json({
+          success: true,
+          data: result,
+        });
+      } catch (error) {
+        log.error('Failed to list media', { error, filter: filters });
+        throw error;
+      }
     }),
   ],
   /**

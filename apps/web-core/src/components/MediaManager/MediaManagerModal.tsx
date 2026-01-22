@@ -12,7 +12,7 @@ interface MediaManagerModalProps {
   onClose: () => void;
   onSelect?: (url: string, file: Media) => void;
   refId?: string; // Context reference ID (e.g. MarkdownPage ID)
-  refType?: string; // Context type (e.g. 'markdown_page')
+  refType?: string; // Context type (e.g. 'markdown_pages')
 }
 
 export function MediaManagerModal({ open, onClose, onSelect, refId, refType }: MediaManagerModalProps) {

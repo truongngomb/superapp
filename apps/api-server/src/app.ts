@@ -31,14 +31,14 @@ function createApp(): Express {
   
   // Helmet with relaxed CSP for API docs
   // Helmet with CSP configuration
-  // Note: 'unsafe-inline' is currently kept for compatibility with certain inline styles/scripts
+  // Note: 'unsafe-inline' removed to enforce strict CSP
   // We removed 'unsafe-eval' to improve security
   app.use(helmet({
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
-        styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://fonts.googleapis.com"],
+        scriptSrc: ["'self'", "https://cdn.jsdelivr.net"],
+        styleSrc: ["'self'", "https://cdn.jsdelivr.net", "https://fonts.googleapis.com"],
         fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdn.jsdelivr.net"],
         imgSrc: ["'self'", "data:", "https:", "blob:"],
         connectSrc: ["'self'", "https:"],

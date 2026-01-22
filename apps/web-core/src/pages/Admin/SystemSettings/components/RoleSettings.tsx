@@ -28,7 +28,8 @@ export function RoleSettings() {
   const handleSave = async () => {
     setSubmitting(true);
     try {
-      await updateSetting('role_resources', roleResources);
+      // Set visibility to 'public' so all users can see role resources for layout config
+      await updateSetting('role_resources', roleResources, 'public');
       setInitialRoleResources([...roleResources]);
     } finally {
       setSubmitting(false);

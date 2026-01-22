@@ -33,10 +33,12 @@ export function MarkdownPageRow({ index, style, data, isSelected, onSelect }: Ma
 
   const actions = (
     <div className="flex items-center gap-1">
-      <LanguageManagementButton 
-        page={page} 
-        onManageTranslations={data.onManageTranslations}
-      />
+      <PermissionGuard resource="markdown_pages" action="update">
+        <LanguageManagementButton 
+          page={page} 
+          onManageTranslations={data.onManageTranslations}
+        />
+      </PermissionGuard>
 
       <Button
         variant="ghost"

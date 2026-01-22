@@ -4,7 +4,7 @@
  * Provides authentication and authorization middleware for Express routes.
  */
 import { Request, Response, NextFunction } from 'express';
-import { pb } from '../config/database.js';
+import { createPocketBaseClient } from '../config/database.js';
 import { getUserPermissions, getPublicRolePermissions } from '../services/permission.service.js';
 import type { User } from '@superapp/shared-types';
 import { UnauthorizedError } from './errorHandler.js';
@@ -68,6 +68,7 @@ export const authenticate = async (
 
   try {
     // Load token and validate with PocketBase
+    const pb = createPocketBaseClient();
     pb.authStore.save(token, null);
 
     if (!pb.authStore.isValid) {

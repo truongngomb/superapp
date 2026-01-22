@@ -5,6 +5,6 @@ export interface SettingsContextType {
   loading: boolean;
   submitting: boolean;
   fetchSettings: () => Promise<void>;
-  updateSetting: (key: string, value: unknown) => Promise<boolean>;
+  updateSetting: (key: string, value: unknown, visibility?: 'public' | 'admin' | 'secret') => Promise<boolean>;
   getSettingValue: <T = unknown>(key: string, defaultValue: T) => T;
 }

@@ -44,10 +44,10 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     }
   }, [show, isAdmin, settings.length]);
 
-  const updateSetting = useCallback(async (key: string, value: unknown) => {
+  const updateSetting = useCallback(async (key: string, value: unknown, visibility?: 'public' | 'admin' | 'secret') => {
     setSubmitting(true);
     try {
-      await settingsService.update(key, value);
+      await settingsService.update(key, value, visibility);
       await fetchSettings();
       show('Setting updated successfully', 'success');
       return true;

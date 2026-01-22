@@ -35,7 +35,8 @@ import {
   useDebounce, 
   useResponsiveView, 
   useExcelExport,
-  useInfiniteResource 
+  useInfiniteResource,
+  useAuth
 } from "@/hooks";
 
 import { markdownService } from "@/services";
@@ -126,6 +127,12 @@ export default function MarkdownPagesPage() {
     enabled: isMobile,
     pageSize: 10,
   });
+
+  // Permissions
+  const { checkPermission } = useAuth();
+  const canDelete = checkPermission('markdown_pages', 'delete');
+  const canUpdate = checkPermission('markdown_pages', 'update');
+  const canSelect = canDelete || canUpdate; // Only allow selection if user can perform batch actions
 
   // UI State
   const [editingPage, setEditingPage] = useState<MarkdownPage | undefined>(undefined);
@@ -252,7 +259,7 @@ export default function MarkdownPagesPage() {
         resource="markdown_pages"
         itemCount={isMobile ? mobilePages.length : pages.length}
         totalItems={total}
-        canSelect={true}
+        canSelect={canSelect}
         selectedCount={selectedIds.length}
         totalListItems={isMobile ? mobilePages.length : pages.length}
         onSelectAll={handleSelectAll}
@@ -320,8 +327,8 @@ export default function MarkdownPagesPage() {
                   isFetchingNextPage={isFetchingNextPage}
                   fetchNextPage={fetchNextPage}
                   isLoading={loading}
-                  selectedIds={selectedIds}
-                  onSelect={handleSelectOne}
+                  selectedIds={canSelect ? selectedIds : []}
+                  onSelect={canSelect ? handleSelectOne : undefined}
                   onEdit={(p) => { 
                     setEditingPage(p); 
                     setManageAllLanguages(false);
@@ -341,8 +348,8 @@ export default function MarkdownPagesPage() {
                   selectedIds={selectedIds}
                   sort={sortConfig}
                   onSort={handleSort}
-                  onSelect={handleSelectOne}
-                  onSelectAll={handleSelectAll}
+                  onSelect={canSelect ? handleSelectOne : undefined}
+                  onSelectAll={canSelect ? handleSelectAll : undefined}
                   onEdit={(p) => { 
                     setEditingPage(p); 
                     setManageAllLanguages(false);
@@ -377,7 +384,7 @@ export default function MarkdownPagesPage() {
                         onDelete: (p) => { setDeleteId(p.id); }
                       }}
                       isSelected={selectedIds.includes(page.id)}
-                      onSelect={(id, checked) => { handleSelectOne(id, checked); }}
+                      onSelect={canSelect ? (id, checked) => { handleSelectOne(id, checked); } : undefined}
                     />
                   ))}
                 </div>

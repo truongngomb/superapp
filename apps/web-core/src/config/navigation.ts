@@ -30,7 +30,7 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
     path: '/markdown-pages', 
     labelKey: 'markdown:title', 
     icon: FileText,
-    permission: { resource: 'markdown_manage', action: 'view' }
+    permission: { resource: 'markdown_pages', action: 'view' }
   },
   { 
     path: '/admin', 

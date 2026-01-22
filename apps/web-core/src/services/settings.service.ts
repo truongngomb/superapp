@@ -38,8 +38,8 @@ export const settingsService = {
   /**
    * Update setting
    */
-  async update(key: string, value: unknown): Promise<void> {
-    await api.post('/settings', { key, value });
+  async update(key: string, value: unknown, visibility?: 'public' | 'admin' | 'secret'): Promise<void> {
+    await api.post('/settings', { key, value, visibility });
   },
 
   async pruneLogs(days: number): Promise<void> {

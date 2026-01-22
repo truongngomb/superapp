@@ -3,7 +3,7 @@
  * 
  * Handles OAuth authentication and session management.
  */
-import { pb, config, Collections } from '../config/index.js';
+import { config, Collections, createPocketBaseClient } from '../config/index.js';
 import { permissionService } from './permission.service.js';
 import type { UserSession, User } from '@superapp/shared-types';
 import { createLogger } from '../utils/index.js';
@@ -47,6 +47,7 @@ class AuthService {
    * @returns OAuth URL, state, and code verifier
    */
   async initGoogleAuth(): Promise<GoogleAuthInitResult> {
+    const pb = createPocketBaseClient();
     const authMethods = await pb.collection(Collections.USERS).listAuthMethods();
     // PocketBase SDK v0.26+ uses oauth2.providers instead of authProviders
     const providers = authMethods.oauth2.providers;
@@ -75,6 +76,7 @@ class AuthService {
    * @returns Token and user ID
    */
   async handleGoogleCallback(code: string, codeVerifier: string): Promise<OAuthResult> {
+    const pb = createPocketBaseClient();
     const authData = await pb.collection(Collections.USERS).authWithOAuth2Code(
       'google',
       code,
@@ -94,7 +96,7 @@ class AuthService {
    * Clear current session
    */
   logout(): void {
-    pb.authStore.clear();
+    // No-op on server side with per-request instances
     log.info('User logged out');
   }
 
@@ -109,6 +111,7 @@ class AuthService {
   async validateSession(token: string): Promise<UserSession> {
     try {
       // Load token and verify with PocketBase
+      const pb = createPocketBaseClient();
       pb.authStore.save(token, null);
 
       if (!pb.authStore.isValid) {

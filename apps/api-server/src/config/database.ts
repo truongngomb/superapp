@@ -7,23 +7,22 @@ import PocketBase from 'pocketbase';
 import { config } from './env.js';
 import { logger } from '../utils/index.js';
 
-// =============================================================================
-// PocketBase Client Instance
-// =============================================================================
-
-/**
- * PocketBase client singleton
- * Configured with URL from environment variables
- */
-export const pb = new PocketBase(config.pocketbaseUrl);
-pb.autoCancellation(false);
-
 /**
  * Dedicated PocketBase client for admin/system operations
  * Use this for operations that bypass user-level rules
  */
 export const adminPb = new PocketBase(config.pocketbaseUrl);
 adminPb.autoCancellation(false);
+
+/**
+ * Create a new PocketBase client instance
+ * Use this for per-request authentication to avoid race conditions
+ */
+export const createPocketBaseClient = () => {
+  const client = new PocketBase(config.pocketbaseUrl);
+  client.autoCancellation(false);
+  return client;
+};
 
 // =============================================================================
 // Health Check
@@ -42,7 +41,7 @@ export async function checkPocketBaseHealth(
 ): Promise<boolean> {
   for (let i = 0; i < retries; i++) {
     try {
-      await pb.health.check();
+      await adminPb.health.check();
       return true;
     } catch {
       if (i === retries - 1) {

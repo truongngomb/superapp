@@ -98,16 +98,19 @@ export const markdownService = {
   /**
    * Get menu tree
    */
-  async getMenuTree(config?: ServiceConfig): Promise<MarkdownMenuItem[]> {
+  async getMenuTree(lang?: string, config?: ServiceConfig): Promise<MarkdownMenuItem[]> {
     const { controller, clear } = createAbortController(config?.timeout ?? env.API_REQUEST_TIMEOUT);
     
     try {
-      // Access public endpoint
-      // Assuming api-server route will change to /markdown-pages/menu or just return filtered tree
-      // But for now let's just use a general menu endpoint if user wants to keep the tree functionality but without position.
-      // If the user wants to remove menuPosition completely, getMenuTree logic on backend probably needs adjustment to not wait for position.
-      // Let's assume we fetch ALL menu items
-      return await api.get<MarkdownMenuItem[]>(`${API_ENDPOINTS.MARKDOWN_PAGES}/menu`, {
+      const queryParams = new URLSearchParams();
+      if (lang) queryParams.append('lang', lang);
+      
+      const queryString = queryParams.toString();
+      const endpoint = queryString 
+        ? `${API_ENDPOINTS.MARKDOWN_PAGES}/menu?${queryString}`
+        : `${API_ENDPOINTS.MARKDOWN_PAGES}/menu`;
+
+      return await api.get<MarkdownMenuItem[]>(endpoint, {
         signal: config?.signal ?? controller.signal,
       });
     } finally {
