@@ -12,6 +12,15 @@
     "maintenance_mode": "Maintenance Mode",
     "maintenance_mode_desc": "Block all non-admin access to the portal"
   },
+  "version": {
+    "title": "Application Version",
+    "description": "Manage client version to trigger auto-updates",
+    "system_version": "System Version",
+    "system_version_desc": "Change version number (greater than Client) to force user reload & cache clear",
+    "force_reload": "Force Reload",
+    "force_reload_title": "Increment version to force all users to reload immediately",
+    "force_reload_success": "Version updated to {{version}}. all Clients will auto-reload."
+  },
   "layout": {
     "title": "Layout Configuration",
     "description": "Customize layout styles for specific pages or the entire system",

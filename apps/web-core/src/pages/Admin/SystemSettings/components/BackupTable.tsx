@@ -49,9 +49,9 @@ export function BackupTable({ data, loading, onDownload, onRestore, onDelete }: 
           </tr>
         </thead>
         <tbody>
-          {data.map((backup) => (
+          {data.map((backup, index) => (
             <tr 
-              key={backup.key} 
+              key={backup.key || index} 
               className="border-t border-border transition-colors hover:bg-muted/5"
             >
               <td className="p-4 align-middle font-medium">{backup.key}</td>

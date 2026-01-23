@@ -12,6 +12,15 @@
     "maintenance_mode": "Chế độ bảo trì",
     "maintenance_mode_desc": "Chặn tất cả quyền truy cập cổng thông tin của người không phải là quản trị viên"
   },
+  "version": {
+    "title": "Phiên bản Ứng dụng",
+    "description": "Quản lý phiên bản client để kích hoạt tự động cập nhật",
+    "system_version": "Phiên bản Hệ thống",
+    "system_version_desc": "Thay đổi số phiên bản (lớn hơn Client) để ép người dùng tải lại trang & xóa cache",
+    "force_reload": "Ép buộc Tải lại",
+    "force_reload_title": "Tăng phiên bản để ép buộc tất cả người dùng tải lại ngay lập tức",
+    "force_reload_success": "Đã cập nhật phiên bản lên {{version}}. Tất cả Client sẽ tự động tải lại."
+  },
   "layout": {
     "title": "Cấu hình Giao diện",
     "description": "Tuỳ chỉnh kiểu giao diện cho từng trang hoặc toàn bộ hệ thống",

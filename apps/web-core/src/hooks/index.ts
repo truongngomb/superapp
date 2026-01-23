@@ -23,6 +23,7 @@ export * from './useMediaQuery';
 export * from './useResponsiveView';
 export * from './useInfiniteResource';
 export * from './usePageTitle';
+export { useAutoVersionCheck } from './useAutoVersionCheck';
 
 // Re-exports from core-logic package
 export {

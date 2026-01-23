@@ -12,6 +12,15 @@
     "maintenance_mode": "유지 관리 모드",
     "maintenance_mode_desc": "포털에 대한 모든 비 관리자 액세스 차단"
   },
+  "version": {
+    "title": "애플리케이션 버전",
+    "description": "자동 업데이트를 트리거하기 위해 클라이언트 버전을 관리합니다",
+    "system_version": "시스템 버전",
+    "system_version_desc": "버전 번호를 변경(클라이언트보다 높게)하여 사용자 페이지 새로고침 및 캐시 삭제를 강제합니다",
+    "force_reload": "강제 새로고침",
+    "force_reload_title": "버전을 증가시켜 모든 사용자가 즉시 새로고침하도록 강제합니다",
+    "force_reload_success": "버전이 {{version}}(으)로 업데이트되었습니다. 모든 클라이언트가 자동으로 새로고침됩니다."
+  },
   "layout": {
     "title": "레이아웃 설정",
     "description": "특정 페이지 또는 전체 시스템의 레이아웃 스타일 사용자 정의",

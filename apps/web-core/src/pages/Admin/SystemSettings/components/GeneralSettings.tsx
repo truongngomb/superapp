@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AlertCircle, Settings as SettingsIcon, Trash2, Database, Zap } from 'lucide-react';
+import { AlertCircle, Settings as SettingsIcon, Trash2, Database, Zap, Code, GitBranch } from 'lucide-react';
 import { 
   Card, 
   CardHeader, 
@@ -116,6 +116,108 @@ export function GeneralSettings() {
               }}
               disabled={loading || submitting}
             />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Application Version */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg text-purple-600 dark:text-purple-400">
+              <Code className="w-5 h-5" />
+            </div>
+            <div>
+              <h2 className="text-lg font-bold">{t('settings:version.title')}</h2>
+              <p className="text-sm text-muted-foreground">{t('settings:version.description')}</p>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-purple-50 dark:bg-purple-950/20 rounded-xl border border-purple-200 dark:border-purple-900/50 gap-4">
+             <div className="flex items-center gap-4">
+              <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/50 rounded-full flex items-center justify-center text-purple-600">
+                <GitBranch className="w-5 h-5" />
+              </div>
+              <div className="space-y-1">
+                <div className="font-bold text-purple-900 dark:text-purple-100 flex items-center gap-2">
+                  {t('settings:version.system_version')}
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-surface border">
+                    Client: {__APP_VERSION__}
+                  </span>
+                </div>
+                <div className="text-xs text-purple-700 dark:text-purple-400">
+                  {t('settings:version.system_version_desc')}
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <div className="relative w-full sm:w-32">
+                 <input 
+                    type="text" 
+                    className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    placeholder="1.0.0"
+                    defaultValue={getSettingValue<string>('system_version', '1.0.0')}
+                    onBlur={(e) => {
+                      if (e.target.value !== getSettingValue<string>('system_version', '1.0.0')) {
+                         void updateSetting('system_version', e.target.value, 'public');
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.currentTarget.blur();
+                      }
+                    }}
+                 />
+              </div>
+              
+              <Button 
+                variant="danger"
+                className="whitespace-nowrap gap-2"
+                onClick={() => {
+                  const currentVersion = getSettingValue<string>('system_version', '1.0.0');
+                  const parts = currentVersion.split('.').map(Number);
+                  
+                  // Increment patch version safely
+                  if (parts.length >= 3) {
+                     // Ensure parts[2] is a number before incrementing
+                     const patchKey = 2;
+                     const patchVal = parts[patchKey];
+                     if (patchVal !== undefined && isFinite(patchVal)) {
+                        parts[patchKey] = patchVal + 1;
+                     } else {
+                        parts[patchKey] = 1;
+                     }
+                  } else {
+                    // Fallback if version format is weird
+                     if (parts.length > 0) {
+                        const lastIndex = parts.length - 1;
+                        const lastPart = parts[lastIndex];
+                        if (lastPart !== undefined && isFinite(lastPart)) {
+                           parts[lastIndex] = lastPart + 1;
+                        } else {
+                           parts.push(1);
+                        }
+                     } else {
+                        parts.push(1);
+                     }
+                  }
+                  
+                  const newVersion = parts.join('.');
+                  void updateSetting('system_version', newVersion, 'public');
+                  success(t('settings:version.force_reload_success', { version: newVersion }));
+                  
+                  // Update input value manually to reflect change immediately
+                  const input = document.querySelector('input[placeholder="1.0.0"]') as HTMLInputElement;
+                  input.value = newVersion;
+                }}
+                title={t('settings:version.force_reload_title')}
+              >
+                <Zap className="w-4 h-4" />
+                {t('settings:version.force_reload')}
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
