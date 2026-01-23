@@ -272,5 +272,6 @@ export enum PermissionResource {
   Dashboard = 'dashboard',
   Home = 'home',
   ApiDocs = 'api-docs',
+  SystemHealth = 'system_health',
 }
 

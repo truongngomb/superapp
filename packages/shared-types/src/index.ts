@@ -45,3 +45,6 @@ export * from './markdown.js';
 // Media types
 export * from './media.js';
 
+// Request Metrics types
+export * from './request-metrics.types.js';
+

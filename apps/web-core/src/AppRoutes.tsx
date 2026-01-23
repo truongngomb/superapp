@@ -40,6 +40,9 @@ const MarkdownPagesPage = lazy(
 const MarkdownViewerPage = lazy(
   () => import('@/pages/MarkdownViewer/MarkdownViewerPage')
 );
+const SystemHealthPage = lazy(
+  () => import('@/pages/Admin/SystemHealth/SystemHealthPage')
+);
 
 
 // ============================================================================
@@ -207,6 +210,19 @@ export function AppRoutes() {
               >
                 <LazyPage>
                   <ApiDocsPage />
+                </LazyPage>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="system-health"
+            element={
+              <ProtectedRoute
+                resource={PermissionResource.SystemHealth}
+                action={PermissionAction.View}
+              >
+                <LazyPage>
+                  <SystemHealthPage />
                 </LazyPage>
               </ProtectedRoute>
             }

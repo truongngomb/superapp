@@ -1,0 +1,67 @@
+{
+  "title": "시스템 상태",
+  "subtitle": "실시간 성능 모니터링 및 리소스 사용량",
+  "cpu_usage": "CPU 사용량",
+  "memory_usage": "메모리 사용량",
+  "disk_usage": "디스크 공간",
+  "uptime": "가동 시간",
+  
+  "cpu_chart": {
+    "title": "CPU 사용 기록",
+    "description": "실시간 프로세서 부하 비율",
+    "collecting": "데이터 수집 중..."
+  },
+  
+  "memory_chart": {
+    "title": "메모리 분배",
+    "description": "RAM 사용량 ({{percentage}}%)",
+    "used": "사용됨",
+    "available": "사용 가능"
+  },
+  
+  "disk_table": {
+    "title": "디스크 사용량",
+    "description": "저장소 파티션 통계",
+    "filesystem": "파일 시스템",
+    "type": "유형",
+    "mount": "마운트",
+    "size": "크기",
+    "used": "사용됨",
+    "available": "사용 가능",
+    "use_percent": "사용률 %"
+  },
+  
+  "system_info": {
+    "os_platform": "OS 플랫폼",
+    "hostname": "호스트명",
+    "processor": "프로세서",
+    "cpu_speed": "CPU 속도",
+    "cores": "{{count}} 코어"
+  },
+  
+  "cards": {
+    "server": "서버: {{value}}%",
+    "free": "여유 공간: {{value}}",
+    "since_restart": "마지막 재시작 이후"
+  },
+  
+  "request_monitoring": {
+    "title": "요청 모니터링",
+    "total_requests": "총 요청 수",
+    "requests_per_second": "초당 요청 수 (RPS)",
+    "avg_response_time": "평균 응답 시간",
+    "error_rate": "오류율",
+    "status_code_distribution": "상태 코드 분포",
+    "method_distribution": "HTTP 메서드",
+    "top_endpoints": "가장 많이 요청된 엔드포인트",
+    "slowest_endpoints": "가장 느린 엔드포인트",
+    "response_time_distribution": "응답 시간 분포",
+    "endpoint": "엔드포인트",
+    "requests": "요청 수",
+    "avg_duration": "평균 시간",
+    "fast": "빠름 (<100ms)",
+    "medium": "보통 (100-500ms)",
+    "slow": "느림 (500ms-1s)",
+    "very_slow": "매우 느림 (>1s)"
+  }
+}

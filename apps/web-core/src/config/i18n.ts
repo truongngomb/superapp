@@ -20,6 +20,7 @@ import activityLogsEn from '../locales/en/activity_logs.json';
 import notificationsEn from '../locales/en/notifications.json';
 import settingsEn from '../locales/en/settings.json';
 import markdownEn from '../locales/en/markdown.json';
+import systemHealthEn from '../locales/en/system_health.json';
 
 // Import translation files - Vietnamese
 import commonVi from '../locales/vi/common.json';
@@ -32,6 +33,7 @@ import activityLogsVi from '../locales/vi/activity_logs.json';
 import notificationsVi from '../locales/vi/notifications.json';
 import settingsVi from '../locales/vi/settings.json';
 import markdownVi from '../locales/vi/markdown.json';
+import systemHealthVi from '../locales/vi/system_health.json';
 
 // Import translation files - Korean
 import commonKo from '../locales/ko/common.json';
@@ -44,6 +46,7 @@ import activityLogsKo from '../locales/ko/activity_logs.json';
 import notificationsKo from '../locales/ko/notifications.json';
 import settingsKo from '../locales/ko/settings.json';
 import markdownKo from '../locales/ko/markdown.json';
+import systemHealthKo from '../locales/ko/system_health.json';
 
 // Configure resources
 export const resources = {
@@ -58,6 +61,7 @@ export const resources = {
     notifications: notificationsEn,
     settings: settingsEn,
     markdown: markdownEn,
+    system_health: systemHealthEn,
   },
   vi: {
     common: commonVi,
@@ -70,6 +74,7 @@ export const resources = {
     notifications: notificationsVi,
     settings: settingsVi,
     markdown: markdownVi,
+    system_health: systemHealthVi,
   },
   ko: {
     common: commonKo,
@@ -82,6 +87,7 @@ export const resources = {
     notifications: notificationsKo,
     settings: settingsKo,
     markdown: markdownKo,
+    system_health: systemHealthKo,
   },
 } as const;
 
@@ -97,7 +103,7 @@ void i18n
   .init({
     resources,
     defaultNS: 'common',
-    ns: ['common', 'home', 'auth', 'categories', 'roles', 'users', 'activity_logs', 'notifications', 'settings', 'markdown'],
+    ns: ['common', 'home', 'auth', 'categories', 'roles', 'users', 'activity_logs', 'notifications', 'settings', 'markdown', 'system_health'],
 
     fallbackLng: 'en', // Default language if detection fails
     supportedLngs: ['en', 'vi', 'ko'],

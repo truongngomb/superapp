@@ -1,9 +1,12 @@
 import { api } from '@/config/api';
-import type { SystemStats } from '@superapp/shared-types';
+import type { SystemStats, RequestMetrics } from '@superapp/shared-types';
 
 export const systemService = {
   getStats: async (): Promise<SystemStats> => {
-    const data = await api.get<SystemStats>('/system/stats');
-    return data;
+    return api.get<SystemStats>('/system/stats');
+  },
+  
+  getRequestMetrics: async (): Promise<RequestMetrics> => {
+    return api.get<RequestMetrics>('/system/requests');
   },
 };

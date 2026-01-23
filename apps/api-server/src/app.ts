@@ -11,6 +11,7 @@ import cookieParser from 'cookie-parser';
 
 import { config, cache } from './config/index.js';
 import { authenticate, checkMaintenanceMode, errorHandler, NotFoundError, requireAdmin } from './middleware/index.js';
+import { requestStartTracker, requestEndTracker } from './middleware/requestTracker.js';
 import { authRouter, categoriesRouter, rolesRouter, usersRouter, activityLogsRouter, realtimeRouter, systemRouter, settingsRouter, markdownRouter, mediaRouter } from './routes/index.js';
 
 import { generateOpenApiDocument } from './docs/index.js';
@@ -78,11 +79,23 @@ function createApp(): Express {
   app.use(cookieParser());
 
   // =========================================================================
+  // Request Tracking - Start
+  // =========================================================================
+  
+  app.use(requestStartTracker);
+
+  // =========================================================================
   // Authentication (populates req.user on all routes)
   // =========================================================================
   
   app.use(authenticate);
   app.use(checkMaintenanceMode);
+
+  // =========================================================================
+  // Request Tracking - End
+  // =========================================================================
+  
+  app.use(requestEndTracker);
 
   // =========================================================================
   // API Routes

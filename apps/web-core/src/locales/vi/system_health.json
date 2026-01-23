@@ -1,0 +1,67 @@
+{
+  "title": "Sức khỏe hệ thống",
+  "subtitle": "Giám sát hiệu năng và tài nguyên hệ thống theo thời gian thực",
+  "cpu_usage": "Sử dụng CPU",
+  "memory_usage": "Sử dụng RAM",
+  "disk_usage": "Dung lượng đĩa",
+  "uptime": "Thời gian hoạt động",
+  
+  "cpu_chart": {
+    "title": "Lịch sử sử dụng CPU",
+    "description": "Phần trăm tải xử lý theo thời gian thực",
+    "collecting": "Đang thu thập dữ liệu..."
+  },
+  
+  "memory_chart": {
+    "title": "Phân bổ bộ nhớ",
+    "description": "Sử dụng RAM ({{percentage}}%)",
+    "used": "Đã dùng",
+    "available": "Còn trống"
+  },
+  
+  "disk_table": {
+    "title": "Sử dụng đĩa",
+    "description": "Thống kê các phân vùng lưu trữ",
+    "filesystem": "Hệ thống tệp",
+    "type": "Loại",
+    "mount": "Điểm gắn",
+    "size": "Dung lượng",
+    "used": "Đã dùng",
+    "available": "Còn trống",
+    "use_percent": "% Sử dụng"
+  },
+  
+  "system_info": {
+    "os_platform": "Nền tảng HĐH",
+    "hostname": "Tên máy chủ",
+    "processor": "Bộ xử lý",
+    "cpu_speed": "Tốc độ CPU",
+    "cores": "{{count}} Lõi"
+  },
+  
+  "cards": {
+    "server": "Máy chủ: {{value}}%",
+    "free": "Còn trống: {{value}}",
+    "since_restart": "Kể từ lần khởi động lại"
+  },
+  
+  "request_monitoring": {
+    "title": "Giám sát Request",
+    "total_requests": "Tổng số Request",
+    "requests_per_second": "Request/giây",
+    "avg_response_time": "Thời gian phản hồi TB",
+    "error_rate": "Tỷ lệ lỗi",
+    "status_code_distribution": "Phân bố Status Code",
+    "method_distribution": "Phương thức HTTP",
+    "top_endpoints": "Endpoints phổ biến nhất",
+    "slowest_endpoints": "Endpoints chậm nhất",
+    "response_time_distribution": "Phân bố thời gian phản hồi",
+    "endpoint": "Endpoint",
+    "requests": "Lượt gọi",
+    "avg_duration": "Thời gian TB",
+    "fast": "Nhanh (<100ms)",
+    "medium": "Vừa (100-500ms)",
+    "slow": "Chậm (500ms-1s)",
+    "very_slow": "Rất chậm (>1s)"
+  }
+}

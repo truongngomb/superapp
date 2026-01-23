@@ -12,6 +12,7 @@ export * from './useSettings';
 export * from './useMarkdownPages';
 export * from './useAppMenu';
 export { useMediaUpload } from './useMedia';
+export * from './useSystemHealth';
 
 export * from './useLayoutMode';
 export * from './useLayout';

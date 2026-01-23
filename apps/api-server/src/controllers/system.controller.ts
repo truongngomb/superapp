@@ -1,6 +1,7 @@
 import type { Request, Response } from 'express';
 import si, { Systeminformation } from 'systeminformation';
 import { logger } from '../utils/logger.js';
+import { requestMetricsService } from '../services/requestMetrics.service.js';
 
 import { cache } from '../config/index.js';
 
@@ -88,6 +89,18 @@ export const getSystemStats = async (_req: Request, res: Response) => {
   } catch (error) {
     logger.error('System', 'Failed to fetch system stats', error);
     res.status(500).json({ message: 'Failed to fetch system stats' });
+  }
+};
+
+export const getRequestMetrics = async (_req: Request, res: Response) => {
+  try {
+    const metrics = requestMetricsService.getMetrics();
+    // Await promise to satisfy linter rule for async function
+    await Promise.resolve();
+    res.json(metrics);
+  } catch (error) {
+    logger.error('System', 'Failed to fetch request metrics', error);
+    res.status(500).json({ message: 'Failed to fetch request metrics' });
   }
 };
 
