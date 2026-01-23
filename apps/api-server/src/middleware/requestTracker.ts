@@ -75,7 +75,7 @@ export function requestEndTracker(req: Request, res: Response, next: NextFunctio
     requestMetricsService.recordRequest({
       timestamp: reqWithStartTime.startTime || Date.now(),
       method: req.method,
-      path: req.path,
+      path: req.originalUrl,
       statusCode: res.statusCode,
       duration,
       userAgent: req.get('user-agent'),

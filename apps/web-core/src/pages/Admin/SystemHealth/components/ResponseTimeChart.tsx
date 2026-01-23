@@ -1,10 +1,18 @@
 import { useTranslation } from 'react-i18next';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Rectangle } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/common';
 import type { ResponseTimeDistribution } from '@superapp/shared-types';
 
 interface ResponseTimeChartProps {
   data: ResponseTimeDistribution;
+}
+
+interface CustomBarProps {
+  payload: {
+    color: string;
+  };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any; // Allow other props for spreading
 }
 
 export function ResponseTimeChart({ data }: ResponseTimeChartProps) {
@@ -46,11 +54,14 @@ export function ResponseTimeChart({ data }: ResponseTimeChartProps) {
                 return item ? item.label : String(label);
               }}
             />
-            <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={32}>
-              {chartData.map((entry, index) => (
-                <Cell key={`cell-${index.toString()}`} fill={entry.color} />
-              ))}
-            </Bar>
+            <Bar 
+              dataKey="value" 
+              barSize={32}
+              shape={(props: unknown) => {
+                const { payload, ...rest } = props as CustomBarProps;
+                return <Rectangle {...rest} fill={payload.color} radius={[0, 4, 4, 0]} />;
+              }}
+            />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>
