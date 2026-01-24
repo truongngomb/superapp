@@ -24,6 +24,9 @@ COPY apps/web-core/package.json ./apps/web-core/
 COPY packages/shared-types/package.json ./packages/shared-types/
 COPY packages/core-logic/package.json ./packages/core-logic/
 COPY packages/ui-kit/package.json ./packages/ui-kit/
+COPY packages/core-sdk/package.json ./packages/core-sdk/
+COPY apps/story-weaver-api/package.json ./apps/story-weaver-api/
+COPY apps/story-weaver/package.json ./apps/story-weaver/
 
 # Install all dependencies (frozen lockfile)
 RUN pnpm install --frozen-lockfile
@@ -41,6 +44,14 @@ ARG VITE_ENABLE_DEBUG=false
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 ENV VITE_ENABLE_DEBUG=$VITE_ENABLE_DEBUG
 
+# Build Story Weaver (Micro-frontend)
+# Note: This builds into apps/story-weaver/dist. We might need to move it or configure output.
+# But verify where web-core expects it.
+# The updated vite config puts it in ../../apps/web-core/public/apps/story-weaver
+# So running build here should work if paths align in container.
+RUN pnpm --filter @superapp/story-weaver build
+
+# Build Web Core (Main App)
 RUN pnpm --filter @superapp/web-core build
 
 # =============================================================================
@@ -67,6 +78,8 @@ COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
 COPY packages/shared-types/package.json ./packages/shared-types/
 COPY packages/core-logic/package.json ./packages/core-logic/
 COPY apps/api-server/package.json ./apps/api-server/
+COPY apps/story-weaver-api/package.json ./apps/story-weaver-api/
+COPY packages/core-sdk/package.json ./packages/core-sdk/
 
 # Copy SOURCE code (Explicitly specific folders to avoid accidental dist copy)
 COPY packages/shared-types/src ./packages/shared-types/src
@@ -75,6 +88,14 @@ COPY packages/core-logic/src ./packages/core-logic/src
 COPY packages/core-logic/tsconfig.json ./packages/core-logic/
 COPY apps/api-server/src ./apps/api-server/src
 COPY apps/api-server/tsconfig.json ./apps/api-server/
+
+# Copy Story Weaver API
+COPY apps/story-weaver-api/src ./apps/story-weaver-api/src
+COPY apps/story-weaver-api/tsconfig.json ./apps/story-weaver-api/
+
+# Copy Core SDK
+COPY packages/core-sdk/src ./packages/core-sdk/src
+COPY packages/core-sdk/tsconfig.json ./packages/core-sdk/
 
 # Config supervisor
 COPY deploy/supervisord.conf /etc/supervisord.conf
