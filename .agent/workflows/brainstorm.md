@@ -21,7 +21,7 @@ Nếu User cần, dùng `search_web` để tìm hiểu thị trường/đối th
 - Phân loại: **MVP** (Làm ngay) vs **Nice-to-have** (Làm sau).
 
 ## BƯỚC 4: TẠO BRIEF DOCUMENT
-Tạo file `docs/BRIEF.md`:
+Tạo file `.agent/artifacts/BRIEF.md`:
 ```markdown
 # 💡 BRIEF: [Tên Ý Tưởng]
 ## Problem & Solution
