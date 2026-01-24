@@ -17,8 +17,10 @@ export async function migrateVideoProjects() {
   try {
     // 1. Create sw_video_projects
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await pb.collections.create(swVideoProjectsCollection as any);
       console.log('✅ Created collection: sw_video_projects');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       if (err.status === 400 && err.response?.data?.name?.code === 'validation_not_unique') {
         console.log('ℹ️ Collection sw_video_projects already exists');
@@ -41,8 +43,9 @@ export async function migrateVideoProjects() {
       await pb.collections.create({
         ...swVideoScenesCollection,
         schema
-      } as any);
+      } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
       console.log('✅ Created collection: sw_video_scenes');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       if (err.status === 400 && err.response?.data?.name?.code === 'validation_not_unique') {
         console.log('ℹ️ Collection sw_video_scenes already exists');
@@ -80,7 +83,7 @@ export async function migrateVideoProjects() {
         });
         console.log(`Migrated project: ${record.id}`);
       }
-    } catch (err) {
+    } catch {
       console.log('ℹ️ Old collection video_projects not found or empty. Skipping data migration.');
     }
 
@@ -114,7 +117,7 @@ export async function migrateVideoProjects() {
         });
         console.log(`Migrated scene: ${record.id}`);
       }
-    } catch (err) {
+    } catch {
       console.log('ℹ️ Old collection video_scenes not found or empty.');
     }
 

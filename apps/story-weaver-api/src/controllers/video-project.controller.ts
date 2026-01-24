@@ -70,9 +70,9 @@ export const update = async (req: Request, res: Response) => {
     return;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const item = await videoProjectService.update(
     id,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     req.body as any,
     req.user?.id
   );
