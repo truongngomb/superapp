@@ -1,0 +1,29 @@
+{
+  "name": "@superapp/core-sdk",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./auth": "./dist/auth/index.js",
+    "./services": "./dist/services/index.js",
+    "./logging": "./dist/logging/index.js"
+  },
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "pocketbase": "^0.21.5",
+    "node-cache": "^5.1.2"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.7",
+    "eslint": "^9.39.2",
+    "globals": "^17.0.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.53.0"
+  }
+}
