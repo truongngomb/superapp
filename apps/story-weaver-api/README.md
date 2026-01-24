@@ -111,7 +111,8 @@ Server will start at `http://localhost:3002`
 
 ## 🔌 API Endpoints
 
-**Base URL**: `http://localhost:3002/api/story-weaver`
+**Base URL (Direct)**: `http://localhost:3002/api`
+**Base URL (Via Proxy)**: `http://localhost:5173/api/story-weaver`
 
 ### Video Projects
 

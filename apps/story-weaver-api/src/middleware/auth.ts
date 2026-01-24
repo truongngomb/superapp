@@ -23,8 +23,16 @@ export async function requireAuth(
   next: NextFunction
 ) {
   try {
-    const token = req.headers.authorization?.replace('Bearer ', '');
+    let token = req.headers.authorization?.replace('Bearer ', '');
     
+    // If no bearer token, try to get from pb_auth cookie
+    if (!token && req.headers.cookie) {
+      const match = req.headers.cookie.match(/pb_auth=([^;]+)/);
+      if (match) {
+        token = decodeURIComponent(match[1]);
+      }
+    }
+
     if (!token) {
       return res.status(401).json({ error: 'No token provided' });
     }

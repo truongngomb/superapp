@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import path from 'path';
 import fs from 'fs';
+import { storyWeaverProxyPlugin } from './plugins/story-weaver-proxy';
 
 // Read package.json to get version
 const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf-8')) as { version: string };
@@ -10,12 +11,13 @@ const appVersion = packageJson.version;
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
-  
+
   return {
     define: {
       '__APP_VERSION__': JSON.stringify(appVersion),
     },
     plugins: [
+      storyWeaverProxyPlugin(), // Must be FIRST to intercept before react()
       react(),
       VitePWA({
         registerType: 'autoUpdate',
@@ -47,7 +49,7 @@ export default defineConfig(({ mode }) => {
           ]
         },
         workbox: {
-          navigateFallbackDenylist: [/^\/api/],
+          navigateFallbackDenylist: [/^\/api/, /^\/story-weaver/],
           maximumFileSizeToCacheInBytes: 5000000,
           globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
           runtimeCaching: [
@@ -82,24 +84,36 @@ export default defineConfig(({ mode }) => {
     server: {
       port: 5173,
       host: true,
-      allowedHosts: env['VITE_ALLOWED_HOSTS'] 
+      allowedHosts: env['VITE_ALLOWED_HOSTS']
         ? env['VITE_ALLOWED_HOSTS'].split(',').map(h => h.trim())
         : ['localhost', '127.0.0.1'],
       proxy: {
+        // StoryWeaver API - proxy to story-weaver-api microservice
+        // Rewrite: /api/story-weaver/* -> /api/*
+        '/api/story-weaver': {
+          target: 'http://127.0.0.1:3002',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api\/story-weaver/, '/api'),
+        },
+        // Main API - proxy to api-server
         '/api': {
           target: 'http://127.0.0.1:3001',
           changeOrigin: true
         },
+        // StoryWeaver Frontend - proxy to story-weaver app
+        // Rewrite: /story-weaver/* -> /*
         '/story-weaver': {
           target: 'http://127.0.0.1:3102',
           changeOrigin: true,
           secure: false,
+          ws: true, // WebSocket support for HMR
         }
       }
     },
     build: {
       target: 'esnext',
       minify: 'esbuild',
+      emptyOutDir: true,
       rollupOptions: {
         // Exclude eruda from production build (only needed for debug)
         external: (id) => {

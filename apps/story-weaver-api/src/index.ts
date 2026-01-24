@@ -35,17 +35,20 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Routes
-app.use('/api/story-weaver', apiRouter);
+// Routes - use /api prefix (proxy will rewrite /api/story-weaver -> /api)
+app.use('/api', apiRouter);
 
-// Health check
-app.get('/health', (_req, res) => {
+// Health check handler
+const healthHandler = (_req: express.Request, res: express.Response) => {
   res.json({ 
     status: 'ok', 
     service: 'story-weaver-api',
     timestamp: new Date().toISOString(),
   });
-});
+};
+
+// Health check endpoint at /api/health (same pattern as main api-server)
+app.get('/api/health', healthHandler);
 
 // Error handling
 app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
@@ -58,5 +61,5 @@ app.use((err: Error, _req: express.Request, res: express.Response, _next: expres
 
 app.listen(PORT, () => {
   console.log(`🎬 Story Weaver API running on http://localhost:${PORT}`);
-  console.log(`📊 Health check: http://localhost:${PORT}/health`);
+  console.log(`📊 Health check: http://localhost:${PORT}/api/health`);
 });

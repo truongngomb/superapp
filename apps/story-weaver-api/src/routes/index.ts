@@ -6,5 +6,5 @@ import { videoProjectsRouter } from './video-projects.js';
 
 export const apiRouter = Router();
 
-apiRouter.use('/projects', videoProjectsRouter);
+apiRouter.use('/video-projects', videoProjectsRouter);
 // Add more routes here as needed

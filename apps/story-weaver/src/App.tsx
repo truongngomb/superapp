@@ -9,7 +9,8 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
+        {/* Auto-detect basename based on current path for proxy support */}
+        <BrowserRouter basename={window.location.pathname.startsWith('/story-weaver') ? '/story-weaver' : '/'}>
             <Routes>
                 <Route path="/" element={<DashboardPage />} />
                 <Route path="/dashboard" element={<DashboardPage />} />
