@@ -6,7 +6,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { config } from '../config/env.js';
 import { logger } from '../utils/logger.js';
-import { ServiceUnavailableError } from '../middleware/index.js';
+import { ServiceUnavailableError } from '../utils/errors.js';
 
 interface GeneratedScene {
   script_text: string;
@@ -59,15 +59,15 @@ export class AiGenerateService {
     `;
 
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+       
       const result = await this.model.generateContent(prompt);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+       
       const response = await result.response;
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+       
       const text = response.text();
       
       // Basic cleanup to ensure JSON
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+       
       const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
       
       return JSON.parse(jsonStr as string) as GeneratedScene[];
