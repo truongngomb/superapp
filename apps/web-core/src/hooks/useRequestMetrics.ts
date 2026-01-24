@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { systemService } from '@/services/system.service';
-import type { RequestMetrics } from '@superapp/shared-types';
+
 
 export function useRequestMetrics() {
   const { data, isLoading, error, refetch } = useQuery({

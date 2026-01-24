@@ -14,9 +14,9 @@ export function SettingsTabs({ activeTab, setActiveTab }: SettingsTabsProps) {
   const { t } = useTranslation(['settings']);
   
   const tabs = [
-    { id: 'layout', icon: Layout },
-    { id: 'roles', icon: Shield },
     { id: 'general', icon: SettingsIcon },
+    { id: 'roles', icon: Shield },
+    { id: 'layout', icon: Layout },
   ] as const;
 
   return (

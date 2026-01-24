@@ -20,11 +20,11 @@ export default function SystemSettingsPage() {
   // Determine active tab from URL hash
   const getActiveTab = (): Tab => {
     const hash = location.hash.replace('#', '');
-    const validTabs: Tab[] = ['layout', 'roles', 'general'];
+    const validTabs: Tab[] = ['general', 'roles', 'layout'];
     if (validTabs.includes(hash as Tab)) {
       return hash as Tab;
     }
-    return 'layout';
+    return 'general';
   };
 
   const activeTab = getActiveTab();
@@ -32,7 +32,7 @@ export default function SystemSettingsPage() {
   // Handle default hash
   useEffect(() => {
     if (!location.hash) {
-      void navigate('#layout', { replace: true });
+      void navigate('#general', { replace: true });
     }
   }, [location.hash, navigate]);
 

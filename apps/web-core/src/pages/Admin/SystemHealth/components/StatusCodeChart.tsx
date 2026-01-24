@@ -12,7 +12,7 @@ export function StatusCodeChart({ data }: StatusCodeChartProps) {
   // Transform data for Recharts
   const chartData = Object.entries(data).map(([code, count]) => {
     const statusCode = parseInt(code);
-    let name = code;
+    const name = code;
     let color = 'hsl(var(--muted))'; // Default gray
 
     if (statusCode >= 200 && statusCode < 300) {
