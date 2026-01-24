@@ -12,7 +12,7 @@ import cookieParser from 'cookie-parser';
 import { config, cache } from './config/index.js';
 import { authenticate, checkMaintenanceMode, errorHandler, NotFoundError, requireAdmin } from './middleware/index.js';
 import { requestStartTracker, requestEndTracker } from './middleware/requestTracker.js';
-import { authRouter, categoriesRouter, rolesRouter, usersRouter, activityLogsRouter, realtimeRouter, systemRouter, settingsRouter, markdownRouter, mediaRouter, videoProjectsRouter, videoScenesRouter } from './routes/index.js';
+import { authRouter, categoriesRouter, rolesRouter, usersRouter, activityLogsRouter, realtimeRouter, systemRouter, settingsRouter, markdownRouter, mediaRouter } from './routes/index.js';
 
 import { generateOpenApiDocument } from './docs/index.js';
 
@@ -111,8 +111,7 @@ function createApp(): Express {
   app.use('/api/settings', settingsRouter);
   app.use('/api/markdown-pages', markdownRouter);
   app.use('/api/media', mediaRouter);
-  app.use('/api/video-projects', videoProjectsRouter);
-  app.use('/api/video-scenes', videoScenesRouter);
+
 
 
   // =========================================================================

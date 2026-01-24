@@ -8,8 +8,4 @@ export * from './user.service.js';
 export * from './realtime.service.js';
 export * from './settings.service.js';
 export * from './markdown.service.js';
-export * from './video-project.service.js';
-export * from './video-scene.service.js';
-export * from './ai-generate.service.js';
-export * from './video-render.service.js';
 
