@@ -21,6 +21,12 @@
     "force_reload_title": "버전을 증가시켜 모든 사용자가 즉시 새로고침하도록 강제합니다",
     "force_reload_success": "버전이 {{version}}(으)로 업데이트되었습니다. 모든 클라이언트가 자동으로 새로고침됩니다."
   },
+  "monitoring": {
+    "title": "모니터링 & 스냅샷",
+    "description": "시스템 모니터링 및 데이터 보존 설정 구성",
+    "snapshot_interval": "스냅샷 빈도",
+    "snapshot_interval_desc": "요청 기록 집계 빈도"
+  },
   "layout": {
     "title": "레이아웃 설정",
     "description": "특정 페이지 또는 전체 시스템의 레이아웃 스타일 사용자 정의",

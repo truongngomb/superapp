@@ -43,7 +43,7 @@ function getOpenApiUrl(): string {
 /**
  * Generate Scalar UI HTML content for iframe
  */
-function generateScalarHtml(specUrl: string, isDark: boolean): string {
+function generateScalarHtml(specUrl: string, isDark: boolean, title: string): string {
   // Scalar configuration
   const config = JSON.stringify({
     darkMode: isDark,
@@ -57,7 +57,7 @@ function generateScalarHtml(specUrl: string, isDark: boolean): string {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SuperApp API Documentation</title>
+  <title>${title}</title>
   <style>
     /* Prevent white flash in dark mode */
     body {
@@ -176,7 +176,7 @@ function JsonNode({ data, name, depth = 0, isLast = true, initialExpanded }: Jso
 }
 
 export default function ApiDocsPage() {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation(['common', 'api_docs']);
   const { isDark } = useTheme();
   const layoutMode = useLayoutMode();
   const toast = useToast();
@@ -211,7 +211,7 @@ export default function ApiDocsPage() {
       } catch (err: unknown) {
         if (isMounted) {
           console.error('Failed to fetch OpenAPI spec:', err);
-          setRawJson('Failed to load API spec');
+          setRawJson(t('api_docs:failed_load_spec'));
           setParsedData(null);
         }
       } finally {
@@ -226,14 +226,15 @@ export default function ApiDocsPage() {
     return () => {
       isMounted = false;
     };
-  }, [viewMode, rawJson, specUrl]);
+  }, [viewMode, rawJson, specUrl, t]);
   
   const handleViewModeChange = (mode: ApiDocsViewMode) => {
     setViewMode(mode);
     setStorageItem(STORAGE_KEYS.API_DOCS_VIEW_MODE, mode);
   };
   
-  const htmlContent = generateScalarHtml(specUrl, isDark);
+  const pageTitle = `${t('common:brand')} - ${t('common:resources.api_docs')}`;
+  const htmlContent = generateScalarHtml(specUrl, isDark, pageTitle);
 
   return (
     <div className={cn(
@@ -260,7 +261,7 @@ export default function ApiDocsPage() {
             aria-pressed={viewMode === 'reference'}
           >
             <BookOpen className="w-4 h-4" />
-            <span className="hidden sm:inline">{t('api_docs.view_reference')}</span>
+            <span className="hidden sm:inline">{t('api_docs:view_reference')}</span>
           </Button>
           <Button
             type="button"
@@ -279,7 +280,7 @@ export default function ApiDocsPage() {
             aria-pressed={viewMode === 'raw'}
           >
             <FileJson className="w-4 h-4" />
-            <span className="hidden sm:inline">{t('api_docs.view_raw')}</span>
+            <span className="hidden sm:inline">{t('api_docs:view_raw')}</span>
           </Button>
         </div>
       </div>
@@ -288,7 +289,7 @@ export default function ApiDocsPage() {
         {viewMode === 'reference' ? (
           <iframe
             key={isDark ? 'dark' : 'light'}
-            title={t('api_docs.view_reference')}
+            title={t('api_docs:view_reference')}
             srcDoc={htmlContent}
             className="w-full h-full border-0"
             sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
@@ -327,10 +328,10 @@ export default function ApiDocsPage() {
                         setTreeKey(prev => prev + 1);
                       }}
                       className="bg-background shadow-sm flex items-center gap-1.5 h-8"
-                      title={t('api_docs.expand_all')}
+                      title={t('api_docs:expand_all')}
                     >
                       <Maximize2 className="w-3.5 h-3.5" />
-                      <span className="hidden md:inline">{t('api_docs.expand_all')}</span>
+                      <span className="hidden md:inline">{t('api_docs:expand_all')}</span>
                     </Button>
                     <Button
                       type="button"
@@ -341,10 +342,10 @@ export default function ApiDocsPage() {
                         setTreeKey(prev => prev + 1);
                       }}
                       className="bg-background shadow-sm flex items-center gap-1.5 h-8"
-                      title={t('api_docs.collapse_all')}
+                      title={t('api_docs:collapse_all')}
                     >
                       <Minimize2 className="w-3.5 h-3.5" />
-                      <span className="hidden md:inline">{t('api_docs.collapse_all')}</span>
+                      <span className="hidden md:inline">{t('api_docs:collapse_all')}</span>
                     </Button>
                   </>
                 )}
@@ -359,7 +360,7 @@ export default function ApiDocsPage() {
                   }}
                   className="bg-background shadow-sm flex items-center gap-1.5 h-8"
                 >
-                  {t('copy')}
+                  {t('common:copy')}
                 </Button>
               </div>
             )}

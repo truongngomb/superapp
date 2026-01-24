@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AlertCircle, Settings as SettingsIcon, Trash2, Database, Zap, Code, GitBranch } from 'lucide-react';
+import { AlertCircle, FileText, Settings as SettingsIcon, Trash2, Database, Zap, Code, GitBranch, Activity, Play } from 'lucide-react';
 import { 
   Card, 
   CardHeader, 
@@ -17,6 +17,7 @@ import {
 import { useSettings, useToast } from '@/hooks';
 import { settingsService } from '@/services/settings.service';
 import { BackupManager } from './BackupManager';
+import { SYSTEM_METRICS_SNAPSHOT_INTERVAL } from '@superapp/shared-types';
 
 export function GeneralSettings() {
   const { t } = useTranslation(['settings', 'common']);
@@ -29,6 +30,7 @@ export function GeneralSettings() {
 
   const [pruneDays, setPruneDays] = useState<string>('30');
   const [processing, setProcessing] = useState(false);
+  const [snapshotProcessing, setSnapshotProcessing] = useState(false);
   
   // Confirmation state
   const [confirmState, setConfirmState] = useState<{
@@ -53,10 +55,6 @@ export function GeneralSettings() {
     if (!confirmState.type) return;
 
     setProcessing(true);
-    // Close modal first or keep it open with loading state? 
-    // Usually better to keep it open with loading, but ConfirmModal supports loading prop.
-    // However, our current ConfirmModal usage pattern often closes on confirm initiation or handles loading internal.
-    // Let's check ConfirmModal again. It has `loading` prop.
     
     try {
       if (confirmState.type === 'prune') {
@@ -76,6 +74,18 @@ export function GeneralSettings() {
     } finally {
       setProcessing(false);
       setConfirmState({ isOpen: false, type: null });
+    }
+  };
+
+  const handleTriggerSnapshot = async () => {
+    try {
+      setSnapshotProcessing(true);
+      await settingsService.triggerSnapshot();
+      success(t('settings:monitoring.trigger_success', 'Snapshot triggered successfully'));
+    } catch {
+      showError(t('settings:monitoring.trigger_error', 'Failed to trigger snapshot'));
+    } finally {
+      setSnapshotProcessing(false);
     }
   };
 
@@ -216,6 +226,68 @@ export function GeneralSettings() {
               >
                 <Zap className="w-4 h-4" />
                 {t('settings:version.force_reload')}
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Monitoring & Snapshots */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg text-green-600 dark:text-green-400">
+              <Activity className="w-5 h-5" />
+            </div>
+            <div>
+              <h2 className="text-lg font-bold">{t('settings:monitoring.title')}</h2>
+              <p className="text-sm text-muted-foreground">{t('settings:monitoring.description')}</p>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-green-50 dark:bg-green-950/20 rounded-xl border border-green-200 dark:border-green-900/50 gap-4">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 bg-green-100 dark:bg-green-900/50 rounded-full flex items-center justify-center text-green-600">
+                <FileText className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="font-bold text-green-900 dark:text-green-100">
+                  {t('settings:monitoring.snapshot_interval')}
+                </div>
+                <div className="text-xs text-green-700 dark:text-green-400">
+                  {t('settings:monitoring.snapshot_interval_desc')}
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <Select
+                value={String(getSettingValue<number>(SYSTEM_METRICS_SNAPSHOT_INTERVAL, 30))}
+                onValueChange={(value) => {
+                  void updateSetting(SYSTEM_METRICS_SNAPSHOT_INTERVAL, Number(value), 'public');
+                }}
+                disabled={loading || submitting}
+              >
+                <SelectTrigger className="w-full sm:w-40">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="15">15 {t('common:minutes')}</SelectItem>
+                  <SelectItem value="30">30 {t('common:minutes')}</SelectItem>
+                  <SelectItem value="60">60 {t('common:minutes')}</SelectItem>
+                </SelectContent>
+              </Select>
+              
+              <Button
+                variant="outline"
+                size="icon"
+                title={t('settings:monitoring.trigger_now', 'Trigger Snapshot Now')}
+                onClick={() => void handleTriggerSnapshot()}
+                disabled={snapshotProcessing || loading}
+                className="shrink-0 text-green-600 hover:text-green-700 hover:bg-green-50 dark:hover:bg-green-950/30"
+              >
+                <Play className={`w-4 h-4 ${snapshotProcessing ? 'animate-pulse' : ''}`} />
               </Button>
             </div>
           </div>

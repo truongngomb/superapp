@@ -3,6 +3,9 @@
  */
 import { Request, Response } from 'express';
 import { SettingsService } from '../services/settings.service.js';
+import { schedulerService } from '../services/scheduler.service.js';
+import { requestMetricsService } from '../services/requestMetrics.service.js';
+import { SYSTEM_METRICS_SNAPSHOT_INTERVAL } from '@superapp/shared-types';
 import { createLogger } from '../utils/index.js';
 
 const log = createLogger('SettingsController');
@@ -67,11 +70,40 @@ export const SettingsController = {
         return res.status(400).json({ message: 'Key is required' });
       }
       await SettingsService.setSetting(key, value, visibility as 'public' | 'admin' | 'secret' | undefined);
+
+      // If updating Snapshot Interval, trigger Scheduler update
+      if (key === SYSTEM_METRICS_SNAPSHOT_INTERVAL) {
+        const minutes = Number(value);
+        if (!isNaN(minutes)) {
+          schedulerService.updateSnapshotInterval(minutes);
+        }
+      }
+
       res.status(200).json({ success: true });
     } catch (error) {
       log.error('Error in set setting:', error);
       res.status(500).json({ message: 'Internal server error' });
     }
+  },
+
+  /**
+   * Trigger manual snapshot
+   */
+  async triggerSnapshot(_req: Request, res: Response) {
+    try {
+      log.info('Manual snapshot triggered by admin');
+      await requestMetricsService.createSnapshot();
+      res.status(200).json({ success: true, message: 'Snapshot triggered successfully' });
+    } catch (error: unknown) {
+      log.error('Error triggering snapshot:', error);
+      
+      const err = error as { message?: string; data?: unknown };
+      // Return specific error message to help debugging
+      res.status(500).json({ 
+        message: 'Internal server error', 
+        details: err.message || String(error),
+        data: err.data 
+      });
+    }
   }
 };
-

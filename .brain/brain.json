@@ -76,6 +76,18 @@
         "apps/api-server/src/services/category.service.ts"
       ],
       "notes": "Feature mẫu để copy patterns"
+    },
+    {
+      "name": "Request History Snapshot",
+      "status": "implemented",
+      "spec_file": "request_history_snapshot_proposal.md",
+      "files": [
+        "apps/api-server/src/database/collections/system_metrics_snapshots.collection.ts",
+        "apps/api-server/src/services/scheduler.service.ts",
+        "apps/api-server/src/services/requestMetrics.service.ts",
+        "apps/web-core/src/pages/Admin/SystemSettings/components/GeneralSettings.tsx"
+      ],
+      "notes": "Cron Job 30 phút, tổng hợp traffic vào collection system_metrics_snapshots. Config interval trong General Settings."
     }
   ],
   "knowledge_items": {

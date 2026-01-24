@@ -5,6 +5,8 @@
   "memory_usage": "Memory Usage",
   "disk_usage": "Disk Space",
   "uptime": "App Uptime",
+  "error_load_failed": "Failed to load system health data",
+  "collecting_data": "Collecting data...",
   
   "cpu_chart": {
     "title": "CPU Usage History",
@@ -36,6 +38,7 @@
     "hostname": "Hostname",
     "processor": "Processor",
     "cpu_speed": "CPU Speed",
+    "cpu_speed_value": "{{speed}} GHz",
     "cores": "{{count}} Cores"
   },
   
@@ -63,5 +66,10 @@
     "medium": "Medium (100-500ms)",
     "slow": "Slow (500ms-1s)",
     "very_slow": "Very Slow (>1s)"
+  },
+  "historical_analytics": {
+    "title": "Historical Analytics",
+    "traffic_errors": "Traffic & Errors (Last 50 Snapshots)",
+    "latency_performance": "Latency Performance (ms)"
   }
 }

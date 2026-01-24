@@ -47,4 +47,6 @@ export * from './media.js';
 
 // Request Metrics types
 export * from './request-metrics.types.js';
+export * from './metrics.js';
+export * from './constants.js';
 

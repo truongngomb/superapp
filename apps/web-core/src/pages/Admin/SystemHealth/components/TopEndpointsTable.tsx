@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/common';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/common';
 import type { EndpointMetric } from '@superapp/shared-types';
 
 interface TopEndpointsTableProps {
@@ -40,12 +40,12 @@ export function TopEndpointsTable({ data, type }: TopEndpointsTableProps) {
             {data.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={3} className="text-center text-muted-foreground h-24">
-                  {t('cpu_chart.collecting')}
+                  {t('collecting_data')}
                 </TableCell>
               </TableRow>
             ) : (
               data.map((endpoint, index) => (
-                <TableRow key={`${endpoint.path}-${index}`}>
+                <TableRow key={`${endpoint.path}-${String(index)}`}>
                   <TableCell className="font-medium truncate max-w-[200px]" title={endpoint.path}>
                     {endpoint.path}
                   </TableCell>

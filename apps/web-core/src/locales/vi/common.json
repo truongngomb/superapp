@@ -92,7 +92,8 @@
     "markdown_view_pages": "Trang Markdown (Xem)",
     "dashboard": "Tổng quan",
     "home": "Trang chủ",
-    "api-docs": "Tài liệu API"
+    "api_docs": "Tài liệu API",
+    "system_health": "Trạng thái Hệ thống"
   },
   "remove_success": "Đã xóa thành công",
   "remove_error": "Lỗi khi xóa",
@@ -101,6 +102,7 @@
     "message": "Chúng tôi đang thực hiện bảo trì định kỳ để nâng cấp dịch vụ. Vui lòng quay lại sau.",
     "retry": "Thử lại"
   },
+  "minutes": "phút",
   "success": "Thành công",
   "name": "Tên",
   "description": "Mô tả",
@@ -197,12 +199,7 @@
     "list": "Dạng danh sách",
     "table": "Dạng bảng"
   },
-  "api_docs": {
-    "view_reference": "Tài liệu tương tác",
-    "view_raw": "Dữ liệu thô JSON",
-    "expand_all": "Mở rộng tất cả",
-    "collapse_all": "Thu gọn tất cả"
-  },
+
   "archived": "Đã lưu trữ",
   "no_roles": "Chưa có vai trò",
   "deleted": "Đã xóa",

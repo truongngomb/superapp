@@ -16,7 +16,7 @@ const routeTitles: Record<string, string> = {
   '/admin/activity-logs': 'activity_logs:title',
   '/admin/settings': 'settings:title',
   '/markdown-pages': 'markdown:title',
-  '/admin/api-docs': 'common:resources.api-docs',
+  '/admin/api-docs': 'common:resources.api_docs',
 };
 
 export function usePageTitle() {

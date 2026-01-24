@@ -5,10 +5,10 @@
 
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Users, Shield, FolderTree, Activity, TrendingUp, Clock, Cpu, HardDrive, Server } from 'lucide-react';
+import { Users, Shield, FolderTree, Activity, TrendingUp, Clock, Cpu, HardDrive, Server, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Card, CardContent, Skeleton } from '@/components/common';
+import { Card, CardContent, Skeleton, Button } from '@/components/common';
 import { roleService, userService, categoryService, activityLogService } from '@/services';
 import { systemService } from '@/services/system.service';
 import type { SystemStats } from '@superapp/shared-types';
@@ -300,10 +300,18 @@ export default function AdminDashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
       >
-        <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-          <Server className="w-5 h-5" />
-          {t('admin_dashboard.system_status')}
-        </h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
+            <Server className="w-5 h-5" />
+            {t('admin_dashboard.system_status')}
+          </h2>
+          <Link to="/admin/system-health">
+            <Button variant="outline" size="sm" className="gap-2">
+              {t('common:resources.system_health')} 
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+          </Link>
+        </div>
 
         {systemLoading ? (
            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

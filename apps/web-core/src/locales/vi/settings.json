@@ -21,6 +21,12 @@
     "force_reload_title": "Tăng phiên bản để ép buộc tất cả người dùng tải lại ngay lập tức",
     "force_reload_success": "Đã cập nhật phiên bản lên {{version}}. Tất cả Client sẽ tự động tải lại."
   },
+  "monitoring": {
+    "title": "Giám sát & Snapshot",
+    "description": "Cấu hình giám sát hệ thống và lưu trữ dữ liệu",
+    "snapshot_interval": "Tần suất Snapshot",
+    "snapshot_interval_desc": "Tần gian tổng hợp lịch sử request"
+  },
   "layout": {
     "title": "Cấu hình Giao diện",
     "description": "Tuỳ chỉnh kiểu giao diện cho từng trang hoặc toàn bộ hệ thống",

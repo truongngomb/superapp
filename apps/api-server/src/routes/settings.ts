@@ -14,6 +14,7 @@ router.get('/public', SettingsController.getPublic.bind(SettingsController));
 router.get('/', requireAdmin, SettingsController.getAll.bind(SettingsController));
 router.get('/:key', requireAdmin, SettingsController.getByKey.bind(SettingsController));
 router.post('/', requireAdmin, SettingsController.set.bind(SettingsController));
+router.post('/snapshot', requireAdmin, SettingsController.triggerSnapshot.bind(SettingsController));
 
 export const settingsRouter = router;
 

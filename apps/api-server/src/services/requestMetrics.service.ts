@@ -13,15 +13,60 @@ import type {
  * Tracks and aggregates HTTP request metrics using in-memory cache.
  * Provides real-time insights into application performance and usage patterns.
  */
+import { adminPb } from '../config/index.js';
+import { CollectionNames } from '../database/collections/index.js';
+import { createLogger, logger } from '../utils/index.js';
+
+const log = createLogger('RequestMetricsService');
+
+export async function fixMetricsSchema() {
+  try {
+    const collection = await adminPb.collections.getOne(CollectionNames.SYSTEM_METRICS_SNAPSHOTS);
+    
+    // Use type assertion for schema property since it's generic in SDK
+    const schema = (collection.schema || []) as Array<{ name: string; required: boolean }>;
+    let changed = false;
+
+    // Fields to ensure are NOT required (can be 0)
+    const fieldsToFix = ['error_count', 'total_requests', 'avg_latency', 'p95_latency'];
+
+    for (const fieldName of fieldsToFix) {
+      const field = schema.find(f => f.name === fieldName);
+      if (field && field.required) {
+        field.required = false;
+        logger.info('System', `Fixing schema: Removing 'required' from ${fieldName}`);
+        changed = true;
+      }
+    }
+
+    if (changed) {
+      await adminPb.collections.update(collection.id, { schema });
+      logger.info('System', 'Metrics schema updated successfully.');
+    } else {
+      logger.info('System', 'Metrics schema is already correct.');
+    }
+  } catch (error) {
+    logger.error('System', 'Failed to fix metrics schema', error as Error);
+  }
+}
+
+/**
+ * Request Metrics Service
+ * 
+ * Tracks and aggregates HTTP request metrics using in-memory cache.
+ * Provides real-time insights into application performance and usage patterns.
+ */
 class RequestMetricsService {
   private cache: NodeCache;
   private readonly METRICS_KEY = 'request_metrics';
+  private readonly SNAPSHOT_KEY = 'snapshot_metrics'; // New bucket for snapshot
   private readonly WINDOW_SIZE = 5 * 60 * 1000; // 5 minutes in milliseconds
   private readonly MAX_RECENT_REQUESTS = 50;
   
   constructor() {
-    // Initialize cache with TTL of 10 minutes
-    this.cache = new NodeCache({ stdTTL: 600, checkperiod: 60 });
+    // Initialize cache with TTL of 10 minutes for Window, but we need longer for Snapshot bucket if interval > 10m
+    // We'll set stdTTL to 0 (infinite) and handle cleanup manually to be safe for 60m+ intervals
+    this.cache = new NodeCache({ stdTTL: 0, checkperiod: 600 });
     this.initializeMetrics();
   }
 
@@ -30,23 +75,89 @@ class RequestMetricsService {
    */
   private initializeMetrics(): void {
     const initialMetrics: RequestMetric[] = [];
-    this.cache.set(this.METRICS_KEY, initialMetrics);
+    if (!this.cache.get(this.METRICS_KEY)) {
+        this.cache.set(this.METRICS_KEY, initialMetrics);
+    }
+    if (!this.cache.get(this.SNAPSHOT_KEY)) {
+        this.cache.set(this.SNAPSHOT_KEY, []); // Init snapshot bucket
+    }
   }
 
   /**
    * Record a new request metric
    */
   public recordRequest(metric: RequestMetric): void {
+    // 1. Update Window Metrics (Real-time)
     const metrics = this.cache.get<RequestMetric[]>(this.METRICS_KEY) || [];
-    
-    // Add new metric
     metrics.push(metric);
     
     // Remove old metrics outside the rolling window
     const now = Date.now();
     const filtered = metrics.filter(m => (now - m.timestamp) < this.WINDOW_SIZE);
-    
     this.cache.set(this.METRICS_KEY, filtered);
+
+    // 2. Update Snapshot Metrics (Long-term accumulation)
+    const snapshotMetrics = this.cache.get<RequestMetric[]>(this.SNAPSHOT_KEY) || [];
+    // Store minimal data if needed, but for now we store full metric.
+    // Optimization: In high load, map to lighter object here.
+    snapshotMetrics.push(metric); 
+    this.cache.set(this.SNAPSHOT_KEY, snapshotMetrics);
+  }
+
+  // ... (getMetrics and calculate methods remain unchanged) ...
+
+  /**
+   * Create a snapshot of aggregated metrics and save to Database
+   * Called by SchedulerService
+   */
+  public async createSnapshot(): Promise<void> {
+    const rawMetrics = this.cache.get<RequestMetric[]>(this.SNAPSHOT_KEY) || [];
+    
+    if (rawMetrics.length === 0) {
+        log.info('No metrics to snapshot.');
+        return;
+    }
+
+    log.info(`Creating snapshot from ${String(rawMetrics.length)} requests...`);
+
+    // 1. Aggregate Data
+    const total_requests = rawMetrics.length;
+    const errors = rawMetrics.filter(m => m.statusCode >= 500).length; // Count system errors
+    const totalDuration = rawMetrics.reduce((sum, m) => sum + m.duration, 0);
+    const avg_latency = Math.round(totalDuration / total_requests);
+    
+    // Calculate P95
+    const sortedDurations = rawMetrics.map(m => m.duration).sort((a, b) => a - b);
+    const p95Index = Math.floor(sortedDurations.length * 0.95);
+    const p95_latency = sortedDurations[p95Index] || 0;
+
+    // Top Endpoints
+    const topEndpoints = this.calculateTopEndpoints(rawMetrics, 10); // Reuse logic
+
+    const snapshotData = {
+        timestamp: new Date().toISOString(),
+        total_requests,
+        avg_latency,
+        error_count: errors,
+        p95_latency,
+        top_endpoints: topEndpoints // JSON field
+    };
+    
+    // Debug log
+    log.info('Snapshot Data Preview:', { total_requests, avg_latency, error_count: errors });
+
+    // 2. Save to DB
+    try {
+        await adminPb.collection(CollectionNames.SYSTEM_METRICS_SNAPSHOTS).create(snapshotData);
+        
+        // 3. Reset Bucket ONLY after successful save
+        this.cache.set(this.SNAPSHOT_KEY, []);
+        log.info('Snapshot saved to DB and bucket reset.');
+    } catch (error) {
+        log.error('Failed to save snapshot to DB:', error);
+        // Do NOT reset bucket on error, allowing retry or manual inspection.
+        throw error;
+    }
   }
 
   /**

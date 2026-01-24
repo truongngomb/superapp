@@ -21,6 +21,12 @@
     "force_reload_title": "Increment version to force all users to reload immediately",
     "force_reload_success": "Version updated to {{version}}. all Clients will auto-reload."
   },
+  "monitoring": {
+    "title": "Monitoring & Snapshots",
+    "description": "Configure system monitoring and data retention settings",
+    "snapshot_interval": "Snapshot Frequency",
+    "snapshot_interval_desc": "How often to aggregate request history"
+  },
   "layout": {
     "title": "Layout Configuration",
     "description": "Customize layout styles for specific pages or the entire system",

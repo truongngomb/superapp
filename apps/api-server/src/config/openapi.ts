@@ -86,8 +86,12 @@ List endpoints support pagination with \`page\` and \`limit\` query parameters.
     },
     servers: [
       {
+        url: '/',
+        description: 'Frontend Proxy (Same Origin - Recommended for Cookies)',
+      },
+      {
         url: serverUrl,
-        description: 'Current Server',
+        description: 'Backend Server (Direct)',
       },
     ],
     tags: [

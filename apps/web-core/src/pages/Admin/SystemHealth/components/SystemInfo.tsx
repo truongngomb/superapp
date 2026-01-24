@@ -29,8 +29,8 @@ export function SystemInfo({ os, cpu }: SystemInfoProps) {
     { label: t('system_info.os_platform'), value: `${os.distro} ${os.release} (${os.arch})` },
     { label: t('system_info.hostname'), value: os.hostname },
     { label: t('system_info.processor'), value: `${cpu.manufacturer} ${cpu.brand}` },
-    { label: t('system_info.cpu_speed'), value: `${cpu.speed.toString()} GHz` },
-    { label: t('system_info.cores', { count: cpu.cores }), value: `${cpu.cores.toString()} ${t('system_info.cores', { count: cpu.cores })}` },
+    { label: t('system_info.cpu_speed'), value: t('system_info.cpu_speed_value', { speed: cpu.speed }) },
+    { label: t('system_info.cores', { count: cpu.cores }), value: t('system_info.cores', { count: cpu.cores }) },
   ];
 
   return (

@@ -17,6 +17,7 @@ import { MemoryGauge } from "./components/MemoryGauge";
 import { DiskTable } from "./components/DiskTable";
 import { SystemInfo } from "./components/SystemInfo";
 import { RequestMonitoringSection } from "./components/RequestMonitoringSection";
+import { HistoricalCharts } from "./components/HistoricalCharts";
 
 // Simple Header component just for this page to match PageHeader style but simpler
 function Header() {
@@ -49,7 +50,7 @@ export default function SystemHealthPage() {
     return (
       <div className="flex flex-col items-center justify-center h-[calc(100vh-200px)] text-destructive">
         <Activity className="w-12 h-12 mb-4" />
-        <h2 className="text-lg font-semibold">{t('common:error.load_failed')}</h2>
+        <h2 className="text-lg font-semibold">{t('error_load_failed')}</h2>
         <p className="text-sm opacity-80">{error instanceof Error ? error.message : 'Unknown error'}</p>
       </div>
     );
@@ -92,7 +93,7 @@ export default function SystemHealthPage() {
         />
         <HealthCard
           title={t('uptime')}
-          value={formatUptime(0)} 
+          value={t('common:n_a')} 
           subValue={t('cards.since_restart')}
           icon={Server}
           color="text-purple-500"
@@ -110,19 +111,18 @@ export default function SystemHealthPage() {
         />
       </div>
 
+      {/* Request Monitoring Section */}
+      <RequestMonitoringSection />
+
+      {/* Historical Analytics */}
+      <HistoricalCharts />
+
       {/* Tables Row */}
       <div className="grid grid-cols-1 gap-6">
         <DiskTable disks={stats.disk} />
       </div>
-
-      {/* Request Monitoring Section */}
-      <RequestMonitoringSection />
     </motion.div>
   );
 }
 
-function formatUptime(_seconds: number): string {
-  // Placeholder since we don't have uptime from API yet
-  // Once we add uptime to SystemStats, we can format it here
-  return "N/A"; 
-}
+

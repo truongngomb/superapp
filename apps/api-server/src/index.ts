@@ -15,6 +15,7 @@ if (!(global as any).EventSource) {
 import app from './app.js';
 import { config, checkPocketBaseHealth } from './config/index.js';
 import { createLogger } from './utils/index.js';
+import { schedulerService } from './services/scheduler.service.js';
 
 const log = createLogger('Server');
 
@@ -29,6 +30,9 @@ async function startServer(): Promise<void> {
   if (!dbHealthy) {
     log.warn('PocketBase is not available. Server will start with limited functionality.');
   }
+
+  // Initialize Scheduler
+  await schedulerService.initialize();
 
   // Start Express server
   const server = app.listen(config.port, config.host, () => {

@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { 
   getSystemStats, 
+  getHistory, 
   getRequestMetrics,
   pruneLogs, 
   clearCache,
@@ -14,6 +15,7 @@ import { requireAdmin } from '../middleware/auth.js';
 const router: Router = Router();
 
 router.get('/stats', requireAdmin, getSystemStats);
+router.get('/history', requireAdmin, getHistory);
 router.get('/requests', requireAdmin, getRequestMetrics);
 router.post('/logs/prune', requireAdmin, pruneLogs);
 router.post('/cache/clear', requireAdmin, clearCache);

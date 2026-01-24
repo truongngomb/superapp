@@ -49,4 +49,8 @@ export const settingsService = {
   async clearCache(): Promise<void> {
     await api.post('/system/cache/clear');
   },
+
+  async triggerSnapshot(): Promise<void> {
+    await api.post('/settings/snapshot');
+  },
 };
