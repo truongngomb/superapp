@@ -38,7 +38,7 @@ function getEnvVar(key: string, defaultValue: string): string {
  */
 export const env: EnvConfig = {
   NODE_ENV: (import.meta.env.MODE || 'development') as Environment,
-  API_BASE_URL: getEnvVar('VITE_API_BASE_URL', '/api'),
+  API_BASE_URL: getEnvVar('VITE_API_BASE_URL', '/api/story-weaver'),
   IS_DEV: import.meta.env.DEV,
   IS_PROD: import.meta.env.PROD,
   ENABLE_DEBUG: import.meta.env.DEV || getEnvVar('VITE_ENABLE_DEBUG', 'false') === 'true',

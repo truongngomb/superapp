@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:copy": "pnpm build && echo Build completed and copied to web-core/public/apps/story-weaver",
     "preview": "vite preview",
     "lint": "eslint ."
   },
