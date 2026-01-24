@@ -61,7 +61,8 @@ export function StatusCodeChart({ data }: StatusCodeChartProps) {
               dataKey="value"
             >
               {chartData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} strokeWidth={0} />
+                // eslint-disable-next-line @typescript-eslint/no-deprecated
+                <Cell key={`cell-${String(index)}`} fill={entry.color} strokeWidth={0} />
               ))}
             </Pie>
             <Tooltip 

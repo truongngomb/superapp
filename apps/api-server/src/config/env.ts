@@ -136,10 +136,6 @@ const envSchema = z.object({
     .string()
     .default('')
     .transform((val) => val.split(',').map(s => s.trim()).filter(Boolean)),
-
-  // AI & Media
-  GEMINI_API_KEY: z.string().optional(),
-  FFMPEG_PATH: z.string().optional(),
 });
 
 // =============================================================================
@@ -253,12 +249,6 @@ export const config = {
     maxAttempts: env.RETRY_MAX_ATTEMPTS,
     baseDelay: env.RETRY_BASE_DELAY,
     maxDelay: env.RETRY_MAX_DELAY,
-  },
-
-  /** AI & Media configuration */
-  ai: {
-    geminiApiKey: env.GEMINI_API_KEY,
-    ffmpegPath: env.FFMPEG_PATH,
   },
 } as const;
 

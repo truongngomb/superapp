@@ -91,7 +91,7 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true
         },
         '/story-weaver': {
-          target: 'http://127.0.0.1:3002',
+          target: 'http://127.0.0.1:3102',
           changeOrigin: true,
           secure: false,
         }

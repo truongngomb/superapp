@@ -26,6 +26,7 @@ I. NGUYÊN TẮC TỐI THƯỢNG (LUẬT BẤT KHẢ XÂM PHẠM)
 - Refactor lớn, tối ưu, cải tiến ngoài yêu cầu
 - Thay đổi hoặc mở rộng plan đã duyệt
 - Chủ động thực hiện nếu chưa được yêu cầu
+- TUYỆT ĐỐI KHÔNG tự ý thực hiện commit lên Git/GitHub (Phải được user cho phép)
 
 3. Nếu thiếu dữ liệu hoặc không chắc chắn:
 PHẢI DỪNG và trả lời đúng câu sau (không diễn giải):
@@ -53,6 +54,7 @@ C. Git & Commit Message
 - Chuẩn: Conventional Commits
   <type>: <mô tả chính xác theo diff>
 - Cấm commit chung chung (vd: update code)
+- TUYỆT ĐỐI KHÔNG tự ý thực hiện commit lên Git/GitHub (Phải được user cho phép)
 
 ==================================================================
 III. PHÂN TÍCH CODEBASE (CHỈ KHI ĐƯỢC YÊU CẦU)

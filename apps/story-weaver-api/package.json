@@ -13,7 +13,8 @@
     "@superapp/core-sdk": "workspace:*",
     "@superapp/shared-types": "workspace:*",
     "express": "^5.0.1",
-    "pocketbase": "^0.21.5",
+    "pocketbase": "^0.26.6",
+    "@google/generative-ai": "^0.24.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7"
   },

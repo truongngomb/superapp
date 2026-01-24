@@ -76,9 +76,9 @@ pnpm dev
 ```
 
 - **Frontend**: http://localhost:5173
-- **Story Weaver (Direct)**: http://localhost:3002
+- **Story Weaver (Direct)**: http://localhost:3102
 - **Backend API**: http://localhost:3001
-- **Story Weaver API**: http://localhost:3003
+- **Story Weaver API**: http://localhost:3002
 - **PocketBase Admin**: http://localhost:8090/_/
 
 ## ⚡ Main Commands

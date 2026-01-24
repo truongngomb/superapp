@@ -16,7 +16,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "pocketbase": "^0.21.5",
+    "pocketbase": "^0.26.6",
     "node-cache": "^5.1.2"
   },
   "devDependencies": {

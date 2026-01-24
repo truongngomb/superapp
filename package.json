@@ -1,22 +1,24 @@
 {
   "name": "superapp-monorepo",
   "private": true,
+  "packageManager": "pnpm@9.14.2",
   "scripts": {
-    "dev": "pnpm -r --parallel dev",
-    "dev:api": "pnpm --filter @superapp/api-server dev",
-    "dev:sw-api": "pnpm --filter @superapp/story-weaver-api dev",
-    "dev:web": "pnpm --filter @superapp/web-core dev",
-    "dev:sw": "pnpm --filter @superapp/story-weaver dev",
-    "build": "pnpm --filter \"./packages/*\" build && pnpm --filter \"./apps/*\" build",
-    "db": "pnpm --filter @superapp/api-server db",
-    "lint": "pnpm -r lint",
-    "test": "pnpm -r test",
+    "dev": "turbo dev",
+    "dev:api": "turbo dev --filter @superapp/api-server",
+    "dev:sw-api": "turbo dev --filter @superapp/story-weaver-api",
+    "dev:web": "turbo dev --filter @superapp/web-core",
+    "dev:sw": "turbo dev --filter @superapp/story-weaver",
+    "build": "turbo build",
+    "db": "turbo db --filter @superapp/api-server",
+    "lint": "turbo lint",
+    "test": "turbo test",
     "docker:build": "docker build -f deploy/Dockerfile -t truongngomb/superapp:latest .",
     "docker:push": "powershell -ExecutionPolicy Bypass -File deploy/push_docker.ps1"
   },
   "devDependencies": {
     "@types/node": "^25.0.7",
     "globals": "^17.0.0",
+    "turbo": "^2.7.5",
     "vite": "^7.3.1"
   }
 }

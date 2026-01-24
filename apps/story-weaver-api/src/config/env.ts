@@ -3,11 +3,16 @@ import dotenv from 'dotenv';
 // Load environment variables
 dotenv.config();
 
+const clientUrl = process.env.CLIENT_URL || 'http://localhost:3102';
+const extraOrigins = process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:5173'];
+
 export const config = {
-  port: process.env.STORY_WEAVER_PORT || process.env.PORT || 3003,
+  port: process.env.STORY_WEAVER_PORT || process.env.PORT || 3002,
   env: process.env.NODE_ENV || 'development',
+  clientUrl,
+  serverUrl: process.env.SERVER_URL || 'http://localhost:3002',
   cors: {
-    origin: process.env.CORS_ORIGIN?.split(',') || ['http://localhost:5173'],
+    origin: [clientUrl, ...extraOrigins],
   },
   ai: {
     geminiApiKey: process.env.GEMINI_API_KEY || '',

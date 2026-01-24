@@ -2,20 +2,35 @@
  * Story Weaver API Server
  * Microservice for video generation features
  */
-import express from 'express';
-import cors from 'cors';
 import dotenv from 'dotenv';
-import { apiRouter } from './routes/index.js';
-
-// Load environment variables
+// Load environment variables MUST be at the top
 dotenv.config();
 
+import express from 'express';
+import cors from 'cors';
+import { apiRouter } from './routes/index.js';
+
+// Define a configuration object to centralize environment variables
+const port = process.env.PORT || 3002;
+const clientUrl = process.env.CLIENT_URL || 'http://localhost:3102';
+const serverUrl = process.env.SERVER_URL || 'http://localhost:3002';
+const extraOrigins = process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:5173'];
+
+const config = {
+  port,
+  clientUrl,
+  serverUrl,
+  // Auto-merge CLIENT_URL into allowed origins
+  corsOrigin: [clientUrl, ...extraOrigins],
+  // If there were other services or specific configurations, they would go here
+};
+
 const app = express();
-const PORT = process.env.PORT || 3003;
+const PORT = config.port; // Use config object
 
 // Middleware
 app.use(cors({
-  origin: process.env.CORS_ORIGIN?.split(',') || 'http://localhost:5173',
+  origin: config.corsOrigin, // Use config object
   credentials: true,
 }));
 app.use(express.json());

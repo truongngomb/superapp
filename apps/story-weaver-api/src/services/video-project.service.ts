@@ -6,15 +6,17 @@
 import { BaseService } from '@superapp/core-sdk/services';
 import type { VideoProject } from '@superapp/shared-types';
 
+import { config } from '../config/env.js';
+
 class VideoProjectService extends BaseService<VideoProject> {
   protected collectionName = 'sw_video_projects';
   protected cacheKey = 'sw_video_projects';
 
   constructor() {
     super({
-      pocketbaseUrl: process.env.POCKETBASE_URL!,
-      adminEmail: process.env.POCKETBASE_ADMIN_EMAIL!,
-      adminPassword: process.env.POCKETBASE_ADMIN_PASSWORD!,
+      pocketbaseUrl: config.pocketbase.url,
+      adminEmail: config.pocketbase.adminEmail,
+      adminPassword: config.pocketbase.adminPassword,
     });
   }
 

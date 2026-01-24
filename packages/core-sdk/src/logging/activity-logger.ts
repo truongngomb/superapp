@@ -26,7 +26,7 @@ export class ActivityLogger {
 
   private async authenticate(email: string, password: string) {
     try {
-      await this.pb.admins.authWithPassword(email, password);
+      await this.pb.collection('_superusers').authWithPassword(email, password);
     } catch (error) {
       console.error('ActivityLogger auth failed:', error);
     }

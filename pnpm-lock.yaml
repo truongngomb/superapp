@@ -14,6 +14,9 @@ importers:
       globals:
         specifier: ^17.0.0
         version: 17.0.0
+      turbo:
+        specifier: ^2.7.5
+        version: 2.7.5
       vite:
         specifier: ^7.3.1
         version: 7.3.1(@types/node@25.0.8)(jiti@1.21.7)(sass@1.97.2)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)
@@ -78,8 +81,8 @@ importers:
         specifier: ^4.2.1
         version: 4.2.1
       pocketbase:
-        specifier: ^0.26.5
-        version: 0.26.5
+        specifier: ^0.26.6
+        version: 0.26.6
       systeminformation:
         specifier: ^5.30.3
         version: 5.30.3
@@ -286,6 +289,9 @@ importers:
 
   apps/story-weaver-api:
     dependencies:
+      '@google/generative-ai':
+        specifier: ^0.24.1
+        version: 0.24.1
       '@superapp/core-sdk':
         specifier: workspace:*
         version: link:../../packages/core-sdk
@@ -302,8 +308,8 @@ importers:
         specifier: ^5.0.1
         version: 5.2.1
       pocketbase:
-        specifier: ^0.21.5
-        version: 0.21.5
+        specifier: ^0.26.6
+        version: 0.26.6
     devDependencies:
       '@types/cors':
         specifier: ^2.8.17
@@ -536,8 +542,8 @@ importers:
         specifier: ^5.1.2
         version: 5.1.2
       pocketbase:
-        specifier: ^0.21.5
-        version: 0.21.5
+        specifier: ^0.26.6
+        version: 0.26.6
     devDependencies:
       '@types/node':
         specifier: ^25.0.7
@@ -4934,11 +4940,8 @@ packages:
     resolution: {integrity: sha512-uysumyrvkUX0rX/dEVqt8gC3sTBzd4zoWfLeS29nb53imdaXVvLINYXTI2GNqzaMuvacNx4uJQ8+b3zXR0pkgQ==}
     engines: {node: '>=10.4.0'}
 
-  pocketbase@0.21.5:
-    resolution: {integrity: sha512-bnI/uinnQps+ElSlzxkc4yvwuSFfKcoszDtXH/4QT2FhGq2mJVUvDlxn+rjRXVntUjPfmMG5LEPZ1eGqV6ssog==}
-
-  pocketbase@0.26.5:
-    resolution: {integrity: sha512-SXcq+sRvVpNxfLxPB1C+8eRatL7ZY4o3EVl/0OdE3MeR9fhPyZt0nmmxLqYmkLvXCN9qp3lXWV/0EUYb3MmMXQ==}
+  pocketbase@0.26.6:
+    resolution: {integrity: sha512-Pl7V4y3DWglYITC4cBpclmuIzePRGsb/sXk/Wyqxznwu5JsHA5IILJY81PT2XQ3OSKCakWjbxjYBqtdcghzKvA==}
 
   possible-typed-array-names@1.1.0:
     resolution: {integrity: sha512-/+5VFTchJDoVj3bhoqi6UeymcD00DAwb1nJwamzPvHEszJ4FpF6SNNbUbOS8yI56qHzdV8eK0qEfOSiodkTdxg==}
@@ -5759,6 +5762,40 @@ packages:
   tsx@4.21.0:
     resolution: {integrity: sha512-5C1sg4USs1lfG0GFb2RLXsdpXqBSEhAaA/0kPL01wxzpMqLILNxIxIOKiILz+cdg/pLnOUxFYOR5yhHU666wbw==}
     engines: {node: '>=18.0.0'}
+    hasBin: true
+
+  turbo-darwin-64@2.7.5:
+    resolution: {integrity: sha512-nN3wfLLj4OES/7awYyyM7fkU8U8sAFxsXau2bYJwAWi6T09jd87DgHD8N31zXaJ7LcpyppHWPRI2Ov9MuZEwnQ==}
+    cpu: [x64]
+    os: [darwin]
+
+  turbo-darwin-arm64@2.7.5:
+    resolution: {integrity: sha512-wCoDHMiTf3FgLAbZHDDx/unNNonSGhsF5AbbYODbxnpYyoKDpEYacUEPjZD895vDhNvYCH0Nnk24YsP4n/cD6g==}
+    cpu: [arm64]
+    os: [darwin]
+
+  turbo-linux-64@2.7.5:
+    resolution: {integrity: sha512-KKPvhOmJMmzWj/yjeO4LywkQ85vOJyhru7AZk/+c4B6OUh/odQ++SiIJBSbTG2lm1CuV5gV5vXZnf/2AMlu3Zg==}
+    cpu: [x64]
+    os: [linux]
+
+  turbo-linux-arm64@2.7.5:
+    resolution: {integrity: sha512-8PIva4L6BQhiPikUTds9lSFSHXVDAsEvV6QUlgwPsXrtXVQMVi6Sv9p+IxtlWQFvGkdYJUgX9GnK2rC030Xcmw==}
+    cpu: [arm64]
+    os: [linux]
+
+  turbo-windows-64@2.7.5:
+    resolution: {integrity: sha512-rupskv/mkIUgQXzX/wUiK00mKMorQcK8yzhGFha/D5lm05FEnLx8dsip6rWzMcVpvh+4GUMA56PgtnOgpel2AA==}
+    cpu: [x64]
+    os: [win32]
+
+  turbo-windows-arm64@2.7.5:
+    resolution: {integrity: sha512-G377Gxn6P42RnCzfMyDvsqQV7j69kVHKlhz9J4RhtJOB5+DyY4yYh/w0oTIxZQ4JRMmhjwLu3w9zncMoQ6nNDw==}
+    cpu: [arm64]
+    os: [win32]
+
+  turbo@2.7.5:
+    resolution: {integrity: sha512-7Imdmg37joOloTnj+DPrab9hIaQcDdJ5RwSzcauo/wMOSAgO+A/I/8b3hsGGs6PWQz70m/jkPgdqWsfNKtwwDQ==}
     hasBin: true
 
   type-check@0.4.0:
@@ -11305,9 +11342,7 @@ snapshots:
       base64-js: 1.5.1
       xmlbuilder: 15.1.1
 
-  pocketbase@0.21.5: {}
-
-  pocketbase@0.26.5: {}
+  pocketbase@0.26.6: {}
 
   possible-typed-array-names@1.1.0: {}
 
@@ -12350,6 +12385,33 @@ snapshots:
       get-tsconfig: 4.13.0
     optionalDependencies:
       fsevents: 2.3.3
+
+  turbo-darwin-64@2.7.5:
+    optional: true
+
+  turbo-darwin-arm64@2.7.5:
+    optional: true
+
+  turbo-linux-64@2.7.5:
+    optional: true
+
+  turbo-linux-arm64@2.7.5:
+    optional: true
+
+  turbo-windows-64@2.7.5:
+    optional: true
+
+  turbo-windows-arm64@2.7.5:
+    optional: true
+
+  turbo@2.7.5:
+    optionalDependencies:
+      turbo-darwin-64: 2.7.5
+      turbo-darwin-arm64: 2.7.5
+      turbo-linux-64: 2.7.5
+      turbo-linux-arm64: 2.7.5
+      turbo-windows-64: 2.7.5
+      turbo-windows-arm64: 2.7.5
 
   type-check@0.4.0:
     dependencies:

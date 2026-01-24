@@ -25,17 +25,17 @@ export default defineConfig(({ mode }) => ({
   },
   
   server: {
-    port: 3002,
+    port: 3102,
     host: true,
     proxy: {
-      // Proxy story-weaver specific API calls to microservice
-      '/api/story-weaver': {
-        target: 'http://127.0.0.1:3003',
-        changeOrigin: true
-      },
       // Proxy core API calls to main api-server
       '/api': {
         target: 'http://127.0.0.1:3001',
+        changeOrigin: true
+      },
+      // Proxy story-weaver specific API calls to microservice
+      '/api/story-weaver': {
+        target: 'http://127.0.0.1:3002',
         changeOrigin: true
       }
     }

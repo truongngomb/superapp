@@ -36,14 +36,24 @@ export abstract class BaseService<T> {
     this.authenticate();
   }
 
-  private async authenticate() {
-    try {
-      await this.pb.admins.authWithPassword(
-        this.options.adminEmail,
-        this.options.adminPassword
-      );
-    } catch (error) {
-      console.error('Failed to authenticate with PocketBase:', error);
+  private async authenticate(retries = 10, delay = 3000) {
+    for (let i = 0; i < retries; i++) {
+      try {
+        await this.pb.collection('_superusers').authWithPassword(
+          this.options.adminEmail,
+          this.options.adminPassword
+        );
+        // console.log(`[BaseService] Authenticated with PocketBase for ${this.collectionName}`);
+        return;
+      } catch (error) {
+        const isLastAttempt = i === retries - 1;
+        if (isLastAttempt) {
+          console.error(`[BaseService] Failed to authenticate with PocketBase for ${this.collectionName} after ${retries} attempts:`, error);
+        } else {
+          // console.warn(`[BaseService] Auth failed for ${this.collectionName}, retrying in ${delay}ms... (${i + 1}/${retries})`);
+          await new Promise((resolve) => setTimeout(resolve, delay));
+        }
+      }
     }
   }
 

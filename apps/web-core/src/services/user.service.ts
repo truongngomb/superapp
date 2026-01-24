@@ -33,13 +33,13 @@ export const userService = {
     try {
       const searchParams = new URLSearchParams();
       
-      if (params?.page) searchParams.append('page', String(params.page));
-      if (params?.limit) searchParams.append('limit', String(params.limit));
-      if (params?.sort) searchParams.append('sort', params.sort);
-      if (params?.order) searchParams.append('order', params.order);
-      if (params?.search) searchParams.append('search', params.search);
-      if (params?.isActive !== undefined) searchParams.append('isActive', String(params.isActive));
-      if (params?.isDeleted !== undefined) searchParams.append('isDeleted', String(params.isDeleted));
+      if (params?.page) searchParams.append('page', params.page.toString());
+      if (params?.limit) searchParams.append('limit', params.limit.toString());
+      if (typeof params?.sort === 'string') searchParams.append('sort', params.sort);
+      if (typeof params?.order === 'string') searchParams.append('order', params.order);
+      if (typeof params?.search === 'string') searchParams.append('search', params.search);
+      if (params?.isActive !== undefined) searchParams.append('isActive', params.isActive ? 'true' : 'false');
+      if (params?.isDeleted !== undefined) searchParams.append('isDeleted', params.isDeleted ? 'true' : 'false');
       
       const query = searchParams.toString();
       const endpoint = query 
@@ -63,11 +63,11 @@ export const userService = {
     try {
       const searchParams = new URLSearchParams();
       
-      if (params?.sort) searchParams.append('sort', params.sort);
-      if (params?.order) searchParams.append('order', params.order);
-      if (params?.search) searchParams.append('search', params.search);
-      if (params?.isActive !== undefined) searchParams.append('isActive', String(params.isActive));
-      if (params?.isDeleted !== undefined) searchParams.append('isDeleted', String(params.isDeleted));
+      if (typeof params?.sort === 'string') searchParams.append('sort', params.sort);
+      if (typeof params?.order === 'string') searchParams.append('order', params.order);
+      if (typeof params?.search === 'string') searchParams.append('search', params.search);
+      if (params?.isActive !== undefined) searchParams.append('isActive', params.isActive ? 'true' : 'false');
+      if (params?.isDeleted !== undefined) searchParams.append('isDeleted', params.isDeleted ? 'true' : 'false');
       
       const query = searchParams.toString();
       const endpoint = `${API_ENDPOINTS.USERS}/export${query ? `?${query}` : ''}`;
