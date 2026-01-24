@@ -73,6 +73,8 @@ POCKETBASE_ADMIN_PASSWORD=your_secure_password
 
 ### Scripts
 
+These scripts are typically managed via **Turborepo** from the root.
+
 | Command | Description |
 |---------|-------------|
 | `pnpm dev` | Start development server with watch mode |

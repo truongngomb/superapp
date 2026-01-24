@@ -64,6 +64,8 @@ VITE_ENABLE_DEBUG=false
 
 ### Scripts
 
+These scripts are typically managed via **Turborepo** from the root, but can be run individually here.
+
 | Command | Description |
 |---------|-------------|
 | `pnpm dev` | Start development server (http://localhost:5173) |

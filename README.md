@@ -48,6 +48,7 @@ my-project/
 - **Soft Delete**: Trash/Archive with restore capability
 - **Markdown CMS**: Multi-language content management with live preview and auto-translation
 - **Story Weaver**: AI-powered video script generation and microservice architecture
+- **Monorepo Management**: Powered by **Turborepo** for optimized build and development pipelines
 
 ## 🚀 Quick Start
 
@@ -66,10 +67,11 @@ pnpm install
 See detailed instructions in sub-folders:
 - [Frontend Configuration](apps/web-core/README.md#environment-variables)
 - [Backend Configuration](apps/api-server/README.md#environment-variables)
+- [Story Weaver API Configuration](apps/story-weaver-api/README.md#environment-variables)
 
 ### 3. Run Development
 
-Start all apps concurrently:
+Start all apps concurrently using Turborepo:
 
 ```bash
 pnpm dev
@@ -83,15 +85,15 @@ pnpm dev
 
 ## ⚡ Main Commands
 
-These commands run scripts across the workspace.
+These commands use **Turborepo** to run scripts across the workspace efficiently.
 
 | Command | Description |
 |---------|-------------|
-| `pnpm dev` | Start all development servers |
-| `pnpm build` | Build all apps and packages |
-| `pnpm lint` | Run ESLint in all workspaces |
+| `pnpm dev` | Start all development servers (parallel) |
+| `pnpm build` | Build all apps and packages (with caching) |
+| `pnpm lint` | Run ESLint across all projects |
 | `pnpm db` | Run Database CLI (api-server) |
-| `pnpm test` | Run tests in all workspaces |
+| `pnpm test` | Run tests across all projects |
 
 ## 📱 Mobile Development
 

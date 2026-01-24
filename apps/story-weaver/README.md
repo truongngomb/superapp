@@ -33,12 +33,12 @@ StoryWeaver is a modern web application that leverages Google Gemini AI to autom
 
 ## 🛠️ Tech Stack
 
-- **Framework**: React 18 + TypeScript
-- **Build Tool**: Vite
-- **Routing**: React Router DOM v6
+- **Framework**: React 19 + TypeScript
+- **Build Tool**: Vite 7
+- **Routing**: React Router 7 (React Router DOM v7)
 - **State Management**: TanStack Query (React Query) v5
 - **UI Components**: Custom UI Kit (`@superapp/ui-kit`)
-- **Styling**: SCSS + Tailwind CSS
+- **Styling**: SCSS + Tailwind CSS 3.4
 - **Icons**: Lucide React
 - **Type Safety**: Shared types from `@superapp/shared-types`
 
@@ -60,10 +60,10 @@ pnpm build --filter @superapp/shared-types
 pnpm build --filter @superapp/ui-kit
 
 # Start development server
-pnpm dev --filter story-weaver
+pnpm dev --filter @superapp/story-weaver
 ```
 
-The app will start at `http://localhost:3002`
+The app will start at `http://localhost:3102`
 
 ## 🔧 Environment Variables
 
@@ -74,7 +74,7 @@ Create a `.env` file in the app root:
 VITE_API_URL=http://localhost:3001
 
 # Optional: Custom port
-VITE_PORT=3002
+VITE_PORT=3102
 ```
 
 ## 🚀 Usage
