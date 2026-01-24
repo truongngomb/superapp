@@ -43,6 +43,7 @@ export const videoProjectSchema = z.object({
   description: z.string().optional(),
   status: videoProjectStatusSchema,
   settings: videoProjectSettingsSchema.optional(),
+  userId: z.string(),
   // BaseEntity fields
   created: z.string(),
   updated: z.string(),

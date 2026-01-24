@@ -1,0 +1,30 @@
+{
+  "name": "@superapp/story-weaver-api",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@superapp/core-sdk": "workspace:*",
+    "@superapp/shared-types": "workspace:*",
+    "express": "^5.0.1",
+    "pocketbase": "^0.21.5",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/cors": "^2.8.17",
+    "@types/node": "^25.0.7",
+    "eslint": "^9.39.2",
+    "globals": "^17.0.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.53.0"
+  }
+}
