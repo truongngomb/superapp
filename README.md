@@ -8,11 +8,14 @@
 my-project/
 ├── apps/
 │   ├── api-server/          # Backend API (Express, PocketBase)
-│   └── web-core/            # Frontend SPA (React, Vite, Capacitor)
+│   ├── story-weaver-api/    # Microservice API (Video Generation)
+│   ├── web-core/            # Frontend Shell (Host App)
+│   └── story-weaver/        # Micro-frontend (Sub App)
 ├── deploy/                  # Docker & Deployment configuration
 ├── packages/
 │   ├── shared-types/        # Shared TypeScript types & Zod schemas
-│   ├── core-logic/          # Shared hooks & utilities
+│   ├── core-logic/          # Shared React hooks & utilities
+│   ├── core-sdk/            # Shared Backend Logic & Auth
 │   └── ui-kit/              # Shared UI components
 ├── package.json             # Root workspace config
 └── pnpm-workspace.yaml      # pnpm workspace definition
@@ -26,7 +29,7 @@ my-project/
 - **Frontend**: React 19, TypeScript, Vite, TanStack Query, Shadcn UI (TailwindCSS)
 - **Backend**: Node.js, Express, PocketBase (Auth/DB), Scalar (API Docs)
 - **Mobile**: Capacitor (Android/iOS)
-- **Infrastructure**: Docker, Nginx
+- **Infrastructure**: Docker, Nginx, Microservices
 
 ## ✨ Features
 
@@ -44,6 +47,7 @@ my-project/
 - **Excel Export**: Data export functionality
 - **Soft Delete**: Trash/Archive with restore capability
 - **Markdown CMS**: Multi-language content management with live preview and auto-translation
+- **Story Weaver**: AI-powered video script generation and microservice architecture
 
 ## 🚀 Quick Start
 
@@ -72,7 +76,9 @@ pnpm dev
 ```
 
 - **Frontend**: http://localhost:5173
-- **Backend**: http://localhost:3001
+- **Story Weaver (Direct)**: http://localhost:3002
+- **Backend API**: http://localhost:3001
+- **Story Weaver API**: http://localhost:3003
 - **PocketBase Admin**: http://localhost:8090/_/
 
 ## ⚡ Main Commands
@@ -128,6 +134,7 @@ See **[deploy/DEPLOYMENT.md](deploy/DEPLOYMENT.md)** for detailed instructions o
 |---------|-------------|
 | `@superapp/shared-types` | TypeScript types & Zod validation schemas |
 | `@superapp/core-logic` | Shared React hooks & utility functions |
+| `@superapp/core-sdk` | Shared Backend methods (Auth, Service Base) |
 | `@superapp/ui-kit` | Reusable UI components with TailwindCSS |
 
 ## 📄 License
