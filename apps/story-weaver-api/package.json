@@ -7,7 +7,14 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "db": "tsx src/scripts/migrate.ts",
+    "db:status": "tsx src/scripts/migrate.ts --status",
+    "db:migrate": "tsx src/scripts/migrate.ts --migrate",
+    "db:pull": "tsx src/scripts/migrate.ts --pull",
+    "db:seed": "tsx src/scripts/migrate.ts --seed",
+    "db:backup": "tsx src/scripts/migrate.ts --backup",
+    "db:generate": "tsx src/scripts/migrate.ts --generate"
   },
   "dependencies": {
     "@superapp/core-sdk": "workspace:*",
@@ -15,12 +22,21 @@
     "express": "^5.0.1",
     "pocketbase": "^0.26.6",
     "@google/generative-ai": "^0.24.1",
+    "compression": "^1.8.1",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.7"
+    "dotenv": "^16.4.7",
+    "eventsource": "^4.1.0",
+    "helmet": "^8.1.0",
+    "node-cache": "^5.1.2",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@types/express": "^5.0.0",
-    "@types/cors": "^2.8.17",
+    "@types/compression": "^1.8.1",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/eventsource": "^3.0.0",
+    "@types/express": "^5.0.6",
     "@types/node": "^25.0.7",
     "eslint": "^9.39.2",
     "globals": "^17.0.0",

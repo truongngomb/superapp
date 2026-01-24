@@ -1,12 +1,13 @@
 import { BaseService, type ListOptions, type PaginatedResult } from './base.service.js';
-import { Collections, CacheKeys, config } from '../config/index.js';
+import { CacheKeys, config } from '../config/index.js';
 import type { ActivityLog, ActivityLogInput } from '@superapp/shared-types';
+import { CollectionNames } from '../database/collections/index.js';
 
 // Re-export types for backwards compatibility
 export type { ActivityLog, ActivityLogInput };
 
 export class ActivityLogService extends BaseService<ActivityLog> {
-  protected readonly collectionName = Collections.ACTIVITY_LOGS;
+  protected readonly collectionName = CollectionNames.ACTIVITY_LOGS;
   protected readonly cacheKey = CacheKeys.ACTIVITY_LOGS;
   protected readonly defaultExpand = 'user';
 

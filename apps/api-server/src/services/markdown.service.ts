@@ -10,9 +10,10 @@ import type {
   MarkdownPageTranslation 
 } from '@superapp/shared-types';
 import { getOrSet, invalidate } from '../config/index.js';
+import { CollectionNames } from '../database/collections/index.js';
 
 export class MarkdownService extends BaseService<MarkdownPage> {
-  protected readonly collectionName = 'markdown_pages';
+  protected readonly collectionName = CollectionNames.MARKDOWN_PAGES;
   protected readonly cacheKey = 'markdown:pages';
 
   /**

@@ -4,8 +4,9 @@
  * Handles CRUD operations for user roles.
  */
 import { BaseService } from './base.service.js';
-import { Collections, CacheKeys, cache } from '../config/index.js';
+import { CacheKeys, cache } from '../config/index.js';
 import type { Role, RolePermissions } from '@superapp/shared-types';
+import { CollectionNames } from '../database/collections/index.js';
 
 // =============================================================================
 // Service Implementation
@@ -15,7 +16,7 @@ import type { Role, RolePermissions } from '@superapp/shared-types';
  * Service for managing user roles and their permissions
  */
 class RoleService extends BaseService<Role> {
-  protected readonly collectionName = Collections.ROLES;
+  protected readonly collectionName = CollectionNames.ROLES;
   protected readonly cacheKey = CacheKeys.ROLES;
 
   /** Exclude soft-deleted records by default */

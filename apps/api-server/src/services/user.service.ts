@@ -4,9 +4,10 @@
  * Handles CRUD operations for user management.
  */
 import { BaseService } from './base.service.js';
-import { Collections, CacheKeys } from '../config/index.js';
-import { BadRequestError } from '../middleware/index.js';
 import type { User, UserUpdateInput, UserRoleAssignment } from '@superapp/shared-types';
+import { CollectionNames } from '../database/collections/index.js';
+import { CacheKeys } from '@/config/cache.ts';
+import { BadRequestError } from '@/middleware/errorHandler.ts';
 
 // =============================================================================
 // Types
@@ -23,7 +24,7 @@ export type UserWithRoles = User;
  * Service for managing users
  */
 class UserService extends BaseService<User> {
-  protected readonly collectionName = Collections.USERS;
+  protected readonly collectionName = CollectionNames.USERS;
   protected readonly cacheKey = CacheKeys.USERS;
   protected readonly defaultFilter = 'isDeleted = false';
   protected readonly defaultExpand = 'roles';
@@ -140,7 +141,7 @@ class UserService extends BaseService<User> {
    */
   private async roleExists(roleId: string): Promise<boolean> {
     try {
-      await this.db.collection(Collections.ROLES).getOne(roleId);
+      await this.db.collection(CollectionNames.ROLES).getOne(roleId);
       return true;
     } catch {
       return false;

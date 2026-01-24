@@ -6,7 +6,7 @@
  */
 import { createPocketBaseClient } from '../config/database.js';
 import { config } from '../config/env.js';
-import { createLogger } from '../utils/index.js';
+import { createLogger } from '../utils/logger.js';
 import { allCollections } from './collections/index.js';
 import type { 
   CollectionSchema, 
@@ -80,8 +80,8 @@ export class MigrationService {
    * Required before performing any migration operations
    */
   async authenticate(email?: string, password?: string): Promise<void> {
-    const adminEmail = email ?? config.pocketbaseAdminEmail;
-    const adminPassword = password ?? config.pocketbaseAdminPassword;
+    const adminEmail = email ?? config.pocketbase.adminEmail;
+    const adminPassword = password ?? config.pocketbase.adminPassword;
 
     if (!adminEmail || !adminPassword) {
       throw new Error(
@@ -882,13 +882,6 @@ export class MigrationService {
       }
     }
     
-    // Check indexes for helper imports
-    // This is a naive check, if we used helper in strings it wouldn't be caught, 
-    // but the `collectionToCode` generates naive strings for indexes anyway.
-    // For now we will rely on creating basic strings for indexes or simple helpers
-    // Let's stick to basic strings for indexes in current implementation to be safe
-    // preventing cyclic dependency issues if we try to be too smart.
-    
     // Build file content
     const lines: string[] = [
       '/**',
@@ -1096,4 +1089,3 @@ export class MigrationService {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 }
-

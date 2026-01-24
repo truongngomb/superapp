@@ -32,12 +32,12 @@ const envSchema = z.object({
   CLIENT_URL: z
     .string()
     .url('CLIENT_URL must be a valid URL')
-    .default('http://localhost:5173'),
+    .default('http://127.0.0.1:5173'),
   
   SERVER_URL: z
     .string()
     .url('SERVER_URL must be a valid URL')
-    .default('http://localhost:3000'),
+    .default('http://127.0.0.1:3000'),
   
   // Database
   POCKETBASE_URL: z
@@ -160,7 +160,7 @@ const parseEnv = () => {
     logger.warn('Config', 'Using fallback values for missing env variables');
     return envSchema.parse({
       ...process.env,
-      POCKETBASE_URL: process.env['POCKETBASE_URL'] || 'http://localhost:8090',
+      POCKETBASE_URL: process.env['POCKETBASE_URL'] || 'http://127.0.0.1:8090',
     });
   }
   

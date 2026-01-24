@@ -4,9 +4,10 @@
  * Handles fetching user permissions based on their roles.
  * Supports multiple roles per user with permission merging (union).
  */
-import { Collections, adminPb, checkPocketBaseHealth, config, cache, ensureAdminAuth } from '../config/index.js';
+import { adminPb, checkPocketBaseHealth, config, cache, ensureAdminAuth } from '../config/index.js';
 import type { RolePermissions } from '@superapp/shared-types';
 import { createLogger } from '../utils/index.js';
+import { CollectionNames } from '../database/collections/index.js';
 
 // =============================================================================
 // Service Implementation
@@ -41,7 +42,7 @@ class PermissionService {
       await ensureAdminAuth();
       
       // Fetch User with expanded 'roles' relation (multiple)
-      const user = await adminPb.collection(Collections.USERS).getOne(userId, {
+      const user = await adminPb.collection(CollectionNames.USERS).getOne(userId, {
         expand: 'roles',
         requestKey: null,
       });
@@ -148,7 +149,7 @@ class PermissionService {
       // Ensure adminPb is authenticated before querying
       await ensureAdminAuth();
       
-      const role = await adminPb.collection(Collections.ROLES)
+      const role = await adminPb.collection(CollectionNames.ROLES)
         .getFirstListItem(`name = "${roleName}" && isActive = true && isDeleted = false`, {
           requestKey: null,
         });

@@ -5,8 +5,9 @@
  * Extends BaseService for all common operations.
  */
 import { BaseService } from './base.service.js';
-import { Collections, CacheKeys } from '../config/index.js';
+import { CacheKeys } from '../config/index.js';
 import type { Category } from '@superapp/shared-types';
+import { CollectionNames } from '../database/collections/index.js';
 
 // =============================================================================
 // Service Implementation
@@ -17,7 +18,7 @@ import type { Category } from '@superapp/shared-types';
  * Uses BaseService soft delete feature
  */
 class CategoryService extends BaseService<Category> {
-  protected readonly collectionName = Collections.CATEGORIES;
+  protected readonly collectionName = CollectionNames.CATEGORIES;
   protected readonly cacheKey = CacheKeys.CATEGORIES;
 
   /** Exclude soft-deleted records by default */

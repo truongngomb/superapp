@@ -90,4 +90,20 @@ export async function ensureAdminAuth(): Promise<void> {
   }
 }
 
+// =============================================================================
+// Collection Names
+// =============================================================================
 
+/**
+ * PocketBase collection names
+ * Use these constants to avoid typos and enable refactoring
+ */
+export const Collections = {
+  VIDEO_PROJECTS: 'sw_video_projects',
+  SCRIPTS: 'sw_scripts',
+  ASSETS: 'sw_assets',
+  GENERATIONS: 'sw_generations',
+} as const;
+
+/** Union type of all collection names */
+export type CollectionName = (typeof Collections)[keyof typeof Collections];

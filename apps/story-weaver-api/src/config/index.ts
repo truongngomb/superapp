@@ -15,8 +15,8 @@ export { config } from './env.js';
 export type { Config, Env } from './env.js';
 
 // Database (PocketBase)
-export { adminPb, createPocketBaseClient, checkPocketBaseHealth, ensureAdminAuth } from './database.js';
-
+export { adminPb, createPocketBaseClient, checkPocketBaseHealth, ensureAdminAuth, Collections } from './database.js';
+export type { CollectionName } from './database.js';
 
 // Caching
 export {
@@ -28,7 +28,3 @@ export {
   clearAll,
   cached,
 } from './cache.js';
-
-// OpenAPI
-export { openApiRegistry, generateOpenApiDocument } from './openapi.js';
-

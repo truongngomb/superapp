@@ -8,9 +8,10 @@ import { config } from '../config/index.js';
 import { ForbiddenError, NotFoundError } from '../middleware/index.js';
 import { PermissionResource, PermissionAction } from '@superapp/shared-types';
 import { permissionService } from './permission.service.js';
+import { CollectionNames } from '../database/collections/index.js';
 
 export class MediaService extends BaseService<Media> {
-  protected collectionName = 'media';
+  protected collectionName = CollectionNames.MEDIA;
   protected cacheKey = 'media';
   // No soft delete for media, direct deletion or maybe we want soft delete?
   // Let's assume soft delete is not strictly required for media assets in this phase, 

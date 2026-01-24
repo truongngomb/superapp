@@ -3,10 +3,11 @@
  * 
  * Handles OAuth authentication and session management.
  */
-import { config, Collections, createPocketBaseClient } from '../config/index.js';
+import { config, createPocketBaseClient } from '../config/index.js';
 import { permissionService } from './permission.service.js';
 import type { UserSession, User } from '@superapp/shared-types';
 import { createLogger } from '../utils/index.js';
+import { CollectionNames } from '../database/collections/index.js';
 
 // =============================================================================
 // Types
@@ -48,7 +49,7 @@ class AuthService {
    */
   async initGoogleAuth(): Promise<GoogleAuthInitResult> {
     const pb = createPocketBaseClient();
-    const authMethods = await pb.collection(Collections.USERS).listAuthMethods();
+    const authMethods = await pb.collection(CollectionNames.USERS).listAuthMethods();
     // PocketBase SDK v0.26+ uses oauth2.providers instead of authProviders
     const providers = authMethods.oauth2.providers;
     const googleProvider = providers.find((p) => p.name === 'google');
@@ -77,7 +78,7 @@ class AuthService {
    */
   async handleGoogleCallback(code: string, codeVerifier: string): Promise<OAuthResult> {
     const pb = createPocketBaseClient();
-    const authData = await pb.collection(Collections.USERS).authWithOAuth2Code(
+    const authData = await pb.collection(CollectionNames.USERS).authWithOAuth2Code(
       'google',
       code,
       codeVerifier,
@@ -119,7 +120,7 @@ class AuthService {
       }
 
       // Fetch fresh user data from PocketBase
-      const authData = await pb.collection(Collections.USERS).authRefresh();
+      const authData = await pb.collection(CollectionNames.USERS).authRefresh();
       const user = authData.record as unknown as User;
 
       // Avatar URL calc removed as unused and creating issues
@@ -135,7 +136,7 @@ class AuthService {
           avatar: user.avatar 
             ? (user.avatar.startsWith('http') 
               ? user.avatar 
-              : `${config.pocketbaseUrl}/api/files/${Collections.USERS}/${user.id}/${user.avatar}`)
+              : `${config.pocketbaseUrl}/api/files/${CollectionNames.USERS}/${user.id}/${user.avatar}`)
             : undefined,
           created: user.created,
           updated: user.updated,

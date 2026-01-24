@@ -1,49 +1,136 @@
-import type { Request, Response, NextFunction } from 'express';
-import { verifyToken } from '@superapp/core-sdk/auth';
+/**
+ * Authentication Middleware
+ * 
+ * Provides authentication and authorization middleware for Express routes.
+ */
+import { Request, Response, NextFunction } from 'express';
+import { getUserPermissions, getPublicRolePermissions } from '../services/permission.service.js';
+import { UnauthorizedError } from './errorHandler.js';
+import { logger } from '../utils/index.js';
 
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace Express {
-    interface Request {
-      user?: {
-        id: string;
-        email: string;
-        role?: unknown;
-      };
-    }
-  }
-}
+// =============================================================================
+// Constants
+// =============================================================================
+
+const COOKIE_NAME = 'pb_auth';
+
+// =============================================================================
+// Middleware
+// =============================================================================
 
 /**
- * Authentication middleware using core-sdk
+ * Authentication middleware - populates req.user
+ * 
+ * Does not block the request if unauthenticated.
+ * For guest users (no token), assigns permissions from "Public" role if exists.
+ * Use `requireAuth` to block unauthenticated requests.
+ * 
+ * Cookie contains only JWT token (optimized).
  */
-export async function requireAuth(
+export const authenticate = async (
   req: Request,
-  res: Response,
+  _res: Response,
   next: NextFunction
-) {
-  try {
-    let token = req.headers.authorization?.replace('Bearer ', '');
-    
-    // If no bearer token, try to get from pb_auth cookie
-    if (!token && req.headers.cookie) {
-      const match = req.headers.cookie.match(/pb_auth=([^;]+)/);
-      if (match) {
-        token = decodeURIComponent(match[1]);
+) => {
+  const token = req.cookies[COOKIE_NAME] as string | undefined;
+
+  if (!token || typeof token !== 'string') {
+    // Guest user - try to assign Public role permissions
+    try {
+      const guestPermissions = await getPublicRolePermissions();
+      if (Object.keys(guestPermissions).length > 0) {
+        req.user = {
+          id: 'guest',
+          email: '',
+          name: 'Guest',
+          roles: [],
+          permissions: guestPermissions,
+          isGuest: true,
+          created: '',
+          updated: '',
+          isActive: true,
+          isDeleted: false,
+        };
       }
+    } catch (error) {
+      logger.warn('AuthMiddleware', 'Failed to get public permissions:', error);
     }
-
-    if (!token) {
-      return res.status(401).json({ error: 'No token provided' });
-    }
-
-    const user = await verifyToken(token, {
-      pocketbaseUrl: process.env.POCKETBASE_URL!,
-    });
-
-    req.user = user;
-    next();
-  } catch {
-    res.status(401).json({ error: 'Unauthorized' });
+    next(); return;
   }
-}
+
+  try {
+    // Fetch user permissions
+    const userWithPermissions = await getUserPermissions(token);
+    req.user = {
+      id: userWithPermissions.id,
+      email: userWithPermissions.email,
+      roles: userWithPermissions.roles,
+      name: userWithPermissions.name || '',
+      created: userWithPermissions.created || '',
+      updated: userWithPermissions.updated || '',
+      isActive: userWithPermissions.isActive || true,
+      isDeleted: userWithPermissions.isDeleted || false,
+      permissions: userWithPermissions.permissions,
+    };
+  } catch (error) {
+    // Invalid token or expired - silently continue
+    logger.warn('AuthMiddleware', 'Auth validation failed:', error);
+  }
+
+  next();
+};
+
+/**
+ * Require authentication middleware
+ * 
+ * Blocks request with 401 if not authenticated.
+ * Use after `authenticate` middleware.
+ * 
+ * @throws UnauthorizedError if not authenticated
+ * 
+ * @example
+ * ```typescript
+ * router.get('/profile', requireAuth, getProfile);
+ * ```
+ */
+export const requireAuth = (
+  req: Request,
+  _res: Response,
+  next: NextFunction
+) => {
+  if (!req.user) {
+    throw new UnauthorizedError('Please login to access this resource');
+  }
+  next();
+};
+
+/**
+ * Require admin role middleware
+ * 
+ * Blocks request with 403 if user does not have 'admin' role.
+ */
+export const requireAdmin = (
+  req: Request,
+  _res: Response,
+  next: NextFunction
+) => {
+  if (!req.user) {
+    throw new UnauthorizedError('Please login to access this resource');
+  }
+
+  // Check if user has admin role or specific system permission
+  const roles = req.user.roles || [];
+  const permissions = req.user.permissions;
+  
+  const hasAdminRole = roles.some(role => role === 'admin' || role === 'SUPER_ADMIN');
+  const hasSystemView = permissions['system']?.includes('view');
+  const hasAllManage = permissions['all']?.includes('manage');
+  
+  const isAdmin = hasAdminRole || hasSystemView || hasAllManage;
+  
+  if (!isAdmin) {
+    throw new UnauthorizedError('Access denied: Admin privileges required');
+  }
+  
+  next();
+};

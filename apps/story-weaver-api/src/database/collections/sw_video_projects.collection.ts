@@ -1,33 +1,31 @@
-import type { CollectionSchema } from '../collection.schema.js';
+import {
+  BaseCollectionSchema,
+  textField,
+  selectField,
+  jsonField,
+  relationField,
+  boolField,
+  autodateField,
+  index
+} from '../collection.schema.js';
 
-export const swVideoProjectsCollection: CollectionSchema = {
+export const swVideoProjectsCollection: BaseCollectionSchema = {
   name: 'sw_video_projects',
   type: 'base',
-  schema: [
-    { name: 'name', type: 'text', required: true },
-    { name: 'description', type: 'text' },
-    {
-      name: 'status',
-      type: 'select',
-      options: {
-        values: ['draft', 'generating', 'rendering', 'completed', 'error'],
-        maxSelect: 1,
-      },
-      required: true,
-    },
-    { name: 'settings', type: 'json' },
-    { name: 'user_id', type: 'relation', required: true, options: {
-      collectionId: 'users',
-      cascadeDelete: false,
-      maxSelect: 1,
-      displayFields: ['id', 'email']
-    }},
-    { name: 'isActive', type: 'bool', default: true },
-    { name: 'isDeleted', type: 'bool', default: false },
+  fields: [
+    textField('name', { required: true }),
+    textField('description'),
+    selectField('status', ['draft', 'generating', 'rendering', 'completed', 'error'], { required: true, maxSelect: 1 }),
+    jsonField('settings'),
+    relationField('user_id', 'users', { required: true, cascadeDelete: false, maxSelect: 1, displayFields: ['id', 'email'] }),
+    boolField('isActive'), 
+    boolField('isDeleted'),
+    autodateField('created', { onCreate: true, onUpdate: false }),
+    autodateField('updated', { onCreate: true, onUpdate: true }),
   ],
   indexes: [
-    'CREATE INDEX `idx_sw_project_user` ON `sw_video_projects` (`user_id`)',
-    'CREATE INDEX `idx_sw_project_status` ON `sw_video_projects` (`status`)'
+    index('sw_video_projects', 'user_id'),
+    index('sw_video_projects', 'status'),
   ],
   listRule: '@request.auth.id != "" && (isDeleted = false || user_id = @request.auth.id)',
   viewRule: '@request.auth.id != "" && (isDeleted = false || user_id = @request.auth.id)',

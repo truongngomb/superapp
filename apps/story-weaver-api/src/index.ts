@@ -1,65 +1,69 @@
 /**
- * Story Weaver API Server
- * Microservice for video generation features
+ * Server Entry Point
+ * 
+ * Starts the Express server and handles graceful shutdown.
  */
-import dotenv from 'dotenv';
-// Load environment variables MUST be at the top
-dotenv.config();
+import { EventSource } from 'eventsource';
 
-import express from 'express';
-import cors from 'cors';
-import { apiRouter } from './routes/index.js';
+// Polyfill for PocketBase Realtime SDK
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+if (!(global as any).EventSource) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (global as any).EventSource = EventSource;
+}
 
-// Define a configuration object to centralize environment variables
-const port = process.env.PORT || 3002;
-const clientUrl = process.env.CLIENT_URL || 'http://localhost:3102';
-const serverUrl = process.env.SERVER_URL || 'http://localhost:3002';
-const extraOrigins = process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:5173'];
+import app from './app.js';
+import { config, checkPocketBaseHealth } from './config/index.js';
+import { logger } from './utils/logger.js';
 
-const config = {
-  port,
-  clientUrl,
-  serverUrl,
-  // Auto-merge CLIENT_URL into allowed origins
-  corsOrigin: [clientUrl, ...extraOrigins],
-  // If there were other services or specific configurations, they would go here
-};
+// =============================================================================
+// Server Startup
+// =============================================================================
 
-const app = express();
-const PORT = config.port; // Use config object
+async function startServer(): Promise<void> {
+  // Check database connectivity
+  const dbHealthy = await checkPocketBaseHealth();
+  
+  if (!dbHealthy) {
+    logger.warn('Server', 'PocketBase is not available. Server will start with limited functionality.');
+  }
 
-// Middleware
-app.use(cors({
-  origin: config.corsOrigin, // Use config object
-  credentials: true,
-}));
-app.use(express.json());
-
-// Routes - use /api prefix (proxy will rewrite /api/story-weaver -> /api)
-app.use('/api', apiRouter);
-
-// Health check handler
-const healthHandler = (_req: express.Request, res: express.Response) => {
-  res.json({ 
-    status: 'ok', 
-    service: 'story-weaver-api',
-    timestamp: new Date().toISOString(),
+  // Start Express server
+  const server = app.listen(config.port, () => {
+    logger.info('Server', `
+🚀 Story Weaver API is running!
+📍 Environment: ${config.nodeEnv}
+🌐 URL: ${config.serverUrl}
+📚 API: ${config.serverUrl}/api
+❤️  Health: ${config.serverUrl}/api/health
+🗄️  Database: ${dbHealthy ? 'Connected' : 'Unavailable'}
+    `);
   });
-};
 
-// Health check endpoint at /api/health (same pattern as main api-server)
-app.get('/api/health', healthHandler);
+  // Graceful shutdown
+  const shutdown = (signal: string) => {
+    logger.info('Server', `${signal} received. Shutting down gracefully...`);
+    server.close(() => {
+      logger.info('Server', 'Server closed.');
+      process.exit(0);
+    });
 
-// Error handling
-app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-  console.error('Error:', err);
-  res.status(500).json({ 
-    success: false, 
-    error: err.message || 'Internal server error' 
-  });
-});
+    // Force close after timeout
+    setTimeout(() => {
+      logger.error('Server', 'Forced shutdown after timeout.');
+      process.exit(1);
+    }, config.server.gracefulShutdownTimeout);
+  };
 
-app.listen(PORT, () => {
-  console.log(`🎬 Story Weaver API running on http://localhost:${PORT}`);
-  console.log(`📊 Health check: http://localhost:${PORT}/api/health`);
+  process.on('SIGTERM', () => { shutdown('SIGTERM'); });
+  process.on('SIGINT', () => { shutdown('SIGINT'); });
+}
+
+// =============================================================================
+// Run
+// =============================================================================
+
+startServer().catch((error: unknown) => {
+  logger.error('Server', 'Failed to start server', error);
+  process.exit(1);
 });

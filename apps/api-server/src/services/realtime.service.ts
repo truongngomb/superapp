@@ -1,8 +1,9 @@
 import { Response } from 'express';
 import PocketBase from 'pocketbase';
-import { config, Collections } from '../config/index.js';
+import { config } from '../config/index.js';
 import { createLogger } from '../utils/index.js';
 import { ActivityLogService } from './activity_log.service.js';
+import { CollectionNames } from '@/database/index.ts';
 
 const log = createLogger('RealtimeService');
 
@@ -71,14 +72,14 @@ class RealtimeService {
         log.warn('No PocketBase Admin credentials found. Real-time subscription might fail due to collection rules.');
       }
 
-      log.info(`Subscribing to PocketBase collection: ${Collections.ACTIVITY_LOGS}`);
-      await this.pbAdmin.collection(Collections.ACTIVITY_LOGS).subscribe('*', (e) => {
+      log.info(`Subscribing to PocketBase collection: ${CollectionNames.ACTIVITY_LOGS}`);
+      await this.pbAdmin.collection(CollectionNames.ACTIVITY_LOGS).subscribe('*', (e) => {
         void (async () => {
           if (e.action === 'create') {
             try {
               if (!this.pbAdmin) return;
             // Fetch full record with expanded user relation
-            const fullRecord = await this.pbAdmin.collection(Collections.ACTIVITY_LOGS).getOne(e.record.id, {
+            const fullRecord = await this.pbAdmin.collection(CollectionNames.ACTIVITY_LOGS).getOne(e.record.id, {
               expand: 'user',
             });
 
