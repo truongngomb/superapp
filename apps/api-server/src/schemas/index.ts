@@ -75,3 +75,7 @@ export type {
   UserRoleAssignmentSchemaType,
 } from './user.schema.js';
 
+// Video schemas
+export * from './video-project.schema.js';
+export * from './video-scene.schema.js';
+

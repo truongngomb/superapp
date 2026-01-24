@@ -102,6 +102,8 @@ export const Collections = {
   CATEGORIES: 'categories',
   ROLES: 'roles',
   ACTIVITY_LOGS: 'activity_logs',
+  VIDEO_PROJECTS: 'video_projects',
+  VIDEO_SCENES: 'video_scenes',
 } as const;
 
 /** Union type of all collection names */

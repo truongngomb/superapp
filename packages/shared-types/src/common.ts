@@ -113,6 +113,7 @@ export interface BaseListParams {
   search?: string;
   isActive?: boolean;
   isDeleted?: boolean;
+  [key: string]: unknown;
 }
 
 
@@ -273,5 +274,6 @@ export enum PermissionResource {
   Home = 'home',
   ApiDocs = 'api_docs',
   SystemHealth = 'system_health',
+  VideoProjects = 'video_projects',
 }
 

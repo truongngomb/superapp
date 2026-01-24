@@ -1,0 +1,41 @@
+// Theme CSS Variables
+:root {
+  --color-primary-50: 214 100% 97%;
+  --color-primary-100: 214 95% 93%;
+  --color-primary-200: 213 97% 87%;
+  --color-primary-300: 212 96% 78%;
+  --color-primary-400: 213 94% 68%;
+  --color-primary: 217 91% 60%;
+  --color-primary-600: 221 83% 53%;
+  --color-primary-700: 224 76% 48%;
+  --color-primary-800: 226 71% 40%;
+  --color-primary-900: 224 64% 33%;
+
+  --color-secondary: 271 91% 65%;
+  --color-accent: 43 96% 56%;
+
+  --color-background: 0 0% 100%;
+  --color-surface: 210 40% 98%;
+  --color-surface-elevated: 0 0% 100%;
+  --color-foreground: 222 47% 11%;
+  --color-muted: 215 16% 47%;
+  --color-border: 214 32% 91%;
+
+  --color-success: 142 76% 36%;
+  --color-warning: 38 92% 50%;
+  --color-error: 0 84% 60%;
+  --color-info: 199 89% 48%;
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+}
+
+.dark {
+  --color-background: 222 47% 11%;
+  --color-surface: 223 47% 14%;
+  --color-surface-elevated: 224 47% 17%;
+  --color-foreground: 210 40% 98%;
+  --color-muted: 215 20% 65%;
+  --color-border: 217 33% 25%;
+}

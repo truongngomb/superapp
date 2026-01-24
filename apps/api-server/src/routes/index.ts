@@ -21,4 +21,6 @@ export { realtimeRouter } from './realtime.js';
 export { settingsRouter } from './settings.js';
 export { markdownRouter } from './markdown.js';
 export { mediaRouter } from './media.js';
+export { videoProjectsRouter } from './video-projects.js';
+export { videoScenesRouter } from './video-scenes.js';
 

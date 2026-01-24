@@ -50,3 +50,7 @@ export * from './request-metrics.types.js';
 export * from './metrics.js';
 export * from './constants.js';
 
+// Video Project types
+export * from './video-project.js';
+export * from './video-scene.js';
+
