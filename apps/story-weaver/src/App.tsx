@@ -1,27 +1,27 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { DashboardPage } from './pages/Dashboard/DashboardPage';
-import { EditorPage } from './pages/Editor/EditorPage';
-import { MainLayout } from './components/layout/MainLayout';
-import './styles/index.scss';
+/**
+ * App Root Component
+ * 
+ * Entry point for the application.
+ * Wraps the router with all necessary context providers.
+ */
+import { BrowserRouter } from 'react-router-dom';
+import { AppProviders } from './AppProviders';
+import { AppRoutes } from './AppRoutes';
+import { MaintenanceOverlay } from './components/common';
+import { useState } from 'react';
 
-const queryClient = new QueryClient();
+// ============================================================================
+// App Component
+// ============================================================================
 
-function App() {
+export function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-        {/* Auto-detect basename based on current path for proxy support */}
-        <BrowserRouter basename={window.location.pathname.startsWith('/story-weaver') ? '/story-weaver' : '/'}>
-            <Routes>
-                <Route element={<MainLayout />}>
-                    <Route path="/" element={<DashboardPage />} />
-                    <Route path="/dashboard" element={<DashboardPage />} />
-                    <Route path="/editor/:id" element={<EditorPage />} />
-                </Route>
-            </Routes>
-        </BrowserRouter>
-    </QueryClientProvider>
+    <AppProviders>
+      {/* Auto-detect basename based on current path for proxy support */}
+      <BrowserRouter basename={useState(() => window.location.pathname.startsWith('/story-weaver') ? '/story-weaver' : '/')[0]}>
+        <MaintenanceOverlay />
+        <AppRoutes />
+      </BrowserRouter>
+    </AppProviders>
   )
 }
-
-export default App;

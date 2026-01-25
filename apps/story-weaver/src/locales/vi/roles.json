@@ -1,0 +1,21 @@
+{
+  "entity": "vai trò",
+  "entities": "vai trò",
+  "title": "Quản lý Vai trò",
+  "subtitle": "Quản lý vai trò và phân quyền",
+  "create_btn": "Tạo Vai trò",
+  "permissions_count": "quyền",
+  "list": {
+    "resources_configured": "tài nguyên đã cấu hình"
+  },
+  "form": {
+    "add_title": "Thêm Vai trò Mới",
+    "edit_title": "Chỉnh sửa Vai trò",
+    "name_label": "Tên vai trò",
+    "name_placeholder": "Nhập tên vai trò",
+    "desc_label": "Mô tả",
+    "desc_placeholder": "Nhập mô tả",
+    "permissions_label": "Phân quyền",
+    "active_description": "Cho phép người dùng có vai trò này truy cập hệ thống"
+  }
+}

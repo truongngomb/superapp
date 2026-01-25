@@ -13,6 +13,10 @@ export const API_ENDPOINTS = {
     GOOGLE: '/auth/google',
     LOGOUT: '/auth/logout',
   },
+  MARKDOWN_PAGES: '/markdown-pages',
+  ACTIVITY_LOGS: '/activity-logs',
+  USERS: '/users',
+
   VIDEO_PROJECTS: '/video-projects',
   VIDEO_SCENES: '/video-scenes',
 } as const;
@@ -43,8 +47,23 @@ export const STORAGE_KEYS = {
   THEME: 'theme',
   AUTH_TOKEN: 'auth_token',
   USER_PREFERENCES: 'user_preferences',
+  CATEGORIES_VIEW_MODE: 'categories_view_mode',
+  CATEGORIES_SORT: 'categories_sort',
+  USERS_VIEW_MODE: 'users_view_mode',
+  USERS_SORT: 'users_sort',
+  ROLES_VIEW_MODE: 'roles_view_mode',
+  ROLES_SORT: 'roles_sort',
+  ACTIVITY_LOGS_SORT: 'activity_logs_sort',
+  MARKDOWN_PAGES_VIEW_MODE: 'markdown_pages_view_mode',
+  MARKDOWN_PAGES_SORT: 'markdown_pages_sort',
+  API_DOCS_VIEW_MODE: 'api_docs_view_mode',
+
+  LAYOUT_MODE: 'layout_mode',
+  DESKTOP_SIDEBAR_OPEN: 'desktop_sidebar_open',
+  SETTINGS: 'app_settings',
+  
   VIDEO_PROJECTS_VIEW_MODE: 'video_projects_view_mode',
-  VIDEO_PROJECTS_SORT: 'video_projects_sort',
+  VIDEO_PROJECTS_SORT: 'video_projects_sort'
 } as const;
 
 // Theme

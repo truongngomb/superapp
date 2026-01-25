@@ -3,22 +3,22 @@ import { IMenuItem } from '@superapp/shared-types';
 
 export const STORY_WEAVER_MENU: IMenuItem[] = [
   {
-    path: '/story-weaver',
+    path: '/',
     label: 'Dashboard',
     icon: LayoutDashboard,
   },
   {
-    path: '/story-weaver/create',
+    path: '/create',
     label: 'Create Video',
     icon: Video,
   },
   {
-    path: '/story-weaver/library',
+    path: '/library',
     label: 'Library',
     icon: Library,
   },
   {
-    path: '/story-weaver/settings',
+    path: '/settings',
     label: 'Settings',
     icon: Settings,
   }

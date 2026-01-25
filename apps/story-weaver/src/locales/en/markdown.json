@@ -1,0 +1,68 @@
+{
+  "title": "Markdown Pages",
+  "name": "Markdown Pages",
+  "entities": "Markdown Pages",
+  "list_title": "Page Management",
+  "create_title": "Create Page",
+  "edit_title": "Edit Page",
+  "view_page": "View Page",
+  
+  "form": {
+    "title": "Title",
+    "title_placeholder": "Ex: About Us",
+    "slug": "URL Slug",
+    "slug_placeholder": "ex: about-us",
+    "slug_help": "Unique identifier for URL (e.g., about-us)",
+    "auto_generate_slug": "Auto-generate from title",
+    "content": "Content",
+    "excerpt": "Excerpt",
+    "excerpt_placeholder": "Short summary for SEO and previews...",
+    "icon": "Icon",
+    "select_icon": "Select Icon",
+    "icon_placeholder": "e.g. settings, home (Lucide icon name)",
+    "cover_image": "Cover Image",
+    "show_in_menu": "Show in Menu",
+    "is_title": "Is Section Title",
+    "menu_title": "Menu Title",
+    "menu_title_placeholder": "Short title for menu (optional)",
+    "menu_title_help": "Override the title displayed in navigation menu",
+    "parent_page": "Parent Page",
+    "select_parent": "Select parent page...",
+    "none": "None",
+    "order": "Order",
+    "published": "Published",
+    "published_help": "Visible to public",
+    "settings": "Settings",
+    "assets": "Assets",
+    "has_cover": "Has cover image",
+    "auto_fill": "Auto-fill from Default",
+    "auto_fill_tooltip": "Auto-translate content from default language",
+    "auto_fill_all": "Sync to All Languages",
+    "auto_fill_all_tooltip": "Auto-translate content to all other languages",
+    "manage_translations": "Manage Translations",
+    "default_language": "Default Language",
+    "editing": "Editing",
+    "translation_count": "{{count}}/3 languages"
+  },
+  
+  "errors": {
+    "slug_invalid": "Slug can only contain lowercase letters, numbers, and hyphens",
+    "slug_reserved": "This slug is reserved by system",
+    "menu_depth_exceeded": "Maximum menu depth is 2 levels",
+    "at_least_one_language": "Please provide content for at least one language (Title & Slug required)",
+    "check_tabs": "Please check errors in {{tabs}} tabs"
+  },
+
+  "status": {
+    "published": "Published",
+    "draft": "Draft"
+  },
+
+  "toast": {
+    "auto_fill_success": "Auto-translated from {{from}} to {{to}}",
+    "auto_fill_all_success": "Successfully auto-translated to all languages",
+    "no_default_content": "No default language content available",
+    "already_default": "This is the default language",
+    "translation_error": "Translation failed. Please try again."
+  }
+}

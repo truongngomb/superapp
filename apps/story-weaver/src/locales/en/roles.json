@@ -1,0 +1,21 @@
+{
+  "entity": "Role",
+  "entities": "Roles",
+  "title": "Role Management",
+  "subtitle": "Manage user roles and permissions",
+  "create_btn": "Create Role",
+  "permissions_count": "permissions",
+  "list": {
+    "resources_configured": "resources configured"
+  },
+  "form": {
+    "add_title": "Add New Role",
+    "edit_title": "Edit Role",
+    "name_label": "Name",
+    "name_placeholder": "Enter role name",
+    "desc_label": "Description",
+    "desc_placeholder": "Enter role description",
+    "permissions_label": "Permissions",
+    "active_description": "Allow users with this role to access the system"
+  }
+}

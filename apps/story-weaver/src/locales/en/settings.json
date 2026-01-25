@@ -1,0 +1,112 @@
+{
+  "title": "System Settings",
+  "subtitle": "Manage global system configurations",
+  "tabs": {
+    "layout": "Layout",
+    "roles": "Role Resources",
+    "general": "General"
+  },
+  "general": {
+    "title": "System Maintenance",
+    "description": "General system health and maintenance",
+    "maintenance_mode": "Maintenance Mode",
+    "maintenance_mode_desc": "Block all non-admin access to the portal"
+  },
+  "version": {
+    "title": "Application Version",
+    "description": "Manage client version to trigger auto-updates",
+    "system_version": "System Version",
+    "system_version_desc": "Change version number (greater than Client) to force user reload & cache clear",
+    "force_reload": "Force Reload",
+    "force_reload_title": "Increment version to force all users to reload immediately",
+    "force_reload_success": "Version updated to {{version}}. all Clients will auto-reload."
+  },
+  "monitoring": {
+    "title": "Monitoring & Snapshots",
+    "description": "Configure system monitoring and data retention settings",
+    "snapshot_interval": "Snapshot Frequency",
+    "snapshot_interval_desc": "How often to aggregate request history"
+  },
+  "layout": {
+    "title": "Layout Configuration",
+    "description": "Customize layout styles for specific pages or the entire system",
+    "global_layout": "Global Layout",
+    "page_specific": "Page-specific Layout",
+    "home_page": "Home Page",
+    "category_page": "Category Page",
+    "modes": {
+      "standard": "Standard Layout",
+      "standard_desc": "Standard layout with header and navigation",
+      "modern": "Modern Layout",
+      "modern_desc": "Modern design with sticky sidebar and topbar",
+      "default": "Default"
+    },
+    "resource": "Managed Resource",
+    "select_resource": "Select resource...",
+    "mode": "Mode",
+    "empty": "No custom layouts configured"
+  },
+  "roles": {
+    "title": "Role Resources",
+    "description": "Configure available resources for the permission system",
+    "add_resource": "Add Resource",
+    "resource_name": "Resource Name",
+    "resource_placeholder": "e.g., example_resource...",
+    "empty": "No additional resources configured"
+  },
+  "actions": {
+    "add": "Add",
+    "save": "Save Configuration",
+    "saving": "Saving...",
+    "reset": "Reset to Default"
+  },
+  "messages": {
+    "save_success": "Settings saved successfully",
+    "save_error": "Failed to save settings",
+    "prune_success": "Logs pruned successfully",
+    "prune_error": "Failed to prune logs",
+    "clear_cache_success": "Cache cleared successfully",
+    "clear_cache_error": "Failed to clear cache"
+  },
+  "utilities": {
+    "title": "System Utilities",
+    "description": "Administrative tools for system maintenance",
+    "prune_logs": "Prune Activity Logs",
+    "prune_logs_desc": "Delete old activity logs to free up space",
+    "days_placeholder": "Select retention period",
+    "days_30": "Delete older than 30 days",
+    "days_60": "Delete older than 60 days",
+    "days_90": "Delete older than 90 days",
+    "prune_button": "Prune Logs",
+    "clear_cache": "Clear System Cache",
+    "clear_cache_desc": "Clear server-side cache to refresh configurations",
+    "clear_cache_button": "Clear Cache",
+    "prune_confirm_title": "Prune Logs",
+    "prune_confirm_message": "Are you sure you want to delete logs older than {{days}} days? This action cannot be undone.",
+    "clear_cache_confirm_title": "Clear Cache",
+    "clear_cache_confirm_message": "Are you sure you want to clear the system cache? This may temporarily impact performance."
+  },
+  "backup": {
+    "title": "Backup & Restore",
+    "description": "Manage system data backups",
+    "create": "Create Backup",
+    "filename": "Filename",
+    "size": "Size",
+    "date": "Date Created",
+    "actions": "Actions",
+    "empty": "No backups found",
+    "download": "Download",
+    "restore": "Restore",
+    "delete": "Delete",
+    "create_success": "Backup created successfully",
+    "create_error": "Failed to create backup",
+    "restore_success": "System restored successfully",
+    "restore_error": "Failed to restore backup",
+    "delete_success": "Backup deleted successfully",
+    "delete_error": "Failed to delete backup",
+    "restore_confirm_title": "Confirm Restore",
+    "restore_confirm_message": "Are you sure you want to restore '{{name}}'? Current data will be OVERWRITTEN. This cannot be undone.",
+    "delete_confirm_title": "Delete Backup",
+    "delete_confirm_message": "Are you sure you want to delete backup '{{name}}'?"
+  }
+}

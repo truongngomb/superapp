@@ -1,0 +1,69 @@
+{
+  "title": "Home",
+  "hero": {
+    "badge": "Enterprise SuperApp Architecture",
+    "subtitle": "The Ultimate Development Platform",
+    "description": "A standardized SuperApp system integrating Frontend, Backend, Mobile, and AI Agents. Optimized for speed, security, and limitless scalability."
+  },
+  "features": {
+    "dashboard": {
+      "title": "Live Command Center",
+      "description": "Real-time system health monitoring. Visualize data with dynamic, interactive charts."
+    },
+    "user_mgmt": {
+      "title": "User Management",
+      "description": "Complete user CRUD with soft delete, batch operations, and Excel export"
+    },
+    "role_mgmt": {
+      "title": "Role Management",
+      "description": "Flexible role-based access control with granular permissions"
+    },
+    "category_mgmt": {
+      "title": "Category Management",
+      "description": "Reference feature with full CRUD, archive, restore, and export functionality"
+    },
+    "activity_logs": {
+      "title": "Transparent Audit Logs",
+      "description": "Detailed tracking of all data changes. Trace user behavior with millisecond precision."
+    },
+    "i18n": {
+      "title": "Native I18n Support",
+      "description": "Deep Internationalization (EN/VI/KO). Instant language switching without page reload."
+    },
+    "export": {
+      "title": "Data Export",
+      "description": "Export data to Excel with customizable columns using ExcelJS"
+    },
+    "performance": {
+      "title": "Peak Performance",
+      "description": "React 19 + Vite architecture optimized for Core Web Vitals. 100/100 Lighthouse score for fluid experience."
+    },
+    "security": {
+      "title": "Enterprise Security",
+      "description": "Multi-layer RBAC, secure authentication, and compliance with the strictest security standards."
+    },
+    "cross_platform": {
+      "title": "Unified Cross-Platform",
+      "description": "Seamless experience across Web, Android, and iOS. Offline-first PWA support included."
+    },
+    "markdown_pages": {
+      "title": "Markdown CMS",
+      "description": "Multi-language Markdown content management with live preview, auto-translation, and optimized rendering."
+    }
+  },
+  "tech_stack": {
+    "title": "Technology Stack",
+    "frontend": "Frontend",
+    "backend": "Backend",
+    "mobile": "Mobile & PWA",
+    "frontend_items": ["React 19", "TypeScript", "Vite", "TailwindCSS", "Framer Motion"],
+    "backend_items": ["Node.js", "Express", "PocketBase", "Zod", "NodeCache"],
+    "mobile_items": ["Capacitor", "Android", "iOS", "PWA"]
+  },
+  "footer": {
+    "license": "MIT License",
+    "rights": "All rights reserved.",
+    "github": "GitHub",
+    "copyright": "© {{year}} {{brand}}. {{rights}}"
+  }
+}
