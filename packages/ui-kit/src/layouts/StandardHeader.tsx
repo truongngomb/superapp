@@ -1,7 +1,7 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useLayoutEffect, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { LogOut, Menu, Moon, Sun, User, X, ChevronDown } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { LogOut, Menu, Moon, Sun, User, X, ChevronDown, MoreVertical } from 'lucide-react';
 import { cn } from '../utils';
 import { IMenuItem, IHeaderProps } from '@superapp/shared-types';
 
@@ -35,9 +35,10 @@ interface NavLinkProps {
   link: IMenuItem;
   isActive: boolean;
   label: string;
+  isLinkActive: (link: IMenuItem) => boolean;
 }
 
-function NavLink({ link, isActive, label }: NavLinkProps) {
+function NavLink({ link, isActive, label, isLinkActive }: NavLinkProps) {
   const Icon = (link.icon || (() => null)) as React.ElementType;
   const hasChildren = link.children && link.children.length > 0;
   const [isHovered, setIsHovered] = useState(false);
@@ -45,7 +46,7 @@ function NavLink({ link, isActive, label }: NavLinkProps) {
   const commonClasses = cn(
     'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
     'flex items-center gap-1.5',
-    isActive && !link.isTitle
+    isActive
       ? 'bg-primary/10 text-primary'
       : 'text-muted hover:text-foreground hover:bg-surface',
      link.isTitle ? 'cursor-default' : 'cursor-pointer'
@@ -81,7 +82,7 @@ function NavLink({ link, isActive, label }: NavLinkProps) {
       {/* Submenu Dropdown */}
       {hasChildren && (
          <div className={cn(
-            "absolute left-0 top-full pt-2 w-48 z-50 transition-all duration-200 ease-in-out origin-top-left",
+            "absolute left-0 top-full pt-2 min-w-[12rem] w-max max-w-[18rem] z-50 transition-all duration-200 ease-in-out origin-top-left",
             isHovered 
                 ? "opacity-100 translate-y-0 pointer-events-auto" 
                 : "opacity-0 -translate-y-2 pointer-events-none"
@@ -89,14 +90,20 @@ function NavLink({ link, isActive, label }: NavLinkProps) {
             <div className="bg-popover border border-border rounded-lg shadow-lg overflow-hidden p-1 bg-white dark:bg-slate-900">
                {link.children?.map(child => {
                  const ChildIcon = (child.icon || (() => null)) as React.ElementType;
+                 const isChildActive = isLinkActive(child);
                  return (
                    <Link
                       key={child.path}
                       to={child.path}
-                      className="flex items-center gap-2 px-3 py-2 text-sm text-muted hover:text-foreground hover:bg-surface rounded-md transition-colors"
+                      className={cn(
+                        "flex items-center gap-2 px-3 py-2 text-sm rounded-md transition-colors",
+                        isChildActive 
+                          ? "bg-primary/10 text-primary font-medium" 
+                          : "text-muted hover:text-foreground hover:bg-surface"
+                      )}
                    >
-                      <ChildIcon className="w-4 h-4 text-muted-foreground" />
-                      <span className="truncate">{child.label}</span>
+                      <ChildIcon className={cn("w-4 h-4", isChildActive ? "text-primary" : "text-muted-foreground")} />
+                      <span className="whitespace-nowrap">{child.label}</span>
                    </Link>
                  );
                })}
@@ -107,6 +114,179 @@ function NavLink({ link, isActive, label }: NavLinkProps) {
   );
 
   return content;
+}
+
+interface MoreMenuProps {
+  items: IMenuItem[];
+  isLinkActive: (link: IMenuItem) => boolean;
+}
+
+function MoreMenu({ items, isLinkActive }: MoreMenuProps) {
+  const [isHovered, setIsHovered] = useState(false);
+  
+  return (
+    <div 
+      className="relative"
+      onMouseEnter={() => {setIsHovered(true)}}
+      onMouseLeave={() => {setIsHovered(false)}}
+    >
+      <div className={cn(ICON_BUTTON_CLASS, isHovered && 'bg-surface')}>
+        <MoreVertical className={cn(ICON_CLASS, items.some(isLinkActive) && "text-primary")} />
+      </div>
+
+      <AnimatePresence>
+        {isHovered && (
+          <motion.div 
+            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+            className="absolute right-0 top-full pt-2 min-w-[14rem] w-max max-w-[20rem] z-50 origin-top-right"
+          >
+            <div className="bg-popover border border-border rounded-lg shadow-xl p-1 bg-white dark:bg-slate-900 ring-1 ring-black/5">
+              {items.map((link) => {
+                const Icon = (link.icon || (() => null)) as React.ElementType;
+                const isActive = isLinkActive(link);
+                return (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    className={cn(
+                      "flex items-center justify-between gap-2 px-3 py-2 text-sm rounded-md transition-colors",
+                      isActive ? "bg-primary/10 text-primary font-medium" : "text-muted hover:text-foreground hover:bg-surface"
+                    )}
+                  >
+                    <div className="flex items-center gap-2 min-w-0">
+                      <Icon className={cn("w-4 h-4 shrink-0", isActive ? "text-primary" : "text-muted-foreground")} />
+                      <span className="whitespace-nowrap">{link.label}</span>
+                    </div>
+                    {link.children && link.children.length > 0 && (
+                      <ChevronDown className="w-3 h-3 text-muted-foreground -rotate-90" />
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+interface DesktopNavProps {
+  items: IMenuItem[];
+  isLinkActive: (link: IMenuItem) => boolean;
+}
+
+function DesktopNav({ items, isLinkActive }: DesktopNavProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const measureRef = useRef<HTMLDivElement>(null);
+  const [visibleCount, setVisibleCount] = useState(items.length);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      setMounted(true);
+    });
+    return () => {cancelAnimationFrame(frame)};
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!mounted || !containerRef.current || !measureRef.current) return;
+
+    const calculate = () => {
+      const container = containerRef.current;
+      const measure = measureRef.current;
+      if (!container || !measure) return;
+
+      const containerWidth = container.offsetWidth;
+      const itemElements = Array.from(measure.children) as HTMLElement[];
+      const itemWidths = itemElements.map(el => el.offsetWidth + 4); // +4 for gap
+
+      let totalWidth = 0;
+      let count = items.length;
+      const moreButtonWidth = 44; 
+
+      let fitsAll = true;
+      for (let i = 0; i < itemWidths.length; i++) {
+        totalWidth += itemWidths[i];
+        if (totalWidth > containerWidth) {
+          fitsAll = false;
+          break;
+        }
+      }
+
+      if (!fitsAll) {
+        totalWidth = moreButtonWidth;
+        count = 0;
+        for (let i = 0; i < itemWidths.length; i++) {
+          if (totalWidth + itemWidths[i] > containerWidth) {
+            break;
+          }
+          totalWidth += itemWidths[i];
+          count++;
+        }
+      } else {
+        count = items.length;
+      }
+
+      setVisibleCount(count);
+    };
+
+    const observer = new ResizeObserver(calculate);
+    observer.observe(containerRef.current);
+    calculate();
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [items, mounted]);
+
+  const visibleItems = items.slice(0, visibleCount);
+  const hiddenItems = items.slice(visibleCount);
+
+  return (
+    <div ref={containerRef} className="flex-1 flex items-center justify-center gap-1 min-w-0 relative">
+      {/* Hidden measurement div - always render all items here to measure their full widths */}
+      <div 
+        ref={measureRef} 
+        className="absolute flex gap-1 invisible pointer-events-none whitespace-nowrap"
+        aria-hidden="true"
+        style={{ left: -9999, top: 0 }}
+      >
+        {items.map((link) => (
+          <NavLink
+            key={`measure-${link.path}`}
+            link={link}
+            isActive={isLinkActive(link)}
+            label={link.label}
+            isLinkActive={isLinkActive}
+          />
+        ))}
+      </div>
+
+      {/* Actual visible items */}
+      <div className="flex items-center gap-1 min-w-0">
+        {visibleItems.map((link) => (
+          <NavLink
+            key={link.path}
+            link={link}
+            isActive={isLinkActive(link)}
+            label={link.label}
+            isLinkActive={isLinkActive}
+          />
+        ))}
+      </div>
+
+      {hiddenItems.length > 0 && (
+        <MoreMenu 
+          items={hiddenItems} 
+          isLinkActive={isLinkActive} 
+        />
+      )}
+    </div>
+  );
 }
 
 interface UserAvatarProps {
@@ -158,11 +338,22 @@ export function StandardHeader({
   // Use location for active state
   const location = useLocation();
 
-  const isLinkActive = useCallback((link: IMenuItem) => {
-    if (link.matchPrefix) {
-      return location.pathname.startsWith(link.path);
-    }
-    return location.pathname === link.path;
+  const isLinkActive = useCallback((link: IMenuItem): boolean => {
+    const checkActive = (item: IMenuItem): boolean => {
+      const active = item.matchPrefix 
+        ? location.pathname.startsWith(item.path)
+        : location.pathname === item.path;
+      
+      if (active) return true;
+
+      if (item.children) {
+        return item.children.some(child => checkActive(child));
+      }
+
+      return false;
+    };
+
+    return checkActive(link);
   }, [location.pathname]);
 
   return (
@@ -182,16 +373,12 @@ export function StandardHeader({
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-1">
-          {menuItems.map((link) => (
-            <NavLink
-              key={link.path}
-              link={link}
-              isActive={isLinkActive(link)}
-              label={link.label}
-            />
-          ))}
-        </nav>
+      <div className="hidden md:flex flex-1 min-w-0">
+        <DesktopNav 
+          items={menuItems}
+          isLinkActive={isLinkActive}
+        />
+      </div>
 
         {/* Actions */}
         <div className="flex items-center gap-2">

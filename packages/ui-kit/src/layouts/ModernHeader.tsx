@@ -107,8 +107,8 @@ export function ModernHeader({
           </Button>
 
           {/* Dynamic Header Content (e.g., Sub-navigation) */}
-          <div className="flex-1 flex items-center overflow-x-auto no-scrollbar py-2 min-w-0">
-            <div className="flex items-center gap-1 min-w-max">
+          <div className="flex-1 flex items-center hide-scrollbar py-2 min-w-0 h-full">
+            <div className="flex items-center gap-1 w-full h-full">
               {headerContent}
             </div>
           </div>
@@ -199,8 +199,8 @@ export function ModernHeader({
 
       {/* Mobile Sub-navigation Row (Visible only on small screens when headerContent exists) */}
       {headerContent && (
-        <div className="lg:hidden border-t border-border bg-background/50 backdrop-blur-md overflow-x-auto no-scrollbar transition-all duration-300">
-          <div className="flex items-center gap-1 px-4 py-2 min-w-max">
+        <div className="lg:hidden border-t border-border bg-background/50 backdrop-blur-md hide-scrollbar transition-all duration-300">
+          <div className="flex items-center gap-1 px-4 py-2">
             {headerContent}
           </div>
         </div>
