@@ -13,9 +13,9 @@ import {
   YAxis,
 } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle, Skeleton } from '@/components/common';
-import { systemService } from '@/services/system.service';
-import type { SystemMetricSnapshot } from '@superapp/shared-types';
 import { logger } from '@/utils';
+import { systemService } from '@superapp/core-logic';
+import type { SystemMetricSnapshot } from '@superapp/shared-types';
 
 interface FormattedSnapshot extends SystemMetricSnapshot {
   timeLabel: string;

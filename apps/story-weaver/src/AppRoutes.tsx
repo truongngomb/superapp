@@ -1,8 +1,8 @@
 import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { LoadingSpinner } from '@superapp/ui-kit';
-import { SharedLayoutAdapter } from './components/layout/SharedLayoutAdapter';
 import { ProtectedRoute, NotFoundPage } from '@/components/common';
+import { MainLayout } from './components/layout';
 
 // Lazy load pages
 const DashboardPage = lazy(() => import('./pages/Dashboard/DashboardPage').then(m => ({ default: m.DashboardPage })));
@@ -16,7 +16,7 @@ function LazyPage({ children }: { children: React.ReactNode }) {
 export function AppRoutes() {
   return (
     <Routes>
-      <Route element={<SharedLayoutAdapter />}>
+      <Route element={<MainLayout />}>
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         
         <Route path="dashboard" element={

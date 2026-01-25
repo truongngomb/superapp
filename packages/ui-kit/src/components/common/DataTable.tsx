@@ -4,13 +4,13 @@ import {
   useReactTable, 
   getCoreRowModel, 
   flexRender,
-  ColumnDef,
-  SortingState,
-  RowSelectionState,
+  type ColumnDef,
+  type SortingState,
+  type RowSelectionState,
 } from '@tanstack/react-table';
 import { ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react';
-import { Checkbox } from '@superapp/ui-kit';
-import { cn } from '@/utils';
+import { Checkbox } from '../Checkbox';
+import { cn } from '../../utils';
 import { List } from 'react-window';
 import { motion } from 'framer-motion';
 
@@ -18,8 +18,7 @@ import { motion } from 'framer-motion';
 const VirtualList = List as any;
 
 // Re-export specific type for usage in other files
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type DataTableColumn<T> = ColumnDef<T, any> & {
+export type DataTableColumn<T> = ColumnDef<T, undefined> & {
   // Add legacy props if strictly needed during migration, otherwise prefer standard ColumnDef
   className?: string; // used for cell styling
   align?: 'left' | 'center' | 'right';
@@ -71,11 +70,10 @@ function DataTableInner<T>({
   emptyMessage,
   showSelectAll = false,
 }: DataTableProps<T>) {
-  "use no memo";
   const { t } = useTranslation(['uikit', 'uikit']);
 
   // Convert legacy selection props to TanStack rowSelection state
-  const rowSelection = useMemo(() => {
+  const rowSelection = useMemo<RowSelectionState>(() => {
     if (!selectedIds) return {};
     return selectedIds.reduce<RowSelectionState>((acc, id) => {
       acc[id] = true;
@@ -99,7 +97,7 @@ function DataTableInner<T>({
     // Filter hidden columns (legacy support compatibility)
     // We cast to any to access the custom legacy props if defined in the standard ColumnDef alias
      
-    const visibleCols = cols.filter(c => !(c as Column<T>).hidden);
+    const visibleCols = cols.filter(c => !c.hidden);
 
     // Prepend Selection Column if needed
     if (onSelectAll || onSelectOne) {
@@ -163,7 +161,7 @@ function DataTableInner<T>({
       // Handles server-side sorting callback
       if (typeof updater !== 'function' && updater.length > 0 && onSort) {
         const sort = updater[0];
-        if (sort) onSort(sort.id);
+        onSort(sort.id);
       }
     },
     defaultColumn: {
@@ -185,7 +183,7 @@ function DataTableInner<T>({
   const flatHeaders = table.getFlatHeaders();
   const refinedGridTemplateColumns = useMemo(() => {
     return flatHeaders.map((header) => {
-        const colDef = header.column.columnDef as Column<T>;
+        const colDef = header.column.columnDef as DataTableColumn<T>;
         const legacyWidth = colDef.width; 
         
         // Priority: legacy string width > TanStack number size
@@ -217,8 +215,6 @@ function DataTableInner<T>({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Row = ({ index, style }: { index: number; style: CSSProperties; [key: string]: any }) => {
     const row = rows[index];
-    if (!row) return null;
-
     return (
       <div
         className={cn(
@@ -234,13 +230,13 @@ function DataTableInner<T>({
         aria-rowindex={index + 1}
       >
         {row.getVisibleCells().map((cell) => {
-            const colDef = cell.column.columnDef as Column<T>;
+            const colDef = cell.column.columnDef as DataTableColumn<T>;
            return (
             <div
               key={cell.id}
               className={cn(
                 "px-4 text-sm h-full flex items-center",
-                cell.column.id !== 'actions' && "truncate",
+                cell.column.id !== 'actions' && !colDef.wrap && "truncate",
                 colDef.align === 'center' && "justify-center text-center",
                 colDef.align === 'right' && "justify-end text-right",
                 colDef.className
@@ -287,7 +283,7 @@ function DataTableInner<T>({
         >
           {table.getFlatHeaders().map((header) => {
             const isSortable = header.column.getCanSort();
-            const colDef = header.column.columnDef as Column<T>;
+            const colDef = header.column.columnDef as DataTableColumn<T>;
             
             return (
               <div
@@ -362,7 +358,7 @@ function DataTableInner<T>({
                 role="row"
               >
                 {row.getVisibleCells().map((cell) => {
-                   const colDef = cell.column.columnDef as Column<T>;
+                   const colDef = cell.column.columnDef as DataTableColumn<T>;
                    return (
                     <div
                       key={cell.id}

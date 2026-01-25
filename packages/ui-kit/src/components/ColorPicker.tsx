@@ -9,9 +9,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Copy, Check, Palette, Pipette } from 'lucide-react';
-import { cn } from '@/utils';
-import { useToast } from '@/context';
 import { Button, Input } from './index';
+import { cn } from '../utils';
 
 // ============================================================================
 // Types
@@ -49,6 +48,8 @@ interface ColorPickerProps {
   allowModeSwitch?: boolean;
   /** Preset colors for palette mode (uses defaults if not provided) */
   presetColors?: PresetColor[];
+  /** Optional callback when color is copied to clipboard */
+  onCopy?: (value: string) => void;
 }
 
 // ============================================================================
@@ -140,6 +141,7 @@ function isValidHex(value: string): boolean {
 export function ColorPicker({
   value,
   onChange,
+  onCopy,
   label,
   showHexInput = true,
   showOpacity = true,
@@ -150,7 +152,6 @@ export function ColorPicker({
   presetColors,
 }: ColorPickerProps) {
   const { t } = useTranslation('uikit');
-  const toast = useToast();
   
   // Determine presets to use
   const presets = presetColors ?? DEFAULT_PRESET_COLORS;
@@ -238,10 +239,12 @@ export function ColorPicker({
     try {
       await navigator.clipboard.writeText(hexInput);
       setCopied(true);
-      toast.success(t('color_copied'));
+      if (onCopy) {
+        onCopy(hexInput);
+      }
       setTimeout(() => { setCopied(false); }, 2000);
     } catch {
-      toast.error(t('copy_failed'));
+      // Fallback or silent fail
     }
   };
   

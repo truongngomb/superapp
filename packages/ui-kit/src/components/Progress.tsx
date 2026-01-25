@@ -1,7 +1,7 @@
 import * as React from "react"
 import { Root as ProgressRoot, Indicator as ProgressIndicator } from "@radix-ui/react-progress"
 
-import { cn } from "@/utils"
+import { cn } from "../utils"
 
 const Progress = React.forwardRef<
   React.ComponentRef<typeof ProgressRoot>,
@@ -11,7 +11,7 @@ const Progress = React.forwardRef<
     ref={ref}
     className={cn(
       "relative h-2 w-full overflow-hidden rounded-full bg-secondary",
-      className
+      String(className)
     )}
     {...props}
   >

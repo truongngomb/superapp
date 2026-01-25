@@ -1,5 +1,5 @@
 import { VideoScene } from '@superapp/shared-types';
-import { Card } from '@superapp/ui-kit';
+import { Card, Button } from '@superapp/ui-kit';
 import { GripVertical, Image as ImageIcon, Music as MusicIcon, Clock, Trash2 } from 'lucide-react';
 
 interface SceneCardProps {
@@ -29,12 +29,14 @@ export const SceneCard = ({ scene, index, onDelete }: SceneCardProps) => {
             <div className="flex-1 space-y-2">
                 <div className="flex justify-between items-start">
                     <h4 className="font-semibold">Scene {index + 1}</h4>
-                    <button 
+                    <Button
+                        variant="ghost"
+                        size="icon"
                         onClick={() => onDelete(scene.id)}
-                        className="text-muted-foreground hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="text-muted-foreground hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8"
                     >
                         <Trash2 size={16} />
-                    </button>
+                    </Button>
                 </div>
                 
                 <p className="text-sm line-clamp-2">{scene.script_text || <span className="text-muted-foreground italic">No script content...</span>}</p>

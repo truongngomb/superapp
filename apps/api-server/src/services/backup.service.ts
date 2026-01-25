@@ -18,7 +18,7 @@ export class BackupService {
     try {
       const backups = await adminPb.backups.getFullList();
       return backups.map(b => ({
-        name: b.key,
+        key: b.key,
         size: b.size,
         modified: b.modified,
       }));

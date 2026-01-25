@@ -9,3 +9,4 @@ export * from './ProtectedRoute';
 export * from './ResourceToolbar';
 export * from './SearchFilterBar';
 export * from './Toast';
+export * from './DataTable';

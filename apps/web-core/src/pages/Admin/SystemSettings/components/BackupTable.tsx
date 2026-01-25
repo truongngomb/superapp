@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Download, RefreshCw, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { Button } from '@/components/common';
-import { BackupItem } from '@/services/backup.service';
+import type { BackupItem } from '@superapp/shared-types';
 
 interface BackupTableProps {
   data: BackupItem[];

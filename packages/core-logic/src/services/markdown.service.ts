@@ -3,7 +3,7 @@
  * Handles all markdown page-related API calls
  */
 
-import { api, createAbortController, API_ENDPOINTS, type RequestConfig, env } from '@/config';
+import { api, createAbortController, API_ENDPOINTS, type RequestConfig, env } from '../config';
 import type { 
   MarkdownPage, 
   MarkdownPageCreateInput, 
@@ -135,35 +135,35 @@ export const markdownService = {
   /**
    * Delete page
    */
-  async delete(id: string): Promise<void> {
+  async delete(id: string): Promise<boolean | undefined> {
     return api.delete(`${API_ENDPOINTS.MARKDOWN_PAGES}/${id}`);
   },
 
   /**
    * Restore page
    */
-  async restore(id: string): Promise<void> {
+  async restore(id: string): Promise<boolean | undefined> {
     return api.post(`${API_ENDPOINTS.MARKDOWN_PAGES}/${id}/restore`);
   },
 
   /**
    * Batch delete pages
    */
-  async deleteMany(ids: string[]): Promise<void> {
+  async deleteMany(ids: string[]): Promise<boolean | undefined> {
     return api.post(`${API_ENDPOINTS.MARKDOWN_PAGES}/batch-delete`, { ids });
   },
 
   /**
    * Batch restore pages
    */
-  async restoreMany(ids: string[]): Promise<void> {
+  async restoreMany(ids: string[]): Promise<boolean | undefined> {
     return api.post(`${API_ENDPOINTS.MARKDOWN_PAGES}/batch-restore`, { ids });
   },
 
   /**
    * Batch update status
    */
-  async batchUpdateStatus(ids: string[], isActive: boolean): Promise<void> {
+  async batchUpdateStatus(ids: string[], isActive: boolean): Promise<boolean | undefined> {
     return api.post(`${API_ENDPOINTS.MARKDOWN_PAGES}/batch-status`, { ids, isActive });
   },
 

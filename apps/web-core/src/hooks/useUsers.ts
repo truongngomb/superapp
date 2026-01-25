@@ -1,10 +1,10 @@
 import { useState, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { userService } from '@/services/user.service';
 import type { User, UserCreateInput, UserUpdateInput, UserListParams } from '@superapp/shared-types';
 import { useToast } from '@/context';
 import { logger } from '@/utils';
 import { ApiException } from '@/config';
+import { userService } from '@superapp/core-logic';
 
 export function useUsers() {
   const [users, setUsers] = useState<User[]>([]);

@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { settingsService, type SettingItem } from '@/services';
 import { queryKeys } from '@/config/queryClient';
 import { useToast } from '@/context';
-import { useAuth } from '@/hooks';
+import { useAuth } from '@superapp/core-logic';
 import { SettingsContext } from './SettingsContext.base';
 import { getStorageItem, setStorageItem } from '@/utils';
 import { STORAGE_KEYS } from '@/config';

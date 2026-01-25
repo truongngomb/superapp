@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { systemService } from '@/services/system.service';
+import { systemService } from '@superapp/core-logic';
 
 
 export function useRequestMetrics() {

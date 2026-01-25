@@ -1,7 +1,7 @@
 /**
  * Media Service (Frontend)
  */
-import { api } from '@/config';
+import { api } from '../config';
 import type { MediaUploadResponse, PaginatedResponse, Media } from '@superapp/shared-types';
 
 export const mediaService = {
@@ -35,11 +35,6 @@ export const mediaService = {
     if (refId) formData.append('refId', refId);
     if (refType) formData.append('refType', refType);
 
-    // Endpoint: /api/media/upload
-    // Note: API_ENDPOINTS.MEDIA might not exist, we should add it or use hardcoded string for now.
-    // Let's use direct path to be safe unless we update config.
-    // But good practice: check config.
-    
     return api.post<MediaUploadResponse>('/media/upload', formData);
   },
 

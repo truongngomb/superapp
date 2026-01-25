@@ -9,6 +9,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { LoadingSpinner } from '@superapp/ui-kit';
 import { ProtectedRoute, GuestGuard, NotFoundPage } from '@/components/common';
 import { PermissionResource, PermissionAction } from '@superapp/shared-types';
+import { MainLayout } from './components/layout';
 
 // ============================================================================
 // Lazy Loaded Pages
@@ -60,12 +61,10 @@ function LazyPage({ children }: { children: React.ReactNode }) {
 // Route Configuration
 // ============================================================================
 
-import { SharedLayoutAdapter } from '@/components/layout/SharedLayoutAdapter';
-
 export function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<SharedLayoutAdapter />}>
+      <Route path="/" element={<MainLayout />}>
         {/* Public Routes */}
         <Route
           index

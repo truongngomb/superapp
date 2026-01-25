@@ -2,38 +2,50 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Settings as SettingsIcon, AlertOctagon } from 'lucide-react';
-import { Button } from '@superapp/ui-kit';
-import { api } from '@/config';
+import { Button } from './Button';
 
 export const MAINTENANCE_EVENT = 'maintenance_mode_event';
 
-export function MaintenanceOverlay() {
+export interface MaintenanceOverlayProps {
+  /**
+   * Callback to check system health.
+   * Should throw an error or handle dispatching the event if maintenance is active.
+   */
+  onCheckHealth: () => Promise<void>;
+  
+  /**
+   * Path to admin login (to hide overlay).
+   * Default: '/login'
+   */
+  adminLoginPath?: string;
+}
+
+export function MaintenanceOverlay({ 
+  onCheckHealth, 
+  adminLoginPath = '/login' 
+}: MaintenanceOverlayProps) {
   const { t } = useTranslation('uikit');
   const [isVisible, setIsVisible] = useState(false);
   const location = useLocation();
-  const isLoginPage = location.pathname === '/login';
+  const isLoginPage = location.pathname === adminLoginPath;
 
   // Proactively check system health/maintenance status on mount
   useEffect(() => {
     const checkMaintenance = async () => {
       try {
-        // If system is in maintenance, this will trigger 503 exception
-        // which global handler catches -> dispatches event
-        await api.get('/health');
+        await onCheckHealth();
       } catch {
-        // Error already handled by api.ts interceptor
+        // Error handling depends on the global interceptor dispatching event
       }
     };
 
     if (!isLoginPage) {
       void checkMaintenance();
     }
-  }, [isLoginPage]);
+  }, [isLoginPage, onCheckHealth]);
 
   useEffect(() => {
     const handleMaintenanceEvent = () => {
-      // Show overlay if not on login page
-      // OR if on login page but we decide to enforce it (currently hiding on login)
       if (!isLoginPage) {
         setIsVisible(true);
       }
@@ -46,9 +58,6 @@ export function MaintenanceOverlay() {
     };
   }, [isLoginPage]);
 
-  // Logic: 
-  // 1. If we are on Login page -> Hide overlay (allow Admin to login)
-  // 2. If not visible -> return null
   if (isLoginPage) return null;
   if (!isVisible) return null;
 
@@ -59,11 +68,11 @@ export function MaintenanceOverlay() {
       </div>
       
       <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent mb-4">
-        {t('maintenance.title', 'System Under Maintenance')}
+        {t('maintenance.title')}
       </h1>
       
       <p className="text-lg text-muted-foreground max-w-md mb-8">
-        {t('maintenance.message', 'We are currently performing scheduled maintenance to improve our services. Please check back soon.')}
+        {t('maintenance.message')}
       </p>
 
       <div className="flex gap-4">
@@ -71,13 +80,13 @@ export function MaintenanceOverlay() {
           variant="outline" 
           onClick={() => { window.location.reload(); }}
         >
-          {t('maintenance.retry', 'Try Again')}
+          {t('maintenance.retry')}
         </Button>
         <Button 
           variant="ghost" 
-          onClick={() => { window.location.href = '/login'; }}
+          onClick={() => { window.location.href = adminLoginPath; }}
         >
-          {t('auth.login_admin', 'Admin Login')}
+          {t('auth.login_admin')}
         </Button>
       </div>
 

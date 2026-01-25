@@ -1,12 +1,10 @@
 import { useMemo, useState, useCallback } from 'react';
 import { useLocation, Outlet } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Bell } from 'lucide-react';
 import { AppLayout, LanguageSwitcher } from '@superapp/ui-kit';
 import { IMenuItem } from '@superapp/shared-types';
-import { useAuth, useAppMenu, useLayoutMode, useActivityLogContext, useLayout } from '@/hooks';
+import { useAuth, useAppMenu, useLayoutMode, useLayout } from '@/hooks';
 import { useTheme } from '@/context';
-import { NotificationCenter } from '../notifications/NotificationCenter';
 import { getStorageItem, setStorageItem } from '@/utils';
 import { STORAGE_KEYS } from '@/config';
 
@@ -18,9 +16,6 @@ export function SharedLayoutAdapter() {
   const { headerContent } = useLayout(); // Get headerContent from context
   const location = useLocation();
   const { t } = useTranslation(['uikit', 'home']);
-  const { unreadCount } = useActivityLogContext();
-
-  const [notifOpen, setNotifOpen] = useState(false);
 
   // Modern Layout Sidebar State
   const [desktopSidebarOpen, setDesktopSidebarOpen] = useState(() => {
@@ -69,34 +64,10 @@ export function SharedLayoutAdapter() {
     return filterFn(rawMenuItems as unknown[]);
   }, [rawMenuItems, checkPermission]);
 
-  const renderNotifications = () => {
-     return (
-     <div className="relative">
-       <button
-         type="button"
-         onClick={() => { setNotifOpen(true); }}
-         className="p-2 rounded-lg hover:bg-surface transition-colors cursor-pointer text-foreground relative"
-         aria-label={t('uikit:toggle_notifications')}
-       >
-         <Bell className="w-5 h-5 text-muted" />
-         {unreadCount > 0 && (
-             <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow-sm ring-2 ring-background">
-               {unreadCount > 9 ? '9+' : unreadCount}
-             </span>
-         )}
-       </button>
-       <NotificationCenter 
-         isOpen={notifOpen} 
-         onClose={() => { setNotifOpen(false); }} 
-       />
-     </div>
-  );
-  };
-
   const renderLanguageSwitcher = () => {
     return (
-    <LanguageSwitcher className="text-foreground hover:bg-surface" />
-  );
+      <LanguageSwitcher className="text-foreground hover:bg-surface" />
+    );
   };
 
   const commonProps = {
@@ -107,7 +78,6 @@ export function SharedLayoutAdapter() {
     onLogout: handleLogout,
     isDark: isDark,
     onToggleTheme: toggleTheme,
-    renderNotifications: renderNotifications,
     renderLanguageSwitcher: renderLanguageSwitcher,
     t: (k: string, opt?: Record<string, unknown>) => t(k, opt),
   };

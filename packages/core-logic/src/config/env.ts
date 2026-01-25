@@ -24,6 +24,9 @@ interface EnvConfig {
 
   // UI Timing
   readonly DEBOUNCE_DELAY: number;
+
+  // Connection
+  readonly POCKETBASE_URL: string;
 }
 
 /**
@@ -54,6 +57,9 @@ export const env: EnvConfig = {
 
   // UI Timing
   DEBOUNCE_DELAY: parseInt(getEnvVar('VITE_DEBOUNCE_DELAY', '400'), 10),
+
+  // Connection
+  POCKETBASE_URL: getEnvVar('VITE_POCKETBASE_URL', typeof window !== 'undefined' ? window.location.origin : ''),
 } as const;
 
 /**

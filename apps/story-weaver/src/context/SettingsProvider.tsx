@@ -3,7 +3,7 @@ import { SettingsContext } from './SettingsContext.base';
 import type { SettingsContextType } from './SettingsContext.types';
 import { settingsService, SettingItem } from '@/services';
 import { logger } from '@/utils';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@superapp/core-logic';
 
 interface SettingsProviderProps {
   children: ReactNode;

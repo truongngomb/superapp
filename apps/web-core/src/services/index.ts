@@ -1,14 +1,20 @@
 /**
- * Services Module Exports
+ * Services Module
+ * Re-exports shared services from core-logic
  */
 
-export { authService } from './auth.service';
-export { categoryService } from './category.service';
-export { roleService } from './role.service';
-export { userService } from './user.service';
-export { activityLogService } from './activity_log.service';
-export { settingsService } from './settings.service';
-export { markdownService } from './markdown.service';
-export { systemService } from './system.service';
+export {
+    authService,
+    roleService,
+    userService,
+    activityLogService,
+    settingsService,
+    markdownService,
+    systemService,
+    mediaService,
+    backupService
+} from '@superapp/core-logic';
 
-export type { SettingItem } from './settings.service';
+export type { SettingItem } from '@superapp/core-logic';
+
+export * from './category.service';

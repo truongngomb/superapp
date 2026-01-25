@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Archive, HardDrive } from 'lucide-react';
 import { Card, CardHeader, CardContent, Button, ConfirmModal } from '@/components/common';
 import { useToast } from '@/hooks';
-import { backupService, BackupItem } from '@/services/backup.service';
+import { backupService, BackupItem } from '@superapp/core-logic';
 import { BackupTable } from './BackupTable';
 
 export function BackupManager() {

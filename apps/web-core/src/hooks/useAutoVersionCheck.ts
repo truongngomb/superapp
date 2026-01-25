@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useRef } from 'react';
-import { settingsService } from '@/services/settings.service';
 import { logger } from '@superapp/core-logic';
+import { settingsService } from '@superapp/core-logic';
 
 const CHECK_INTERVAL = 60 * 1000; // Check every 1 minute
 const RELOAD_COOLDOWN = 10 * 1000; // Prevent loop reloading within 10s

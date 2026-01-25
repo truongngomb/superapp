@@ -1,11 +1,11 @@
 
 import { useTranslation } from 'react-i18next';
 import { Modal, Button, FileUploader } from '@superapp/ui-kit';
-import { mediaService } from '@/services/media.service';
 import type { Media } from '@superapp/shared-types';
 import { Trash2, Check, Loader2 } from 'lucide-react';
 import { useToast } from '@/context';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { mediaService } from '@superapp/core-logic';
 
 interface MediaManagerModalProps {
   open: boolean;

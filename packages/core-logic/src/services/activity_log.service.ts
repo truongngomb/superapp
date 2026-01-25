@@ -2,12 +2,8 @@
  * Activity Log Service
  * Handles fetching activity logs from the backend
  */
-import { api, createAbortController, API_ENDPOINTS, type RequestConfig, env } from '@/config';
+import { api, createAbortController, API_ENDPOINTS, type RequestConfig, env } from '../config';
 import type { ActivityLog, PaginatedActivityLogs, ActivityLogParams } from '@superapp/shared-types';
-
-// ============================================================================
-// Types
-// ============================================================================
 
 interface ServiceConfig extends Omit<RequestConfig, 'signal'> {
   /** Request timeout in ms (default: env.API_REQUEST_TIMEOUT) */
@@ -15,10 +11,6 @@ interface ServiceConfig extends Omit<RequestConfig, 'signal'> {
   /** AbortSignal for cancellation */
   signal?: AbortSignal;
 }
-
-// ============================================================================
-// Service
-// ============================================================================
 
 export const activityLogService = {
   /**

@@ -6,14 +6,14 @@ import {
   CardDescription
 } from "@/components/common";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Progress } from "@/components/ui/progress";
+  Progress,
+  TableHead,
+  TableBody,
+  TableCell,
+  Table
+} from "@superapp/ui-kit";
 import { formatBytes } from "@/utils/format";
 import { useTranslation } from "react-i18next";
 

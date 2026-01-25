@@ -1,10 +1,6 @@
-import { api } from '@/config/api';
-
-export interface BackupItem {
-  key: string;
-  size: number;
-  modified: string;
-}
+import { api } from '../config/api';
+import { env } from '../config/env';
+import type { BackupItem } from '@superapp/shared-types';
 
 export const backupService = {
   /**
@@ -40,8 +36,7 @@ export const backupService = {
    * Get download URL (Admin only)
    */
   getDownloadUrl: (key: string): string => {
-    const pbUrl = (import.meta.env.VITE_POCKETBASE_URL as string) || window.location.origin;
-    const baseUrl = pbUrl.replace(/\/$/, '');
+    const baseUrl = env.POCKETBASE_URL.replace(/\/$/, '');
     return `${baseUrl}/api/backups/${encodeURIComponent(key)}`;
   }
 };

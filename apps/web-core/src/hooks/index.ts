@@ -12,12 +12,7 @@ export * from './useMarkdownPages';
 export * from './useAppMenu';
 export { useMediaUpload } from './useMedia';
 export * from './useSystemHealth';
-
-export * from './useLayoutMode';
-export * from './useLayout';
 export * from './useResourceService';
-export * from './useMediaQuery';
-export * from './useResponsiveView';
 export * from './useInfiniteResource';
 export * from './usePageTitle';
 export { useAutoVersionCheck } from './useAutoVersionCheck';
@@ -34,6 +29,14 @@ export {
   useDataSorting,
   useExcelExport,
   useOnClickOutside,
+  useLayoutMode,
+  useLayout,
+  LayoutProvider,
+  useMediaQuery,
+  useResponsiveView,
+  useIsMobile,
+  useIsTablet,
+  useIsDesktop,
 } from '@superapp/core-logic';
 export type { UseResourceReturn } from '@superapp/core-logic';
 

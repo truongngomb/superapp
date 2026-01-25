@@ -18,6 +18,8 @@ export * from './SortableHeader';
 export * from './Textarea';
 export * from './Toggle';
 export * from './ViewSwitcher';
+export * from './Table';
+export * from './Progress';
 
 // Markdown components
 export * from './MarkdownEditor';
@@ -30,3 +32,5 @@ export * from './Tabs';
 
 // Common components
 export * from './common';
+export * from './ColorPicker';
+export * from './MaintenanceOverlay';

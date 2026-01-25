@@ -77,8 +77,8 @@ export interface SystemStats {
 // Backup Types
 // ============================================================================
 
-export interface BackupInfo {
-  name: string;
+export interface BackupItem {
+  key: string;
   size: number;
   modified: string;
 }

@@ -1,8 +1,7 @@
 import { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useSettings } from './useSettings';
-
-export type LayoutMode = 'standard' | 'modern';
+import { useSettings } from '../context/SettingsContext';
+import { type LayoutMode } from '@superapp/shared-types';
 
 export function useLayoutMode() {
   const { getSettingValue } = useSettings();
@@ -18,13 +17,12 @@ export function useLayoutMode() {
     // 2. Check page specific
     const path = location.pathname;
     
-    // Create variations of the path to check (e.g., /admin/users -> check "/admin/users" AND "/users")
+    // Create variations of the path to check
     const pathsToCheck = [path];
     if (path.startsWith('/admin/')) {
       pathsToCheck.push(path.replace('/admin', ''));
     }
     
-    // Map markdown viewer pages to markdown_view_pages resource layout
     if (path.startsWith('/pages/')) {
       pathsToCheck.push('/markdown_view_pages');
     }
@@ -33,10 +31,8 @@ export function useLayoutMode() {
     const pageOverrides = layoutConfig.pages;
     const sortedConfigPaths = Object.keys(pageOverrides).sort((a, b) => b.length - a.length);
     
-    // Check real path first, then stripped path
     for (const currentPath of pathsToCheck) {
       for (const configPath of sortedConfigPaths) {
-         // Check exact match or prefix match
          if (currentPath === configPath || currentPath.startsWith(`${configPath}/`)) {
            return pageOverrides[configPath] as LayoutMode;
          }

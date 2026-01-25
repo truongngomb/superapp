@@ -6,7 +6,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@superapp/ui-kit";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/common';
 import type { EndpointMetric } from '@superapp/shared-types';
 

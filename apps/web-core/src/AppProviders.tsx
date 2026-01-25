@@ -12,9 +12,8 @@ import {
   ToastProvider,
   RealtimeProvider,
   SettingsProvider,
-  LayoutProvider,
 } from '@/context';
-import { AuthProvider, ThemeProvider } from '@superapp/core-logic';
+import { AuthProvider, ThemeProvider, LayoutProvider } from '@superapp/core-logic';
 import { ActivityLogProvider } from '@/context/ActivityLogContext';
 
 interface AppProvidersProps {

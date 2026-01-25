@@ -1,12 +1,9 @@
 /**
  * Settings Service
- * Frontend service for interacting with the settings API
+ * Shared service for interacting with the settings API
  */
-import { api } from '@/config';
+import { api } from '../config';
 import type { SettingItem } from '@superapp/shared-types';
-
-// Re-export for convenience
-export type { SettingItem };
 
 export const settingsService = {
   /**

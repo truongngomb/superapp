@@ -2,7 +2,7 @@ import { useMemo, useState, useCallback } from 'react';
 import { useLocation, Outlet } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Bell } from 'lucide-react';
-import { AppLayout, LanguageSwitcher } from '@superapp/ui-kit';
+import { AppLayout, LanguageSwitcher, Button } from '@superapp/ui-kit';
 import { IMenuItem } from '@superapp/shared-types';
 import { useAuth, useAppMenu, useLayoutMode, useActivityLogContext, useLayout } from '@/hooks';
 import { useTheme } from '@/context';
@@ -71,25 +71,26 @@ export function SharedLayoutAdapter() {
 
   const renderNotifications = () => {
      return (
-     <div className="relative">
-       <button
-         type="button"
-         onClick={() => { setNotifOpen(true); }}
-         className="p-2 rounded-lg hover:bg-surface transition-colors cursor-pointer text-foreground relative"
-         aria-label={t('uikit:toggle_notifications')}
-       >
-         <Bell className="w-5 h-5 text-muted" />
-         {unreadCount > 0 && (
-             <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow-sm ring-2 ring-background">
-               {unreadCount > 9 ? '9+' : unreadCount}
-             </span>
-         )}
-       </button>
-       <NotificationCenter 
-         isOpen={notifOpen} 
-         onClose={() => { setNotifOpen(false); }} 
-       />
-     </div>
+      <div className="relative">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => { setNotifOpen(true); }}
+          className="rounded-lg text-foreground relative hover:bg-surface"
+          aria-label={t('uikit:toggle_notifications')}
+        >
+          <Bell className="w-5 h-5 text-muted" />
+          {unreadCount > 0 && (
+              <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow-sm ring-2 ring-background">
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
+          )}
+        </Button>
+        <NotificationCenter 
+          isOpen={notifOpen} 
+          onClose={() => { setNotifOpen(false); }} 
+        />
+      </div>
   );
   };
 

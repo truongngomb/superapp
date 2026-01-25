@@ -15,10 +15,17 @@ export {
   useOnClickOutside,
 } from '@superapp/core-logic';
 
-export * from './useActivityLogs';
+
 export * from './useAppMenu';
-export * from './useLayoutMode';
-export * from './useLayout';
+export { 
+    useLayoutMode, 
+    useLayout,
+    useMediaQuery, 
+    useIsMobile, 
+    useIsTablet, 
+    useIsDesktop,
+    useResponsiveView 
+} from '@superapp/core-logic';
 export * from './useProjects';
 export * from './useScenes';
 export * from './useSettings';

@@ -6,7 +6,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useToast } from '@/context';
-import { mediaService } from '@/services/media.service';
+import { mediaService } from '@superapp/core-logic';
 
 
 

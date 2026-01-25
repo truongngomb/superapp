@@ -1,21 +1,15 @@
 /**
  * AppProviders Component
  * Wraps the application with all context providers
- * 
+ *
  * This eliminates the "pyramid of doom" nesting in App.tsx
  */
-import { type ReactNode } from 'react';
-import { QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { queryClient } from '@/config/queryClient';
-import { AuthProvider, ThemeProvider } from '@superapp/core-logic';
-import {
-  ToastProvider,
-  RealtimeProvider,
-  SettingsProvider,
-  LayoutProvider,
-} from '@/context';
-import { ActivityLogProvider } from '@/context/ActivityLogContext';
+import { type ReactNode } from "react";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { queryClient } from "@/config/queryClient";
+import { AuthProvider, ThemeProvider, LayoutProvider } from "@superapp/core-logic";
+import { ToastProvider, SettingsProvider } from "@/context";
 
 interface AppProvidersProps {
   children: ReactNode;
@@ -24,7 +18,7 @@ interface AppProvidersProps {
 /**
  * Compose multiple providers without deep nesting
  * Order matters: outer providers wrap inner ones
- * 
+ *
  * QueryClientProvider is outermost to enable React Query in all contexts
  */
 export function AppProviders({ children }: AppProvidersProps) {
@@ -35,11 +29,7 @@ export function AppProviders({ children }: AppProvidersProps) {
           <ToastProvider>
             <SettingsProvider>
               <LayoutProvider>
-                <RealtimeProvider>
-                  <ActivityLogProvider>
-                    {children}
-                  </ActivityLogProvider>
-                </RealtimeProvider>
+                {children}
               </LayoutProvider>
             </SettingsProvider>
           </ToastProvider>
