@@ -109,35 +109,35 @@ export const categoryService = {
   /**
    * Restore soft-deleted category
    */
-  async restore(id: string): Promise<void> {
+  async restore(id: string): Promise<boolean | undefined> {
     return api.post(`${API_ENDPOINTS.CATEGORIES}/${id}/restore`);
   },
 
   /**
    * Delete category by ID
    */
-  async delete(id: string): Promise<void> {
+  async delete(id: string): Promise<boolean | undefined> {
     return api.delete(`${API_ENDPOINTS.CATEGORIES}/${id}`);
   },
 
   /**
    * Batch delete categories
    */
-  async deleteMany(ids: string[]): Promise<void> {
+  async deleteMany(ids: string[]): Promise<boolean | undefined> {
     return api.post(`${API_ENDPOINTS.CATEGORIES}/batch-delete`, { ids });
   },
 
   /**
    * Batch update categories status
    */
-  async batchUpdateStatus(ids: string[], isActive: boolean): Promise<void> {
+  async batchUpdateStatus(ids: string[], isActive: boolean): Promise<boolean | undefined> {
     return api.post(`${API_ENDPOINTS.CATEGORIES}/batch-status`, { ids, isActive });
   },
 
   /**
    * Batch restore categories
    */
-  async restoreMany(ids: string[]): Promise<void> {
+  async restoreMany(ids: string[]): Promise<boolean | undefined> {
     return api.post(`${API_ENDPOINTS.CATEGORIES}/batch-restore`, { ids });
   },
 

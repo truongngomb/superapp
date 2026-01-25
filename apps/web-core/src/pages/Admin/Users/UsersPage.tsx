@@ -15,23 +15,16 @@ import {
   Card, 
   CardContent, 
   ConfirmModal, 
-  Pagination, 
-  type ViewMode,
-
-
+  Pagination,
   ResourceToolbar,
   BatchActionButtons,
-  SearchFilterBar
+  SearchFilterBar,
+  PermissionGuard
 } from '@/components/common';
-import { PermissionGuard } from '@/components/common/PermissionGuard';
 import { useSort, useDebounce, useAuth, useResource, useToast, useExcelExport, useResponsiveView, useInfiniteResource } from '@/hooks';
-import type { User, SortColumn, UserCreateInput, UserListParams, UserUpdateInput } from '@superapp/shared-types';
+import type { User, SortColumn, UserCreateInput, UserListParams, UserUpdateInput, ViewMode } from '@superapp/shared-types';
 import { getStorageItem, setStorageItem } from '@/utils';
 import { STORAGE_KEYS } from '@/config';
-
-
-
-// ...
 
 import { UserRow } from './components/UserRow';
 import { UserTable } from './components/UserTable';
@@ -47,8 +40,6 @@ import { UserMobileCardSkeletonList } from './components/UserMobileCardSkeleton'
  * UsersPage Component
  */
 import { useSearchParams } from 'react-router-dom';
-
-// ...
 
 export default function UsersPage() {
   const { t } = useTranslation(['users', 'uikit']);

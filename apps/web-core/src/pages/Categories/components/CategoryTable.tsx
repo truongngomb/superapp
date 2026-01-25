@@ -2,10 +2,9 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Edit2, Trash2, RotateCcw, Copy } from 'lucide-react';
 import { Button, Badge, DataTable, type DataTableColumn } from '@/components/common';
-import { PermissionGuard } from '@/components/common/PermissionGuard';
 import { cn } from '@/utils';
 import type { Category } from '@superapp/shared-types';
-import { CATEGORY_ICONS, type CategoryIcon } from '@superapp/ui-kit';
+import { CATEGORY_ICONS, PermissionGuard, type CategoryIcon } from '@superapp/ui-kit';
 
 interface CategoryTableProps {
   data: Category[];

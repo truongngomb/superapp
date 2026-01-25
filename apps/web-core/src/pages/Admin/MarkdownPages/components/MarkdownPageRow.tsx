@@ -1,10 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import { Edit2, Trash2, Globe, FileText } from 'lucide-react';
 import { Button, DataRow } from '@/components/common';
-import { PermissionGuard } from '@/components/common/PermissionGuard';
 import { cn } from '@/utils';
 import type { MarkdownPage } from '@superapp/shared-types';
-import { Avatar } from '@superapp/ui-kit';
+import { Avatar, PermissionGuard } from '@superapp/ui-kit';
 import { LanguageManagementButton } from './LanguageManagementButton';
 
 

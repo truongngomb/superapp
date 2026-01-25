@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Input, Modal, Toggle } from '@/components/common';
-import { PermissionGuard } from '@/components/common/PermissionGuard';
 import type { User, UserCreateInput, UserUpdateInput } from '@superapp/shared-types';
+import { PermissionGuard } from '@superapp/ui-kit';
 
 interface UserFormProps {
   user: User | null;

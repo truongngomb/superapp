@@ -12,11 +12,11 @@ import type { BaseListParams } from '@superapp/shared-types';
 export interface ResourceService<T, CreateInput, UpdateInput, ListParams> {
   create?: (data: CreateInput) => Promise<T>;
   update?: (id: string, data: UpdateInput) => Promise<T>;
-  delete?: (id: string) => Promise<boolean>;
-  restore?: (id: string) => Promise<boolean>;
-  deleteMany?: (ids: string[]) => Promise<boolean>;
-  restoreMany?: (ids: string[]) => Promise<boolean>;
-  batchUpdateStatus?: (ids: string[], isActive: boolean) => Promise<boolean>;
+  delete?: (id: string) => Promise<boolean | undefined>;
+  restore?: (id: string) => Promise<boolean | undefined>;
+  deleteMany?: (ids: string[]) => Promise<boolean | undefined>;
+  restoreMany?: (ids: string[]) => Promise<boolean | undefined>;
+  batchUpdateStatus?: (ids: string[], isActive: boolean) => Promise<boolean | undefined>;
   getPage: (params: ListParams) => Promise<{ items: T[]; total: number } | T[]>;
   getAllForExport?: (params?: ListParams) => Promise<T[]>;
 }
@@ -237,7 +237,7 @@ export function useResource<T extends { id: string }, CreateInput, UpdateInput, 
     },
   });
 
-  const deleteMutation = useMutation<boolean, Error, string>({
+  const deleteMutation = useMutation<boolean | undefined, Error, string>({
     mutationFn: (id: string) => {
         if (!service.delete) throw new Error('Delete not supported');
         return service.delete(id);
@@ -251,7 +251,7 @@ export function useResource<T extends { id: string }, CreateInput, UpdateInput, 
     },
   });
 
-  const restoreMutation = useMutation<boolean, Error, string>({
+  const restoreMutation = useMutation<boolean | undefined, Error, string>({
     mutationFn: (id: string) => {
         if (!service.restore) throw new Error('Restore not supported');
         return service.restore(id);
@@ -265,7 +265,7 @@ export function useResource<T extends { id: string }, CreateInput, UpdateInput, 
     },
   });
 
-  const batchDeleteMutation = useMutation<boolean, Error, string[]>({
+  const batchDeleteMutation = useMutation<boolean | undefined, Error, string[]>({
     mutationFn: (ids: string[]) => {
         if (!service.deleteMany) throw new Error('Batch delete not supported');
         return service.deleteMany(ids);
@@ -280,7 +280,7 @@ export function useResource<T extends { id: string }, CreateInput, UpdateInput, 
     },
   });
 
-  const batchRestoreMutation = useMutation<boolean, Error, string[]>({
+  const batchRestoreMutation = useMutation<boolean | undefined, Error, string[]>({
     mutationFn: (ids: string[]) => {
         if (!service.restoreMany) throw new Error('Batch restore not supported');
         return service.restoreMany(ids);
@@ -295,7 +295,7 @@ export function useResource<T extends { id: string }, CreateInput, UpdateInput, 
     },
   });
 
-  const batchStatusMutation = useMutation<boolean, Error, { ids: string[]; isActive: boolean }>({
+  const batchStatusMutation = useMutation<boolean | undefined, Error, { ids: string[]; isActive: boolean }>({
     mutationFn: ({ ids, isActive }: { ids: string[]; isActive: boolean }) => {
         if (!service.batchUpdateStatus) throw new Error('Batch status not supported');
         return service.batchUpdateStatus(ids, isActive);

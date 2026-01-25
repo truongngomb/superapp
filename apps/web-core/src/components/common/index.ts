@@ -1,18 +1,7 @@
-// Export UI Kit components
+// Export UI Kit components (includes local ones that were moved to shared)
 export * from '@superapp/ui-kit';
 
-// Export local connected components
-export * from './AuthGuard';
-export * from './GuestGuard';
-export * from './ProtectedRoute';
-export * from './PermissionGuard';
-export * from './MaintenanceOverlay';
+// Export remaining local connected components
 export * from './ColorPicker';
-export * from './LanguageSwitcher';
-export * from './Toast';
 export * from './DataTable';
-export * from './ResourceToolbar';
-export * from './BatchActionButtons';
-export * from './PageHeader';
-export * from './SearchFilterBar';
-export * from './NotFoundPage';
+export * from './MaintenanceOverlay';

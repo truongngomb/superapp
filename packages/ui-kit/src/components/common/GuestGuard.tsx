@@ -6,14 +6,14 @@
 
 import { type ReactNode, type ReactElement } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '@/hooks';
-import { LoadingSpinner } from '@superapp/ui-kit';
+import { useAuth } from '@superapp/core-logic';
+import { LoadingSpinner } from '../LoadingSpinner';
 
 // ============================================================================
 // Types
 // ============================================================================
 
-interface GuestGuardProps {
+export interface GuestGuardProps {
   /** Content to render when NOT authenticated */
   children: ReactNode;
   /** Path to redirect to if already authenticated (default: /) */
@@ -28,15 +28,6 @@ interface GuestGuardProps {
 
 /**
  * Guest guard - redirects to home if already authenticated
- * 
- * @example
- * ```tsx
- * <Route path="/login" element={
- *   <GuestGuard>
- *     <LoginPage />
- *   </GuestGuard>
- * } />
- * ```
  */
 export function GuestGuard({
   children,

@@ -14,18 +14,18 @@ import {
   CardContent,
   ConfirmModal,
   Pagination,
-  type ViewMode,
   ResourceToolbar,
   BatchActionButtons,
-  SearchFilterBar
+  SearchFilterBar,
+  PermissionGuard
 } from "@/components/common";
-import { PermissionGuard } from "@/components/common/PermissionGuard";
 import type { 
   MarkdownPage, 
   MarkdownPageCreateInput, 
   MarkdownPageUpdateInput, 
   MarkdownPageListParams,
-  SortColumn 
+  SortColumn, 
+  ViewMode
 } from "@superapp/shared-types";
 import { getStorageItem, setStorageItem } from "@/utils";
 import { STORAGE_KEYS } from "@/config";
@@ -40,7 +40,7 @@ import {
 } from "@/hooks";
 
 import { markdownService } from "@/services";
-// MarkdownPageForm is lazy loaded below
+
 import { MarkdownPageTable } from "./components/MarkdownPageTable";
 import { MarkdownPageRow } from "./components/MarkdownPageRow";
 import { MarkdownPageMobileList } from "./components/MarkdownPageMobileList";

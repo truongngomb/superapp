@@ -91,11 +91,10 @@ export function MarkdownRenderer({
               const imageIndex = images.findIndex(img => img.src === props.src);
 
               return (
-                <div className="my-5 flex flex-col items-center">
+                <span className="my-5 flex flex-col items-center w-full">
                   <img 
                     {...props} 
-                    className="m-0 rounded-xl shadow-lg border border-border/50 max-h-[500px] w-auto cursor-pointer hover:opacity-90 transition-opacity" 
-                    loading="lazy"
+                    className="m-0 rounded-xl shadow-lg border border-border/50 max-h-[500px] w-auto cursor-pointer hover:opacity-90 transition-opacity"
                     onClick={() => {
                       if (imageIndex !== -1) {
                         setCurrentImageIndex(imageIndex);
@@ -112,7 +111,7 @@ export function MarkdownRenderer({
                     }}
                   />
                   {props.title && <span className="mt-3 text-sm text-muted italic">{props.title}</span>}
-                </div>
+                </span>
               );
             },
             iframe: ({ ...props }) => (

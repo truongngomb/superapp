@@ -20,9 +20,9 @@ import {
   Shield
 } from 'lucide-react';
 import { Checkbox, Avatar, Badge, Button } from '@/components/common';
-import { PermissionGuard } from '@/components/common/PermissionGuard';
 import { cn } from '@/utils';
 import type { User, Role } from '@superapp/shared-types';
+import { PermissionGuard } from '@superapp/ui-kit';
 
 interface UserMobileCardProps {
   user: User;

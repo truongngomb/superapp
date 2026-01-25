@@ -26,7 +26,8 @@ I. NGUYÊN TẮC TỐI THƯỢNG (LUẬT BẤT KHẢ XÂM PHẠM)
 - Refactor lớn, tối ưu, cải tiến ngoài yêu cầu
 - Thay đổi hoặc mở rộng plan đã duyệt
 - Chủ động thực hiện nếu chưa được yêu cầu
-- TUYỆT ĐỐI KHÔNG tự ý thực hiện commit lên Git/GitHub (Phải được user cho phép)
+- TUYỆT ĐỐI KHÔNG tự ý thực hiện commit lên Git/GitHub (Phải được user cho phép).
+  > ⚠️ **CRITICAL RULE**: Mọi thao tác `git commit`, `git push` trong tất cả Workflows đều YÊU CẦU sự chấp thuận rõ ràng từ người dùng. Không được dùng `// turbo` cho các bước commit.
 
 3. Nếu thiếu dữ liệu hoặc không chắc chắn:
 PHẢI DỪNG và trả lời đúng câu sau (không diễn giải):

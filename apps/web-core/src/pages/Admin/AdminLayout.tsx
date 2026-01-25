@@ -4,8 +4,8 @@ import { Users, Shield, LayoutDashboard, FileClock, Settings, MoreVertical } fro
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/utils';
-import { PermissionGuard } from '@/components/common/PermissionGuard';
 import { useLayout, useLayoutMode } from '@/hooks';
+import { PermissionGuard } from '@superapp/ui-kit';
 
 // ============================================================================
 // Types

@@ -1,6 +1,6 @@
 import { useState, useCallback, ReactNode, useEffect, useMemo } from 'react';
-import { Toast } from '@/components/common/Toast';
 import { ToastContext, type ToastType, type ToastOptions } from './useToast';
+import { Toast } from '@superapp/ui-kit';
 
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toast, setToast] = useState<ToastOptions | null>(null);

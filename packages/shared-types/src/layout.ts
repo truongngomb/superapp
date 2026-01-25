@@ -11,8 +11,11 @@ export interface IMenuItem {
   matchPrefix?: boolean;
 }
 
+export type LayoutMode = 'standard' | 'modern';
+export type ViewMode = 'list' | 'table';
+
 export interface ILayoutProps {
-  layoutMode: 'standard' | 'modern';
+  layoutMode: LayoutMode;
 }
 
 export interface ISidebarProps {

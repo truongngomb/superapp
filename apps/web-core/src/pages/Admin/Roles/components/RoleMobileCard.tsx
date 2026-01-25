@@ -16,9 +16,9 @@ import {
   FileText
 } from 'lucide-react';
 import { Checkbox, Button } from '@/components/common';
-import { PermissionGuard } from '@/components/common/PermissionGuard';
 import { cn } from '@/utils';
 import type { Role } from '@superapp/shared-types';
+import { PermissionGuard } from '@superapp/ui-kit';
 
 interface RoleMobileCardProps {
   role: Role;

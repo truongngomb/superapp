@@ -3,9 +3,9 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Edit2, Copy, Trash2, RotateCcw, Shield } from 'lucide-react';
 import { Button, Badge, DataTable, type DataTableColumn } from '@/components/common';
-import { PermissionGuard } from '@/components/common/PermissionGuard';
 import { cn } from '@/utils';
 import type { Role } from '@superapp/shared-types';
+import { PermissionGuard } from '@superapp/ui-kit';
 
 interface RoleTableProps {
   data: Role[];

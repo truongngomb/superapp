@@ -5,12 +5,14 @@
 import { motion } from 'framer-motion';
 import { Search, RefreshCw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Button, Input, SortPopup } from '@superapp/ui-kit';
+import { Button } from '../Button';
+import { Input } from '../Input';
+import { SortPopup } from '../SortPopup';
 import type { SortColumn } from '@superapp/shared-types';
-import { cn } from '@/utils';
-import { fade } from '@/config';
+import { cn } from '@superapp/core-logic';
+import { fade } from '../../utils/animations';
 
-interface SearchFilterBarProps {
+export interface SearchFilterBarProps {
   /** Current search query */
   searchQuery: string;
   /** Callback when search query changes */

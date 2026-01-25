@@ -2,8 +2,8 @@ import { useContext } from 'react';
 import { activityLogService } from '@/services';
 import type { ActivityLog, ActivityLogParams } from '@superapp/shared-types';
 import { ActivityLogContext } from '@/context/ActivityLogContext.base';
-import { useResource } from '@/hooks/useResource';
-import type { ResourceService } from '@/hooks/useResourceService';
+import { useResource } from '@/hooks';
+import type { ResourceService } from '@superapp/core-logic';
 
 /**
  * useActivityLogContext Hook

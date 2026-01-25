@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSettings } from './useSettings';
 
-export type LayoutMode = 'standard' | 'modern';
+import { type LayoutMode } from '@superapp/shared-types';
 
 export function useLayoutMode() {
   const { getSettingValue } = useSettings();

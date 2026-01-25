@@ -8,15 +8,15 @@ import {
   type ReactElement,
 } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '@/hooks';
-import { LoadingSpinner } from '@superapp/ui-kit';
+import { useAuth } from '@superapp/core-logic';
 import { useTranslation } from 'react-i18next';
+import { LoadingSpinner } from '../LoadingSpinner';
 
 // ============================================================================
 // Types
 // ============================================================================
 
-interface ProtectedRouteProps {
+export interface ProtectedRouteProps {
   /** Content to render when access is granted */
   children: ReactNode;
   /** Resource to check permission for (optional) */
@@ -37,29 +37,6 @@ interface ProtectedRouteProps {
 
 /**
  * Route protection guard that checks authentication and permissions
- * 
- * If resource/action is specified, checks permission FIRST.
- * This allows guest users with Public role permissions to access pages.
- * Only redirects to login if:
- * - No permission specified AND not authenticated, OR
- * - Permission specified but not granted AND not authenticated
- * 
- * @example
- * ```tsx
- * // Require authentication only
- * <Route path="/dashboard" element={
- *   <ProtectedRoute>
- *     <DashboardPage />
- *   </ProtectedRoute>
- * } />
- * 
- * // Require specific permission (guest users with Public role can access if permitted)
- * <Route path="/categories" element={
- *   <ProtectedRoute resource="categories" action="view">
- *     <CategoriesPage />
- *   </ProtectedRoute>
- * } />
- * ```
  */
 export function ProtectedRoute({
   children,

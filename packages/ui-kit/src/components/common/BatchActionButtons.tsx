@@ -6,13 +6,13 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { RefreshCw, Trash2, CheckCircle, XCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Button } from '@superapp/ui-kit';
-import { PermissionGuard } from '@/components/common/PermissionGuard';
-import { fadeSlideRight } from '@/config';
+import { Button } from '../Button';
+import { PermissionGuard } from './PermissionGuard';
+import { fadeSlideRight } from '../../utils/animations';
 
-interface BatchActionButtonsProps {
+export interface BatchActionButtonsProps {
   /** The resource name for permission checks */
-  resource: 'categories' | 'roles' | 'users' | 'markdown_pages';
+  resource: string;
   /** Number of selected items */
   selectedCount: number;
   /** Whether archived items are currently shown */

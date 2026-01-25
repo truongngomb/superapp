@@ -1,8 +1,7 @@
 import { List, LayoutGrid } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '../utils';
-
-export type ViewMode = 'list' | 'table';
+import { ViewMode } from '@superapp/shared-types';
 
 interface ViewSwitcherProps {
   value: ViewMode;

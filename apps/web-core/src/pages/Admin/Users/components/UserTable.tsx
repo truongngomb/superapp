@@ -2,9 +2,9 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Edit2, Trash2, RotateCcw, Shield } from 'lucide-react';
 import { Button, Badge, DataTable, type DataTableColumn, Avatar } from '@/components/common';
-import { PermissionGuard } from '@/components/common/PermissionGuard';
 import { cn } from '@/utils';
 import type { User, Role } from '@superapp/shared-types';
+import { PermissionGuard } from '@superapp/ui-kit';
 
 interface UserTableProps {
   data: User[];

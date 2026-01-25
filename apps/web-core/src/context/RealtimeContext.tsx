@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useRef, useCallback, useMemo } from 'react';
 import { logger } from '@/utils';
 
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/hooks';
 
 interface RealtimeContextType {
   isConnected: boolean;

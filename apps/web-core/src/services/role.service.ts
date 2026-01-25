@@ -96,7 +96,7 @@ export const roleService = {
   /**
    * Delete role by ID
    */
-  async delete(id: string): Promise<void> {
+  async delete(id: string): Promise<boolean | undefined> {
     return api.delete(`${API_ENDPOINTS.ROLES}/${id}`);
   },
 
@@ -110,29 +110,29 @@ export const roleService = {
   /**
    * Delete multiple roles
    */
-  async deleteMany(ids: string[]): Promise<void> {
-    await api.post(`${API_ENDPOINTS.ROLES}/batch-delete`, { ids });
+  async deleteMany(ids: string[]): Promise<boolean | undefined> {
+    return await api.post(`${API_ENDPOINTS.ROLES}/batch-delete`, { ids });
   },
 
   /**
    * Update status for multiple roles
    */
-  async batchUpdateStatus(ids: string[], isActive: boolean): Promise<void> {
-    await api.post(`${API_ENDPOINTS.ROLES}/batch-status`, { ids, isActive });
+  async batchUpdateStatus(ids: string[], isActive: boolean): Promise<boolean | undefined> {
+    return await api.post(`${API_ENDPOINTS.ROLES}/batch-status`, { ids, isActive });
   },
 
   /**
    * Restore a role
    */
-  async restore(id: string): Promise<void> {
-    await api.post(`${API_ENDPOINTS.ROLES}/${id}/restore`);
+  async restore(id: string): Promise<boolean | undefined> {
+    return await api.post(`${API_ENDPOINTS.ROLES}/${id}/restore`);
   },
 
   /**
    * Restore multiple roles
    */
-  async restoreMany(ids: string[]): Promise<void> {
-    await api.post(`${API_ENDPOINTS.ROLES}/batch-restore`, { ids });
+  async restoreMany(ids: string[]): Promise<boolean | undefined> {
+    return await api.post(`${API_ENDPOINTS.ROLES}/batch-restore`, { ids });
   },
 
   /**
@@ -149,6 +149,6 @@ export const roleService = {
     const queryString = queryParams.toString();
     const endpoint = queryString ? `${API_ENDPOINTS.ROLES}/export?${queryString}` : `${API_ENDPOINTS.ROLES}/export`;
 
-    return api.get<Role[]>(endpoint);
+    return await api.get<Role[]>(endpoint);
   },
 };

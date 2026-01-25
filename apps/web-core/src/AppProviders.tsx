@@ -9,13 +9,12 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { queryClient } from '@/config/queryClient';
 import {
-  AuthProvider,
-  ThemeProvider,
   ToastProvider,
   RealtimeProvider,
   SettingsProvider,
   LayoutProvider,
 } from '@/context';
+import { AuthProvider, ThemeProvider } from '@superapp/core-logic';
 import { ActivityLogProvider } from '@/context/ActivityLogContext';
 
 interface AppProvidersProps {

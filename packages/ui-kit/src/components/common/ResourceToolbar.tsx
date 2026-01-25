@@ -5,13 +5,16 @@
  */
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { Checkbox, Toggle, ViewSwitcher, type ViewMode } from '@/components/common';
-import { PermissionGuard } from '@/components/common/PermissionGuard';
-import { fadeScale, delayedTransition } from '@/config';
+import { Checkbox } from '../Checkbox';
+import { Toggle } from '../Toggle';
+import { ViewSwitcher } from '../ViewSwitcher';
+import { PermissionGuard } from './PermissionGuard';
+import { fadeScale, delayedTransition } from '../../utils/animations';
+import { ViewMode } from '@superapp/shared-types';
 
-interface ResourceToolbarProps {
+export interface ResourceToolbarProps {
   /** The resource name for permission checks */
-  resource: 'categories' | 'roles' | 'users' | 'markdown_pages';
+  resource: string;
   /** Number of items in the list */
   itemCount: number;
   /** Total number of items (for display) */

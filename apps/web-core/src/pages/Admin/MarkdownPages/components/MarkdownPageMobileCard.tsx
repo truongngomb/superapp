@@ -1,9 +1,8 @@
 import { MarkdownPage } from '@superapp/shared-types';
-import { Badge, Button, Checkbox } from '@superapp/ui-kit';
+import { Badge, Button, Checkbox, PermissionGuard } from '@superapp/ui-kit';
 import { Edit, Trash2, Globe, FileText, Image as ImageIcon, Languages, Link as LinkIcon } from 'lucide-react';
 import { cn } from '@superapp/core-logic';
 import { useTranslation } from 'react-i18next';
-import { PermissionGuard } from '@/components/common/PermissionGuard';
 
 interface MarkdownPageMobileCardProps {
   page: MarkdownPage;

@@ -118,42 +118,42 @@ export const userService = {
   /**
    * Restore user
    */
-  async restoreUser(id: string): Promise<void> {
-    await api.post(`${API_ENDPOINTS.USERS}/${id}/restore`);
+  async restoreUser(id: string): Promise<boolean | undefined> {
+    return await api.post(`${API_ENDPOINTS.USERS}/${id}/restore`);
   },
 
   /**
    * Delete user
    */
-  async deleteUser(id: string): Promise<void> {
+  async deleteUser(id: string): Promise<boolean | undefined> {
     return api.delete(`${API_ENDPOINTS.USERS}/${id}`);
   },
 
   /**
    * Batch delete users
    */
-  async deleteMany(ids: string[]): Promise<void> {
-    await api.post(`${API_ENDPOINTS.USERS}/batch-delete`, { ids });
+  async deleteMany(ids: string[]): Promise<boolean | undefined> {
+    return await api.post(`${API_ENDPOINTS.USERS}/batch-delete`, { ids });
   },
 
   /**
    * Batch update status
    */
-  async batchUpdateStatus(ids: string[], isActive: boolean): Promise<void> {
-    await api.post(`${API_ENDPOINTS.USERS}/batch-status`, { ids, isActive });
+  async batchUpdateStatus(ids: string[], isActive: boolean): Promise<boolean | undefined> {
+    return await api.post(`${API_ENDPOINTS.USERS}/batch-status`, { ids, isActive });
   },
 
   /**
    * Batch restore users
    */
-  async restoreMany(ids: string[]): Promise<void> {
-    await api.post(`${API_ENDPOINTS.USERS}/batch-restore`, { ids });
+  async restoreMany(ids: string[]): Promise<boolean | undefined> {
+    return await api.post(`${API_ENDPOINTS.USERS}/batch-restore`, { ids });
   },
 
   /**
    * Assign roles to user (replaces all existing roles)
    */
-  async assignRoles(userId: string, roleIds: string[]): Promise<User> {
+  async assignRoles(userId: string, roleIds: string[]): Promise<User | undefined> {
     return await api.put<User>(
       `${API_ENDPOINTS.USERS}/${userId}/roles`,
       { roleIds } as UserRoleAssignment
@@ -163,14 +163,14 @@ export const userService = {
   /**
    * Add a single role to user (keeps existing roles)
    */
-  async addRole(userId: string, roleId: string): Promise<User> {
+  async addRole(userId: string, roleId: string): Promise<User | undefined> {
     return await api.post<User>(`${API_ENDPOINTS.USERS}/${userId}/roles/${roleId}`);
   },
 
   /**
    * Remove a specific role from user
    */
-  async removeRole(userId: string, roleId: string): Promise<User> {
+  async removeRole(userId: string, roleId: string): Promise<User | undefined> {
     return await api.delete<User>(`${API_ENDPOINTS.USERS}/${userId}/roles/${roleId}`);
   },
 
@@ -180,7 +180,7 @@ export const userService = {
   /**
    * Remove all roles from user
    */
-  async removeAllRoles(userId: string): Promise<User> {
+  async removeAllRoles(userId: string): Promise<User | undefined> {
     return await api.delete<User>(`${API_ENDPOINTS.USERS}/${userId}/roles`);
   },
 
@@ -191,10 +191,10 @@ export const userService = {
   update(id: string, data: UserUpdateInput): Promise<User> {
     return this.updateUser(id, data);
   },
-  delete(id: string): Promise<void> {
+  delete(id: string): Promise<boolean | undefined> {
     return this.deleteUser(id);
   },
-  restore(id: string): Promise<void> {
+  restore(id: string): Promise<boolean | undefined> {
     return this.restoreUser(id);
   },
 };

@@ -3,13 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { 
   Badge, 
   Button,
-  Avatar
+  Avatar,
+  PermissionGuard
 } from '@superapp/ui-kit';
 import { DataTable, type DataTableColumn } from '@/components/common';
 import { MarkdownPage } from '@superapp/shared-types';
 import { Edit, Trash2, Globe, FileText, Languages } from 'lucide-react';
-
-import { PermissionGuard } from '@/components/common/PermissionGuard';
 
 interface MarkdownPageTableProps {
   data: MarkdownPage[];
