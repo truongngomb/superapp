@@ -39,7 +39,7 @@ import { RoleMobileCardSkeletonList } from "./components/RoleMobileCardSkeleton"
 import { useSearchParams } from "react-router-dom";
 
 export default function RolesPage() {
-  const { t } = useTranslation(["roles", "common"]);
+  const { t } = useTranslation(["roles", "uikit"]);
   const { checkPermission } = useAuth();
   const [searchParams] = useSearchParams();
   
@@ -190,8 +190,8 @@ export default function RolesPage() {
     columns: [
       { key: "name", header: t("roles:form.name_label"), width: 30 },
       { key: "description", header: t("roles:form.desc_label"), width: 40 },
-      { key: "isActive", header: t("common:status"), width: 15 },
-      { key: "created", header: t("common:created"), width: 20 },
+      { key: "isActive", header: t("uikit:status"), width: 15 },
+      { key: "created", header: t("uikit:created"), width: 20 },
     ],
   }) as { exportToExcel: (data: Role[]) => Promise<void> };
 
@@ -207,7 +207,7 @@ export default function RolesPage() {
 
   // Actions
   const onDuplicate = useCallback(async (role: Role) => {
-    const newName = `${role.name} (${t("common:copy")})`;
+    const newName = `${role.name} (${t("uikit:copy")})`;
     await handleCreate({
       name: newName,
       description: role.description,
@@ -218,9 +218,9 @@ export default function RolesPage() {
 
   const sortColumns: SortColumn[] = [
     { field: "name", label: t("roles:form.name_label") },
-    { field: "isActive", label: t("common:status") },
-    { field: "created", label: t("common:created") },
-    { field: "updated", label: t("common:updated") },
+    { field: "isActive", label: t("uikit:status") },
+    { field: "created", label: t("uikit:created") },
+    { field: "updated", label: t("uikit:updated") },
   ];
 
   const hasDeletedSelected = selectedIds.some(
@@ -322,11 +322,11 @@ export default function RolesPage() {
              <CardContent>
                <Shield className="w-12 h-12 text-muted mx-auto mb-4" />
                <p className="text-muted">
-                 {searchQuery ? t("common:list.empty_search", { entities: t("roles:entities") }) : t("common:list.empty", { entities: t("roles:entities") })}
+                 {searchQuery ? t("uikit:list.empty_search", { entities: t("roles:entities") }) : t("uikit:list.empty", { entities: t("roles:entities") })}
                </p>
                {!searchQuery && canCreate && (
                  <Button onClick={() => { setShowForm(true); }} className="mt-4">
-                   {t("common:list.add_first", { entity: t("roles:entity") })}
+                   {t("uikit:list.add_first", { entity: t("roles:entity") })}
                  </Button>
                )}
              </CardContent>
@@ -438,14 +438,14 @@ export default function RolesPage() {
 
       <ConfirmModal
         isOpen={!!deleteId}
-        title={t("common:delete")}
+        title={t("uikit:delete")}
         message={
            roles.find((c) => c.id === deleteId)?.isDeleted
-             ? t("common:confirmation.hard_delete", { entity: t("roles:entity") })
-             : t("common:confirmation.delete", { entity: t("roles:entity") })
+             ? t("uikit:confirmation.hard_delete", { entity: t("roles:entity") })
+             : t("uikit:confirmation.delete", { entity: t("roles:entity") })
         }
-        confirmText={t("common:delete")}
-        cancelText={t("common:cancel")}
+        confirmText={t("uikit:delete")}
+        cancelText={t("uikit:cancel")}
         loading={loading}
         onConfirm={() => { if (deleteId) void handleDelete(deleteId).then(() => { setDeleteId(null); }); }}
         onCancel={() => { setDeleteId(null); }}
@@ -454,10 +454,10 @@ export default function RolesPage() {
 
        <ConfirmModal
         isOpen={!!restoreId}
-        title={t("common:restore")}
-        message={t("common:confirmation.restore", { entity: t("roles:entity") })}
-        confirmText={t("common:confirm")}
-        cancelText={t("common:cancel")}
+        title={t("uikit:restore")}
+        message={t("uikit:confirmation.restore", { entity: t("roles:entity") })}
+        confirmText={t("uikit:confirm")}
+        cancelText={t("uikit:cancel")}
         loading={loading}
         onConfirm={() => { if (restoreId) void handleRestore(restoreId).then(() => { setRestoreId(null); }); }}
         onCancel={() => { setRestoreId(null); }}
@@ -465,14 +465,14 @@ export default function RolesPage() {
 
       <ConfirmModal
         isOpen={showBatchDeleteConfirm}
-        title={t("common:delete")}
+        title={t("uikit:delete")}
         message={
           hasDeletedSelected
-            ? t("common:batch_confirmation.hard_delete", { count: selectedIds.length, entities: t("roles:entities") })
-            : t("common:batch_confirmation.delete", { count: selectedIds.length, entities: t("roles:entities") })
+            ? t("uikit:batch_confirmation.hard_delete", { count: selectedIds.length, entities: t("roles:entities") })
+            : t("uikit:batch_confirmation.delete", { count: selectedIds.length, entities: t("roles:entities") })
         }
-        confirmText={t("common:delete")}
-        cancelText={t("common:cancel")}
+        confirmText={t("uikit:delete")}
+        cancelText={t("uikit:cancel")}
         loading={loading}
         onConfirm={() => { void handleBatchDelete().then(() => { setShowBatchDeleteConfirm(false); }); }}
         onCancel={() => { setShowBatchDeleteConfirm(false); }}
@@ -481,11 +481,11 @@ export default function RolesPage() {
 
        <ConfirmModal
         isOpen={!!batchStatusConfig?.isOpen}
-        title={t("common:confirm")}
-        message={t("common:batch_confirmation.status", {
+        title={t("uikit:confirm")}
+        message={t("uikit:batch_confirmation.status", {
           count: selectedIds.length,
           entities: t("roles:entities"),
-          action: batchStatusConfig?.isActive ? t("common:actions.activate") : t("common:actions.deactivate"),
+          action: batchStatusConfig?.isActive ? t("uikit:actions.activate") : t("uikit:actions.deactivate"),
         })}
         loading={loading}
         onConfirm={() => { if (batchStatusConfig) void handleBatchUpdateStatus(batchStatusConfig.isActive).then(() => { setBatchStatusConfig(null); }); }}
@@ -494,8 +494,8 @@ export default function RolesPage() {
 
        <ConfirmModal
          isOpen={showBatchRestoreConfirm}
-         title={t("common:restore")}
-         message={t("common:batch_confirmation.restore", { count: selectedIds.length, entities: t("roles:entities") })}
+         title={t("uikit:restore")}
+         message={t("uikit:batch_confirmation.restore", { count: selectedIds.length, entities: t("roles:entities") })}
          loading={loading}
          onConfirm={() => { void handleBatchRestore().then(() => { setShowBatchRestoreConfirm(false); }); }}
          onCancel={() => { setShowBatchRestoreConfirm(false); }}

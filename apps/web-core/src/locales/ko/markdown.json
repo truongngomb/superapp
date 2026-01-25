@@ -1,6 +1,7 @@
 {
   "title": "마크다운 페이지",
   "name": "마크다운 페이지",
+  "entities": "마크다운 페이지",
   "list_title": "페이지 관리",
   "create_title": "새 페이지 만들기",
   "edit_title": "페이지 수정",

@@ -39,7 +39,7 @@ export function SearchFilterBar({
   isLoading,
   onRefresh,
 }: SearchFilterBarProps) {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('uikit');
 
   return (
     <motion.div

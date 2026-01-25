@@ -46,7 +46,7 @@ export function CategoryMobileCard({
   isSelected,
   onSelect,
 }: CategoryMobileCardProps) {
-  const { t } = useTranslation(['categories', 'common']);
+  const { t } = useTranslation(['categories', 'uikit']);
   
   // Resolve icon component
   const IconComponent = (CATEGORY_ICONS[category.icon] || CATEGORY_ICONS.folder) as CategoryIcon;
@@ -142,7 +142,7 @@ export function CategoryMobileCard({
               <div className="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0">
                 <FileText className="w-3.5 h-3.5 text-blue-400" />
               </div>
-              <span className="text-sm">{t('common:form.description')}:</span>
+              <span className="text-sm">{t('uikit:form.description')}:</span>
             </div>
             <span className="ml-auto text-sm font-semibold text-foreground text-right max-w-[60%] truncate">
               {category.description}
@@ -176,7 +176,7 @@ export function CategoryMobileCard({
                className="flex-1 h-auto py-3.5 rounded-none text-muted-foreground hover:bg-[#2a3142] hover:text-muted-foreground border-r border-[#2a3142]"
              >
                <Edit2 className="w-4 h-4" />
-               <span className="text-sm font-medium hidden xs:inline">{t('common:edit')}</span>
+               <span className="text-sm font-medium hidden xs:inline">{t('uikit:edit')}</span>
              </Button>
           </PermissionGuard>
         ) : onRestore && (
@@ -187,7 +187,7 @@ export function CategoryMobileCard({
                className="flex-1 h-auto py-3.5 rounded-none text-primary hover:bg-primary/10 hover:text-primary border-r border-[#2a3142]"
              >
                <RotateCcw className="w-4 h-4" />
-               <span className="text-sm font-medium hidden xs:inline">{t('common:restore')}</span>
+               <span className="text-sm font-medium hidden xs:inline">{t('uikit:restore')}</span>
              </Button>
           </PermissionGuard>
         )}
@@ -201,7 +201,7 @@ export function CategoryMobileCard({
                className="flex-1 h-auto py-3.5 rounded-none text-blue-400 hover:bg-blue-400/10 hover:text-blue-400 border-r border-[#2a3142]"
              >
                <Copy className="w-4 h-4" />
-               <span className="text-sm font-medium hidden xs:inline">{t('common:duplicate')}</span>
+               <span className="text-sm font-medium hidden xs:inline">{t('uikit:duplicate')}</span>
              </Button>
           </PermissionGuard>
         )}
@@ -219,7 +219,7 @@ export function CategoryMobileCard({
              )}
            >
              <Trash2 className="w-4 h-4" />
-             <span className="text-sm font-medium hidden xs:inline">{t('common:delete')}</span>
+             <span className="text-sm font-medium hidden xs:inline">{t('uikit:delete')}</span>
            </Button>
         </PermissionGuard>
       </div>

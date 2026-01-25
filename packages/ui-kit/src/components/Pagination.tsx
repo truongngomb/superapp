@@ -10,7 +10,7 @@ interface PaginationProps {
 }
 
 export function Pagination({ currentPage, totalPages, onPageChange, className }: PaginationProps) {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('uikit');
   
   if (totalPages <= 1) return null;
 

@@ -51,7 +51,7 @@ import { useSearchParams } from 'react-router-dom';
 // ...
 
 export default function UsersPage() {
-  const { t } = useTranslation(['users', 'common']);
+  const { t } = useTranslation(['users', 'uikit']);
   const { success, error: errorToast } = useToast();
   const [searchParams] = useSearchParams();
 
@@ -227,12 +227,12 @@ export default function UsersPage() {
     fileNamePrefix: 'users',
     sheetName: t('users:title'),
     columns: [
-      { key: '#', header: t('common:order'), width: 8 },
-      { key: 'name', header: t('common:name'), width: 25 },
-      { key: 'email', header: t('common:email'), width: 30 },
+      { key: '#', header: t('uikit:order'), width: 8 },
+      { key: 'name', header: t('uikit:name'), width: 25 },
+      { key: 'email', header: t('uikit:email'), width: 30 },
       { key: 'roleNames', header: t('users:form.role_label'), width: 20 },
-      { key: 'isActive', header: t('common:status'), width: 12 },
-      { key: 'created', header: t('common:created'), width: 15 },
+      { key: 'isActive', header: t('uikit:status'), width: 12 },
+      { key: 'created', header: t('uikit:created'), width: 15 },
     ],
   }) as { exportToExcel: (data: User[]) => Promise<void> };
 
@@ -251,11 +251,11 @@ export default function UsersPage() {
 
 
   const sortColumns: SortColumn[] = [
-    { field: 'name', label: t('common:name') },
-    { field: 'email', label: t('common:email') },
-    { field: 'isActive', label: t('common:status') },
-    { field: 'created', label: t('common:created') },
-    { field: 'updated', label: t('common:updated') },
+    { field: 'name', label: t('uikit:name') },
+    { field: 'email', label: t('uikit:email') },
+    { field: 'isActive', label: t('uikit:status') },
+    { field: 'created', label: t('uikit:created') },
+    { field: 'updated', label: t('uikit:updated') },
   ];
 
   const hasDeletedSelected = selectedIds.some(
@@ -356,11 +356,11 @@ export default function UsersPage() {
              <CardContent>
                <Users className="w-12 h-12 text-muted mx-auto mb-4" />
                <p className="text-muted">
-                 {searchQuery ? t("common:list.empty_search", { entities: t("users:entities") }) : t("common:list.empty", { entities: t("users:entities") })}
+                 {searchQuery ? t("uikit:list.empty_search", { entities: t("users:entities") }) : t("uikit:list.empty", { entities: t("users:entities") })}
                </p>
                {!searchQuery && canCreate && (
                  <Button onClick={() => { setEditingUser(null); setShowForm(true); }} className="mt-4">
-                   {t("common:list.add_first", { entity: t("users:entity") })}
+                   {t("uikit:list.add_first", { entity: t("users:entity") })}
                  </Button>
                )}
              </CardContent>
@@ -478,14 +478,14 @@ export default function UsersPage() {
 
       <ConfirmModal
         isOpen={!!deleteId}
-        title={t("common:delete")}
+        title={t("uikit:delete")}
         message={
           users.find((u) => u.id === deleteId)?.isDeleted
-            ? t("common:confirmation.hard_delete", { entity: t("users:entity") })
-            : t("common:confirmation.delete", { entity: t("users:entity") })
+            ? t("uikit:confirmation.hard_delete", { entity: t("users:entity") })
+            : t("uikit:confirmation.delete", { entity: t("users:entity") })
         }
-        confirmText={t("common:delete")}
-        cancelText={t("common:cancel")}
+        confirmText={t("uikit:delete")}
+        cancelText={t("uikit:cancel")}
         loading={loading}
         onConfirm={() => { if (deleteId) void handleDelete(deleteId).then(() => { setDeleteId(null); }); }}
         onCancel={() => { setDeleteId(null); }}
@@ -494,10 +494,10 @@ export default function UsersPage() {
 
       <ConfirmModal
          isOpen={!!restoreId}
-         title={t("common:restore")}
-         message={t("common:confirmation.restore", { entity: t("users:entity") })}
-         confirmText={t("common:confirm")}
-         cancelText={t("common:cancel")}
+         title={t("uikit:restore")}
+         message={t("uikit:confirmation.restore", { entity: t("users:entity") })}
+         confirmText={t("uikit:confirm")}
+         cancelText={t("uikit:cancel")}
          loading={loading}
          onConfirm={() => { if (restoreId) void handleRestore(restoreId).then(() => { setRestoreId(null); }); }}
          onCancel={() => { setRestoreId(null); }}
@@ -505,14 +505,14 @@ export default function UsersPage() {
 
        <ConfirmModal
         isOpen={showBatchDeleteConfirm}
-        title={t("common:delete")}
+        title={t("uikit:delete")}
         message={
           hasDeletedSelected
-            ? t("common:batch_confirmation.hard_delete", { count: selectedIds.length, entities: t("users:entities") })
-            : t("common:batch_confirmation.delete", { count: selectedIds.length, entities: t("users:entities") })
+            ? t("uikit:batch_confirmation.hard_delete", { count: selectedIds.length, entities: t("users:entities") })
+            : t("uikit:batch_confirmation.delete", { count: selectedIds.length, entities: t("users:entities") })
         }
-        confirmText={t("common:delete")}
-        cancelText={t("common:cancel")}
+        confirmText={t("uikit:delete")}
+        cancelText={t("uikit:cancel")}
         loading={loading}
         onConfirm={() => { void handleBatchDelete().then(() => { setShowBatchDeleteConfirm(false); }); }}
         onCancel={() => { setShowBatchDeleteConfirm(false); }}
@@ -521,11 +521,11 @@ export default function UsersPage() {
 
        <ConfirmModal
         isOpen={!!batchStatusConfig?.isOpen}
-        title={t("common:confirm")}
-        message={t("common:batch_confirmation.status", {
+        title={t("uikit:confirm")}
+        message={t("uikit:batch_confirmation.status", {
           count: selectedIds.length,
           entities: t("users:entities"),
-          action: batchStatusConfig?.isActive ? t("common:actions.activate") : t("common:actions.deactivate"),
+          action: batchStatusConfig?.isActive ? t("uikit:actions.activate") : t("uikit:actions.deactivate"),
         })}
         loading={loading}
         onConfirm={() => { if (batchStatusConfig) void handleBatchUpdateStatus(batchStatusConfig.isActive).then(() => { setBatchStatusConfig(null); }); }}
@@ -534,8 +534,8 @@ export default function UsersPage() {
 
        <ConfirmModal
          isOpen={showBatchRestoreConfirm}
-         title={t("common:restore")}
-         message={t("common:batch_confirmation.restore", { count: selectedIds.length, entities: t("users:entities") })}
+         title={t("uikit:restore")}
+         message={t("uikit:batch_confirmation.restore", { count: selectedIds.length, entities: t("users:entities") })}
          loading={loading}
          onConfirm={() => { void handleBatchRestore().then(() => { setShowBatchRestoreConfirm(false); }); }}
          onCancel={() => { setShowBatchRestoreConfirm(false); }}

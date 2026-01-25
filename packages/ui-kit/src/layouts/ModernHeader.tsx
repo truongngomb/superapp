@@ -1,11 +1,5 @@
-/**
- * Modern Header Component
- * Header with primary color background, branding, and tools
- */
-
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { 
   LogOut, 
   Menu, 
@@ -19,47 +13,53 @@ import {
   PanelLeftClose,
   PanelLeftOpen
 } from 'lucide-react';
-import { useAuth, useActivityLogContext } from '@/hooks';
-import { useTheme } from '@/context';
-import { LanguageSwitcher } from '../common/LanguageSwitcher';
-import { NotificationCenter } from '../notifications/NotificationCenter';
-import { Button } from '../common';
-import { useLayout } from '@/hooks';
+import { Button } from '../components/Button';
+import { IHeaderProps } from '@superapp/shared-types';
 
-interface ModernHeaderProps {
-  onMenuToggle?: () => void;
-  menuOpen?: boolean;
+export interface ModernHeaderProps extends IHeaderProps {
   onSidebarToggle?: () => void;
   isSidebarOpen?: boolean;
+  headerContent?: React.ReactNode;
+  
+  user?: {
+    name?: string;
+    email?: string;
+    avatar?: string;
+  };
+  isAuthenticated?: boolean;
+  isDark?: boolean;
+  onToggleTheme?: () => void;
+
+  renderLanguageSwitcher?: () => React.ReactNode;
+  renderNotifications?: () => React.ReactNode;
+  t?: (key: string, options?: Record<string, unknown>) => string;
 }
 
-export function ModernHeader({ onMenuToggle, menuOpen, onSidebarToggle, isSidebarOpen = true }: ModernHeaderProps) {
-  const { t } = useTranslation(['common', 'auth']);
-  // navigate removed as we use window.location.href for logout
-  const { user, isAuthenticated, logout } = useAuth();
-  const { isDark, toggleTheme } = useTheme();
-  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-  const { unreadCount } = useActivityLogContext();
+export function ModernHeader({ 
+  onMenuToggle, 
+  menuOpen, 
+  onSidebarToggle, 
+  isSidebarOpen = true,
+  headerContent,
+  user,
+  isAuthenticated,
+  onLogout,
+  isDark,
+  onToggleTheme,
+  renderLanguageSwitcher,
+  renderNotifications,
+  t = (k) => k
+}: ModernHeaderProps) {
+  
   const [isFullscreen, setIsFullscreen] = useState(false);
-
-  const { headerContent } = useLayout();
-
-  const handleLogout = useCallback(() => {
-    void logout()
-      .catch(() => {})
-      .finally(() => {
-        // Force full reload to verify maintenance status (for Guest)
-        window.location.href = '/';
-      });
-  }, [logout]);
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
       void document.documentElement.requestFullscreen().catch(() => {});
       setIsFullscreen(true);
     } else {
-        void document.exitFullscreen();
-        setIsFullscreen(false);
+      void document.exitFullscreen();
+      setIsFullscreen(false);
     }
   };
 
@@ -84,7 +84,7 @@ export function ModernHeader({ onMenuToggle, menuOpen, onSidebarToggle, isSideba
               <span className="text-white font-bold text-lg">S</span>
             </div>
             <span className="text-lg font-bold uppercase tracking-wide hidden sm:inline text-gradient">
-              SuperApp
+              {t('uikit:brand')}
             </span>
           </Link>
 
@@ -101,7 +101,7 @@ export function ModernHeader({ onMenuToggle, menuOpen, onSidebarToggle, isSideba
             size="sm"
             onClick={onSidebarToggle}
             className="text-muted-foreground hover:text-foreground shrink-0"
-            title={isSidebarOpen ? t('common:hide_sidebar') : t('common:show_sidebar')}
+            title={isSidebarOpen ? t('uikit:hide_sidebar') : t('uikit:show_sidebar')}
           >
              {isSidebarOpen ? <PanelLeftClose className="w-6 h-6" /> : <PanelLeftOpen className="w-6 h-6" />}
           </Button>
@@ -118,17 +118,19 @@ export function ModernHeader({ onMenuToggle, menuOpen, onSidebarToggle, isSideba
         <div className="flex items-center gap-2 sm:gap-4 px-4 shrink-0">
 
           <div className="flex items-center gap-1 sm:gap-2">
-            <LanguageSwitcher className="text-foreground hover:bg-surface" />
+            {renderLanguageSwitcher && renderLanguageSwitcher()}
 
-            <Button
-               variant="ghost"
-               size="icon"
-               onClick={toggleTheme}
-               className="text-foreground"
-               title={isDark ? t('switch_theme_light') : t('switch_theme_dark')}
-            >
-              {isDark ? <Sun className="w-5 h-5 text-muted-foreground" /> : <Moon className="w-5 h-5 text-muted-foreground" />}
-            </Button>
+            {onToggleTheme && (
+                <Button
+                variant="ghost"
+                size="icon"
+                onClick={onToggleTheme}
+                className="text-foreground"
+                title={isDark ? t('uikit:switch_theme_light') : t('uikit:switch_theme_dark')}
+                >
+                {isDark ? <Sun className="w-5 h-5 text-muted-foreground" /> : <Moon className="w-5 h-5 text-muted-foreground" />}
+                </Button>
+            )}
 
             <Button
                variant="ghost"
@@ -141,19 +143,16 @@ export function ModernHeader({ onMenuToggle, menuOpen, onSidebarToggle, isSideba
 
             {isAuthenticated && (
               <div className="relative">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => { setIsNotificationsOpen(true); }}
-                  className="text-foreground relative"
-                >
-                  <Bell className="w-5 h-5 text-muted-foreground" />
-                  {unreadCount > 0 && (
-                    <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow-sm">
-                      {unreadCount > 9 ? '9+' : unreadCount}
-                    </span>
-                  )}
-                </Button>
+                {renderNotifications && renderNotifications()}
+                {!renderNotifications && (
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-foreground relative"
+                    >
+                        <Bell className="w-5 h-5 text-muted-foreground" />
+                    </Button>
+                )}
               </div>
             )}
             
@@ -175,9 +174,9 @@ export function ModernHeader({ onMenuToggle, menuOpen, onSidebarToggle, isSideba
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={handleLogout}
+                  onClick={onLogout}
                   className="ml-1 text-muted-foreground hover:text-red-500"
-                  title={t('logout')}
+                  title={t('uikit:logout')}
                 >
                   <LogOut className="w-4 h-4" />
                 </Button>
@@ -190,7 +189,7 @@ export function ModernHeader({ onMenuToggle, menuOpen, onSidebarToggle, isSideba
                   type="button"
                   className="px-4 py-2"
                 >
-                  {t('common:login')}
+                  {t('uikit:login')}
                 </Button>
               </Link>
             )}
@@ -205,13 +204,6 @@ export function ModernHeader({ onMenuToggle, menuOpen, onSidebarToggle, isSideba
             {headerContent}
           </div>
         </div>
-      )}
-
-      {isAuthenticated && (
-        <NotificationCenter
-          isOpen={isNotificationsOpen}
-          onClose={() => { setIsNotificationsOpen(false); }}
-        />
       )}
     </header>
   );

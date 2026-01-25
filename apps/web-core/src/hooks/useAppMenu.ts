@@ -22,7 +22,7 @@ export type AppMenuItem = {
 };
 
 export function useAppMenu() {
-  const { t, i18n } = useTranslation(['common', 'categories', 'markdown']);
+  const { t, i18n } = useTranslation(['uikit', 'home', 'categories', 'markdown']);
 
   // Fetch menu tree with caching
   const { data: dynamicItems = [], isLoading } = useQuery({

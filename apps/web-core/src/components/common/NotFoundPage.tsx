@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 export function NotFoundPage() {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('uikit');
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[50vh] text-center">

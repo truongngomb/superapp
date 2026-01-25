@@ -8,7 +8,7 @@ import { api } from '@/config';
 export const MAINTENANCE_EVENT = 'maintenance_mode_event';
 
 export function MaintenanceOverlay() {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('uikit');
   const [isVisible, setIsVisible] = useState(false);
   const location = useLocation();
   const isLoginPage = location.pathname === '/login';

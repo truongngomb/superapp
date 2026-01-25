@@ -21,7 +21,7 @@ interface UserRowProps {
 }
 
 export function UserRow({ index, style, data, isSelected, onSelect }: UserRowProps) {
-  const { t } = useTranslation(['users', 'common']);
+  const { t } = useTranslation(['users', 'uikit']);
   const user = data.users[index];
   if (!user) return null;
 
@@ -34,7 +34,7 @@ export function UserRow({ index, style, data, isSelected, onSelect }: UserRowPro
               variant="ghost"
               size="sm"
               onClick={(e) => { e.stopPropagation(); data.onEdit(user); }}
-              aria-label={t('common:edit')}
+              aria-label={t('uikit:edit')}
             >
               <Edit2 className="w-4 h-4" />
             </Button>
@@ -53,7 +53,7 @@ export function UserRow({ index, style, data, isSelected, onSelect }: UserRowPro
             variant="ghost"
             size="sm"
             onClick={(e) => { e.stopPropagation(); data.onRestore(user.id); }}
-            aria-label={t('common:restore')}
+            aria-label={t('uikit:restore')}
           >
             <RotateCcw className="w-4 h-4 text-primary" />
           </Button>
@@ -64,7 +64,7 @@ export function UserRow({ index, style, data, isSelected, onSelect }: UserRowPro
           variant="ghost"
           size="sm"
           onClick={(e) => { e.stopPropagation(); data.onDelete(user.id); }}
-          aria-label={user.isDeleted ? t('common:delete') : t('common:archive')}
+          aria-label={user.isDeleted ? t('uikit:delete') : t('uikit:archive')}
         >
           <Trash2 className={cn("w-4 h-4", user.isDeleted ? "text-red-700" : "text-red-500")} />
         </Button>
@@ -93,7 +93,7 @@ export function UserRow({ index, style, data, isSelected, onSelect }: UserRowPro
           <span>{user.name || user.email}</span>
           {user.isDeleted && (
             <Badge variant="danger" size="sm">
-              {t('common:archived')}
+              {t('uikit:archived')}
             </Badge>
           )}
         </div>

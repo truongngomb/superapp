@@ -39,7 +39,7 @@ export function UserTable({
   canSelect = true,
   roles
 }: UserTableProps) {
-  const { t } = useTranslation(['users', 'common']);
+  const { t } = useTranslation(['users', 'uikit']);
 
   const columns = useMemo<DataTableColumn<User>[]>(() => [
     {
@@ -51,14 +51,14 @@ export function UserTable({
     },
     {
       accessorKey: 'name',
-      header: t('common:name'),
+      header: t('uikit:name'),
       enableSorting: true,
       width: '1.5fr',
       className: 'font-medium'
     },
     {
        accessorKey: 'email',
-       header: t('common:email'),
+       header: t('uikit:email'),
        enableSorting: true,
        width: '2fr',
        className: 'hidden md:flex text-muted-foreground'
@@ -81,23 +81,23 @@ export function UserTable({
                );
              })
            ) : (
-             <span className="text-muted-foreground text-xs italic">{t('common:no_roles')}</span>
+             <span className="text-muted-foreground text-xs italic">{t('uikit:no_roles')}</span>
            )}
          </div>
        )}
     },
     {
       accessorKey: 'isActive',
-      header: t('common:status'),
+      header: t('uikit:status'),
       enableSorting: true,
       size: 120,
       cell: ({ row }) => row.original.isActive ? 
-        <Badge variant="success" size="sm">{t('common:active')}</Badge> : 
-        <Badge variant="danger" size="sm">{t('common:inactive')}</Badge>
+        <Badge variant="success" size="sm">{t('uikit:active')}</Badge> : 
+        <Badge variant="danger" size="sm">{t('uikit:inactive')}</Badge>
     },
     {
       id: 'actions',
-      header: t('common:actions.label'),
+      header: t('uikit:actions.label'),
       size: 160,
       cell: ({ row }) => {
         const user = row.original;
@@ -106,7 +106,7 @@ export function UserTable({
           {!user.isDeleted && (
             <>
                <PermissionGuard resource="users" action="update">
-                 <Button variant="ghost" size="sm" onClick={() => { onEdit(user); }} aria-label={t('common:edit')}>
+                 <Button variant="ghost" size="sm" onClick={() => { onEdit(user); }} aria-label={t('uikit:edit')}>
                    <Edit2 className="w-4 h-4" />
                  </Button>
                </PermissionGuard>
@@ -119,13 +119,13 @@ export function UserTable({
           )}
           {user.isDeleted && (
              <PermissionGuard resource="users" action="update">
-               <Button variant="ghost" size="sm" onClick={() => { onRestore(user.id); }} aria-label={t('common:restore')}>
+               <Button variant="ghost" size="sm" onClick={() => { onRestore(user.id); }} aria-label={t('uikit:restore')}>
                  <RotateCcw className="w-4 h-4 text-primary" />
                </Button>
              </PermissionGuard>
           )}
           <PermissionGuard resource="users" action="delete">
-             <Button variant="ghost" size="sm" onClick={() => { onDelete(user.id); }} aria-label={t('common:delete')}>
+             <Button variant="ghost" size="sm" onClick={() => { onDelete(user.id); }} aria-label={t('uikit:delete')}>
                <Trash2 className={cn("w-4 h-4", user.isDeleted ? "text-red-700" : "text-red-500")} />
              </Button>
           </PermissionGuard>

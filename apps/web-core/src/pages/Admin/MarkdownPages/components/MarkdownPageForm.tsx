@@ -84,7 +84,7 @@ export function MarkdownPageForm({
   manageAllLanguages = false, // Default: only edit default language
   onSuccess
 }: MarkdownPageFormProps) {
-  const { t, i18n } = useTranslation(['markdown', 'common']);
+  const { t, i18n } = useTranslation(['markdown', 'uikit']);
   const toast = useToast();
   const { createPage, updatePage, submitting, getAllPages } = useMarkdownPages();
   const { upload: uploadImage } = useMediaUpload(initialData?.id, 'markdown_pages');
@@ -484,7 +484,7 @@ export function MarkdownPageForm({
       footer={
         <div className="flex justify-end gap-3 w-full">
           <Button type="button" variant="outline" onClick={onClose} disabled={submitting}>
-            {t('common:actions.cancel')}
+            {t('uikit:cancel')}
           </Button>
           <Button 
             type="button" 
@@ -497,12 +497,12 @@ export function MarkdownPageForm({
                 if (keys.length > 0) {
                    toast.error(t('errors.check_tabs', { tabs: keys.join(', ').toUpperCase() }));
                 } else {
-                   toast.error(t('common:toast.error'));
+                   toast.error(t('uikit:toast.error'));
                 }
               })(); 
             }}
           >
-            {isEdit ? t('common:actions.save') : t('common:actions.create')}
+            {isEdit ? t('uikit:save') : t('uikit:create')}
           </Button>
         </div>
       }
@@ -649,7 +649,7 @@ export function MarkdownPageForm({
                         className="rounded-none border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground shadow-none transition-none data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none flex items-center gap-2"
                       >
                         {lang.label}
-                        {lang.value === defaultLanguage && <span className="text-xs opacity-70">({t('common:default')})</span>}
+                        {lang.value === defaultLanguage && <span className="text-xs opacity-70">({t('uikit:default')})</span>}
                         {errors.translations?.[lang.value] && <span className="w-1.5 h-1.5 rounded-full bg-red-500" />}
                       </TabsTrigger>
                     ))}
@@ -754,7 +754,7 @@ export function MarkdownPageForm({
                           <label className="text-sm font-medium">
                             {t('form.cover_image')}
                             {lang.value !== defaultLanguage && (
-                              <span className="text-xs text-muted ml-2">({t('common:shared')})</span>
+                              <span className="text-xs text-muted ml-2">({t('uikit:shared')})</span>
                             )}
                           </label>
                           <Controller
@@ -886,7 +886,7 @@ export function MarkdownPageForm({
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="_none_">
-                             {t('common:none')}
+                             {t('uikit:none')}
                         </SelectItem>
                          {parentOptions.map((option) => (
                             <SelectItem key={option.value} value={option.value}>

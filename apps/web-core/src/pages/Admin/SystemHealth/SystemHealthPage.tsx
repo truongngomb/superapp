@@ -21,7 +21,7 @@ import { HistoricalCharts } from "./components/HistoricalCharts";
 
 // Simple Header component just for this page to match PageHeader style but simpler
 function Header() {
-  const { t } = useTranslation(['system_health', 'common']);
+  const { t } = useTranslation(['system_health', 'uikit']);
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
       <div className="flex items-start gap-3">
@@ -35,7 +35,7 @@ function Header() {
 }
 
 export default function SystemHealthPage() {
-  const { t } = useTranslation(['system_health', 'common']);
+  const { t } = useTranslation(['system_health', 'uikit']);
   const { stats, loading, error } = useSystemHealth();
 
   if (loading && !stats) {
@@ -93,7 +93,7 @@ export default function SystemHealthPage() {
         />
         <HealthCard
           title={t('uptime')}
-          value={t('common:n_a')} 
+          value={t('uikit:n_a')} 
           subValue={t('cards.since_restart')}
           icon={Server}
           color="text-purple-500"

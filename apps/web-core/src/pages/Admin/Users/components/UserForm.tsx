@@ -13,7 +13,7 @@ interface UserFormProps {
 }
 
 export function UserForm({ user, onSubmit, onClose, loading, isOpen }: UserFormProps) {
-  const { t } = useTranslation(['users', 'common']);
+  const { t } = useTranslation(['users', 'uikit']);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -61,11 +61,11 @@ export function UserForm({ user, onSubmit, onClose, loading, isOpen }: UserFormP
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={isEdit ? t('common:form.edit_title', { entity: t('users:entity') }) : t('common:form.add_title', { entity: t('users:entity') })}
+      title={isEdit ? t('uikit:form.edit_title', { entity: t('users:entity') }) : t('uikit:form.add_title', { entity: t('users:entity') })}
       footer={
         <div className="flex justify-end gap-3 w-full">
           <Button type="button" variant="outline" onClick={onClose}>
-            {t('common:cancel')}
+            {t('uikit:cancel')}
           </Button>
           <Button 
             type="submit" 
@@ -73,7 +73,7 @@ export function UserForm({ user, onSubmit, onClose, loading, isOpen }: UserFormP
             loading={loading} 
             disabled={!isFormValid} 
           >
-            {isEdit ? t('common:save') : t('common:add')}
+            {isEdit ? t('uikit:save') : t('uikit:add')}
           </Button>
         </div>
       }
@@ -121,14 +121,14 @@ export function UserForm({ user, onSubmit, onClose, loading, isOpen }: UserFormP
               required
             />
             <Input
-              label={t('common:password')}
+              label={t('uikit:password')}
               type="password"
               value={password}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setPassword(e.target.value); }}
               required
             />
             <Input
-              label={t('common:password_confirm')}
+              label={t('uikit:password_confirm')}
               type="password"
               value={passwordConfirm}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setPasswordConfirm(e.target.value); }}

@@ -13,7 +13,7 @@ interface CategoryFormProps {
 }
 
 export function CategoryForm({ isOpen, category, onSubmit, onClose, loading }: CategoryFormProps) {
-  const { t } = useTranslation(['categories', 'common']);
+  const { t } = useTranslation(['categories', 'uikit']);
   const [formData, setFormData] = useState<CreateCategoryInput>({
     name: '',
     description: '',
@@ -54,15 +54,15 @@ export function CategoryForm({ isOpen, category, onSubmit, onClose, loading }: C
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={category ? t('common:form.edit_title', { entity: t('categories:entity') }) : t('common:form.add_title', { entity: t('categories:entity') })}
+      title={category ? t('uikit:form.edit_title', { entity: t('categories:entity') }) : t('uikit:form.add_title', { entity: t('categories:entity') })}
       size="2xl"
       footer={
         <div className="flex justify-end gap-3 w-full">
           <Button type="button" variant="outline" onClick={onClose}>
-            {t('common:cancel')}
+            {t('uikit:cancel')}
           </Button>
           <Button type="submit" form="category-form" loading={loading}>
-            {category ? t('common:save') : t('common:add')}
+            {category ? t('uikit:save') : t('uikit:add')}
           </Button>
         </div>
       }
@@ -96,7 +96,7 @@ export function CategoryForm({ isOpen, category, onSubmit, onClose, loading }: C
              <Toggle
                 checked={formData.isActive ?? true}
                 onChange={(checked) => { setFormData({ ...formData, isActive: checked }); }}
-                label={t('common:active')}
+                label={t('uikit:active')}
                 description={t('categories:form.active_description')}
               />
           </div>

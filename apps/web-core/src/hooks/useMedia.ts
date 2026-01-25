@@ -11,7 +11,7 @@ import { mediaService } from '@/services/media.service';
 
 
 export function useMediaUpload(refId?: string, refType?: string) {
-  const { t } = useTranslation(['common']);
+  const { t } = useTranslation(['uikit']);
   const toast = useToast();
   const [uploading, setUploading] = useState(false);
 

@@ -57,7 +57,7 @@ const itemVariants = {
 };
 
 export function HomePage() {
-  const { t } = useTranslation(['home', 'common']);
+  const { t } = useTranslation(['home', 'uikit']);
 
   return (
     <div className="max-w-5xl mx-auto">
@@ -81,7 +81,7 @@ export function HomePage() {
         </motion.div>
 
         <h1 className="text-4xl md:text-6xl font-bold mb-6">
-          <span className="text-gradient">{t('common:brand')}</span>
+          <span className="text-gradient">{t('uikit:brand')}</span>
           <br />
           <span className="text-foreground">{t('home:hero.subtitle')}</span>
         </h1>
@@ -93,12 +93,12 @@ export function HomePage() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link to="/admin">
             <Button size="lg" className="w-full sm:w-auto">
-              {t('common:get_started')}
+              {t('uikit:get_started')}
               <ArrowRight className="w-5 h-5 ml-1" />
             </Button>
           </Link>
           <Button variant="outline" size="lg" className="w-full sm:w-auto">
-            {t('common:documentation')}
+            {t('uikit:documentation')}
           </Button>
         </div>
       </motion.section>
@@ -214,8 +214,8 @@ export function HomePage() {
       >
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted">
           <div className="flex items-center gap-2">
-            <span className="text-gradient font-semibold">{t('common:brand')}</span>
-            <span>{t('common:version')}</span>
+            <span className="text-gradient font-semibold">{t('uikit:brand')}</span>
+            <span>{t('uikit:version')}</span>
           </div>
           
           <div className="flex items-center gap-6">
@@ -231,7 +231,7 @@ export function HomePage() {
               href="#"
               className="hover:text-primary transition-colors"
             >
-              {t('common:documentation')}
+              {t('uikit:documentation')}
             </a>
             <a
               href="#"
@@ -245,7 +245,7 @@ export function HomePage() {
             <p>
               {t('home:footer.copyright', {
                 year: new Date().getFullYear(),
-                brand: t('common:brand'),
+                brand: t('uikit:brand'),
                 rights: t('home:footer.rights'),
               })}
             </p>

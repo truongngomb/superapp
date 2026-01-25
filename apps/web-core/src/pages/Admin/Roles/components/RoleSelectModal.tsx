@@ -21,7 +21,7 @@ export function RoleSelectModal({
   onClose,
   loading,
 }: RoleSelectModalProps) {
-  const { t } = useTranslation(['users', 'common']);
+  const { t } = useTranslation(['users', 'uikit']);
   const [selectedRoleIds, setSelectedRoleIds] = useState<string[]>([]);
 
   useEffect(() => {
@@ -74,7 +74,7 @@ export function RoleSelectModal({
       footer={
         <div className="flex gap-3">
           <Button type="button" variant="outline" onClick={onClose} className="flex-1">
-            {t('common:cancel')}
+            {t('uikit:cancel')}
           </Button>
           <Button
             type="submit"
@@ -83,7 +83,7 @@ export function RoleSelectModal({
             disabled={!hasChanges()}
             className="flex-1"
           >
-            {t('common:save')}
+            {t('uikit:save')}
           </Button>
         </div>
       }
@@ -129,7 +129,7 @@ export function RoleSelectModal({
                       if (roleId) removeRole(roleId); 
                     }}
                     className="ml-1 h-4 w-4 p-0 hover:bg-transparent"
-                    aria-label={t('common:delete')}
+                    aria-label={t('uikit:delete')}
                   >
                     <X className="w-3 h-3" />
                   </Button>

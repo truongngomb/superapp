@@ -19,7 +19,7 @@ interface NotificationCenterProps {
 
 export const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
-  const { t } = useTranslation(['notifications', 'common']);
+  const { t } = useTranslation(['notifications', 'uikit']);
   const { logs, isLoading, error, refetch, resetUnreadCount, loadMore, hasMore, isLoadingMore } = useActivityLogContext();
   
   const containerRef = useRef<HTMLDivElement>(null);
@@ -62,7 +62,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, 
                   onClick={() => { void refetch(); }}
                   className="p-2 h-8 w-8"
                   disabled={isLoading}
-                  title={t('common:refresh')}
+                  title={t('uikit:refresh')}
                 >
                   <RefreshCw className={cn("w-4 h-4", isLoading && "animate-spin")} />
                 </Button>
@@ -84,7 +84,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, 
                   <div className="relative">
                     <div className="w-12 h-12 border-4 border-indigo-100 dark:border-indigo-900 border-t-indigo-600 rounded-full animate-spin" />
                   </div>
-                  <p className="text-sm text-slate-400 animate-pulse">{t('common:loading')}</p>
+                  <p className="text-sm text-slate-400 animate-pulse">{t('uikit:loading')}</p>
                 </div>
               ) : error ? (
                 <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
@@ -98,7 +98,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, 
                     onClick={() => { void refetch(); }}
                     className="mt-4 text-xs font-semibold"
                   >
-                    {t('common:retry')}
+                    {t('uikit:retry')}
                   </Button>
                 </div>
               ) : logs.length === 0 ? (
@@ -133,10 +133,10 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, 
                         {isLoadingMore ? (
                           <div className="flex items-center gap-2">
                              <div className="w-3 h-3 border-2 border-slate-300 dark:border-slate-600 border-t-indigo-600 rounded-full animate-spin" />
-                             <span>{t('common:loading')}</span>
+                             <span>{t('uikit:loading')}</span>
                           </div>
                         ) : (
-                          t('common:load_more')
+                          t('uikit:load_more')
                         )}
                       </Button>
                     </div>

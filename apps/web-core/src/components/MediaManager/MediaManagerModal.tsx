@@ -16,7 +16,7 @@ interface MediaManagerModalProps {
 }
 
 export function MediaManagerModal({ open, onClose, onSelect, refId, refType }: MediaManagerModalProps) {
-  const { t } = useTranslation(['common']);
+  const { t } = useTranslation(['uikit']);
   const toast = useToast();
   const queryClient = useQueryClient();
 

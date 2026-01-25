@@ -20,7 +20,7 @@ interface RoleRowProps {
 }
 
 export function RoleRow({ index, style, data, isSelected, onSelect }: RoleRowProps) {
-  const { t } = useTranslation(['roles', 'common']);
+  const { t } = useTranslation(['roles', 'uikit']);
   const role = data.roles[index];
   if (!role) return null;
 
@@ -32,7 +32,7 @@ export function RoleRow({ index, style, data, isSelected, onSelect }: RoleRowPro
             variant="ghost"
             size="sm"
             onClick={(e) => { e.stopPropagation(); data.onEdit(role); }}
-            aria-label={t('common:edit')}
+            aria-label={t('uikit:edit')}
           >
             <Edit2 className="w-4 h-4" />
           </Button>
@@ -45,7 +45,7 @@ export function RoleRow({ index, style, data, isSelected, onSelect }: RoleRowPro
             variant="ghost"
             size="sm"
             onClick={(e) => { e.stopPropagation(); data.onDuplicate?.(role); }}
-            aria-label={t('common:duplicate')}
+            aria-label={t('uikit:duplicate')}
           >
             <Copy className="w-4 h-4 text-blue-500" />
           </Button>
@@ -63,7 +63,7 @@ export function RoleRow({ index, style, data, isSelected, onSelect }: RoleRowPro
                   data.onRestore(role.id);
                 }
             }}
-            aria-label={t('common:restore')}
+            aria-label={t('uikit:restore')}
           >
             <RotateCcw className="w-4 h-4 text-primary" />
           </Button>
@@ -75,7 +75,7 @@ export function RoleRow({ index, style, data, isSelected, onSelect }: RoleRowPro
           variant="ghost"
           size="sm"
           onClick={(e) => { e.stopPropagation(); data.onDelete(role.id); }}
-          aria-label={t('common:delete')}
+          aria-label={t('uikit:delete')}
         >
           <Trash2 className={cn("w-4 h-4", role.isDeleted ? "text-red-700" : "text-red-500")} />
         </Button>

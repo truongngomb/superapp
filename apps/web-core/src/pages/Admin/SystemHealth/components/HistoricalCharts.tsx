@@ -23,7 +23,7 @@ interface FormattedSnapshot extends SystemMetricSnapshot {
 }
 
 export function HistoricalCharts() {
-  const { t } = useTranslation(['system_health', 'common']);
+  const { t } = useTranslation(['system_health', 'uikit']);
   const [data, setData] = useState<FormattedSnapshot[]>([]);
   const [loading, setLoading] = useState(true);
 

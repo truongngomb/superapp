@@ -149,7 +149,7 @@ export function ColorPicker({
   allowModeSwitch,
   presetColors,
 }: ColorPickerProps) {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('uikit');
   const toast = useToast();
   
   // Determine presets to use

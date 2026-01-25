@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { DashboardPage } from './pages/Dashboard/DashboardPage';
 import { EditorPage } from './pages/Editor/EditorPage';
+import { MainLayout } from './components/layout/MainLayout';
 import './styles/index.scss';
 
 const queryClient = new QueryClient();
@@ -12,9 +13,11 @@ function App() {
         {/* Auto-detect basename based on current path for proxy support */}
         <BrowserRouter basename={window.location.pathname.startsWith('/story-weaver') ? '/story-weaver' : '/'}>
             <Routes>
-                <Route path="/" element={<DashboardPage />} />
-                <Route path="/dashboard" element={<DashboardPage />} />
-                <Route path="/editor/:id" element={<EditorPage />} />
+                <Route element={<MainLayout />}>
+                    <Route path="/" element={<DashboardPage />} />
+                    <Route path="/dashboard" element={<DashboardPage />} />
+                    <Route path="/editor/:id" element={<EditorPage />} />
+                </Route>
             </Routes>
         </BrowserRouter>
     </QueryClientProvider>

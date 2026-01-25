@@ -48,7 +48,7 @@ export function MarkdownPageMobileList({
   onManageTranslations,
   onDelete,
 }: MarkdownPageMobileListProps) {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('uikit');
   
   // IntersectionObserver for infinite scroll
   const { ref: loadMoreRef, inView } = useInView({

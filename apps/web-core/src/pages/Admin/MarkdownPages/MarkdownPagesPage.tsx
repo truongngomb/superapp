@@ -51,7 +51,7 @@ import { MarkdownPageMobileCardSkeletonList } from "./components/MarkdownPageMob
 const MarkdownPageForm = lazy(() => import("./components/MarkdownPageForm").then(module => ({ default: module.MarkdownPageForm })));
 
 export default function MarkdownPagesPage() {
-  const { t } = useTranslation(["markdown", "common"]);
+  const { t } = useTranslation(["markdown", "uikit"]);
   const [searchParams] = useSearchParams();
   
   // Setup Search
@@ -193,7 +193,7 @@ export default function MarkdownPagesPage() {
       { key: "title", header: t("form.title"), width: 30 },
       { key: "slug", header: t("form.slug"), width: 20 },
       { key: "isPublished", header: t("form.published"), width: 10 },
-      { key: "updated", header: t("common:updated"), width: 15 },
+      { key: "updated", header: t("uikit:updated"), width: 15 },
     ],
   });
 
@@ -208,8 +208,8 @@ export default function MarkdownPagesPage() {
   };
 
   const sortColumns: SortColumn[] = [
-    { field: "updated", label: t("common:updated") },
-    { field: "created", label: t("common:created") },
+    { field: "updated", label: t("uikit:updated") },
+    { field: "created", label: t("uikit:created") },
   ];
 
   const hasDeletedSelected = selectedIds.some(
@@ -309,12 +309,12 @@ export default function MarkdownPagesPage() {
                <CardContent>
                  <FileText className="w-12 h-12 text-muted mx-auto mb-4" />
                  <p className="text-muted">
-                   {searchQuery ? t("common:list.empty_search", { entities: t("name") }) : t("common:list.empty", { entities: t("name") })}
+                   {searchQuery ? t("uikit:list.empty_search", { entities: t("name") }) : t("uikit:list.empty", { entities: t("name") })}
                  </p>
                  {!searchQuery && (
                    <PermissionGuard resource="markdown_pages" action="create">
                      <Button onClick={() => { setShowForm(true); }} className="mt-4">
-                       {t("common:list.add_first", { entity: t("name") })}
+                       {t("uikit:list.add_first", { entity: t("name") })}
                      </Button>
                    </PermissionGuard>
                  )}
@@ -432,10 +432,10 @@ export default function MarkdownPagesPage() {
       {/* Confirm Modals */}
       <ConfirmModal
         isOpen={!!deleteId}
-        title={t("common:delete")}
-        message={t("common:confirmation.delete", { entity: t("name") })}
-        confirmText={t("common:delete")}
-        cancelText={t("common:cancel")}
+        title={t("uikit:delete")}
+        message={t("uikit:confirmation.delete", { entity: t("name") })}
+        confirmText={t("uikit:delete")}
+        cancelText={t("uikit:cancel")}
         onConfirm={() => {
           if (deleteId) {
             void handleDelete(deleteId).then(() => {
@@ -449,8 +449,8 @@ export default function MarkdownPagesPage() {
 
       <ConfirmModal
         isOpen={!!restoreId}
-        title={t("common:restore")}
-        message={t("common:confirmation.restore", { entity: t("name") })}
+        title={t("uikit:restore")}
+        message={t("uikit:confirmation.restore", { entity: t("name") })}
         onConfirm={() => {
           if (restoreId) {
             void handleRestore(restoreId).then(() => {
@@ -463,8 +463,8 @@ export default function MarkdownPagesPage() {
 
       <ConfirmModal
         isOpen={showBatchDeleteConfirm}
-        title={t("common:delete")}
-        message={t("common:batch_confirmation.delete", { count: selectedIds.length, entities: t("name") })}
+        title={t("uikit:delete")}
+        message={t("uikit:batch_confirmation.delete", { count: selectedIds.length, entities: t("name") })}
         onConfirm={() => {
           void handleBatchDelete().then(() => {
             setShowBatchDeleteConfirm(false);
@@ -476,11 +476,11 @@ export default function MarkdownPagesPage() {
       
       <ConfirmModal
          isOpen={!!batchStatusConfig?.isOpen}
-         title={t("common:confirm")}
-         message={t("common:batch_confirmation.status", { 
+         title={t("uikit:confirm")}
+         message={t("uikit:batch_confirmation.status", { 
            count: selectedIds.length, 
            entities: t("name"),
-           action: batchStatusConfig?.isActive ? t("common:actions.activate") : t("common:actions.deactivate")
+           action: batchStatusConfig?.isActive ? t("uikit:actions.activate") : t("uikit:actions.deactivate")
          })}
           onConfirm={() => {
             if (batchStatusConfig) {
@@ -494,8 +494,8 @@ export default function MarkdownPagesPage() {
       
       <ConfirmModal
          isOpen={showBatchRestoreConfirm}
-         title={t("common:restore")}
-         message={t("common:batch_confirmation.restore", { count: selectedIds.length, entities: t("name") })}
+         title={t("uikit:restore")}
+         message={t("uikit:batch_confirmation.restore", { count: selectedIds.length, entities: t("name") })}
           onConfirm={() => {
             void handleBatchRestore().then(() => {
               setShowBatchRestoreConfirm(false);

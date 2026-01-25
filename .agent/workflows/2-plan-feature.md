@@ -39,6 +39,13 @@ Mô tả ngắn gọn mục tiêu.
 - [ ] Breaking changes?
 - [ ] Logic phức tạp cần confirm?
 
+## Quy tắc thực hiện
+1. **Chia nhỏ**: Thực hiện từng bước nhỏ, cô lập thay đổi.
+2. **Chất lượng**: Chạy `lint` và sửa lỗi ngay sau mỗi bước code.
+3. **Manual Test**: Hướng dẫn manual test chi tiết, có từng bước test cụ thể cho mỗi task.
+4. **Kiểm soát**: Dừng lại chờ người dùng (User) xác nhận ("check") sau mỗi bước hoàn thành.
+5. **Ngôn ngữ**: Toàn bộ quy trình dùng Tiếng Việt.
+
 ## Proposed Changes
 
 ### Database (nếu có)

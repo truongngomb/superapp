@@ -7,7 +7,7 @@ import { backupService, BackupItem } from '@/services/backup.service';
 import { BackupTable } from './BackupTable';
 
 export function BackupManager() {
-  const { t } = useTranslation(['settings', 'common']);
+  const { t } = useTranslation(['settings', 'uikit']);
   const { success, error: showError } = useToast();
   
   const [backups, setBackups] = useState<BackupItem[]>([]);
@@ -136,8 +136,8 @@ export function BackupManager() {
           ? t('settings:backup.restore_confirm_message', { name: confirmState.key }) 
           : t('settings:backup.delete_confirm_message', { name: confirmState.key })
         }
-        confirmText={t('common:confirm')}
-        cancelText={t('common:cancel')}
+        confirmText={t('uikit:confirm')}
+        cancelText={t('uikit:cancel')}
         variant={confirmState.type === 'restore' ? 'warning' : 'danger'}
         loading={processing}
       />

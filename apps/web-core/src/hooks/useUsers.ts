@@ -17,7 +17,7 @@ export function useUsers() {
   const [exporting, setExporting] = useState(false);
   
   const toast = useToast();
-  const { t } = useTranslation(['users', 'common']);
+  const { t } = useTranslation(['users', 'uikit']);
   
   // Use refs to avoid infinite loop when reloading
   const isReloading = useRef(false);
@@ -54,7 +54,7 @@ export function useUsers() {
       });
     } catch (error) {
       logger.warn('useUsers', 'Failed to load users:', error);
-      toast.error(t('common:toast.load_error'));
+      toast.error(t('uikit:toast.load_error'));
     } finally {
       setLoading(false);
       setIsLoadingMore(false);
@@ -83,11 +83,11 @@ export function useUsers() {
     setSubmitting(true);
     try {
       await userService.create(data);
-      toast.success(t('common:toast.create_success'));
+      toast.success(t('uikit:toast.create_success'));
       await reloadUsers();
       return true;
     } catch (error) {
-      const message = error instanceof ApiException ? error.message : t('common:toast.error');
+      const message = error instanceof ApiException ? error.message : t('uikit:toast.error');
       toast.error(message);
       return false;
     } finally {
@@ -99,11 +99,11 @@ export function useUsers() {
     setSubmitting(true);
     try {
       await userService.updateUser(id, data);
-      toast.success(t('common:toast.update_success'));
+      toast.success(t('uikit:toast.update_success'));
       await reloadUsers();
       return true;
     } catch (error) {
-      const message = error instanceof ApiException ? error.message : t('common:toast.error');
+      const message = error instanceof ApiException ? error.message : t('uikit:toast.error');
       toast.error(message);
       return false;
     } finally {
@@ -115,11 +115,11 @@ export function useUsers() {
     setSubmitting(true);
     try {
       await userService.restoreUser(id);
-      toast.success(t('common:toast.restore_success'));
+      toast.success(t('uikit:toast.restore_success'));
       await reloadUsers();
       return true;
     } catch (error) {
-      const message = error instanceof ApiException ? error.message : t('common:toast.error');
+      const message = error instanceof ApiException ? error.message : t('uikit:toast.error');
       toast.error(message);
       return false;
     } finally {
@@ -131,11 +131,11 @@ export function useUsers() {
     setDeleting(true);
     try {
       await userService.deleteUser(id);
-      toast.success(t('common:toast.delete_success'));
+      toast.success(t('uikit:toast.delete_success'));
       await reloadUsers();
       return true;
     } catch (error) {
-      const message = error instanceof ApiException ? error.message : t('common:toast.error');
+      const message = error instanceof ApiException ? error.message : t('uikit:toast.error');
       toast.error(message);
       return false;
     } finally {
@@ -147,11 +147,11 @@ export function useUsers() {
     setBatchDeleting(true);
     try {
       await userService.deleteMany(ids);
-      toast.success(t('common:toast.batch_delete_success', { count: ids.length }));
+      toast.success(t('uikit:toast.batch_delete_success', { count: ids.length }));
       await reloadUsers();
       return true;
     } catch (error) {
-      const message = error instanceof ApiException ? error.message : t('common:toast.error');
+      const message = error instanceof ApiException ? error.message : t('uikit:toast.error');
       toast.error(message);
       return false;
     } finally {
@@ -163,11 +163,11 @@ export function useUsers() {
     setSubmitting(true);
     try {
       await userService.restoreMany(ids);
-      toast.success(t('common:toast.batch_restore_success', { count: ids.length }));
+      toast.success(t('uikit:toast.batch_restore_success', { count: ids.length }));
       await reloadUsers();
       return true;
     } catch (error) {
-      const message = error instanceof ApiException ? error.message : t('common:toast.error');
+      const message = error instanceof ApiException ? error.message : t('uikit:toast.error');
       toast.error(message);
       return false;
     } finally {
@@ -179,11 +179,11 @@ export function useUsers() {
     setSubmitting(true);
     try {
       await userService.batchUpdateStatus(ids, isActive);
-      toast.success(t('common:toast.batch_status_success', { count: ids.length }));
+      toast.success(t('uikit:toast.batch_status_success', { count: ids.length }));
       await reloadUsers();
       return true;
     } catch (error) {
-      const message = error instanceof ApiException ? error.message : t('common:toast.error');
+      const message = error instanceof ApiException ? error.message : t('uikit:toast.error');
       toast.error(message);
       return false;
     } finally {
@@ -197,7 +197,7 @@ export function useUsers() {
       return await userService.getAllForExport(params);
     } catch (error) {
       logger.warn('useUsers', 'Failed to export users:', error);
-      toast.error(t('common:toast.load_error'));
+      toast.error(t('uikit:toast.load_error'));
       return [];
     } finally {
       setExporting(false);
@@ -211,11 +211,11 @@ export function useUsers() {
     setSubmitting(true);
     try {
       await userService.assignRoles(userId, roleIds);
-      toast.success(t('common:toast.action_success', { defaultValue: 'Roles assigned successfully' }));
+      toast.success(t('uikit:toast.action_success', { defaultValue: 'Roles assigned successfully' }));
       await reloadUsers();
       return true;
     } catch (error) {
-      const message = error instanceof ApiException ? error.message : t('common:toast.error');
+      const message = error instanceof ApiException ? error.message : t('uikit:toast.error');
       toast.error(message);
       return false;
     } finally {

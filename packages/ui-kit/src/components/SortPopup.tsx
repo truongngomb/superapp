@@ -18,7 +18,7 @@ export function SortPopup({
   onSort,
   className,
 }: SortPopupProps) {
-  const { t } = useTranslation(['common']);
+  const { t } = useTranslation(['uikit']);
 
   // Get active sort label for button
   const activeColumn = columns.find((col) => col.field === currentSort.field);
@@ -55,7 +55,7 @@ export function SortPopup({
         >
           <div className="px-3 py-2 border-b border-border">
             <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-              {t('common:sort_by', { defaultValue: 'Sort by' })}
+              {t('sort_by')}
             </span>
           </div>
           

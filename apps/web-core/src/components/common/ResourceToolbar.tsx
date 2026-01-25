@@ -53,7 +53,7 @@ export function ResourceToolbar({
   batchActions,
   isMobile = false,
 }: ResourceToolbarProps) {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('uikit');
 
   // Determine checkbox state
   const checkboxState = selectedCount === 0 
@@ -125,7 +125,7 @@ export function ResourceToolbar({
       {/* Right side: Batch Actions + Total Items (always same row) */}
       <div className="flex items-center gap-3">
         {batchActions}
-        <p className="text-sm text-muted whitespace-nowrap">{t('total_items', { count: totalItems })}</p>
+        <p className="text-sm text-muted whitespace-nowrap">{t('uikit:total_items', { count: totalItems })}</p>
       </div>
     </div>
   );

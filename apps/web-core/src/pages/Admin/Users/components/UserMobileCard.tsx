@@ -47,7 +47,7 @@ export function UserMobileCard({
   isSelected,
   onSelect,
 }: UserMobileCardProps) {
-  const { t } = useTranslation(['users', 'common']);
+  const { t } = useTranslation(['users', 'uikit']);
   
   // Status config matches Categories
   const getStatusConfig = () => {
@@ -131,7 +131,7 @@ export function UserMobileCard({
               <div className="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0">
                 <Mail className="w-3.5 h-3.5 text-blue-400" />
               </div>
-              <span className="text-sm">{t('common:email')}:</span>
+              <span className="text-sm">{t('uikit:email')}:</span>
             </div>
             <span className="ml-auto text-sm font-semibold text-foreground text-right truncate max-w-[60%]">
               {user.email}
@@ -144,7 +144,7 @@ export function UserMobileCard({
              <div className="w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0">
                <Shield className="w-3.5 h-3.5 text-purple-400" />
              </div>
-             <span className="text-sm">{t('common:role')}:</span>
+             <span className="text-sm">{t('uikit:role')}:</span>
            </div>
            <div className="ml-auto flex flex-wrap justify-end gap-1 max-w-[70%]">
              {user.roles && user.roles.length > 0 ? (
@@ -157,7 +157,7 @@ export function UserMobileCard({
                  );
                })
              ) : (
-               <span className="text-xs italic text-muted-foreground">{t('common:no_roles')}</span>
+               <span className="text-xs italic text-muted-foreground">{t('uikit:no_roles')}</span>
              )}
            </div>
         </div>
@@ -174,7 +174,7 @@ export function UserMobileCard({
                className="flex-1 h-auto py-3.5 rounded-none text-muted-foreground hover:bg-[#2a3142] hover:text-muted-foreground border-r border-[#2a3142]"
              >
                <Edit2 className="w-4 h-4" />
-               <span className="text-sm font-medium hidden xs:inline">{t('common:edit')}</span>
+               <span className="text-sm font-medium hidden xs:inline">{t('uikit:edit')}</span>
              </Button>
           </PermissionGuard>
         ) : onRestore && (
@@ -185,7 +185,7 @@ export function UserMobileCard({
                className="flex-1 h-auto py-3.5 rounded-none text-primary hover:bg-primary/10 hover:text-primary border-r border-[#2a3142]"
              >
                <RotateCcw className="w-4 h-4" />
-               <span className="text-sm font-medium hidden xs:inline">{t('common:restore')}</span>
+               <span className="text-sm font-medium hidden xs:inline">{t('uikit:restore')}</span>
              </Button>
           </PermissionGuard>
         )}
@@ -217,7 +217,7 @@ export function UserMobileCard({
              )}
            >
              <Trash2 className="w-4 h-4" />
-             <span className="text-sm font-medium hidden xs:inline">{t('common:delete')}</span>
+             <span className="text-sm font-medium hidden xs:inline">{t('uikit:delete')}</span>
            </Button>
         </PermissionGuard>
       </div>

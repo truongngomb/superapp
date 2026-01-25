@@ -15,7 +15,7 @@ import { ActivityLogMobileList } from './components/ActivityLogMobileList';
 import { ActivityLogMobileCardSkeletonList } from './components/ActivityLogMobileCardSkeleton';
 
 export default function ActivityLogsPage() {
-  const { t } = useTranslation(['activity_logs', 'common']);
+  const { t } = useTranslation(['activity_logs', 'uikit']);
   const [searchParams] = useSearchParams();
   const {
     logs,
@@ -125,7 +125,7 @@ export default function ActivityLogsPage() {
     fileNamePrefix: 'activity_logs',
     sheetName: t('activity_logs:title'),
     columns: [
-      { key: '#', header: t('common:order'), width: 8 },
+      { key: '#', header: t('uikit:order'), width: 8 },
       { key: 'expand.user.name', header: t('activity_logs:table.user'), width: 20 },
       { key: 'action', header: t('activity_logs:table.action'), width: 12 },
       { key: 'resource', header: t('activity_logs:table.resource'), width: 15 },
@@ -170,8 +170,8 @@ export default function ActivityLogsPage() {
                 onClick={() => { void handleExport(); }}
                 disabled={exporting || logs.length === 0}
                 className="h-10 w-10 p-0 text-[#217346] hover:bg-[#217346]/10"
-                title={t('common:export_excel')}
-                aria-label={t('common:export_excel')}
+                title={t('uikit:export_excel')}
+                aria-label={t('uikit:export_excel')}
               >
                 {exporting ? (
                   <Loader2 className="w-6 h-6 animate-spin" />
@@ -190,7 +190,7 @@ export default function ActivityLogsPage() {
             <Input
               value={searchQuery}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setSearchQuery(e.target.value); }}
-              placeholder={t('common:search')}
+              placeholder={t('uikit:search')}
               className="pl-10"
             />
           </div>
@@ -213,7 +213,7 @@ export default function ActivityLogsPage() {
         {/* Total items */}
         <div className="flex items-center justify-end mb-4">
           <p className="text-sm text-muted">
-            {t('common:total_items', { count: total })}
+            {t('uikit:total_items', { count: total })}
           </p>
         </div>
 

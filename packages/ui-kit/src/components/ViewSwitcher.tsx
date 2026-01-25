@@ -16,7 +16,7 @@ interface ViewSwitcherProps {
  * Toggle between list and table view modes.
  */
 export function ViewSwitcher({ value, onChange, className }: ViewSwitcherProps) {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('uikit');
 
   return (
     <div className={cn('flex items-center gap-1 bg-muted/20 rounded-lg p-1', className)}>
@@ -29,8 +29,8 @@ export function ViewSwitcher({ value, onChange, className }: ViewSwitcherProps) 
             ? 'bg-background text-primary shadow-sm'
             : 'text-muted hover:text-foreground hover:bg-muted/30'
         )}
-        title={t('view_list', { defaultValue: 'List view' })}
-        aria-label={t('view_list', { defaultValue: 'List view' })}
+        title={t('view_mode.list')}
+        aria-label={t('view_mode.list')}
         aria-pressed={value === 'list'}
       >
         <List className="w-4 h-4" />
@@ -44,8 +44,8 @@ export function ViewSwitcher({ value, onChange, className }: ViewSwitcherProps) 
             ? 'bg-background text-primary shadow-sm'
             : 'text-muted hover:text-foreground hover:bg-muted/30'
         )}
-        title={t('view_table', { defaultValue: 'Table view' })}
-        aria-label={t('view_table', { defaultValue: 'Table view' })}
+        title={t('view_mode.table')}
+        aria-label={t('view_mode.table')}
         aria-pressed={value === 'table'}
       >
         <LayoutGrid className="w-4 h-4" />

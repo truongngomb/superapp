@@ -1,29 +1,33 @@
-/**
- * Modern Sidebar Component
- * Sidebar with profile card at top and vertical navigation
- */
-
-import { Link, useLocation } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, User } from 'lucide-react';
-import { cn } from '@/utils';
-import { PermissionGuard } from '@/components/common/PermissionGuard';
-import { useAuth, useAppMenu } from '@/hooks';
-import { Button } from '@/components/common';
+import { cn } from '../utils';
+import { Button } from '../components/Button';
+import { ISidebarProps } from '@superapp/shared-types';
 
-interface ModernSidebarProps {
-  open: boolean;
-  onClose: () => void;
-  className?: string;
+export interface ModernSidebarProps extends ISidebarProps {
   desktopOpen?: boolean;
+  className?: string;
+  user?: {
+    name?: string;
+    avatar?: string;
+    role?: string;
+  };
+  footerText?: React.ReactNode;
+  t?: (key: string, options?: Record<string, unknown>) => string;
 }
 
-export function ModernSidebar({ open, onClose, className, desktopOpen = true }: ModernSidebarProps) {
-  const { t } = useTranslation(['common', 'users', 'roles', 'categories', 'home', 'auth']);
-  const location = useLocation();
-  const { user } = useAuth();
-  const { menuItems } = useAppMenu();
+export function ModernSidebar({ 
+  open, 
+  onClose, 
+  className, 
+  desktopOpen = true,
+  items,
+  user,
+  currentPath,
+  footerText,
+  t = (k) => k
+}: ModernSidebarProps) {
 
   return (
     <>
@@ -70,27 +74,26 @@ export function ModernSidebar({ open, onClose, className, desktopOpen = true }: 
                  </div>
                  <div className="absolute bottom-0 right-1 w-5 h-5 bg-green-500 border-2 border-background rounded-full"></div>
               </div>
-              <h3 className="text-lg font-bold text-foreground text-center">{user?.name || 'User'}</h3>
-              <p className="text-sm text-muted-foreground text-center uppercase tracking-wider mt-1">{t('auth:role.admin', { defaultValue: 'Admin' })}</p>
+              <h3 className="text-lg font-bold text-foreground text-center">{user?.name || t('uikit:unknown_user')}</h3>
+              <p className="text-sm text-muted-foreground text-center uppercase tracking-wider mt-1">
+                {user?.role || t('uikit:role')}
+              </p>
            </div>
 
            {/* Navigation */}
            <nav className="flex-1 overflow-y-auto py-6 px-3 space-y-1">
-              {menuItems.map((item) => {
-                 const Icon = item.icon;
+              {items.map((item) => {
+                  const Icon = (item.icon || (() => null)) as React.ElementType;
                  const isActive = item.matchPrefix 
-                   ? location.pathname.startsWith(item.path)
-                   : location.pathname === item.path;
+                   ? currentPath.startsWith(item.path)
+                   : currentPath === item.path;
                    
-                 // Simple recursive render for children could go here, but for now max 2 levels
-                 // We will render parent then cached children if any (simplified)
-                 
                  let link;
                  
                  if (item.isTitle) {
                     link = (
                         <div key={item.path} className="px-4 py-3 rounded-lg text-sm font-medium transition-colors flex items-center gap-3 text-muted-foreground hover:text-foreground hover:bg-surface">
-                           {Icon && <Icon className="w-5 h-5" />}
+                           <Icon className="w-5 h-5" />
                            <span className='truncate'>{item.label}</span>
                         </div>
                     );
@@ -99,7 +102,7 @@ export function ModernSidebar({ open, onClose, className, desktopOpen = true }: 
                        <Link
                          key={item.path}
                          to={item.path}
-                         onClick={() => { if(window.innerWidth < 1024) onClose(); }}
+                         onClick={() => { if(typeof window !== 'undefined' && window.innerWidth < 1024) onClose?.(); }}
                          className={cn(
                            'px-4 py-3 rounded-lg text-sm font-medium transition-colors',
                            'flex items-center gap-3',
@@ -108,26 +111,26 @@ export function ModernSidebar({ open, onClose, className, desktopOpen = true }: 
                              : 'text-muted-foreground hover:text-foreground hover:bg-surface'
                          )}
                        >
-                         {Icon && <Icon className="w-5 h-5" />}
+                         <Icon className="w-5 h-5" />
                          <span className="truncate">{item.label}</span>
                        </Link>
                      );
                  }
 
-                 const content = (
+                 return (
                    <div key={item.path}>
                      {link}
                      {/* Render Children (Level 2) - Indented */}
                      {item.children && item.children.length > 0 && (
                         <div className="ml-4 mt-1 space-y-1 border-l border-border pl-2">
                           {item.children.map(child => {
-                            const ChildIcon = child.icon;
-                            const isChildActive = location.pathname === child.path;
+                            const ChildIcon = (child.icon || (() => null)) as React.ElementType;
+                            const isChildActive = currentPath === child.path;
                             return (
                               <Link
                                 key={child.path}
                                 to={child.path}
-                                onClick={() => { if(window.innerWidth < 1024) onClose(); }}
+                                onClick={() => { if(typeof window !== 'undefined' && window.innerWidth < 1024) onClose?.(); }}
                                 className={cn(
                                   'flex items-center gap-3 px-4 py-2 rounded-lg text-sm transition-colors',
                                   isChildActive
@@ -135,7 +138,7 @@ export function ModernSidebar({ open, onClose, className, desktopOpen = true }: 
                                     : 'text-muted-foreground hover:text-foreground hover:bg-surface'
                                 )}
                               >
-                                {ChildIcon && <ChildIcon className="w-4 h-4" />}
+                                <ChildIcon className="w-4 h-4" />
                                 <span className="truncate">{child.label}</span>
                               </Link>
                             );
@@ -144,28 +147,19 @@ export function ModernSidebar({ open, onClose, className, desktopOpen = true }: 
                      )}
                    </div>
                  );
-
-                 if (item.permission) {
-                   return (
-                     <PermissionGuard
-                       key={item.path}
-                       resource={item.permission.resource}
-                       action={item.permission.action}
-                     >
-                       {content}
-                     </PermissionGuard>
-                   );
-                 }
-
-                 return content;
               })}
            </nav>
            
            {/* Footer */}
            <div className="p-2 border-t border-border text-center">
-              <p className="text-xs text-muted-foreground">
-                 © 2026 Admin Portal<br/>v1.0.0
-              </p>
+              <div className="text-xs text-muted-foreground leading-tight">
+                 {footerText || (
+                   <>
+                      <div>{t('uikit:brand')} {t('uikit:admin')}</div>
+                      <div>{t('uikit:version')}</div>
+                   </>
+                 )}
+              </div>
            </div>
         </div>
       </aside>

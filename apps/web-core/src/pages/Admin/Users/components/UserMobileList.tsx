@@ -54,7 +54,7 @@ export function UserMobileList({
   onRestore,
   onAssignRole,
 }: UserMobileListProps) {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('uikit');
   
   // IntersectionObserver for infinite scroll
   const { ref: loadMoreRef, inView } = useInView({

@@ -176,7 +176,7 @@ function JsonNode({ data, name, depth = 0, isLast = true, initialExpanded }: Jso
 }
 
 export default function ApiDocsPage() {
-  const { t } = useTranslation(['common', 'api_docs']);
+  const { t } = useTranslation(['uikit', 'api_docs']);
   const { isDark } = useTheme();
   const layoutMode = useLayoutMode();
   const toast = useToast();
@@ -233,7 +233,7 @@ export default function ApiDocsPage() {
     setStorageItem(STORAGE_KEYS.API_DOCS_VIEW_MODE, mode);
   };
   
-  const pageTitle = `${t('common:brand')} - ${t('common:resources.api_docs')}`;
+  const pageTitle = `${t('uikit:brand')} - ${t('uikit:resources.api_docs')}`;
   const htmlContent = generateScalarHtml(specUrl, isDark, pageTitle);
 
   return (
@@ -360,7 +360,7 @@ export default function ApiDocsPage() {
                   }}
                   className="bg-background shadow-sm flex items-center gap-1.5 h-8"
                 >
-                  {t('common:copy')}
+                  {t('uikit:copy')}
                 </Button>
               </div>
             )}

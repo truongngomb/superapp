@@ -9,7 +9,7 @@ import { LayoutResourceRow } from './LayoutResourceRow';
 import { PERMISSIONS } from '@/config/constants';
 
 export function LayoutSettings() {
-  const { t } = useTranslation(['settings', 'common']);
+  const { t } = useTranslation(['settings', 'uikit']);
   const { settings, updateSetting, getSettingValue, loading } = useSettings();
 
   // Local state
@@ -211,7 +211,7 @@ export function LayoutSettings() {
             onClick={handleReset}
             disabled={!isDirty() || submitting}
           >
-            {t('common:actions_menu.reset')}
+            {t('uikit:actions_menu.reset')}
           </Button>
           <Button 
             onClick={() => void handleSave()} 

@@ -24,11 +24,11 @@ export function MarkdownPageMobileCard({
   onSelect,
   onClick
 }: MarkdownPageMobileCardProps) {
-  const { t, i18n } = useTranslation(['markdown', 'common']);
+  const { t, i18n } = useTranslation(['markdown', 'uikit']);
 
   const lang = i18n.language;
   const trans = page.translations[lang] || page.translations['en'] || Object.values(page.translations)[0];
-  const title = trans?.title || t('common:untitled');
+  const title = trans?.title || t('uikit:untitled');
   const slug = trans?.slug || '';
 
   return (
@@ -76,7 +76,7 @@ export function MarkdownPageMobileCard({
           <div className="flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-muted">
             <span className="flex items-center gap-1">
               <FileText className="w-3 h-3" />
-              {page.updated ? new Date(page.updated).toLocaleDateString(i18n.language) : t('common:n_a')}
+              {page.updated ? new Date(page.updated).toLocaleDateString(i18n.language) : t('uikit:n_a')}
             </span>
             {page.coverImage && (
               <span className="flex items-center gap-1" title={t('form.has_cover')}>
@@ -98,7 +98,7 @@ export function MarkdownPageMobileCard({
             </Badge>
             {page.isDeleted && (
                <Badge variant="danger" className="h-5 text-[10px] px-1.5 font-medium">
-                 {t('common:status.deleted')}
+                 {t('uikit:status.deleted')}
                </Badge>
             )}
           </div>

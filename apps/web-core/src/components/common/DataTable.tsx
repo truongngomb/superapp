@@ -72,7 +72,7 @@ function DataTableInner<T>({
   showSelectAll = false,
 }: DataTableProps<T>) {
   "use no memo";
-  const { t } = useTranslation('common');
+  const { t } = useTranslation(['uikit', 'uikit']);
 
   // Convert legacy selection props to TanStack rowSelection state
   const rowSelection = useMemo(() => {
@@ -115,7 +115,7 @@ function DataTableInner<T>({
                 checked={table.getIsAllRowsSelected()}
                 triState={table.getIsSomeRowsSelected()}
                 onChange={(checked) => { onSelectAll(checked); }}
-                aria-label={t('data_table.select_all')}
+                aria-label={t('uikit:data_table.select_all')}
               />
             </div>
           ) : null
@@ -126,7 +126,7 @@ function DataTableInner<T>({
               <Checkbox
                 checked={row.getIsSelected()}
                 onChange={(checked) => { onSelectOne(row.id, checked); }}
-                aria-label={t('data_table.select_row')}
+                aria-label={t('uikit:data_table.select_row')}
               />
             </div>
           ) : null
@@ -269,7 +269,7 @@ function DataTableInner<T>({
       transition={{ duration: 0.2 }}
       className="w-full rounded-lg border border-border bg-card shadow-sm overflow-hidden flex flex-col"
       role="table"
-      aria-label={t('data_table.table_label')}
+      aria-label={t('uikit:data_table.table_label')}
       aria-rowcount={data.length}
     >
       {/* Header */}
@@ -336,7 +336,7 @@ function DataTableInner<T>({
           </div>
         ) : data.length === 0 ? (
           <div className="p-8 text-center text-muted-foreground border-b border-border/50">
-             {emptyMessage || t('list.empty', { entities: t('data_table.items') })}
+             {emptyMessage || t('uikit:list.empty', { entities: t('uikit:data_table.items') })}
           </div>
         ) : useVirtualization ? (
           <VirtualList

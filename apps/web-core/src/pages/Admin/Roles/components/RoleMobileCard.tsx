@@ -41,7 +41,7 @@ export function RoleMobileCard({
   isSelected,
   onSelect,
 }: RoleMobileCardProps) {
-  const { t } = useTranslation(['roles', 'common']);
+  const { t } = useTranslation(['roles', 'uikit']);
   
   // Status config
   const getStatusConfig = () => {
@@ -121,7 +121,7 @@ export function RoleMobileCard({
               <div className="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0">
                 <FileText className="w-3.5 h-3.5 text-blue-400" />
               </div>
-              <span className="text-sm">{t('common:form.description')}:</span>
+              <span className="text-sm">{t('uikit:form.description')}:</span>
             </div>
             <span className="ml-auto text-sm font-semibold text-foreground text-right truncate max-w-[60%]">
               {role.description}
@@ -141,7 +141,7 @@ export function RoleMobileCard({
                className="flex-1 h-auto py-3.5 rounded-none text-muted-foreground hover:bg-[#2a3142] hover:text-muted-foreground border-r border-[#2a3142]"
              >
                <Edit2 className="w-4 h-4" />
-               <span className="text-sm font-medium hidden xs:inline">{t('common:edit')}</span>
+               <span className="text-sm font-medium hidden xs:inline">{t('uikit:edit')}</span>
              </Button>
           </PermissionGuard>
         ) : onRestore && (
@@ -152,7 +152,7 @@ export function RoleMobileCard({
                className="flex-1 h-auto py-3.5 rounded-none text-primary hover:bg-primary/10 hover:text-primary border-r border-[#2a3142]"
              >
                <RotateCcw className="w-4 h-4" />
-               <span className="text-sm font-medium hidden xs:inline">{t('common:restore')}</span>
+               <span className="text-sm font-medium hidden xs:inline">{t('uikit:restore')}</span>
              </Button>
           </PermissionGuard>
         )}
@@ -166,7 +166,7 @@ export function RoleMobileCard({
                className="flex-1 h-auto py-3.5 rounded-none text-blue-400 hover:bg-blue-400/10 hover:text-blue-400 border-r border-[#2a3142]"
              >
                <Copy className="w-4 h-4" />
-               <span className="text-sm font-medium hidden xs:inline">{t('common:duplicate')}</span>
+               <span className="text-sm font-medium hidden xs:inline">{t('uikit:duplicate')}</span>
              </Button>
            </PermissionGuard>
         )}
@@ -184,7 +184,7 @@ export function RoleMobileCard({
              )}
            >
              <Trash2 className="w-4 h-4" />
-             <span className="text-sm font-medium hidden xs:inline">{t('common:delete')}</span>
+             <span className="text-sm font-medium hidden xs:inline">{t('uikit:delete')}</span>
            </Button>
         </PermissionGuard>
       </div>

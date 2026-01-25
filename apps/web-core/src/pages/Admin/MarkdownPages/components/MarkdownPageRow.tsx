@@ -22,13 +22,13 @@ interface MarkdownPageRowProps {
 }
 
 export function MarkdownPageRow({ index, style, data, isSelected, onSelect }: MarkdownPageRowProps) {
-  const { t, i18n } = useTranslation(['markdown', 'common']);
+  const { t, i18n } = useTranslation(['markdown', 'uikit']);
   const page = data.pages[index];
   if (!page) return null;
 
   const lang = i18n.language;
   const trans = page.translations[lang] || page.translations['en'] || Object.values(page.translations)[0];
-  const title = trans?.title || t('common:untitled');
+  const title = trans?.title || t('uikit:untitled');
   const slug = trans?.slug || '';
 
   const actions = (
@@ -60,7 +60,7 @@ export function MarkdownPageRow({ index, style, data, isSelected, onSelect }: Ma
           size="sm"
           className="h-8 w-8 p-0"
           onClick={(e) => { e.stopPropagation(); data.onEdit(page); }}
-          title={t('common:edit')}
+          title={t('uikit:edit')}
         >
           <Edit2 className="w-4 h-4 text-yellow-600" />
         </Button>
@@ -72,7 +72,7 @@ export function MarkdownPageRow({ index, style, data, isSelected, onSelect }: Ma
           size="sm"
           className="h-8 w-8 p-0 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10"
           onClick={(e) => { e.stopPropagation(); data.onDelete(page); }}
-          title={t('common:delete')}
+          title={t('uikit:delete')}
         >
           <Trash2 className="w-4 h-4" />
         </Button>

@@ -20,7 +20,7 @@ export function useMarkdownPages() {
   const [batchDeleting, setBatchDeleting] = useState(false);
   
   const toast = useToast();
-  const { t } = useTranslation(['markdown', 'common']);
+  const { t } = useTranslation(['markdown', 'uikit']);
   
   // Pagination state
   const [pagination, setPagination] = useState({ page: 1, totalPages: 1, total: 0 });
@@ -56,7 +56,7 @@ export function useMarkdownPages() {
       });
     } catch (error) {
       logger.warn('useMarkdownPages', 'Failed to load pages:', error);
-      toast.error(t('common:toast.load_error'));
+      toast.error(t('uikit:toast.load_error'));
     } finally {
       setLoading(false);
       setIsLoadingMore(false);
@@ -84,11 +84,11 @@ export function useMarkdownPages() {
     setSubmitting(true);
     try {
       await markdownService.create(data);
-      toast.success(t('common:toast.create_success'));
+      toast.success(t('uikit:toast.create_success'));
       await reloadPages();
       return true;
     } catch (error) {
-      const message = error instanceof ApiException ? error.message : t('common:toast.error');
+      const message = error instanceof ApiException ? error.message : t('uikit:toast.error');
       toast.error(message);
       return false;
     } finally {
@@ -100,11 +100,11 @@ export function useMarkdownPages() {
     setSubmitting(true);
     try {
       await markdownService.update(id, data);
-      toast.success(t('common:toast.update_success'));
+      toast.success(t('uikit:toast.update_success'));
       await reloadPages();
       return true;
     } catch (error) {
-      const message = error instanceof ApiException ? error.message : t('common:toast.error');
+      const message = error instanceof ApiException ? error.message : t('uikit:toast.error');
       toast.error(message);
       return false;
     } finally {
@@ -119,14 +119,14 @@ export function useMarkdownPages() {
       await markdownService.delete(id);
       
       const successMessage = page?.isDeleted 
-        ? t('common:toast.hard_delete_success') 
-        : t('common:toast.delete_success');
+        ? t('uikit:toast.hard_delete_success') 
+        : t('uikit:toast.delete_success');
       
       toast.success(successMessage);
       await reloadPages();
       return true;
     } catch (error) {
-      const message = error instanceof ApiException ? error.message : t('common:toast.error');
+      const message = error instanceof ApiException ? error.message : t('uikit:toast.error');
       toast.error(message);
       return false;
     } finally {
@@ -141,14 +141,14 @@ export function useMarkdownPages() {
       await markdownService.deleteMany(ids);
       
       const successMessage = hasDeleted
-        ? t('common:toast.batch_hard_delete_success', { count: ids.length })
-        : t('common:toast.batch_delete_success', { count: ids.length });
+        ? t('uikit:toast.batch_hard_delete_success', { count: ids.length })
+        : t('uikit:toast.batch_delete_success', { count: ids.length });
 
       toast.success(successMessage);
       await reloadPages();
       return true;
     } catch (error) {
-      const message = error instanceof ApiException ? error.message : t('common:toast.error');
+      const message = error instanceof ApiException ? error.message : t('uikit:toast.error');
       toast.error(message);
       return false;
     } finally {
@@ -160,11 +160,11 @@ export function useMarkdownPages() {
     setSubmitting(true);
     try {
       await markdownService.restore(id);
-      toast.success(t('common:toast.restore_success'));
+      toast.success(t('uikit:toast.restore_success'));
       await reloadPages();
       return true;
     } catch (error) {
-      const message = error instanceof ApiException ? error.message : t('common:toast.error');
+      const message = error instanceof ApiException ? error.message : t('uikit:toast.error');
       toast.error(message);
       return false;
     } finally {
@@ -176,11 +176,11 @@ export function useMarkdownPages() {
     setSubmitting(true);
     try {
       await markdownService.restoreMany(ids);
-      toast.success(t('common:toast.batch_restore_success', { count: ids.length }));
+      toast.success(t('uikit:toast.batch_restore_success', { count: ids.length }));
       await reloadPages();
       return true;
     } catch (error) {
-      const message = error instanceof ApiException ? error.message : t('common:toast.error');
+      const message = error instanceof ApiException ? error.message : t('uikit:toast.error');
       toast.error(message);
       return false;
     } finally {
@@ -192,11 +192,11 @@ export function useMarkdownPages() {
     setSubmitting(true);
     try {
       await markdownService.batchUpdateStatus(ids, isActive);
-      toast.success(t('common:toast.batch_status_success', { count: ids.length }));
+      toast.success(t('uikit:toast.batch_status_success', { count: ids.length }));
       await reloadPages();
       return true;
     } catch (error) {
-      const message = error instanceof ApiException ? error.message : t('common:toast.error');
+      const message = error instanceof ApiException ? error.message : t('uikit:toast.error');
       toast.error(message);
       return false;
     } finally {

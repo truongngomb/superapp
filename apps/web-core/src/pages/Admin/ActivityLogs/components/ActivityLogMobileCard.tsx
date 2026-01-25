@@ -35,7 +35,7 @@ export function ActivityLogMobileCard({
   log,
   index,
 }: ActivityLogMobileCardProps) {
-  const { t, i18n } = useTranslation(['activity_logs', 'common']);
+  const { t, i18n } = useTranslation(['activity_logs', 'uikit']);
   
   // Get Locale for date formatting
   const getLocale = () => {
@@ -93,7 +93,7 @@ export function ActivityLogMobileCard({
                <div className="flex items-center gap-2">
                  <span className="text-muted-foreground font-bold text-sm">#{index + 1}</span>
                  <h3 className="font-bold text-lg text-foreground truncate flex-1">
-                   {log.expand?.user?.name || t('common:unknown')}
+                   {log.expand?.user?.name || t('uikit:unknown')}
                  </h3>
                  <span className="text-xs text-muted-foreground flex items-center gap-1 flex-shrink-0 bg-muted/50 px-2 py-0.5 rounded-full">
                    <Clock className="w-3 h-3" />

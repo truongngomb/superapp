@@ -54,3 +54,5 @@ export * from './constants.js';
 export * from './video-project.js';
 export * from './video-scene.js';
 
+// Layout types
+export * from './layout.js';

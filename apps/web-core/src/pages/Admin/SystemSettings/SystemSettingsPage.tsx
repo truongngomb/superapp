@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { PageLoader } from '@/components/common';
+import { LoadingSpinner } from '@superapp/ui-kit';
 import { useSettings } from '@/hooks';
 
 // Sub-components
@@ -11,7 +11,7 @@ import { RoleSettings } from './components/RoleSettings';
 import { GeneralSettings } from './components/GeneralSettings';
 
 export default function SystemSettingsPage() {
-  const { t } = useTranslation(['settings', 'common']);
+  const { t } = useTranslation(['settings', 'uikit']);
   const { settings, loading } = useSettings();
   
   const location = useLocation();
@@ -41,7 +41,7 @@ export default function SystemSettingsPage() {
   };
 
   if (loading && settings.length === 0) {
-    return <PageLoader />;
+    return <LoadingSpinner />;
   }
 
   return (

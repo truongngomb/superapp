@@ -36,7 +36,7 @@ export function MarkdownPageTable({
   onManageTranslations,
   onDelete
 }: MarkdownPageTableProps) {
-  const { t, i18n } = useTranslation(['markdown', 'common']);
+  const { t, i18n } = useTranslation(['markdown', 'uikit']);
 
   const columns = useMemo<DataTableColumn<MarkdownPage>[]>(() => [
     {
@@ -47,7 +47,7 @@ export function MarkdownPageTable({
       cell: ({ row }) => {
         const lang = i18n.language;
         const trans = row.original.translations[lang] || row.original.translations['en'] || Object.values(row.original.translations)[0];
-        const title = trans?.title || t('common:untitled');
+        const title = trans?.title || t('uikit:untitled');
         const slug = trans?.slug || '';
 
         return (
@@ -98,13 +98,13 @@ export function MarkdownPageTable({
     },
     {
       id: 'updated',
-      header: () => t('common:updated'),
+      header: () => t('uikit:updated'),
       size: 120,
       cell: ({ row }) => new Date(row.original.updated).toLocaleDateString(i18n.language)
     },
     {
       id: 'actions',
-      header: () => t('common:actions.label'),
+      header: () => t('uikit:actions.label'),
       size: 180,
       cell: ({ row }) => {
         const lang = i18n.language;

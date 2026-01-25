@@ -2,6 +2,7 @@
  * Markdown Pages Types & Schemas
  */
 import { z } from 'zod';
+import { BaseListParams } from './common.js';
 
 const BaseResourceSchema = z.object({
   id: z.string(),
@@ -84,16 +85,9 @@ export interface MarkdownMenuItem {
 }
 
 // List Params
-export interface MarkdownPageListParams {
-  page?: number;
-  limit?: number;
-  sort?: string;
-  order?: 'asc' | 'desc';
-  search?: string;
+export interface MarkdownPageListParams extends BaseListParams {
   isPublished?: boolean;
   showInMenu?: boolean;
-  isActive?: boolean;
-  isDeleted?: boolean;
   lang?: string; // Language to filter/return
 }
 

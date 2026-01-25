@@ -30,7 +30,7 @@ export function MarkdownEditor({
   className = '',
   ...props
 }: MarkdownEditorProps) {
-  const { t } = useTranslation(['common']);
+  const { t } = useTranslation(['uikit']);
   
   // Auto-detect theme from document (set by ThemeProvider)
   const theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
@@ -50,45 +50,45 @@ export function MarkdownEditor({
   const overrideCommandTitles = useCallback((cmds: ICommand[]) => {
     return cmds.map(cmd => {
       const titleMap: Record<string, string> = {
-        'bold': t('markdown.bold', { defaultValue: 'Bold' }),
-        'italic': t('markdown.italic', { defaultValue: 'Italic' }),
-        'strikethrough': t('markdown.strikethrough', { defaultValue: 'Strikethrough' }),
-        'hr': t('markdown.hr', { defaultValue: 'Horizontal Rule' }),
-        'title': t('markdown.title', { defaultValue: 'Title' }),
-        'title1': t('markdown.heading', { defaultValue: 'Heading' }) + ' 1',
-        'title2': t('markdown.heading', { defaultValue: 'Heading' }) + ' 2',
-        'title3': t('markdown.heading', { defaultValue: 'Heading' }) + ' 3',
-        'title4': t('markdown.heading', { defaultValue: 'Heading' }) + ' 4',
-        'title5': t('markdown.heading', { defaultValue: 'Heading' }) + ' 5',
-        'title6': t('markdown.heading', { defaultValue: 'Heading' }) + ' 6',
-        'link': t('markdown.link', { defaultValue: 'Link' }),
-        'quote': t('markdown.quote', { defaultValue: 'Quote' }),
-        'code': t('markdown.code', { defaultValue: 'Code' }),
-        'codeBlock': t('markdown.code_block', { defaultValue: 'Code Block' }),
-        'comment': t('markdown.comment', { defaultValue: 'Insert Comment' }),
+        'bold': t('markdown.bold'),
+        'italic': t('markdown.italic'),
+        'strikethrough': t('markdown.strikethrough'),
+        'hr': t('markdown.hr'),
+        'title': t('markdown.title'),
+        'title1': t('markdown.heading') + ' 1',
+        'title2': t('markdown.heading') + ' 2',
+        'title3': t('markdown.heading') + ' 3',
+        'title4': t('markdown.heading') + ' 4',
+        'title5': t('markdown.heading') + ' 5',
+        'title6': t('markdown.heading') + ' 6',
+        'link': t('markdown.link'),
+        'quote': t('markdown.quote'),
+        'code': t('markdown.code'),
+        'codeBlock': t('markdown.code_block'),
+        'comment': t('markdown.comment'),
         // List commands - try all possible naming variants
-        'unorderedListCommand': t('markdown.unordered_list', { defaultValue: 'Unordered List' }),
-        'orderedListCommand': t('markdown.ordered_list', { defaultValue: 'Ordered List' }),
-        'checkedListCommand': t('markdown.task_list', { defaultValue: 'Task List' }),
-        'unorderedList': t('markdown.unordered_list', { defaultValue: 'Unordered List' }),
-        'orderedList': t('markdown.ordered_list', { defaultValue: 'Ordered List' }),
-        'checkedList': t('markdown.task_list', { defaultValue: 'Task List' }),
+        'unorderedListCommand': t('markdown.unordered_list'),
+        'orderedListCommand': t('markdown.ordered_list'),
+        'checkedListCommand': t('markdown.task_list'),
+        'unorderedList': t('markdown.unordered_list'),
+        'orderedList': t('markdown.ordered_list'),
+        'checkedList': t('markdown.task_list'),
         // Hyphenated names (actual command names from library)
-        'unordered-list': t('markdown.unordered_list', { defaultValue: 'Unordered List' }),
-        'ordered-list': t('markdown.ordered_list', { defaultValue: 'Ordered List' }),
-        'checked-list': t('markdown.task_list', { defaultValue: 'Task List' }),
-        'uol': t('markdown.unordered_list', { defaultValue: 'Unordered List' }),
-        'ol': t('markdown.ordered_list', { defaultValue: 'Ordered List' }),
-        'ul': t('markdown.unordered_list', { defaultValue: 'Unordered List' }),
-        'olist': t('markdown.ordered_list', { defaultValue: 'Ordered List' }),
-        'ulist': t('markdown.unordered_list', { defaultValue: 'Unordered List' }),
-        'list': t('markdown.unordered_list', { defaultValue: 'List' }),
-        'table': t('markdown.table', { defaultValue: 'Table' }),
+        'unordered-list': t('markdown.unordered_list'),
+        'ordered-list': t('markdown.ordered_list'),
+        'checked-list': t('markdown.task_list'),
+        'uol': t('markdown.unordered_list'),
+        'ol': t('markdown.ordered_list'),
+        'ul': t('markdown.unordered_list'),
+        'olist': t('markdown.ordered_list'),
+        'ulist': t('markdown.unordered_list'),
+        'list': t('markdown.unordered_list'),
+        'table': t('markdown.table'),
         // Editor view modes
-        'edit': t('markdown.edit_mode', { defaultValue: 'Edit' }),
-        'live': t('markdown.live_mode', { defaultValue: 'Live Preview' }),
-        'preview': t('markdown.preview_mode', { defaultValue: 'Preview' }),
-        'fullscreen': t('markdown.fullscreen', { defaultValue: 'Fullscreen' }),
+        'edit': t('markdown.edit_mode'),
+        'live': t('markdown.live_mode'),
+        'preview': t('markdown.preview_mode'),
+        'fullscreen': t('markdown.fullscreen'),
       };
 
       if (cmd.name && titleMap[cmd.name]) {
@@ -110,8 +110,8 @@ export function MarkdownEditor({
     name: 'image',
     keyCommand: 'image',
     buttonProps: { 
-      'aria-label': t('markdown.insert_image', { defaultValue: 'Insert Image' }), 
-      title: t('markdown.insert_image', { defaultValue: 'Insert Image' }) 
+      'aria-label': t('markdown.insert_image'), 
+      title: t('markdown.insert_image') 
     },
     icon: (
       <span style={{ fontSize: 12, display: 'flex', alignItems: 'center' }}>
@@ -130,8 +130,8 @@ export function MarkdownEditor({
     name: 'gallery',
     keyCommand: 'gallery',
     buttonProps: { 
-      'aria-label': t('markdown.media_library', { defaultValue: 'Media Library' }), 
-      title: t('markdown.media_library', { defaultValue: 'Media Library' }) 
+      'aria-label': t('markdown.media_library'), 
+      title: t('markdown.media_library') 
     },
     icon: (
       <span style={{ fontSize: 12, display: 'flex', alignItems: 'center' }}>
@@ -174,8 +174,8 @@ export function MarkdownEditor({
     name: 'youtube',
     keyCommand: 'youtube',
     buttonProps: { 
-      'aria-label': t('markdown.insert_youtube', { defaultValue: 'Insert YouTube Video' }), 
-      title: t('markdown.insert_youtube', { defaultValue: 'Insert YouTube Video' }) 
+      'aria-label': t('markdown.insert_youtube'), 
+      title: t('markdown.insert_youtube') 
     },
     icon: (
       <span style={{ fontSize: 12, display: 'flex', alignItems: 'center' }}>
@@ -184,7 +184,7 @@ export function MarkdownEditor({
     ),
     execute: (state, _api) => {
       const selection = { start: state.selection.start, end: state.selection.end };
-      const url = prompt(t('markdown.youtube_url_prompt', { defaultValue: 'Enter YouTube URL:' }));
+      const url = prompt(t('markdown.youtube_url_prompt'));
       
       if (url) {
         const videoId = extractYouTubeId(url);
@@ -195,7 +195,7 @@ export function MarkdownEditor({
 `;
           insertMarkdown(embedCode, selection);
         } else {
-          alert(t('markdown.invalid_youtube_url', { defaultValue: 'Invalid YouTube URL' }));
+          alert(t('markdown.invalid_youtube_url'));
         }
       }
     },

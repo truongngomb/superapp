@@ -36,7 +36,7 @@ export function DataRow({
   isSelected,
   onSelect
 }: DataRowProps) {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('uikit');
 
   const handleCheckboxChange = (checked: boolean) => {
     onSelect?.(checked);

@@ -22,7 +22,7 @@ interface NavItem {
 // ============================================================================
 
 export default function AdminLayout() {
-  const { t } = useTranslation(['common', 'markdown']);
+  const { t } = useTranslation(['uikit', 'users', 'roles', 'activity_logs']);
   const layoutMode = useLayoutMode();
   const { setHeaderContent } = useLayout();
 
@@ -30,31 +30,31 @@ export default function AdminLayout() {
     {
       to: '/admin/dashboard',
       icon: <LayoutDashboard className="w-4 h-4" />,
-      label: t('admin_dashboard.dashboard'),
+      label: t('uikit:admin_dashboard.dashboard'),
       resource: 'dashboard',
     },
     {
       to: '/admin/settings',
       icon: <Settings className="w-4 h-4" />,
-      label: t('settings'),
+      label: t('uikit:settings'),
       resource: 'all',
     },
     {
       to: '/admin/users',
       icon: <Users className="w-4 h-4" />,
-      label: t('users'),
+      label: t('users:entities'),
       resource: 'users',
     },
     {
       to: '/admin/roles',
       icon: <Shield className="w-4 h-4" />,
-      label: t('roles'),
+      label: t('roles:entities'),
       resource: 'roles',
     },
     {
       to: '/admin/activity-logs',
       icon: <FileClock className="w-4 h-4" />,
-      label: t('activity_logs'),
+      label: t('activity_logs:entities'),
       resource: 'activity_logs',
     },
   ], [t]);

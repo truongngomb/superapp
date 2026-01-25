@@ -32,7 +32,7 @@ interface DashboardStats {
 // ============================================================================
 
 export default function AdminDashboard() {
-  const { t } = useTranslation(['common', 'categories', 'activity_logs']);
+  const { t } = useTranslation(['uikit', 'users', 'roles', 'categories', 'activity_logs']);
   const [stats, setStats] = useState<DashboardStats>({ users: 0, roles: 0, categories: 0, activityLogs: 0 });
   const [systemStats, setSystemStats] = useState<SystemStats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -174,7 +174,7 @@ export default function AdminDashboard() {
       {/* Header */}
       <div>
         <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-          {t('admin_dashboard.dashboard')}
+          {t('uikit:admin_dashboard.dashboard')}
         </h1>
         <p className="text-muted mt-1 flex items-center gap-2">
           <Clock className="w-4 h-4" />
@@ -186,21 +186,21 @@ export default function AdminDashboard() {
       <div>
         <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
           <Shield className="w-5 h-5" />
-          {t('admin_dashboard.user_access')}
+          {t('uikit:admin_dashboard.user_access')}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[
             {
-              label: t('users'),
-              description: t('admin_dashboard.manage_users_desc'),
+              label: t('users:entities'),
+              description: t('uikit:admin_dashboard.manage_users_desc'),
               value: stats.users,
               icon: <Users className="w-6 h-6" />,
               color: 'from-blue-500 to-blue-600',
               link: '/admin/users',
             },
             {
-              label: t('roles'),
-              description: t('admin_dashboard.manage_roles_desc'),
+              label: t('roles:entities'),
+              description: t('uikit:admin_dashboard.manage_roles_desc'),
               value: stats.roles,
               icon: <Shield className="w-6 h-6" />,
               color: 'from-purple-500 to-purple-600',
@@ -242,12 +242,12 @@ export default function AdminDashboard() {
       <div>
         <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
           <FolderTree className="w-5 h-5" />
-          {t('admin_dashboard.content_system')}
+          {t('uikit:admin_dashboard.content_system')}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[
             {
-              label: t('categories'),
+              label: t('categories:entities'),
               description: t('categories:subtitle'),
               value: stats.categories,
               icon: <FolderTree className="w-6 h-6" />,
@@ -255,7 +255,7 @@ export default function AdminDashboard() {
               link: '/categories',
             },
             {
-              label: t('activity_logs'),
+              label: t('activity_logs:entities'),
               description: t('activity_logs:subtitle'),
               value: stats.activityLogs,
               icon: <Activity className="w-6 h-6" />,
@@ -307,7 +307,7 @@ export default function AdminDashboard() {
           </h2>
           <Link to="/admin/system-health">
             <Button variant="outline" size="sm" className="gap-2">
-              {t('common:resources.system_health')} 
+              {t('uikit:resources.system_health')} 
               <ArrowRight className="w-4 h-4" />
             </Button>
           </Link>

@@ -14,7 +14,7 @@ interface RoleFormProps {
 }
 
 export function RoleForm({ role, onSubmit, onClose, loading, isOpen }: RoleFormProps) {
-  const { t } = useTranslation(['roles', 'common']);
+  const { t } = useTranslation(['roles', 'uikit']);
   const { getSettingValue } = useSettings();
   
   // Get dynamic resources from settings, fallback to empty array
@@ -92,15 +92,15 @@ export function RoleForm({ role, onSubmit, onClose, loading, isOpen }: RoleFormP
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={role ? t('common:form.edit_title', { entity: t('roles:entity') }) : t('common:form.add_title', { entity: t('roles:entity') })}
+      title={role ? t('uikit:form.edit_title', { entity: t('roles:entity') }) : t('uikit:form.add_title', { entity: t('roles:entity') })}
       size="xl"
       footer={
         <div className="flex justify-end gap-3 w-full">
           <Button type="button" variant="outline" onClick={onClose}>
-            {t('common:cancel')}
+            {t('uikit:cancel')}
           </Button>
           <Button type="submit" form="role-form" loading={loading}>
-            {role ? t('common:save') : t('common:add')}
+            {role ? t('uikit:save') : t('uikit:add')}
           </Button>
         </div>
       }
@@ -124,7 +124,7 @@ export function RoleForm({ role, onSubmit, onClose, loading, isOpen }: RoleFormP
         <Toggle
           checked={formData.isActive ?? true}
           onChange={(checked) => { setFormData({ ...formData, isActive: checked }); }}
-          label={t('common:active')}
+          label={t('uikit:active')}
           description={t('roles:form.active_description')}
         />
 
@@ -133,7 +133,7 @@ export function RoleForm({ role, onSubmit, onClose, loading, isOpen }: RoleFormP
           <div className="border border-border rounded-lg p-4 space-y-4 bg-background">
             {resources.map(resource => (
               <div key={resource} className="border-b border-border pb-3 last:border-0 last:pb-0">
-                <div className="font-medium capitalize mb-2 text-foreground">{t(`common:resources.${resource}`)}</div>
+                <div className="font-medium capitalize mb-2 text-foreground">{t(`uikit:resources.${resource}`)}</div>
                 <div className="flex flex-wrap gap-4">
                   {PERMISSIONS.ACTIONS.map(action => {
                     const isChecked = formData.permissions[resource]?.includes(action);
@@ -142,7 +142,7 @@ export function RoleForm({ role, onSubmit, onClose, loading, isOpen }: RoleFormP
                         key={action}
                         checked={isChecked || false}
                         onChange={() => { handleTogglePermission(resource, action); }}
-                        label={t(`common:actions.${action}`)}
+                        label={t(`uikit:actions.${action}`)}
                         className="capitalize"
                       />
                     );

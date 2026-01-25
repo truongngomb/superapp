@@ -5,24 +5,24 @@ import { useTranslation } from 'react-i18next';
 // Map paths to translation keys
 // Keys format: "namespace:key"
 const routeTitles: Record<string, string> = {
-  '/': 'home:hero.badge', // Using hero badge "SuperApp" or similar as title, or strictly home:title if exists
+  '/': 'home:title', 
   '/categories': 'categories:title',
   '/login': 'auth:login.title',
   
   // Admin Routes
-  '/admin/dashboard': 'common:dashboard',
+  '/admin/dashboard': 'uikit:admin_dashboard.dashboard',
   '/admin/users': 'users:title',
   '/admin/roles': 'roles:title',
   '/admin/activity-logs': 'activity_logs:title',
   '/admin/settings': 'settings:title',
   '/markdown-pages': 'markdown:title',
-  '/admin/api-docs': 'common:resources.api_docs',
+  '/admin/api-docs': 'uikit:resources.api_docs',
 };
 
 export function usePageTitle() {
   const location = useLocation();
   const { t } = useTranslation([
-    'common', 
+    'uikit', 
     'home', 
     'categories', 
     'auth', 

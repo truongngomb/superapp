@@ -38,12 +38,12 @@ export function RoleTable({
   currentPage = 1,
   canSelect = true,
 }: RoleTableProps) {
-  const { t } = useTranslation(['roles', 'common']);
+  const { t } = useTranslation(['roles', 'uikit']);
 
   const columns = useMemo<DataTableColumn<Role>[]>(() => [
     {
       accessorKey: 'name',
-      header: t('common:name'),
+      header: t('uikit:name'),
       enableSorting: true,
       width: '1.5fr',
       className: 'font-medium',
@@ -56,7 +56,7 @@ export function RoleTable({
     },
     {
        accessorKey: 'description',
-       header: t('common:description'),
+       header: t('uikit:description'),
        enableSorting: false,
        width: '2fr',
        className: 'text-muted-foreground truncate'
@@ -78,16 +78,16 @@ export function RoleTable({
     },
     {
       accessorKey: 'isActive',
-      header: t('common:status'),
+      header: t('uikit:status'),
       enableSorting: true,
       size: 120,
       cell: ({ row }) => row.original.isActive ? 
-        <Badge variant="success" size="sm">{t('common:active')}</Badge> : 
-        <Badge variant="danger" size="sm">{t('common:inactive')}</Badge>
+        <Badge variant="success" size="sm">{t('uikit:active')}</Badge> : 
+        <Badge variant="danger" size="sm">{t('uikit:inactive')}</Badge>
     },
     {
       id: 'actions',
-      header: t('common:actions.label'),
+      header: t('uikit:actions.label'),
       size: 160,
       cell: ({ row }) => {
         const role = row.original;
@@ -103,13 +103,13 @@ export function RoleTable({
                     size="sm" 
                     onClick={() => { onEdit(role); }} 
                     disabled={isSystem}
-                    aria-label={t('common:edit')}
+                    aria-label={t('uikit:edit')}
                  >
                    <Edit2 className="w-4 h-4" />
                  </Button>
                </PermissionGuard>
                <PermissionGuard resource="roles" action="create">
-                  <Button variant="ghost" size="sm" onClick={() => { onDuplicate(role); }} aria-label={t('common:duplicate')}>
+                  <Button variant="ghost" size="sm" onClick={() => { onDuplicate(role); }} aria-label={t('uikit:duplicate')}>
                     <Copy className="w-4 h-4 text-blue-500" />
                   </Button>
                </PermissionGuard>
@@ -117,7 +117,7 @@ export function RoleTable({
           )}
           {role.isDeleted && (
              <PermissionGuard resource="roles" action="update">
-               <Button variant="ghost" size="sm" onClick={() => { onRestore(role.id); }} aria-label={t('common:restore')}>
+               <Button variant="ghost" size="sm" onClick={() => { onRestore(role.id); }} aria-label={t('uikit:restore')}>
                  <RotateCcw className="w-4 h-4 text-primary" />
                </Button>
              </PermissionGuard>
@@ -128,7 +128,7 @@ export function RoleTable({
                 size="sm" 
                 onClick={() => { onDelete(role.id); }} 
                 disabled={isSystem}
-                aria-label={t('common:delete')}
+                aria-label={t('uikit:delete')}
              >
                <Trash2 className={cn("w-4 h-4", role.isDeleted ? "text-red-700" : "text-red-500")} />
              </Button>

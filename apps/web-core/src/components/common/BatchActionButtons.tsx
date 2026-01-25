@@ -39,7 +39,7 @@ export function BatchActionButtons({
   onActivate,
   onDeactivate,
 }: BatchActionButtonsProps) {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('uikit');
 
   if (selectedCount === 0) {
     return null;

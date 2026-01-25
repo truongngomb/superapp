@@ -6,8 +6,8 @@
  */
 import { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { MainLayout } from '@/components/layout';
-import { ProtectedRoute, GuestGuard, PageLoader, NotFoundPage } from '@/components/common';
+import { LoadingSpinner } from '@superapp/ui-kit';
+import { ProtectedRoute, GuestGuard, NotFoundPage } from '@/components/common';
 import { PermissionResource, PermissionAction } from '@superapp/shared-types';
 
 // ============================================================================
@@ -53,17 +53,19 @@ const SystemHealthPage = lazy(
  * Wraps a lazy component with Suspense
  */
 function LazyPage({ children }: { children: React.ReactNode }) {
-  return <Suspense fallback={<PageLoader />}>{children}</Suspense>;
+  return <Suspense fallback={<LoadingSpinner />}>{children}</Suspense>;
 }
 
 // ============================================================================
 // Route Configuration
 // ============================================================================
 
+import { SharedLayoutAdapter } from '@/components/layout/SharedLayoutAdapter';
+
 export function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<MainLayout />}>
+      <Route path="/" element={<SharedLayoutAdapter />}>
         {/* Public Routes */}
         <Route
           index

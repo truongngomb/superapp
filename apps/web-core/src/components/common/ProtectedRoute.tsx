@@ -69,7 +69,7 @@ export function ProtectedRoute({
   loadingFallback,
   forbiddenFallback,
 }: ProtectedRouteProps): ReactElement {
-  const { t } = useTranslation(['common']);
+  const { t } = useTranslation(['uikit']);
   const { isAuthenticated, isLoading, checkPermission } = useAuth();
   const location = useLocation();
 
@@ -80,7 +80,7 @@ export function ProtectedRoute({
     }
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
-        <LoadingSpinner size="lg" text={t('common:auth.checking')} />
+        <LoadingSpinner size="lg" text={t('uikit:auth.checking')} />
       </div>
     );
   }
@@ -123,20 +123,20 @@ export function ProtectedRoute({
  * Default forbidden page component
  */
 function ForbiddenPage(): ReactElement {
-  const { t } = useTranslation(['common']);
+  const { t } = useTranslation(['uikit']);
   
   return (
     <div className="flex flex-col items-center justify-center min-h-[50vh] text-center">
       <div className="text-6xl mb-4">🚫</div>
-      <h1 className="text-3xl font-bold text-foreground mb-2">{t('common:auth.access_denied')}</h1>
+      <h1 className="text-3xl font-bold text-foreground mb-2">{t('uikit:auth.access_denied')}</h1>
       <p className="text-muted mb-6 max-w-md">
-        {t('common:auth.access_denied_desc')}
+        {t('uikit:auth.access_denied_desc')}
       </p>
       <a
         href="/"
         className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
       >
-        {t('common:actions.go_home')}
+        {t('uikit:actions.go_home')}
       </a>
     </div>
   );

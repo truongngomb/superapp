@@ -20,7 +20,7 @@ import { BackupManager } from './BackupManager';
 import { SYSTEM_METRICS_SNAPSHOT_INTERVAL } from '@superapp/shared-types';
 
 export function GeneralSettings() {
-  const { t } = useTranslation(['settings', 'common']);
+  const { t } = useTranslation(['settings', 'uikit']);
   const { getSettingValue, updateSetting, loading, submitting } = useSettings();
   const { success, error: showError } = useToast();
   
@@ -273,9 +273,9 @@ export function GeneralSettings() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="15">15 {t('common:minutes')}</SelectItem>
-                  <SelectItem value="30">30 {t('common:minutes')}</SelectItem>
-                  <SelectItem value="60">60 {t('common:minutes')}</SelectItem>
+                  <SelectItem value="15">15 {t('uikit:minutes')}</SelectItem>
+                  <SelectItem value="30">30 {t('uikit:minutes')}</SelectItem>
+                  <SelectItem value="60">60 {t('uikit:minutes')}</SelectItem>
                 </SelectContent>
               </Select>
               
@@ -393,8 +393,8 @@ export function GeneralSettings() {
           ? t('settings:utilities.prune_confirm_message', { days: pruneDays }) 
           : t('settings:utilities.clear_cache_confirm_message')
         }
-        confirmText={t('common:confirm')}
-        cancelText={t('common:cancel')}
+        confirmText={t('uikit:confirm')}
+        cancelText={t('uikit:cancel')}
         variant="warning"
         loading={processing}
       />

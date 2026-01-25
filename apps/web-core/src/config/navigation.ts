@@ -17,7 +17,7 @@ export interface NavigationItem {
 export const NAVIGATION_ITEMS: NavigationItem[] = [
   { 
     path: '/', 
-    labelKey: 'home', 
+    labelKey: 'home:title', 
     icon: Home 
   },
   { 

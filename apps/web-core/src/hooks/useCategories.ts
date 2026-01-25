@@ -15,7 +15,7 @@ export function useCategories() {
   const [batchDeleting, setBatchDeleting] = useState(false);
   const [exporting, setExporting] = useState(false);
   const toast = useToast();
-  const { t } = useTranslation(['categories', 'common']);
+  const { t } = useTranslation(['categories', 'uikit']);
   
   // Pagination state
   const [pagination, setPagination] = useState({ page: 1, totalPages: 1, total: 0 });
@@ -55,7 +55,7 @@ export function useCategories() {
       });
     } catch (error) {
       logger.warn('useCategories', 'Failed to load categories:', error);
-      toast.error(t('common:toast.load_error'));
+      toast.error(t('uikit:toast.load_error'));
     } finally {
       setLoading(false);
       setIsLoadingMore(false);
@@ -84,12 +84,12 @@ export function useCategories() {
     setSubmitting(true);
     try {
       await categoryService.create(data);
-      toast.success(t('common:toast.create_success'));
+      toast.success(t('uikit:toast.create_success'));
       // Reload list after create
       await reloadCategories();
       return true;
     } catch (error) {
-      const message = error instanceof ApiException ? error.message : t('common:toast.error');
+      const message = error instanceof ApiException ? error.message : t('uikit:toast.error');
       toast.error(message);
       return false;
     } finally {
@@ -101,12 +101,12 @@ export function useCategories() {
     setSubmitting(true);
     try {
       await categoryService.update(id, data);
-      toast.success(t('common:toast.update_success'));
+      toast.success(t('uikit:toast.update_success'));
       // Reload list after update
       await reloadCategories();
       return true;
     } catch (error) {
-      const message = error instanceof ApiException ? error.message : t('common:toast.error');
+      const message = error instanceof ApiException ? error.message : t('uikit:toast.error');
       toast.error(message);
       return false;
     } finally {
@@ -121,15 +121,15 @@ export function useCategories() {
       await categoryService.delete(id);
       
       const successMessage = category?.isDeleted 
-        ? t('common:toast.hard_delete_success') 
-        : t('common:toast.delete_success');
+        ? t('uikit:toast.hard_delete_success') 
+        : t('uikit:toast.delete_success');
       
       toast.success(successMessage);
       // Reload list after delete
       await reloadCategories();
       return true;
     } catch (error) {
-      const message = error instanceof ApiException ? error.message : t('common:toast.error');
+      const message = error instanceof ApiException ? error.message : t('uikit:toast.error');
       toast.error(message);
       return false;
     } finally {
@@ -144,15 +144,15 @@ export function useCategories() {
       await categoryService.deleteMany(ids);
       
       const successMessage = hasDeleted
-        ? t('common:toast.batch_hard_delete_success', { count: ids.length })
-        : t('common:toast.batch_delete_success', { count: ids.length });
+        ? t('uikit:toast.batch_hard_delete_success', { count: ids.length })
+        : t('uikit:toast.batch_delete_success', { count: ids.length });
 
       toast.success(successMessage);
       // Reload list after delete
       await reloadCategories();
       return true;
     } catch (error) {
-      const message = error instanceof ApiException ? error.message : t('common:toast.error');
+      const message = error instanceof ApiException ? error.message : t('uikit:toast.error');
       toast.error(message);
       return false;
     } finally {
@@ -166,11 +166,11 @@ export function useCategories() {
       // Assuming categoryService has a batchUpdateStatus or we use a custom fetch
       // For now, let's use the explicit endpoint we added to Backend
       await categoryService.batchUpdateStatus(ids, isActive);
-      toast.success(t('common:toast.batch_status_success', { count: ids.length }));
+      toast.success(t('uikit:toast.batch_status_success', { count: ids.length }));
       await reloadCategories();
       return true;
     } catch (error) {
-      const message = error instanceof ApiException ? error.message : t('common:toast.error');
+      const message = error instanceof ApiException ? error.message : t('uikit:toast.error');
       toast.error(message);
       return false;
     } finally {
@@ -183,12 +183,12 @@ export function useCategories() {
     setSubmitting(true);
     try {
       await categoryService.restore(id);
-      toast.success(t('common:toast.restore_success', { defaultValue: 'Category restored successfully' }));
+      toast.success(t('uikit:toast.restore_success', { defaultValue: 'Category restored successfully' }));
       // Reload list after restore
       await reloadCategories();
       return true;
     } catch (error) {
-      const message = error instanceof ApiException ? error.message : t('common:toast.error');
+      const message = error instanceof ApiException ? error.message : t('uikit:toast.error');
       toast.error(message);
       return false;
     } finally {
@@ -202,11 +202,11 @@ export function useCategories() {
     setSubmitting(true);
     try {
       await categoryService.restoreMany(ids);
-      toast.success(t('common:toast.batch_restore_success', { count: ids.length, defaultValue: 'Successfully restored {{count}} categories' }));
+      toast.success(t('uikit:toast.batch_restore_success', { count: ids.length, defaultValue: 'Successfully restored {{count}} categories' }));
       await reloadCategories();
       return true;
     } catch (error) {
-      const message = error instanceof ApiException ? error.message : t('common:toast.error');
+      const message = error instanceof ApiException ? error.message : t('uikit:toast.error');
       toast.error(message);
       return false;
     } finally {
@@ -219,7 +219,7 @@ export function useCategories() {
     try {
       return await categoryService.getAllForExport(params);
     } catch (error) {
-      const message = error instanceof ApiException ? error.message : t('common:toast.load_error');
+      const message = error instanceof ApiException ? error.message : t('uikit:toast.load_error');
       toast.error(message);
       logger.warn('useCategories', 'Failed to get categories for export:', error);
       return [];

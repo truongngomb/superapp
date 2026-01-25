@@ -27,7 +27,7 @@ export function ConfirmModal({
   onCancel,
   variant = 'danger',
 }: ConfirmModalProps) {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('uikit');
   const finalConfirmText = confirmText || t('delete');
   const finalCancelText = cancelText || t('cancel');
 

@@ -13,7 +13,7 @@ interface RoleResourceRowProps {
 }
 
 export function RoleResourceRow({ res, index, total, onRemove, onMoveUp, onMoveDown }: RoleResourceRowProps) {
-  const { t } = useTranslation(['common']);
+  const { t } = useTranslation(['uikit']);
   const controls = useDragControls();
 
   return (
@@ -42,7 +42,7 @@ export function RoleResourceRow({ res, index, total, onRemove, onMoveUp, onMoveD
           onClick={() => { onMoveUp(index); }}
           disabled={index === 0}
           className="h-9 w-9 p-0"
-          title={t('common:actions.move_up')}
+          title={t('uikit:actions.move_up')}
         >
           <ArrowUp className="w-4 h-4" />
         </Button>
@@ -52,7 +52,7 @@ export function RoleResourceRow({ res, index, total, onRemove, onMoveUp, onMoveD
           onClick={() => { onMoveDown(index); }}
           disabled={index === total - 1}
           className="h-9 w-9 p-0"
-          title={t('common:actions.move_down')}
+          title={t('uikit:actions.move_down')}
         >
           <ArrowDown className="w-4 h-4" />
         </Button>
@@ -61,7 +61,7 @@ export function RoleResourceRow({ res, index, total, onRemove, onMoveUp, onMoveD
           size="sm"
           onClick={() => { onRemove(res); }}
           className="h-9 w-9 p-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors ml-1"
-          title={t('common:actions.remove')}
+          title={t('uikit:actions.remove')}
         >
           <Trash2 className="w-4 h-4" />
         </Button>

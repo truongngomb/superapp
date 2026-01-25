@@ -38,7 +38,7 @@ import { CategoryMobileCardSkeletonList } from "./components/CategoryMobileCardS
 // Define Resource Types
 
 export default function CategoriesPage() {
-  const { t } = useTranslation(["categories", "common"]);
+  const { t } = useTranslation(["categories", "uikit"]);
   const [searchParams] = useSearchParams();
   
   // Setup Search
@@ -189,12 +189,12 @@ export default function CategoriesPage() {
     fileNamePrefix: "categories",
     sheetName: t("categories:title"),
     columns: [
-      { key: "#", header: t("common:order"), width: 8 },
-      { key: "name", header: t("common:name"), width: 25 },
+      { key: "#", header: t("uikit:order"), width: 8 },
+      { key: "name", header: t("uikit:name"), width: 25 },
       { key: "description", header: t("categories:form.desc_label"), width: 40 },
       { key: "color", header: t("categories:form.color_label"), width: 15 },
-      { key: "icon", header: t("common:icon"), width: 15 },
-      { key: "isActive", header: t("common:status"), width: 12 },
+      { key: "icon", header: t("uikit:icon"), width: 15 },
+      { key: "isActive", header: t("uikit:status"), width: 12 },
     ],
   }) as { exportToExcel: (data: Category[]) => Promise<void> };
 
@@ -228,10 +228,10 @@ export default function CategoriesPage() {
 
 
   const sortColumns: SortColumn[] = [
-    { field: "name", label: t("common:name") },
-    { field: "isActive", label: t("common:status") },
-    { field: "created", label: t("common:created") },
-    { field: "updated", label: t("common:updated") },
+    { field: "name", label: t("uikit:name") },
+    { field: "isActive", label: t("uikit:status") },
+    { field: "created", label: t("uikit:created") },
+    { field: "updated", label: t("uikit:updated") },
   ];
 
   const hasDeletedSelected = selectedIds.some(
@@ -332,11 +332,11 @@ export default function CategoriesPage() {
              <CardContent>
                <Folder className="w-12 h-12 text-muted mx-auto mb-4" />
                <p className="text-muted">
-                 {searchQuery ? t("common:list.empty_search", { entities: t("categories:entities") }) : t("common:list.empty", { entities: t("categories:entities") })}
+                 {searchQuery ? t("uikit:list.empty_search", { entities: t("categories:entities") }) : t("uikit:list.empty", { entities: t("categories:entities") })}
                </p>
                {!searchQuery && canCreate && (
                  <Button onClick={() => { setShowForm(true); }} className="mt-4">
-                   {t("common:list.add_first", { entity: t("categories:entity") })}
+                   {t("uikit:list.add_first", { entity: t("categories:entity") })}
                  </Button>
                )}
              </CardContent>
@@ -439,14 +439,14 @@ export default function CategoriesPage() {
 
       <ConfirmModal
         isOpen={!!deleteId}
-        title={t("common:delete")}
+        title={t("uikit:delete")}
         message={
            categories.find((c) => c.id === deleteId)?.isDeleted
-             ? t("common:confirmation.hard_delete", { entity: t("categories:entity") })
-             : t("common:confirmation.delete", { entity: t("categories:entity") })
+             ? t("uikit:confirmation.hard_delete", { entity: t("categories:entity") })
+             : t("uikit:confirmation.delete", { entity: t("categories:entity") })
         }
-        confirmText={t("common:delete")}
-        cancelText={t("common:cancel")}
+        confirmText={t("uikit:delete")}
+        cancelText={t("uikit:cancel")}
         loading={loading}
         onConfirm={() => { if (deleteId) void handleDelete(deleteId).then(() => { setDeleteId(null); }); }}
         onCancel={() => { setDeleteId(null); }}
@@ -455,10 +455,10 @@ export default function CategoriesPage() {
 
        <ConfirmModal
         isOpen={!!restoreId}
-        title={t("common:restore")}
-        message={t("common:confirmation.restore", { entity: t("categories:entity") })}
-        confirmText={t("common:confirm")}
-        cancelText={t("common:cancel")}
+        title={t("uikit:restore")}
+        message={t("uikit:confirmation.restore", { entity: t("categories:entity") })}
+        confirmText={t("uikit:confirm")}
+        cancelText={t("uikit:cancel")}
         loading={loading}
         onConfirm={() => { if (restoreId) void handleRestore(restoreId).then(() => { setRestoreId(null); }); }}
         onCancel={() => { setRestoreId(null); }}
@@ -466,14 +466,14 @@ export default function CategoriesPage() {
 
       <ConfirmModal
         isOpen={showBatchDeleteConfirm}
-        title={t("common:delete")}
+        title={t("uikit:delete")}
         message={
           hasDeletedSelected
-            ? t("common:batch_confirmation.hard_delete", { count: selectedIds.length, entities: t("categories:entities") })
-            : t("common:batch_confirmation.delete", { count: selectedIds.length, entities: t("categories:entities") })
+            ? t("uikit:batch_confirmation.hard_delete", { count: selectedIds.length, entities: t("categories:entities") })
+            : t("uikit:batch_confirmation.delete", { count: selectedIds.length, entities: t("categories:entities") })
         }
-        confirmText={t("common:delete")}
-        cancelText={t("common:cancel")}
+        confirmText={t("uikit:delete")}
+        cancelText={t("uikit:cancel")}
         loading={loading}
         onConfirm={() => { void handleBatchDelete().then(() => { setShowBatchDeleteConfirm(false); }); }}
         onCancel={() => { setShowBatchDeleteConfirm(false); }}
@@ -482,11 +482,11 @@ export default function CategoriesPage() {
 
        <ConfirmModal
         isOpen={!!batchStatusConfig?.isOpen}
-        title={t("common:confirm")}
-        message={t("common:batch_confirmation.status", {
+        title={t("uikit:confirm")}
+        message={t("uikit:batch_confirmation.status", {
           count: selectedIds.length,
           entities: t("categories:entities"),
-          action: batchStatusConfig?.isActive ? t("common:actions.activate") : t("common:actions.deactivate"),
+          action: batchStatusConfig?.isActive ? t("uikit:actions.activate") : t("uikit:actions.deactivate"),
         })}
         loading={loading}
         onConfirm={() => { if (batchStatusConfig) void handleBatchUpdateStatus(batchStatusConfig.isActive).then(() => { setBatchStatusConfig(null); }); }}
@@ -495,8 +495,8 @@ export default function CategoriesPage() {
 
        <ConfirmModal
          isOpen={showBatchRestoreConfirm}
-         title={t("common:restore")}
-         message={t("common:batch_confirmation.restore", { count: selectedIds.length, entities: t("categories:entities") })}
+         title={t("uikit:restore")}
+         message={t("uikit:batch_confirmation.restore", { count: selectedIds.length, entities: t("categories:entities") })}
          loading={loading}
          onConfirm={() => { void handleBatchRestore().then(() => { setShowBatchRestoreConfirm(false); }); }}
          onCancel={() => { setShowBatchRestoreConfirm(false); }}

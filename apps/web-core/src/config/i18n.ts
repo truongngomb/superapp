@@ -8,9 +8,9 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
+import { uikitLocales } from '@superapp/ui-kit';
 
 // Import translation files - English
-import commonEn from '../locales/en/common.json';
 import homeEn from '../locales/en/home.json';
 import authEn from '../locales/en/auth.json';
 import categoriesEn from '../locales/en/categories.json';
@@ -23,7 +23,6 @@ import markdownEn from '../locales/en/markdown.json';
 import systemHealthEn from '../locales/en/system_health.json';
 
 // Import translation files - Vietnamese
-import commonVi from '../locales/vi/common.json';
 import homeVi from '../locales/vi/home.json';
 import authVi from '../locales/vi/auth.json';
 import categoriesVi from '../locales/vi/categories.json';
@@ -36,7 +35,6 @@ import markdownVi from '../locales/vi/markdown.json';
 import systemHealthVi from '../locales/vi/system_health.json';
 
 // Import translation files - Korean
-import commonKo from '../locales/ko/common.json';
 import homeKo from '../locales/ko/home.json';
 import authKo from '../locales/ko/auth.json';
 import categoriesKo from '../locales/ko/categories.json';
@@ -51,7 +49,6 @@ import systemHealthKo from '../locales/ko/system_health.json';
 // Configure resources
 export const resources = {
   en: {
-    common: commonEn,
     home: homeEn,
     auth: authEn,
     categories: categoriesEn,
@@ -62,9 +59,9 @@ export const resources = {
     settings: settingsEn,
     markdown: markdownEn,
     system_health: systemHealthEn,
+    uikit: uikitLocales.en,
   },
   vi: {
-    common: commonVi,
     home: homeVi,
     auth: authVi,
     categories: categoriesVi,
@@ -75,9 +72,9 @@ export const resources = {
     settings: settingsVi,
     markdown: markdownVi,
     system_health: systemHealthVi,
+    uikit: uikitLocales.vi,
   },
   ko: {
-    common: commonKo,
     home: homeKo,
     auth: authKo,
     categories: categoriesKo,
@@ -88,6 +85,7 @@ export const resources = {
     settings: settingsKo,
     markdown: markdownKo,
     system_health: systemHealthKo,
+    uikit: uikitLocales.ko,
   },
 } as const;
 
@@ -102,8 +100,8 @@ void i18n
   .use(initReactI18next)
   .init({
     resources,
-    defaultNS: 'common',
-    ns: ['common', 'home', 'auth', 'categories', 'roles', 'users', 'activity_logs', 'notifications', 'settings', 'markdown', 'system_health'],
+    defaultNS: 'uikit',
+    ns: ['uikit', 'home', 'auth', 'categories', 'roles', 'users', 'activity_logs', 'notifications', 'settings', 'markdown', 'system_health'],
 
     fallbackLng: 'en', // Default language if detection fails
     supportedLngs: ['en', 'vi', 'ko'],

@@ -1,22 +1,12 @@
-import { Link, useLocation } from 'react-router-dom';
-// import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
-import { cn } from '@/utils';
-import { Button } from '@/components/common';
-import { PermissionGuard } from '@/components/common/PermissionGuard';
-import { useAppMenu } from '@/hooks';
+import { cn } from '../utils';
+import { Button } from '../components/Button';
+import { ISidebarProps } from '@superapp/shared-types';
 
-interface SidebarProps {
-  open: boolean;
-  onClose: () => void;
-}
-
-export function Sidebar({ open, onClose }: SidebarProps) {
-  // const { t } = useTranslation(['common', 'users', 'roles', 'categories', 'home', 'auth']);
-  const location = useLocation();
-  const { menuItems } = useAppMenu();
-
+export function StandardSidebar({ open, onClose, items, currentPath, t = (k) => k }: ISidebarProps) {
+  
   return (
     <AnimatePresence>
       {open && (
@@ -44,7 +34,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                 <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
                   <span className="text-white font-bold text-lg">S</span>
                 </div>
-                <span className="text-xl font-bold text-gradient">SuperApp</span>
+                <span className="text-xl font-bold text-gradient">{t('uikit:brand')}</span>
               </div>
               <Button
                 variant="ghost"
@@ -58,11 +48,11 @@ export function Sidebar({ open, onClose }: SidebarProps) {
 
             {/* Navigation */}
             <nav className="p-4 space-y-1">
-              {menuItems.map((item) => {
-                const Icon = item.icon;
+              {items.map((item) => {
+                const Icon = (item.icon || (() => null)) as React.ElementType;
                 const isActive = item.matchPrefix 
-                  ? location.pathname.startsWith(item.path)
-                  : location.pathname === item.path;
+                  ? currentPath.startsWith(item.path)
+                  : currentPath === item.path;
 
                 let link;
                 
@@ -85,7 +75,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                             : 'text-muted hover:text-foreground hover:bg-surface'
                         )}
                       >
-                        {Icon && <Icon className="w-5 h-5" />}
+                        <Icon className="w-5 h-5" />
                         <span>{item.label}</span>
                         {isActive && (
                           <motion.div
@@ -97,15 +87,15 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                     );
                 }
 
+                // Render Children
                 const content = (
                   <div key={item.path}>
                     {link}
-                    {/* Render Children */}
                     {item.children && item.children.length > 0 && (
                       <div className="ml-4 mt-1 space-y-1 border-l border-border pl-2">
                         {item.children.map(child => {
-                          const ChildIcon = child.icon;
-                          const isChildActive = location.pathname === child.path;
+                          const ChildIcon = (child.icon || (() => null)) as React.ElementType;
+                          const isChildActive = currentPath === child.path;
                           return (
                             <Link
                               key={child.path}
@@ -118,7 +108,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                                   : 'text-muted hover:text-foreground hover:bg-surface'
                               )}
                             >
-                              {ChildIcon && <ChildIcon className="w-5 h-5" />}
+                              <ChildIcon className="w-5 h-5" />
                               <span>{child.label}</span>
                             </Link>
                           );
@@ -128,18 +118,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                   </div>
                 );
 
-                if (item.permission) {
-                  return (
-                    <PermissionGuard
-                      key={item.path}
-                      resource={item.permission.resource}
-                      action={item.permission.action}
-                    >
-                      {content}
-                    </PermissionGuard>
-                  );
-                }
-
+                // Note: Permission wrapping is handled by parent (filtering items)
                 return content;
               })}
             </nav>

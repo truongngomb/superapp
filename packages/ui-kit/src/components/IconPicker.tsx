@@ -13,7 +13,7 @@ interface IconPickerProps {
 }
 
 export function IconPicker({ value, onChange, color }: IconPickerProps) {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('uikit');
   const [search, setSearch] = useState('');
   
   const filteredIcons = Object.entries(CATEGORY_ICONS).filter(([name]) => 
@@ -27,7 +27,7 @@ export function IconPicker({ value, onChange, color }: IconPickerProps) {
         <Input
           value={search}
           onChange={(e) => { setSearch(e.target.value); }}
-          placeholder={t('search_icons', { defaultValue: 'Search icons...' })}
+          placeholder={t('search_icons')}
           className="pl-9 h-9"
         />
       </div>
@@ -63,7 +63,7 @@ export function IconPicker({ value, onChange, color }: IconPickerProps) {
         })}
         {filteredIcons.length === 0 && (
           <div className="col-span-full py-6 text-center text-sm text-muted">
-            {t('no_icons_found', { defaultValue: 'No icons found' })}
+            {t('no_icons_found')}
           </div>
         )}
       </div>

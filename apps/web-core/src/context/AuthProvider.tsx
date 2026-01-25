@@ -29,7 +29,7 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const { t } = useTranslation(['common']);
+  const { t } = useTranslation(['uikit']);
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -69,7 +69,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       // Ignore 401/403 as it just means not logged in
       if (err instanceof ApiException) {
         if (!err.isUnauthorized && !err.isForbidden) {
-          setError(err.message || i18n.t('common:toast.unknown_auth'));
+          setError(err.message || i18n.t('uikit:toast.unknown_auth'));
         }
       }
       
@@ -184,7 +184,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             <button
               onClick={clearError}
               className="p-1 hover:bg-red-600 rounded transition-colors"
-              aria-label={t('common:actions.close')}
+              aria-label={t('uikit:close')}
             >
               ✕
             </button>

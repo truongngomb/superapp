@@ -16,4 +16,3 @@ export * from './BatchActionButtons';
 export * from './PageHeader';
 export * from './SearchFilterBar';
 export * from './NotFoundPage';
-export * from './PageLoader';

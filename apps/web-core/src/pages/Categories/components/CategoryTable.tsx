@@ -45,7 +45,7 @@ export function CategoryTable({
   perPage = 10,
   canSelect = true,
 }: CategoryTableProps) {
-  const { t } = useTranslation(['categories', 'common']);
+  const { t } = useTranslation(['categories', 'uikit']);
 
   const columns = useMemo<DataTableColumn<Category>[]>(() => [
     {
@@ -67,7 +67,7 @@ export function CategoryTable({
     },
     {
       accessorKey: 'name',
-      header: t('common:name'),
+      header: t('uikit:name'),
       enableSorting: true,
       size: 200,
       className: 'font-medium'
@@ -81,16 +81,16 @@ export function CategoryTable({
     },
     {
       accessorKey: 'isActive',
-      header: t('common:status'),
+      header: t('uikit:status'),
       enableSorting: true,
       size: 120,
       cell: ({ row }) => row.original.isActive ? 
-        <Badge variant="success" size="sm">{t('common:active')}</Badge> : 
-        <Badge variant="danger" size="sm">{t('common:inactive')}</Badge>
+        <Badge variant="success" size="sm">{t('uikit:active')}</Badge> : 
+        <Badge variant="danger" size="sm">{t('uikit:inactive')}</Badge>
     },
     {
       id: 'actions',
-      header: t('common:actions.label'),
+      header: t('uikit:actions.label'),
       size: 160,
       cell: ({ row }) => {
         const category = row.original;
@@ -98,21 +98,21 @@ export function CategoryTable({
           <div className="flex items-center justify-end gap-1">
             {!category.isDeleted && (
               <PermissionGuard resource="categories" action="update">
-                <Button variant="ghost" size="sm" onClick={() => { onEdit(category); }} aria-label={t('common:edit')}>
+                <Button variant="ghost" size="sm" onClick={() => { onEdit(category); }} aria-label={t('uikit:edit')}>
                   <Edit2 className="w-4 h-4" />
                 </Button>
               </PermissionGuard>
             )}
             {!category.isDeleted && onDuplicate && (
                <PermissionGuard resource="categories" action="create">
-                 <Button variant="ghost" size="sm" onClick={() => { onDuplicate(category); }} aria-label={t('common:duplicate')}>
+                 <Button variant="ghost" size="sm" onClick={() => { onDuplicate(category); }} aria-label={t('uikit:duplicate')}>
                    <Copy className="w-4 h-4 text-blue-500" />
                  </Button>
                </PermissionGuard>
             )}
             {category.isDeleted && onRestore && (
               <PermissionGuard resource="categories" action="update">
-                <Button variant="ghost" size="sm" onClick={() => { onRestore(category.id); }} aria-label={t('common:restore')}>
+                <Button variant="ghost" size="sm" onClick={() => { onRestore(category.id); }} aria-label={t('uikit:restore')}>
                   <RotateCcw className="w-4 h-4 text-primary" />
                 </Button>
               </PermissionGuard>
@@ -122,7 +122,7 @@ export function CategoryTable({
                  variant="ghost" 
                  size="sm" 
                  onClick={() => { onDelete(category.id); }}
-                 aria-label={t('common:delete')}
+                 aria-label={t('uikit:delete')}
                >
                  <Trash2 className={cn('w-4 h-4', category.isDeleted ? 'text-red-700' : 'text-red-500')} />
                </Button>

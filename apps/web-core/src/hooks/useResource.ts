@@ -58,7 +58,7 @@ export function useResource<T extends { id: string }, CreateInput, UpdateInput, 
   initialParams,
   resourceName,
 }: UseResourceOptions<T, CreateInput, UpdateInput, ListParams>): UseResourceReturn<T, CreateInput, UpdateInput, ListParams> {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('uikit');
   const { success, error: errorToast } = useToast();
   const queryClient = useQueryClient();
 
