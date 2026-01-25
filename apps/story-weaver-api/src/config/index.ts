@@ -28,3 +28,6 @@ export {
   clearAll,
   cached,
 } from './cache.js';
+
+// OpenAPI
+export { openApiRegistry, generateOpenApiDocument } from './openapi.js';

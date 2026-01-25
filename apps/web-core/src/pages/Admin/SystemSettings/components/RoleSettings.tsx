@@ -6,9 +6,11 @@ import { Reorder } from 'framer-motion';
 import { useSettings } from '@/hooks';
 import { RoleResourceRow } from './RoleResourceRow';
 
+import { PERMISSIONS } from '@/config/constants';
+
 export function RoleSettings() {
   const { t } = useTranslation(['settings', 'common']);
-  const { settings, updateSetting, getSettingValue } = useSettings();
+  const { settings, updateSetting, getSettingValue, loading } = useSettings();
 
   // Local state
   const [roleResources, setRoleResources] = useState<string[]>([]);
@@ -18,12 +20,12 @@ export function RoleSettings() {
 
   // Sync with global settings
   useEffect(() => {
-    if (settings.length > 0) {
-      const resources = getSettingValue('role_resources', []);
+    if (!loading) {
+      const resources = getSettingValue('role_resources', PERMISSIONS.RESOURCES as string[]);
       setRoleResources(resources);
       setInitialRoleResources([...resources]);
     }
-  }, [settings, getSettingValue]);
+  }, [loading, settings, getSettingValue]);
 
   const handleSave = async () => {
     setSubmitting(true);

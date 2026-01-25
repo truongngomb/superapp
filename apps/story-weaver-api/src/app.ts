@@ -19,6 +19,7 @@ import {
 } from './middleware/index.js';
 
 import { apiRouter } from './routes/index.js';
+import { generateOpenApiDocument } from './docs/index.js';
 
 // =============================================================================
 // App Factory
@@ -103,6 +104,18 @@ export function createApp(): Express {
   
   // Use /api as base prefix
   app.use('/api', apiRouter);
+
+  // =========================================================================
+  // API Documentation
+  // =========================================================================
+
+  // Generate OpenAPI document
+  const openApiDocument = generateOpenApiDocument(config.serverUrl) as unknown as Record<string, unknown>;
+
+  // Serve raw OpenAPI JSON
+  app.get('/api/openapi.json', (_req, res) => {
+    res.json(openApiDocument);
+  });
 
   // =========================================================================
   // Health Check

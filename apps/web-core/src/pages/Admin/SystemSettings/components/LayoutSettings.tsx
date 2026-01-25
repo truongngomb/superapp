@@ -6,9 +6,11 @@ import { cn } from '@/utils';
 import { useSettings } from '@/hooks';
 import { LayoutResourceRow } from './LayoutResourceRow';
 
+import { PERMISSIONS } from '@/config/constants';
+
 export function LayoutSettings() {
   const { t } = useTranslation(['settings', 'common']);
-  const { settings, updateSetting, getSettingValue } = useSettings();
+  const { settings, updateSetting, getSettingValue, loading } = useSettings();
 
   // Local state
   const [layoutConfig, setLayoutConfig] = useState<{
@@ -29,7 +31,7 @@ export function LayoutSettings() {
 
   // Sync with global settings
   useEffect(() => {
-    if (settings.length > 0) {
+    if (!loading) {
       const rawConfig = getSettingValue('layout_config', {
         global: 'standard',
         pages: {} as Record<string, string>
@@ -55,10 +57,10 @@ export function LayoutSettings() {
       setInitialLayoutConfig(JSON.parse(JSON.stringify(cleanConfig)) as typeof layoutConfig);
 
       // We also need role resources to list the pages
-      const resources = getSettingValue('role_resources', []);
+      const resources = getSettingValue('role_resources', PERMISSIONS.RESOURCES as string[]);
       setRoleResources(resources);
     }
-  }, [settings, getSettingValue]);
+  }, [loading, settings, getSettingValue]);
 
   const handleSave = async () => {
     setSubmitting(true);

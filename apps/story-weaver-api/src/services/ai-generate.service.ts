@@ -6,7 +6,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { config } from '../config/env.js';
 import { logger } from '../utils/logger.js';
-import { ServiceUnavailableError } from '../utils/errors.js';
+import { ServiceUnavailableError } from '../middleware/index.js';
 
 interface GeneratedScene {
   script_text: string;

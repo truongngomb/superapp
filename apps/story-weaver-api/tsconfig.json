@@ -1,16 +1,30 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "lib": ["ES2022"],
-    "outDir": "./dist",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2023", "DOM"],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "types": ["node"]
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@superapp/shared-types": ["../../packages/shared-types/src/index.ts"],
+      "@superapp/shared-types/*": ["../../packages/shared-types/src/*"],
+      "@superapp/core-sdk": ["../../packages/core-sdk/src/index.ts"],
+      "@superapp/core-sdk/*": ["../../packages/core-sdk/src/*"]
+    },
+    "declaration": true,
+    "declarationMap": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true
   },
   "include": ["src/**/*", "eslint.config.js"],
   "exclude": ["node_modules", "dist"]
