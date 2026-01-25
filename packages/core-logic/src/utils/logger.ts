@@ -61,8 +61,8 @@ function getCallerInfo(): string {
   const callerLine = stack[4];
   if (!callerLine) return '';
   
-  const match = callerLine.match(/\((.*):(\\d+):(\\d+)\)/) ||
-                callerLine.match(/at\\s+(.*):(\\d+):(\\d+)/);
+  const match = callerLine.match(/\((.*):(\d+):(\d+)\)/) ||
+                callerLine.match(/at\s+(.*):(\d+):(\d+)/);
   
   if (match) {
     return `@ ${match[1]}:${match[2]}`;
