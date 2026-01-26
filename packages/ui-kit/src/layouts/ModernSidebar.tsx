@@ -12,6 +12,7 @@ export interface ModernSidebarProps extends ISidebarProps {
     name?: string;
     avatar?: string;
     role?: string;
+    email?: string;
   };
   footerText?: React.ReactNode;
   t?: (key: string, options?: Record<string, unknown>) => string;
@@ -75,8 +76,8 @@ export function ModernSidebar({
                  <div className="absolute bottom-0 right-1 w-5 h-5 bg-green-500 border-2 border-background rounded-full"></div>
               </div>
               <h3 className="text-lg font-bold text-foreground text-center">{user?.name || t('uikit:unknown_user')}</h3>
-              <p className="text-sm text-muted-foreground text-center uppercase tracking-wider mt-1">
-                {user?.role || t('uikit:role')}
+              <p className="text-sm text-muted-foreground text-center mt-1 w-full truncate px-2" title={user?.email || user?.role}>
+                {user?.email || user?.role || t('uikit:role')}
               </p>
            </div>
 

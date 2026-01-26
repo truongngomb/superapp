@@ -7,16 +7,18 @@ export interface UseAppMenuOptions {
   staticItems: IMenuItem[];
   language: string;
   resolveIcon: (iconName?: string | null) => unknown;
+  fetchMarkdown?: boolean;
 }
 
 /**
  * Base hook for application menu management.
  * Handles fetching dynamic markdown menu and merging it with static items.
  */
-export function useAppMenuBase({ staticItems, language, resolveIcon }: UseAppMenuOptions) {
+export function useAppMenuBase({ staticItems, language, resolveIcon, fetchMarkdown = true }: UseAppMenuOptions) {
   const { data: dynamicItems = [], isLoading } = useQuery({
     queryKey: ['menu-tree', language],
     queryFn: () => markdownService.getMenuTree(language),
+    enabled: fetchMarkdown,
     staleTime: 5 * 60 * 1000,
     retry: 1,
     placeholderData: (previousData) => previousData,

@@ -22,7 +22,8 @@ export interface StaticNavigationItem {
  * 
  * @param staticNavigationItems - App-specific navigation configuration
  */
-export function useAppMenu(staticNavigationItems: StaticNavigationItem[]) {
+export function useAppMenu(staticNavigationItems: StaticNavigationItem[], options: { fetchMarkdown?: boolean } = {}) {
+  const { fetchMarkdown = true } = options;
   const { i18n, t } = useTranslation(['uikit', 'home', 'categories', 'markdown']);
 
   const staticItems = useMemo((): IMenuItem[] => 
@@ -38,6 +39,7 @@ export function useAppMenu(staticNavigationItems: StaticNavigationItem[]) {
   return useAppMenuBase({
     staticItems,
     language: i18n.language,
-    resolveIcon: (name) => resolveIcon(name)
+    resolveIcon: (name) => resolveIcon(name),
+    fetchMarkdown
   });
 }
