@@ -14,6 +14,9 @@ export * from './Pagination';
 export * from './Select';
 export * from './Skeleton';
 export * from './SortPopup';
+export * from './EmptyState';
+export * from './GradientText';
+export * from './StatCard';
 export * from './SortableHeader';
 export * from './Textarea';
 export * from './Toggle';
@@ -34,3 +37,10 @@ export * from './Tabs';
 export * from './common';
 export * from './ColorPicker';
 export * from './MaintenanceOverlay';
+
+// Notification components
+export * from './notifications/NotificationCenter';
+export * from './notifications/ActivityLogItem';
+
+// Media components
+export * from './MediaManager/MediaManagerModal';

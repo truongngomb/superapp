@@ -28,13 +28,13 @@ import {
   TabsTrigger,
   TabsContent,
   IconPicker,
-  CATEGORY_ICONS
+  CATEGORY_ICONS,
+  MediaManagerModal
 } from '@superapp/ui-kit';
 import { generateSlug } from '@superapp/core-logic';
 import { useMarkdownPages, useDebounce, useMediaUpload } from '@/hooks';
 import { useToast } from '@/context';
 import { Wand2, FileText, Link as LinkIcon, Folder, Copy, X, Loader2 } from 'lucide-react';
-import { MediaManagerModal } from '@/components/MediaManager/MediaManagerModal';
 import { markdownService } from '@superapp/core-logic';
 
 // Lazy load the editor

@@ -13,6 +13,7 @@ export {
   useDataSorting,
   useExcelExport,
   useOnClickOutside,
+  useSettings,
 } from '@superapp/core-logic';
 
 
@@ -28,7 +29,6 @@ export {
 } from '@superapp/core-logic';
 export * from './useProjects';
 export * from './useScenes';
-export * from './useSettings';
 
 // Re-export shared context hooks for convenience
 export { useTheme } from '@/context';

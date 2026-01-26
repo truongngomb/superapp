@@ -1,4 +1,4 @@
-import cron from 'node-cron';
+import cron, { ScheduledTask } from 'node-cron';
 import { requestMetricsService } from './requestMetrics.service.js';
 import { SettingsService } from './settings.service.js';
 import { SYSTEM_METRICS_SNAPSHOT_INTERVAL } from '@superapp/shared-types';
@@ -11,7 +11,7 @@ const log = createLogger('SchedulerService');
  * Manages scheduled tasks (cron jobs)
  */
 class SchedulerService {
-  private requestSnapshotJob: cron.ScheduledTask | null = null;
+  private requestSnapshotJob: ScheduledTask | null = null;
   private readonly DEFAULT_INTERVAL = 30; // 30 minutes
 
   /**

@@ -1,23 +1,19 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { AnimatePresence, motion as framerMotion } from "framer-motion";
 import {
-  Plus,
   Shield,
-  Loader2,
-  FileSpreadsheet,
-
+  Loader2
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import {
-  Button,
-  Card,
-  CardContent,
-  ConfirmModal,
   Pagination,
   ResourceToolbar,
   BatchActionButtons,
   SearchFilterBar,  
-  PermissionGuard
+  PageHeader,
+  ResourceConfirmModals,
+  ResourceCardSkeletonList,
+  EmptyState,
 } from "@/components/common";
 import type { Role, SortColumn, CreateRoleInput, UpdateRoleInput, RoleListParams } from "@superapp/shared-types";
 import { ViewMode } from "@superapp/shared-types";
@@ -33,7 +29,6 @@ import { RoleTable } from "./components/RoleTable";
 import { RoleTableSkeleton } from "./components/RoleTableSkeleton";
 import { RoleRowSkeleton } from "./components/RoleRowSkeleton";
 import { RoleMobileList } from "./components/RoleMobileList";
-import { RoleMobileCardSkeletonList } from "./components/RoleMobileCardSkeleton";
 
 
 import { useSearchParams } from "react-router-dom";
@@ -230,30 +225,17 @@ export default function RolesPage() {
   return (
     <div>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <div className="flex items-start gap-3">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("roles:title")}</h1>
-            <p className="text-muted mt-1">{t("roles:subtitle")}</p>
-          </div>
-           <PermissionGuard resource="roles" action="view">
-             <Button
-              variant="ghost"
-              onClick={() => void handleExport()}
-              disabled={exporting || roles.length === 0}
-              className="h-10 w-10 p-0 text-[#217346] hover:bg-[#217346]/10"
-             >
-               {exporting ? <Loader2 className="w-6 h-6 animate-spin" /> : <FileSpreadsheet className="w-6 h-6" />}
-             </Button>
-           </PermissionGuard>
-        </div>
-        <PermissionGuard resource="roles" action="create">
-          <Button onClick={() => { setEditingRole(null); setShowForm(true); }}>
-            <Plus className="w-5 h-5" />
-            {t("roles:create_btn")}
-          </Button>
-        </PermissionGuard>
-      </div>
+      <PageHeader
+        resource="roles"
+        titleKey="roles:title"
+        subtitleKey="roles:subtitle"
+        exporting={exporting}
+        itemCount={roles.length}
+        onExport={() => { void handleExport(); }}
+        onCreateClick={() => { setEditingRole(null); setShowForm(true); }}
+        createButtonKey="roles:create_btn"
+        icon={<Shield className="w-8 h-8 md:w-10 md:h-10 text-primary" />}
+      />
 
       {/* Toolbar */}
       {/* Search Filter Bar */}
@@ -309,7 +291,7 @@ export default function RolesPage() {
         { (loading && roles.length === 0) || isRefreshing ? (
            // Skeleton loading based on view mode
            effectiveView === 'mobile' ? (
-             <RoleMobileCardSkeletonList count={5} />
+             <ResourceCardSkeletonList count={5} />
            ) : viewMode === 'table' ? (
                <RoleTableSkeleton />
            ) : (
@@ -318,19 +300,13 @@ export default function RolesPage() {
              </div>
            )
         ) : roles.length === 0 ? (
-           <Card className="py-12 text-center">
-             <CardContent>
-               <Shield className="w-12 h-12 text-muted mx-auto mb-4" />
-               <p className="text-muted">
-                 {searchQuery ? t("uikit:list.empty_search", { entities: t("roles:entities") }) : t("uikit:list.empty", { entities: t("roles:entities") })}
-               </p>
-               {!searchQuery && canCreate && (
-                 <Button onClick={() => { setShowForm(true); }} className="mt-4">
-                   {t("uikit:list.add_first", { entity: t("roles:entity") })}
-                 </Button>
-               )}
-             </CardContent>
-           </Card>
+            <EmptyState
+              icon={Shield}
+              title={searchQuery ? t("uikit:list.empty_search", { entities: t("roles:entities") }) : t("uikit:list.empty", { entities: t("roles:entities") })}
+              actionText={!searchQuery && canCreate ? t("uikit:list.add_first", { entity: t("roles:entity") }) : undefined}
+              onAction={() => { setEditingRole(null); setShowForm(true); }}
+              className="py-12"
+            />
         ) : (
            <div className="space-y-2">
              {/* Mobile View with Infinite Scroll */}
@@ -436,71 +412,30 @@ export default function RolesPage() {
         )}
       </AnimatePresence>
 
-      <ConfirmModal
-        isOpen={!!deleteId}
-        title={t("uikit:delete")}
-        message={
-           roles.find((c) => c.id === deleteId)?.isDeleted
-             ? t("uikit:confirmation.hard_delete", { entity: t("roles:entity") })
-             : t("uikit:confirmation.delete", { entity: t("roles:entity") })
-        }
-        confirmText={t("uikit:delete")}
-        cancelText={t("uikit:cancel")}
+      <ResourceConfirmModals
+        resourceName="roles"
+        entityKey="entity"
+        entitiesKey="entities"
+        deleteId={deleteId}
+        isDeleted={roles.find((c) => c.id === deleteId)?.isDeleted}
+        onDeleteCancel={() => { setDeleteId(null); }}
+        onDeleteConfirm={() => { if (deleteId) void handleDelete(deleteId).then(() => { setDeleteId(null); }); }}
+        restoreId={restoreId}
+        onRestoreCancel={() => { setRestoreId(null); }}
+        onRestoreConfirm={() => { if (restoreId) void handleRestore(restoreId).then(() => { setRestoreId(null); }); }}
+        showBatchDelete={showBatchDeleteConfirm}
+        selectedCount={selectedIds.length}
+        hasArchivedSelected={hasDeletedSelected}
+        onBatchDeleteCancel={() => { setShowBatchDeleteConfirm(false); }}
+        onBatchDeleteConfirm={() => { void handleBatchDelete().then(() => { setShowBatchDeleteConfirm(false); }); }}
+        showBatchRestore={showBatchRestoreConfirm}
+        onBatchRestoreCancel={() => { setShowBatchRestoreConfirm(false); }}
+        onBatchRestoreConfirm={() => { void handleBatchRestore().then(() => { setShowBatchRestoreConfirm(false); }); }}
+        batchStatusConfig={batchStatusConfig}
+        onBatchStatusCancel={() => { setBatchStatusConfig(null); }}
+        onBatchStatusConfirm={(isActive) => { void handleBatchUpdateStatus(isActive).then(() => { setBatchStatusConfig(null); }); }}
         loading={loading}
-        onConfirm={() => { if (deleteId) void handleDelete(deleteId).then(() => { setDeleteId(null); }); }}
-        onCancel={() => { setDeleteId(null); }}
-        variant="danger"
       />
-
-       <ConfirmModal
-        isOpen={!!restoreId}
-        title={t("uikit:restore")}
-        message={t("uikit:confirmation.restore", { entity: t("roles:entity") })}
-        confirmText={t("uikit:confirm")}
-        cancelText={t("uikit:cancel")}
-        loading={loading}
-        onConfirm={() => { if (restoreId) void handleRestore(restoreId).then(() => { setRestoreId(null); }); }}
-        onCancel={() => { setRestoreId(null); }}
-      />
-
-      <ConfirmModal
-        isOpen={showBatchDeleteConfirm}
-        title={t("uikit:delete")}
-        message={
-          hasDeletedSelected
-            ? t("uikit:batch_confirmation.hard_delete", { count: selectedIds.length, entities: t("roles:entities") })
-            : t("uikit:batch_confirmation.delete", { count: selectedIds.length, entities: t("roles:entities") })
-        }
-        confirmText={t("uikit:delete")}
-        cancelText={t("uikit:cancel")}
-        loading={loading}
-        onConfirm={() => { void handleBatchDelete().then(() => { setShowBatchDeleteConfirm(false); }); }}
-        onCancel={() => { setShowBatchDeleteConfirm(false); }}
-        variant="danger"
-      />
-
-       <ConfirmModal
-        isOpen={!!batchStatusConfig?.isOpen}
-        title={t("uikit:confirm")}
-        message={t("uikit:batch_confirmation.status", {
-          count: selectedIds.length,
-          entities: t("roles:entities"),
-          action: batchStatusConfig?.isActive ? t("uikit:actions.activate") : t("uikit:actions.deactivate"),
-        })}
-        loading={loading}
-        onConfirm={() => { if (batchStatusConfig) void handleBatchUpdateStatus(batchStatusConfig.isActive).then(() => { setBatchStatusConfig(null); }); }}
-        onCancel={() => { setBatchStatusConfig(null); }}
-      />
-
-       <ConfirmModal
-         isOpen={showBatchRestoreConfirm}
-         title={t("uikit:restore")}
-         message={t("uikit:batch_confirmation.restore", { count: selectedIds.length, entities: t("roles:entities") })}
-         loading={loading}
-         onConfirm={() => { void handleBatchRestore().then(() => { setShowBatchRestoreConfirm(false); }); }}
-         onCancel={() => { setShowBatchRestoreConfirm(false); }}
-      />
-
     </div>
   );
 }

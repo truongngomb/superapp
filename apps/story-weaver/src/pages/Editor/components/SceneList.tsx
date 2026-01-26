@@ -1,7 +1,8 @@
 import { useVideoScenes, useDeleteVideoScene } from '@/hooks/useScenes';
 import { SceneCard } from './SceneCard';
-import { Button } from '@superapp/ui-kit';
-import { Plus } from 'lucide-react';
+import { Button, EmptyState, ConfirmModal } from '@superapp/ui-kit';
+import { Plus, Video } from 'lucide-react';
+import { useState } from 'react';
 
 interface SceneListProps {
     projectId: string;
@@ -9,7 +10,8 @@ interface SceneListProps {
 
 export const SceneList = ({ projectId }: SceneListProps) => {
     const { scenes, isLoading } = useVideoScenes(projectId);
-    const { mutate: deleteScene } = useDeleteVideoScene();
+    const { mutate: deleteScene, isPending: isDeleting } = useDeleteVideoScene();
+    const [deleteId, setDeleteId] = useState<string | null>(null);
 
     if (isLoading) return <div>Loading scenes...</div>;
 
@@ -21,16 +23,19 @@ export const SceneList = ({ projectId }: SceneListProps) => {
             
             <div className="flex-1 overflow-y-auto pr-2">
                 {scenes.length === 0 ? (
-                    <div className="text-center py-10 text-muted-foreground border border-dashed rounded-lg">
-                        No scenes yet. Add one to start.
-                    </div>
+                    <EmptyState
+                        icon={Video}
+                        title="No scenes yet"
+                        description="Add your first scene to start building your video story."
+                        className="py-10"
+                    />
                 ) : (
                     scenes.map((scene, index) => (
                         <SceneCard 
                             key={scene.id} 
                             scene={scene} 
                             index={index} 
-                            onDelete={deleteScene}
+                            onDelete={(id) => setDeleteId(id)}
                         />
                     ))
                 )}
@@ -39,6 +44,23 @@ export const SceneList = ({ projectId }: SceneListProps) => {
                     <Plus size={16} className="mr-2" /> Add Scene
                 </Button>
             </div>
+
+            <ConfirmModal
+                isOpen={!!deleteId}
+                title="Delete Scene"
+                message="Are you sure you want to delete this scene? This action cannot be undone."
+                confirmText="Delete"
+                variant="danger"
+                loading={isDeleting}
+                onConfirm={() => {
+                    if (deleteId) {
+                        deleteScene(deleteId, {
+                            onSuccess: () => setDeleteId(null)
+                        });
+                    }
+                }}
+                onCancel={() => setDeleteId(null)}
+            />
         </div>
     );
 };

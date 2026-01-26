@@ -1,10 +1,11 @@
-
 import { useTranslation } from 'react-i18next';
-import { Modal, Button, FileUploader } from '@superapp/ui-kit';
-import type { Media } from '@superapp/shared-types';
+import { Modal } from '../Modal';
+import { Button } from '../Button';
+import { FileUploader } from '../FileUploader';
+import { Media, MediaUploadResponse, PaginatedResponse } from '@superapp/shared-types';
 import { Trash2, Check, Loader2 } from 'lucide-react';
-import { useToast } from '@/context';
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useToast } from '../../hooks/useToast';
+import { useInfiniteQuery, useMutation, useQueryClient, InfiniteData, QueryClient } from '@tanstack/react-query';
 import { mediaService } from '@superapp/core-logic';
 
 interface MediaManagerModalProps {
@@ -18,7 +19,7 @@ interface MediaManagerModalProps {
 export function MediaManagerModal({ open, onClose, onSelect, refId, refType }: MediaManagerModalProps) {
   const { t } = useTranslation(['uikit']);
   const toast = useToast();
-  const queryClient = useQueryClient();
+  const queryClient: QueryClient = useQueryClient();
 
   // Infinite Query for Media List
   const { 
@@ -27,7 +28,7 @@ export function MediaManagerModal({ open, onClose, onSelect, refId, refType }: M
     hasNextPage, 
     isFetchingNextPage, 
     isLoading 
-  } = useInfiniteQuery({
+  } = useInfiniteQuery<PaginatedResponse<Media>, Error, InfiniteData<PaginatedResponse<Media>>, (string | { refId?: string; refType?: string })[], number>({
     queryKey: ['media', { refId, refType }],
     queryFn: ({ pageParam }) => mediaService.getList(pageParam, 20, refId, refType),
     getNextPageParam: (lastPage) => lastPage.page < lastPage.totalPages ? lastPage.page + 1 : undefined,
@@ -36,11 +37,11 @@ export function MediaManagerModal({ open, onClose, onSelect, refId, refType }: M
     staleTime: 1000 * 60, // 1 minute
   });
 
-  const items = data?.pages.flatMap(page => page.items) || [];
-  const total = data?.pages[0]?.total || 0;
+  const items: Media[] = data?.pages.flatMap((page: PaginatedResponse<Media>) => page.items) || [];
+  const total: number = data?.pages[0]?.total || 0;
 
   // Upload Mutation
-  const uploadMutation = useMutation({
+  const uploadMutation = useMutation<MediaUploadResponse, Error, File>({
     mutationFn: (file: File) => mediaService.upload(file, refId, refType),
     onSuccess: () => {
       toast.success(t('success.upload', { defaultValue: 'Uploaded successfully' }));
@@ -53,7 +54,7 @@ export function MediaManagerModal({ open, onClose, onSelect, refId, refType }: M
   });
 
   // Delete Mutation
-  const deleteMutation = useMutation({
+  const deleteMutation = useMutation<unknown, Error, string>({
     mutationFn: (id: string) => mediaService.delete(id),
     onSuccess: () => {
       toast.success(t('success.delete', { defaultValue: 'Deleted successfully' }));
@@ -84,7 +85,7 @@ export function MediaManagerModal({ open, onClose, onSelect, refId, refType }: M
       footer={
         <div className="flex justify-between w-full">
            <div className="text-sm text-muted flex items-center">
-             {total} items
+             {total} {t('common.items', { defaultValue: 'items' })}
            </div>
            <Button variant="outline" onClick={onClose}>
              {t('actions.close', { defaultValue: 'Close' })}
@@ -109,15 +110,15 @@ export function MediaManagerModal({ open, onClose, onSelect, refId, refType }: M
         <div className="flex-1 overflow-y-auto min-h-0 border rounded-md p-4 bg-gray-50/50 dark:bg-gray-900/50">
           {isLoading ? (
              <div className="flex justify-center items-center h-full">
-               <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
              </div>
           ) : items.length === 0 ? (
              <div className="flex justify-center items-center h-full text-muted-foreground">
-               No images found
+               {t('media.no_images', { defaultValue: 'No images found' })}
              </div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {items.map((item) => (
+              {items.map((item: Media) => (
                 <div 
                   key={item.id} 
                   className="group relative aspect-square border rounded-lg overflow-hidden bg-background hover:ring-2 ring-primary cursor-pointer"
@@ -165,7 +166,7 @@ export function MediaManagerModal({ open, onClose, onSelect, refId, refType }: M
                  disabled={isFetchingNextPage}
                >
                  {isFetchingNextPage ? <Loader2 className="w-4 h-4 animate-spin mr-2"/> : null}
-                 Load More
+                 {t('common.load_more', { defaultValue: 'Load More' })}
                </Button>
             </div>
           )}

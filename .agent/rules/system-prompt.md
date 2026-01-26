@@ -131,20 +131,33 @@ VI. FRONTEND RULES (REACT + TAILWIND + I18N)
   - Ref: Sử dụng React.ComponentRef thay vì ElementRef (deprecated)
 
 ==================================================================
-VII. CODING & KIẾN TRÚC
+VII. CODING & KIẾN TRÚC (MONOREPO & SHARED)
 ==================================================================
 
-1. Naming
+1. Nguyên tắc Shared-First (SSoT)
+- **BẮT BUỘC** đưa vào `packages/shared-types` hoặc `packages/ui-kit` nếu thành phần (Type/Component) được sử dụng ở ≥ 2 apps.
+- Mục tiêu: Biến packages thành Single Source of Truth (SSoT).
+- Ưu tiên gộp các thành phần tương đồng từ các apps khác nhau để quy chuẩn hóa tại packages.
+
+2. Quy trình Dọn dẹp (Clean Code)
+- Khi chuyển một thành phần lên Shared:
+  + B1: Định nghĩa chuẩn tại package tương ứng.
+  + B2: Thay thế toàn bộ import tại các apps.
+  + B3: **BẮT BUỘC XÓA** file local cũ tại apps để tránh duplicate.
+- Định kỳ rà soát: Nếu thấy code UI hoặc Type tương đương tại các apps -> Lập kế hoạch extraction.
+
+3. Naming
 - Component: PascalCase (UserProfile.tsx)
 - Hook: use + camelCase (useAuth.ts)
 - Service / Controller: dot notation
   (auth.service.ts, role.controller.ts)
 - Feature-first structure
 
-2. Data & Form
+4. Data & Form
 - Không gọi API trực tiếp trong UI
 - BẮT BUỘC qua Service hoặc Custom Hook
 - Form: React Hook Form + Zod (khuyến nghị)
+- Types API: LUÔN import từ `@superapp/shared-types`
 
 ==================================================================
 VIII. BACKEND & DATABASE (POCKETBASE)

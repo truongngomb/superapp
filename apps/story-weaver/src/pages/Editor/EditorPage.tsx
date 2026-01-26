@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useVideoProject, useRenderVideo } from '@/hooks/useProjects';
 import { SceneList } from './components/SceneList';
-import { Button } from '@superapp/ui-kit';
+import { Button, Badge, LoadingSpinner } from '@superapp/ui-kit';
 import { ChevronLeft, Rocket, Settings } from 'lucide-react';
 
 export const EditorPage = () => {
@@ -10,8 +10,8 @@ export const EditorPage = () => {
     const { data: project, isLoading } = useVideoProject(id!);
     const { mutate: renderVideo, isPending: isRendering } = useRenderVideo();
 
-    if (isLoading) return <div className="p-8">Loading project...</div>;
-    if (!project) return <div className="p-8">Project not found</div>;
+    if (isLoading) return <div className="p-8 flex items-center justify-center h-screen"><LoadingSpinner size="lg" /></div>;
+    if (!project) return <div className="p-8 text-center"><h2 className="text-2xl font-bold">Project not found</h2><Button onClick={() => navigate('/dashboard')} className="mt-4">Back to Dashboard</Button></div>;
 
     const handleRender = () => {
         if (project.id) {
@@ -32,7 +32,9 @@ export const EditorPage = () => {
                     </Button>
                     <div>
                         <h1 className="font-bold text-lg">{project.name}</h1>
-                        <span className="text-xs text-muted-foreground uppercase tracking-wider">{project.status}</span>
+                        <Badge variant={project.status === 'completed' ? 'success' : project.status === 'rendering' ? 'primary' : 'secondary'} size="sm" className="mt-0.5">
+                            {project.status}
+                        </Badge>
                     </div>
                 </div>
                 

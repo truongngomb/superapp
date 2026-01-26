@@ -1,22 +1,17 @@
 import { config } from '../config/index.js';
-import { retry as retryBase } from '@superapp/core-logic/utils/async';
+import { retry as retryBase } from '@superapp/core-logic';
 
 /**
  * Common Utility Helpers
  * Re-exports from @superapp/core-logic with API-specific adaptations
  */
-
-// Re-export utilities using deep paths to ensure safe resolution
-export * from '@superapp/core-logic/utils/string';
-export * from '@superapp/core-logic/utils/object';
-export * from '@superapp/core-logic/utils/security';
-export { sleep } from '@superapp/core-logic/utils/async';
+export * from '@superapp/core-logic';
 
 /**
  * Retry an async function with exponential backoff
  * Wraps core-logic retry with API server configuration defaults
  */
-export const retry = async <T>(
+export const retry = <T>(
   fn: () => Promise<T>,
   options: {
     maxRetries?: number;

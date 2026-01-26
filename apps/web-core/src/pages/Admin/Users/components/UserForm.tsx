@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Input, Modal, Toggle } from '@/components/common';
+import { Button, Input, Modal, Toggle, Avatar } from '@/components/common';
 import type { User, UserCreateInput, UserUpdateInput } from '@superapp/shared-types';
 import { PermissionGuard } from '@superapp/ui-kit';
 
@@ -82,19 +82,12 @@ export function UserForm({ user, onSubmit, onClose, loading, isOpen }: UserFormP
         {/* User Avatar Placeholder/Preview */}
         {user && (
           <div className="flex items-center gap-3 p-3 bg-surface rounded-lg">
-            {user.avatar ? (
-              <img
-                src={user.avatar}
-                alt={user.name || t('users:entity')}
-                className="w-12 h-12 rounded-full object-cover"
-              />
-            ) : (
-              <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
-                <span className="text-lg font-medium text-primary">
-                  {(user.name || user.email).charAt(0).toUpperCase()}
-                </span>
-              </div>
-            )}
+            <Avatar 
+              src={user.avatar} 
+              name={user.name || user.email} 
+              size="lg" 
+              className="text-lg"
+            />
             <div className="overflow-hidden">
               <p className="text-sm font-medium truncate">{user.name}</p>
               <p className="text-xs text-muted truncate">{user.email}</p>

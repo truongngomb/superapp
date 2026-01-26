@@ -3,21 +3,21 @@ import { useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  Plus,
   FileText,
   Loader2,
-  FileSpreadsheet,
 } from "lucide-react";
 import {
   Button,
   Card,
   CardContent,
-  ConfirmModal,
   Pagination,
   ResourceToolbar,
   BatchActionButtons,
   SearchFilterBar,
-  PermissionGuard
+  PermissionGuard,
+  PageHeader,
+  ResourceConfirmModals,
+  ResourceCardSkeletonList,
 } from "@/components/common";
 import type { 
   MarkdownPage, 
@@ -46,7 +46,6 @@ import { MarkdownPageRow } from "./components/MarkdownPageRow";
 import { MarkdownPageMobileList } from "./components/MarkdownPageMobileList";
 import { MarkdownPageSkeleton } from "./components/MarkdownPageSkeleton";
 import { MarkdownPageTableSkeleton } from "./components/MarkdownPageTableSkeleton";
-import { MarkdownPageMobileCardSkeletonList } from "./components/MarkdownPageMobileCardSkeleton";
 
 const MarkdownPageForm = lazy(() => import("./components/MarkdownPageForm").then(module => ({ default: module.MarkdownPageForm })));
 
@@ -219,30 +218,17 @@ export default function MarkdownPagesPage() {
   return (
     <div className="space-y-4 h-full flex flex-col">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <div className="flex items-start gap-3">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("title")}</h1>
-            <p className="text-muted mt-1">{t("list_title")}</p>
-          </div>
-           <PermissionGuard resource="markdown_pages" action="view">
-             <Button
-              variant="ghost"
-              onClick={() => void handleExport()}
-              disabled={exporting || pages.length === 0}
-              className="h-10 w-10 p-0 text-[#217346] hover:bg-[#217346]/10"
-             >
-               {exporting ? <Loader2 className="w-6 h-6 animate-spin" /> : <FileSpreadsheet className="w-6 h-6" />}
-             </Button>
-           </PermissionGuard>
-        </div>
-        <PermissionGuard resource="markdown_pages" action="create">
-          <Button onClick={() => { setEditingPage(undefined); setShowForm(true); }}>
-            <Plus className="w-5 h-5 mr-2" />
-            {t("create_title")}
-          </Button>
-        </PermissionGuard>
-      </div>
+      <PageHeader
+        resource="markdown_pages"
+        titleKey="markdown:title"
+        subtitleKey="markdown:list_title"
+        exporting={exporting}
+        itemCount={pages.length}
+        onExport={() => { void handleExport(); }}
+        onCreateClick={() => { setEditingPage(undefined); setShowForm(true); }}
+        createButtonKey="markdown:create_title"
+        icon={<FileText className="w-8 h-8 md:w-10 md:h-10 text-primary" />}
+      />
 
       {/* Search & Filter */}
       <SearchFilterBar
@@ -296,7 +282,7 @@ export default function MarkdownPagesPage() {
         >
           {(loading && pages.length === 0) || isRefreshing ? (
             effectiveView === 'mobile' ? (
-              <MarkdownPageMobileCardSkeletonList count={3} />
+              <ResourceCardSkeletonList count={3} />
             ) : effectiveView === 'table' ? (
               <MarkdownPageTableSkeleton />
             ) : (
@@ -430,78 +416,30 @@ export default function MarkdownPagesPage() {
       )}
 
       {/* Confirm Modals */}
-      <ConfirmModal
-        isOpen={!!deleteId}
-        title={t("uikit:delete")}
-        message={t("uikit:confirmation.delete", { entity: t("name") })}
-        confirmText={t("uikit:delete")}
-        cancelText={t("uikit:cancel")}
-        onConfirm={() => {
-          if (deleteId) {
-            void handleDelete(deleteId).then(() => {
-              setDeleteId(null);
-            });
-          }
-        }}
-        onCancel={() => { setDeleteId(null); }}
-        variant="danger"
-      />
-
-      <ConfirmModal
-        isOpen={!!restoreId}
-        title={t("uikit:restore")}
-        message={t("uikit:confirmation.restore", { entity: t("name") })}
-        onConfirm={() => {
-          if (restoreId) {
-            void handleRestore(restoreId).then(() => {
-              setRestoreId(null);
-            });
-          }
-        }}
-        onCancel={() => { setRestoreId(null); }}
-      />
-
-      <ConfirmModal
-        isOpen={showBatchDeleteConfirm}
-        title={t("uikit:delete")}
-        message={t("uikit:batch_confirmation.delete", { count: selectedIds.length, entities: t("name") })}
-        onConfirm={() => {
-          void handleBatchDelete().then(() => {
-            setShowBatchDeleteConfirm(false);
-          });
-        }}
-        onCancel={() => { setShowBatchDeleteConfirm(false); }}
-        variant="danger"
-      />
-      
-      <ConfirmModal
-         isOpen={!!batchStatusConfig?.isOpen}
-         title={t("uikit:confirm")}
-         message={t("uikit:batch_confirmation.status", { 
-           count: selectedIds.length, 
-           entities: t("name"),
-           action: batchStatusConfig?.isActive ? t("uikit:actions.activate") : t("uikit:actions.deactivate")
-         })}
-          onConfirm={() => {
-            if (batchStatusConfig) {
-              void handleBatchUpdateStatus(batchStatusConfig.isActive).then(() => {
-                setBatchStatusConfig(null);
-              });
-            }
-          }}
-         onCancel={() => { setBatchStatusConfig(null); }}
-      />
-      
-      <ConfirmModal
-         isOpen={showBatchRestoreConfirm}
-         title={t("uikit:restore")}
-         message={t("uikit:batch_confirmation.restore", { count: selectedIds.length, entities: t("name") })}
-          onConfirm={() => {
-            void handleBatchRestore().then(() => {
-              setShowBatchRestoreConfirm(false);
-            });
-          }}
-         onCancel={() => { setShowBatchRestoreConfirm(false); }}
+      <ResourceConfirmModals
+        resourceName="markdown_pages"
+        tNamespace="markdown"
+        entityKey="name"
+        entitiesKey="name"
+        deleteId={deleteId}
+        isDeleted={pages.find((p) => p.id === deleteId)?.isDeleted}
+        onDeleteCancel={() => { setDeleteId(null); }}
+        onDeleteConfirm={() => { if (deleteId) void handleDelete(deleteId).then(() => { setDeleteId(null); }); }}
+        restoreId={restoreId}
+        onRestoreCancel={() => { setRestoreId(null); }}
+        onRestoreConfirm={() => { if (restoreId) void handleRestore(restoreId).then(() => { setRestoreId(null); }); }}
+        showBatchDelete={showBatchDeleteConfirm}
+        selectedCount={selectedIds.length}
+        hasArchivedSelected={hasDeletedSelected}
+        onBatchDeleteCancel={() => { setShowBatchDeleteConfirm(false); }}
+        onBatchDeleteConfirm={() => { void handleBatchDelete().then(() => { setShowBatchDeleteConfirm(false); }); }}
+        showBatchRestore={showBatchRestoreConfirm}
+        onBatchRestoreCancel={() => { setShowBatchRestoreConfirm(false); }}
+        onBatchRestoreConfirm={() => { void handleBatchRestore().then(() => { setShowBatchRestoreConfirm(false); }); }}
+        batchStatusConfig={batchStatusConfig}
+        onBatchStatusCancel={() => { setBatchStatusConfig(null); }}
+        onBatchStatusConfirm={(isActive) => { void handleBatchUpdateStatus(isActive).then(() => { setBatchStatusConfig(null); }); }}
+        loading={loading}
       />
     </div>
   );

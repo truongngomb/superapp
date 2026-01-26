@@ -1,21 +1,7 @@
-import { useContext } from 'react';
 import { activityLogService } from '@/services';
 import type { ActivityLog, ActivityLogParams } from '@superapp/shared-types';
-import { ActivityLogContext } from '@/context/ActivityLogContext.base';
 import { useResource } from '@/hooks';
 import type { ResourceService } from '@superapp/core-logic';
-
-/**
- * useActivityLogContext Hook
- * Access the global activity log context (used for Notifications)
- */
-export function useActivityLogContext() {
-  const context = useContext(ActivityLogContext);
-  if (!context) {
-    throw new Error('useActivityLogContext must be used within ActivityLogProvider');
-  }
-  return context;
-}
 
 /**
  * useActivityLogs Hook
@@ -28,12 +14,12 @@ export function useActivityLogs() {
     isLoadingMore,
     total,
     queryParams,
-    fetchItems, // Alias this to fetchLogs if preferred
+    fetchItems,
     exporting,
     getAllForExport,
   } = useResource<ActivityLog, unknown, unknown, ActivityLogParams>({
     service: activityLogService as unknown as ResourceService<ActivityLog, unknown, unknown, ActivityLogParams>,
-    resourceName: 'activity_logs', // Matches 'activity_logs' namespace in i18n
+    resourceName: 'activity_logs',
     initialParams: {
       page: 1,
       limit: 10,

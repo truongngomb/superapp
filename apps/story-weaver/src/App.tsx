@@ -7,7 +7,7 @@
 import { BrowserRouter } from 'react-router-dom';
 import { AppProviders } from './AppProviders';
 import { AppRoutes } from './AppRoutes';
-import { MaintenanceOverlay } from './components/common';
+import { MaintenanceOverlay } from '@superapp/ui-kit';
 import { useState } from 'react';
 import { api } from '@superapp/core-logic';
 

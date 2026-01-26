@@ -2,9 +2,10 @@ import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Archive, HardDrive } from 'lucide-react';
 import { Card, CardHeader, CardContent, Button, ConfirmModal } from '@/components/common';
-import { useToast } from '@/hooks';
-import { backupService, BackupItem } from '@superapp/core-logic';
+import { backupService } from '@superapp/core-logic';
 import { BackupTable } from './BackupTable';
+import { useToast } from '@superapp/core-logic';
+import { BackupItem } from '@superapp/shared-types';
 
 export function BackupManager() {
   const { t } = useTranslation(['settings', 'uikit']);

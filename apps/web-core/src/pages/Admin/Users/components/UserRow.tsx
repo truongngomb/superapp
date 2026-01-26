@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { Edit2, Trash2, UserCog, User as UserIcon, RotateCcw } from 'lucide-react';
-import { Button, Badge, DataRow } from '@/components/common';
+import { Edit2, Trash2, UserCog, RotateCcw } from 'lucide-react';
+import { Button, Badge, DataRow, Avatar } from '@/components/common';
 import { formatDate } from '@/utils';
 import type { User } from '@superapp/shared-types';
 import { cn } from '@/utils';
@@ -76,18 +76,8 @@ export function UserRow({ index, style, data, isSelected, onSelect }: UserRowPro
     <DataRow
       className="flex-1"
       style={style}
-      icon={
-        user.avatar ? (
-          <img
-            src={user.avatar}
-            alt={user.name || 'User'}
-            className="w-full h-full rounded-full object-cover"
-          />
-        ) : (
-          <UserIcon className="w-5 h-5 text-primary" />
-        )
-      }
-      iconBgColor={user.avatar ? undefined : 'bg-primary/20'}
+      icon={<Avatar src={user.avatar} name={user.name || user.email} size="md" />}
+      iconBgColor={undefined}
       title={
         <div className="flex items-center gap-2">
           <span>{user.name || user.email}</span>

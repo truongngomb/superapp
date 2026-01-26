@@ -3,8 +3,8 @@ import { useState, useEffect, useRef } from 'react';
 import { AnimatePresence, motion as framerMotion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
-import { RefreshCw, Search, Loader2, FileSpreadsheet } from 'lucide-react';
-import { Button, Pagination, SortPopup, Input, PermissionGuard } from '@/components/common';
+import { RefreshCw, Search, Loader2 } from 'lucide-react';
+import { Button, Pagination, SortPopup, Input, PermissionGuard, PageHeader, ResourceCardSkeletonList } from '@/components/common';
 import { STORAGE_KEYS } from '@/config';
 import { ActivityLogTable } from './components/ActivityLogTable';
 import { ActivityLogTableSkeleton } from './components/ActivityLogTableSkeleton';
@@ -12,7 +12,6 @@ import type { ActivityLog } from '@superapp/shared-types';
 import { cn } from '@/utils';
 import { useSort, useDebounce, useActivityLogs, useExcelExport, useResponsiveView, useInfiniteResource } from '@/hooks';
 import { ActivityLogMobileList } from './components/ActivityLogMobileList';
-import { ActivityLogMobileCardSkeletonList } from './components/ActivityLogMobileCardSkeleton';
 
 export default function ActivityLogsPage() {
   const { t } = useTranslation(['activity_logs', 'uikit']);
@@ -156,32 +155,15 @@ export default function ActivityLogsPage() {
     <PermissionGuard resource="activity_logs" action="view">
       <div>
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-          <div className="flex items-start gap-3">
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-                {t('activity_logs:title')}
-              </h1>
-              <p className="text-muted mt-1">{t('activity_logs:subtitle')}</p>
-            </div>
-            <PermissionGuard resource="activity_logs" action="view">
-              <Button
-                variant="ghost"
-                onClick={() => { void handleExport(); }}
-                disabled={exporting || logs.length === 0}
-                className="h-10 w-10 p-0 text-[#217346] hover:bg-[#217346]/10"
-                title={t('uikit:export_excel')}
-                aria-label={t('uikit:export_excel')}
-              >
-                {exporting ? (
-                  <Loader2 className="w-6 h-6 animate-spin" />
-                ) : (
-                  <FileSpreadsheet className="w-6 h-6" />
-                )}
-              </Button>
-            </PermissionGuard>
-          </div>
-        </div>
+        <PageHeader
+          resource="activity_logs"
+          titleKey="activity_logs:title"
+          subtitleKey="activity_logs:subtitle"
+          exporting={exporting}
+          itemCount={logs.length}
+          onExport={() => { void handleExport(); }}
+          icon={<Search className="w-8 h-8 md:w-10 md:h-10 text-primary" />}
+        />
 
         {/* Search and filters */}
         <div className="flex gap-3 mb-4">
@@ -229,7 +211,7 @@ export default function ActivityLogsPage() {
           >
             {(loading && logs.length === 0) || isRefreshing ? (
                effectiveView === 'mobile' ? (
-                 <ActivityLogMobileCardSkeletonList count={5} />
+                 <ResourceCardSkeletonList count={5} />
                ) : (
                  <ActivityLogTableSkeleton />
                )

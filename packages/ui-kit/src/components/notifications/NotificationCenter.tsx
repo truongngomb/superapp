@@ -6,19 +6,20 @@ import React, { useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Bell, BellOff, X, RefreshCw } from 'lucide-react';
-import { useActivityLogContext, useOnClickOutside } from '@/hooks';
+import { useActivityLogContext, useOnClickOutside } from '@superapp/core-logic';
 import { ActivityLogItem } from './ActivityLogItem';
-import { Button } from '@/components/common';
-import { cn } from '@/utils';
-import { useNavigate } from 'react-router-dom';
+import { Button } from '../Button'; // Fixed path
+import { cn } from '../../utils'; // Fixed path
+// We'll pass navigate as a prop or use a common navigation hook if available
+// For now, let's assume it might be used in a React Router environment
 
 interface NotificationCenterProps {
   isOpen: boolean;
   onClose: () => void;
+  onViewAll?: () => void;
 }
 
-export const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose }) => {
-  const navigate = useNavigate();
+export const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose, onViewAll }) => {
   const { t } = useTranslation(['notifications', 'uikit']);
   const { logs, isLoading, error, refetch, resetUnreadCount, loadMore, hasMore, isLoadingMore } = useActivityLogContext();
   
@@ -146,17 +147,14 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, 
             </div>
 
             {/* Footer */}
-            {logs.length > 0 && (
+            {logs.length > 0 && onViewAll && (
               <div className="p-3 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900">
                 <Button 
                   variant="ghost" 
                   fullWidth 
                   size="sm"
                   className="text-indigo-600 hover:text-indigo-700 hover:bg-white dark:hover:bg-slate-800"
-                  onClick={() => {
-                    onClose();
-                    void navigate('/admin/activity-logs');
-                  }}
+                  onClick={onViewAll}
                 >
                   {t('notifications:view_all')}
                 </Button>
@@ -168,5 +166,3 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, 
     </AnimatePresence>
   );
 };
-
-

@@ -4,24 +4,20 @@ import { queryKeys } from '@/config/queryClient';
 import { AnimatePresence, motion as framerMotion } from 'framer-motion';
 import { 
   Users, 
-  Loader2,
-  FileSpreadsheet, 
-  Plus, 
-
+  Loader2
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { 
-  Button, 
-  Card, 
-  CardContent, 
-  ConfirmModal, 
   Pagination,
   ResourceToolbar,
   BatchActionButtons,
   SearchFilterBar,
-  PermissionGuard
+  PageHeader,
+  ResourceConfirmModals,
+  ResourceCardSkeletonList,
+  EmptyState,
 } from '@/components/common';
-import { useSort, useDebounce, useAuth, useResource, useToast, useExcelExport, useResponsiveView, useInfiniteResource } from '@/hooks';
+import { useSort, useDebounce, useAuth, useResource, useExcelExport, useResponsiveView, useInfiniteResource } from '@/hooks';
 import type { User, SortColumn, UserCreateInput, UserListParams, UserUpdateInput, ViewMode } from '@superapp/shared-types';
 import { getStorageItem, setStorageItem } from '@/utils';
 import { STORAGE_KEYS } from '@/config';
@@ -34,12 +30,12 @@ import { userService, roleService } from '@/services';
 import { UserTableSkeleton } from './components/UserTableSkeleton';
 import { UserRowSkeleton } from './components/UserRowSkeleton';
 import { UserMobileList } from './components/UserMobileList';
-import { UserMobileCardSkeletonList } from './components/UserMobileCardSkeleton';
 
 /**
  * UsersPage Component
  */
 import { useSearchParams } from 'react-router-dom';
+import { useToast } from '@superapp/core-logic';
 
 export default function UsersPage() {
   const { t } = useTranslation(['users', 'uikit']);
@@ -256,30 +252,17 @@ export default function UsersPage() {
   return (
     <div>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <div className="flex items-start gap-3">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("users:title")}</h1>
-            <p className="text-muted mt-1">{t("users:subtitle")}</p>
-          </div>
-          <PermissionGuard resource="users" action="view">
-             <Button
-               variant="ghost"
-               onClick={() => void handleExport()}
-               disabled={exporting || users.length === 0}
-               className="h-10 w-10 p-0 text-[#217346] hover:bg-[#217346]/10"
-             >
-               {exporting ? <Loader2 className="w-6 h-6 animate-spin" /> : <FileSpreadsheet className="w-6 h-6" />}
-             </Button>
-          </PermissionGuard>
-        </div>
-        <PermissionGuard resource="users" action="create">
-          <Button onClick={() => { setEditingUser(null); setShowForm(true); }}>
-            <Plus className="w-5 h-5" />
-            {t("users:create_btn")}
-          </Button>
-        </PermissionGuard>
-      </div>
+      <PageHeader
+        resource="users"
+        titleKey="users:title"
+        subtitleKey="users:subtitle"
+        exporting={exporting}
+        itemCount={users.length}
+        onExport={() => { void handleExport(); }}
+        onCreateClick={() => { setEditingUser(null); setShowForm(true); }}
+        createButtonKey="users:create_btn"
+        icon={<Users className="w-8 h-8 md:w-10 md:h-10 text-primary" />}
+      />
 
       {/* Search Filter Bar */}
       <SearchFilterBar
@@ -334,7 +317,7 @@ export default function UsersPage() {
         { (loading && users.length === 0) || isRefreshing ? (
            // Skeleton loading based on view mode
            effectiveView === 'mobile' ? (
-             <UserMobileCardSkeletonList count={5} />
+             <ResourceCardSkeletonList count={5} />
            ) : effectiveView === 'table' ? (
               <UserTableSkeleton />
            ) : (
@@ -343,19 +326,13 @@ export default function UsersPage() {
               </div>
            )
         ) : users.length === 0 ? (
-           <Card className="py-12 text-center">
-             <CardContent>
-               <Users className="w-12 h-12 text-muted mx-auto mb-4" />
-               <p className="text-muted">
-                 {searchQuery ? t("uikit:list.empty_search", { entities: t("users:entities") }) : t("uikit:list.empty", { entities: t("users:entities") })}
-               </p>
-               {!searchQuery && canCreate && (
-                 <Button onClick={() => { setEditingUser(null); setShowForm(true); }} className="mt-4">
-                   {t("uikit:list.add_first", { entity: t("users:entity") })}
-                 </Button>
-               )}
-             </CardContent>
-           </Card>
+            <EmptyState
+              icon={Users}
+              title={searchQuery ? t("uikit:list.empty_search", { entities: t("users:entities") }) : t("uikit:list.empty", { entities: t("users:entities") })}
+              actionText={!searchQuery && canCreate ? t("uikit:list.add_first", { entity: t("users:entity") }) : undefined}
+              onAction={() => { setEditingUser(null); setShowForm(true); }}
+              className="py-12"
+            />
         ) : (
            <div className="space-y-2">
              {/* Mobile View with Infinite Scroll */}
@@ -467,71 +444,30 @@ export default function UsersPage() {
         )}
       </AnimatePresence>
 
-      <ConfirmModal
-        isOpen={!!deleteId}
-        title={t("uikit:delete")}
-        message={
-          users.find((u) => u.id === deleteId)?.isDeleted
-            ? t("uikit:confirmation.hard_delete", { entity: t("users:entity") })
-            : t("uikit:confirmation.delete", { entity: t("users:entity") })
-        }
-        confirmText={t("uikit:delete")}
-        cancelText={t("uikit:cancel")}
+      <ResourceConfirmModals
+        resourceName="users"
+        entityKey="entity"
+        entitiesKey="entities"
+        deleteId={deleteId}
+        isDeleted={users.find((u) => u.id === deleteId)?.isDeleted}
+        onDeleteCancel={() => { setDeleteId(null); }}
+        onDeleteConfirm={() => { if (deleteId) void handleDelete(deleteId).then(() => { setDeleteId(null); }); }}
+        restoreId={restoreId}
+        onRestoreCancel={() => { setRestoreId(null); }}
+        onRestoreConfirm={() => { if (restoreId) void handleRestore(restoreId).then(() => { setRestoreId(null); }); }}
+        showBatchDelete={showBatchDeleteConfirm}
+        selectedCount={selectedIds.length}
+        hasArchivedSelected={hasDeletedSelected}
+        onBatchDeleteCancel={() => { setShowBatchDeleteConfirm(false); }}
+        onBatchDeleteConfirm={() => { void handleBatchDelete().then(() => { setShowBatchDeleteConfirm(false); }); }}
+        showBatchRestore={showBatchRestoreConfirm}
+        onBatchRestoreCancel={() => { setShowBatchRestoreConfirm(false); }}
+        onBatchRestoreConfirm={() => { void handleBatchRestore().then(() => { setShowBatchRestoreConfirm(false); }); }}
+        batchStatusConfig={batchStatusConfig}
+        onBatchStatusCancel={() => { setBatchStatusConfig(null); }}
+        onBatchStatusConfirm={(isActive) => { void handleBatchUpdateStatus(isActive).then(() => { setBatchStatusConfig(null); }); }}
         loading={loading}
-        onConfirm={() => { if (deleteId) void handleDelete(deleteId).then(() => { setDeleteId(null); }); }}
-        onCancel={() => { setDeleteId(null); }}
-        variant="danger"
       />
-
-      <ConfirmModal
-         isOpen={!!restoreId}
-         title={t("uikit:restore")}
-         message={t("uikit:confirmation.restore", { entity: t("users:entity") })}
-         confirmText={t("uikit:confirm")}
-         cancelText={t("uikit:cancel")}
-         loading={loading}
-         onConfirm={() => { if (restoreId) void handleRestore(restoreId).then(() => { setRestoreId(null); }); }}
-         onCancel={() => { setRestoreId(null); }}
-      />
-
-       <ConfirmModal
-        isOpen={showBatchDeleteConfirm}
-        title={t("uikit:delete")}
-        message={
-          hasDeletedSelected
-            ? t("uikit:batch_confirmation.hard_delete", { count: selectedIds.length, entities: t("users:entities") })
-            : t("uikit:batch_confirmation.delete", { count: selectedIds.length, entities: t("users:entities") })
-        }
-        confirmText={t("uikit:delete")}
-        cancelText={t("uikit:cancel")}
-        loading={loading}
-        onConfirm={() => { void handleBatchDelete().then(() => { setShowBatchDeleteConfirm(false); }); }}
-        onCancel={() => { setShowBatchDeleteConfirm(false); }}
-        variant="danger"
-      />
-
-       <ConfirmModal
-        isOpen={!!batchStatusConfig?.isOpen}
-        title={t("uikit:confirm")}
-        message={t("uikit:batch_confirmation.status", {
-          count: selectedIds.length,
-          entities: t("users:entities"),
-          action: batchStatusConfig?.isActive ? t("uikit:actions.activate") : t("uikit:actions.deactivate"),
-        })}
-        loading={loading}
-        onConfirm={() => { if (batchStatusConfig) void handleBatchUpdateStatus(batchStatusConfig.isActive).then(() => { setBatchStatusConfig(null); }); }}
-        onCancel={() => { setBatchStatusConfig(null); }}
-      />
-
-       <ConfirmModal
-         isOpen={showBatchRestoreConfirm}
-         title={t("uikit:restore")}
-         message={t("uikit:batch_confirmation.restore", { count: selectedIds.length, entities: t("users:entities") })}
-         loading={loading}
-         onConfirm={() => { void handleBatchRestore().then(() => { setShowBatchRestoreConfirm(false); }); }}
-         onCancel={() => { setShowBatchRestoreConfirm(false); }}
-      />
-
     </div>
   );
 }

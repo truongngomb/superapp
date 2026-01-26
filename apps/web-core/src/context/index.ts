@@ -9,10 +9,11 @@ export {
   ThemeContext,
   useAuth,
   useTheme,
+  ActivityLogProvider,
+  ActivityLogContext,
+  RealtimeProvider,
+  useRealtime,
 } from '@superapp/core-logic';
-export type { AuthContextType } from '@superapp/core-logic';
+export type { AuthContextType, ActivityLogContextType } from '@superapp/core-logic';
 export * from './SettingsContext';
-export * from './ActivityLogContext';
-export { ToastProvider } from './ToastContext';
-export { ToastContext, useToast } from './useToast';
-export { RealtimeProvider, useRealtime } from './RealtimeContext';
+export { ToastProvider, useToast, ToastContext } from '@superapp/ui-kit';

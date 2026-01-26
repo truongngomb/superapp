@@ -3,17 +3,14 @@
  */
 
 // Local hooks
-export { usePermission, usePermissions } from './usePermission';
 export * from './useCategories';
 export * from './useUsers';
 export * from './useActivityLogs';
-export * from './useSettings';
 export * from './useMarkdownPages';
 export * from './useAppMenu';
 export { useMediaUpload } from './useMedia';
 export * from './useSystemHealth';
 export * from './useResourceService';
-export * from './useInfiniteResource';
 export * from './usePageTitle';
 export { useAutoVersionCheck } from './useAutoVersionCheck';
 
@@ -22,6 +19,10 @@ export {
   useAuth,
   useTheme,
   useResource,
+  usePermission,
+  usePermissions,
+  useInfiniteResource,
+  useSettings,
   usePreferenceSync,
   useDebounce,
   useDebounceCallback,
@@ -32,6 +33,7 @@ export {
   useLayoutMode,
   useLayout,
   LayoutProvider,
+  useActivityLogContext,
   useMediaQuery,
   useResponsiveView,
   useIsMobile,
@@ -39,6 +41,3 @@ export {
   useIsDesktop,
 } from '@superapp/core-logic';
 export type { UseResourceReturn } from '@superapp/core-logic';
-
-// Context hooks re-exports
-export { useToast } from '@/context/useToast';

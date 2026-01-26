@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { cn } from '../utils';
 import { Button } from '../components/Button';
+import { GradientText } from '../components/GradientText';
 import { ISidebarProps } from '@superapp/shared-types';
 
 export function StandardSidebar({ open, onClose, items, currentPath, t = (k) => k }: ISidebarProps) {
@@ -34,7 +35,7 @@ export function StandardSidebar({ open, onClose, items, currentPath, t = (k) => 
                 <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
                   <span className="text-white font-bold text-lg">S</span>
                 </div>
-                <span className="text-xl font-bold text-gradient">{t('uikit:brand')}</span>
+                <GradientText className="text-xl font-bold">{t('uikit:brand')}</GradientText>
               </div>
               <Button
                 variant="ghost"

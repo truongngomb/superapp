@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { activityLogService } from '@/services';
+import { activityLogService } from '../services'; // Fixed path
 import type { ActivityLog } from '@superapp/shared-types';
-import { logger } from '@/utils';
+import { logger } from '../utils'; // Fixed path
 import { ActivityLogContext } from './ActivityLogContext.base';
 import { useRealtime } from './RealtimeContext';
-import { useAuth } from '@/hooks';
-import { env } from '@/config';
+import { useAuth } from './AuthContext'; // Fixed path
+import { env } from '../config'; // Fixed path
 
 export const ActivityLogProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated } = useAuth();

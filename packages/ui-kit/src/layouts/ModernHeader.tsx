@@ -4,8 +4,7 @@ import {
   LogOut, 
   Menu, 
   Moon, 
-  Sun, 
-  User, 
+  Sun,
   X, 
   Bell, 
   Maximize,
@@ -14,6 +13,8 @@ import {
   PanelLeftOpen
 } from 'lucide-react';
 import { Button } from '../components/Button';
+import { Avatar } from '../components/Avatar';
+import { GradientText } from '../components/GradientText';
 import { IHeaderProps } from '@superapp/shared-types';
 
 export interface ModernHeaderProps extends IHeaderProps {
@@ -83,9 +84,9 @@ export function ModernHeader({
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
               <span className="text-white font-bold text-lg">S</span>
             </div>
-            <span className="text-lg font-bold uppercase tracking-wide hidden sm:inline text-gradient">
+            <GradientText className="text-lg font-bold uppercase tracking-wide hidden sm:inline">
               {t('uikit:brand')}
-            </span>
+            </GradientText>
           </Link>
 
           {/* Optional: Horizontal Links could go here if needed, but we'll stick to sidebar for main nav */}
@@ -163,13 +164,7 @@ export function ModernHeader({
                   <div className="text-sm font-semibold text-foreground">{user.name}</div>
                   <div className="text-xs text-muted-foreground max-w-[100px] truncate">{user.email}</div>
                 </div>
-                <div className="w-8 h-8 rounded-full bg-surface text-primary flex items-center justify-center font-bold text-sm ring-2 ring-border overflow-hidden">
-                   {user.avatar ? (
-                     <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
-                   ) : (
-                     <User className="w-5 h-5" />
-                   )}
-                </div>
+                <Avatar src={user.avatar} name={user.name} size="sm" className="ring-2 ring-border" />
                 
                 <Button
                   variant="ghost"

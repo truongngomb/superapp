@@ -3,21 +3,18 @@ import { useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { AnimatePresence, motion as framerMotion } from "framer-motion";
 import {
-  Plus,
   Folder,
-  Loader2,
-  FileSpreadsheet,
+  Loader2
 } from "lucide-react";
 import {
-  Button,
-  Card,
-  CardContent,
-  ConfirmModal,
   Pagination,
   ResourceToolbar,
   BatchActionButtons,
   SearchFilterBar,
-  PermissionGuard
+  PageHeader,
+  ResourceConfirmModals,
+  ResourceCardSkeletonList,
+  EmptyState,
 } from "@/components/common";
 import type { Category, CreateCategoryInput, SortColumn, CategoryListParams, ViewMode } from "@superapp/shared-types";
 import { getStorageItem, setStorageItem } from "@/utils";
@@ -31,7 +28,6 @@ import { CategoryTable } from "./components/CategoryTable";
 import { CategorySkeleton } from "./components/CategorySkeleton";
 import { CategoryTableSkeleton } from "./components/CategoryTableSkeleton";
 import { CategoryMobileList } from "./components/CategoryMobileList";
-import { CategoryMobileCardSkeletonList } from "./components/CategoryMobileCardSkeleton";
 
 // Define Resource Types
 
@@ -239,30 +235,17 @@ export default function CategoriesPage() {
   return (
     <div>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <div className="flex items-start gap-3">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("categories:title")}</h1>
-            <p className="text-muted mt-1">{t("categories:subtitle")}</p>
-          </div>
-           <PermissionGuard resource="categories" action="view">
-             <Button
-              variant="ghost"
-              onClick={() => void handleExport()}
-              disabled={exporting || categories.length === 0}
-              className="h-10 w-10 p-0 text-[#217346] hover:bg-[#217346]/10"
-             >
-               {exporting ? <Loader2 className="w-6 h-6 animate-spin" /> : <FileSpreadsheet className="w-6 h-6" />}
-             </Button>
-           </PermissionGuard>
-        </div>
-        <PermissionGuard resource="categories" action="create">
-          <Button onClick={() => { setShowForm(true); }}>
-            <Plus className="w-5 h-5" />
-            {t("categories:create_btn")}
-          </Button>
-        </PermissionGuard>
-      </div>
+      <PageHeader
+        resource="categories"
+        titleKey="categories:title"
+        subtitleKey="categories:subtitle"
+        exporting={exporting}
+        itemCount={categories.length}
+        onExport={() => { void handleExport(); }}
+        onCreateClick={() => { setShowForm(true); }}
+        createButtonKey="categories:create_btn"
+        icon={<Folder className="w-8 h-8 md:w-10 md:h-10 text-primary" />}
+      />
 
       {/* Search Filter Bar */}
       <SearchFilterBar
@@ -317,7 +300,7 @@ export default function CategoriesPage() {
         { (loading && categories.length === 0) || isRefreshing ? (
            // Skeleton loading based on view mode
            effectiveView === 'mobile' ? (
-             <CategoryMobileCardSkeletonList count={5} />
+             <ResourceCardSkeletonList count={5} />
            ) : effectiveView === 'table' ? (
              <CategoryTableSkeleton />
            ) : (
@@ -326,19 +309,13 @@ export default function CategoriesPage() {
              </div>
            )
         ) : categories.length === 0 ? (
-           <Card className="py-12 text-center">
-             <CardContent>
-               <Folder className="w-12 h-12 text-muted mx-auto mb-4" />
-               <p className="text-muted">
-                 {searchQuery ? t("uikit:list.empty_search", { entities: t("categories:entities") }) : t("uikit:list.empty", { entities: t("categories:entities") })}
-               </p>
-               {!searchQuery && canCreate && (
-                 <Button onClick={() => { setShowForm(true); }} className="mt-4">
-                   {t("uikit:list.add_first", { entity: t("categories:entity") })}
-                 </Button>
-               )}
-             </CardContent>
-           </Card>
+            <EmptyState
+              icon={Folder}
+              title={searchQuery ? t("uikit:list.empty_search", { entities: t("categories:entities") }) : t("uikit:list.empty", { entities: t("categories:entities") })}
+              actionText={!searchQuery && canCreate ? t("uikit:list.add_first", { entity: t("categories:entity") }) : undefined}
+              onAction={() => { setShowForm(true); }}
+              className="py-12"
+            />
          ) : (
           <div className="space-y-2">
             {/* Mobile View with Infinite Scroll */}
@@ -435,71 +412,30 @@ export default function CategoriesPage() {
         )}
       </AnimatePresence>
 
-      <ConfirmModal
-        isOpen={!!deleteId}
-        title={t("uikit:delete")}
-        message={
-           categories.find((c) => c.id === deleteId)?.isDeleted
-             ? t("uikit:confirmation.hard_delete", { entity: t("categories:entity") })
-             : t("uikit:confirmation.delete", { entity: t("categories:entity") })
-        }
-        confirmText={t("uikit:delete")}
-        cancelText={t("uikit:cancel")}
+      <ResourceConfirmModals
+        resourceName="categories"
+        entityKey="entity"
+        entitiesKey="entities"
+        deleteId={deleteId}
+        isDeleted={categories.find((c) => c.id === deleteId)?.isDeleted}
+        onDeleteCancel={() => { setDeleteId(null); }}
+        onDeleteConfirm={() => { if (deleteId) void handleDelete(deleteId).then(() => { setDeleteId(null); }); }}
+        restoreId={restoreId}
+        onRestoreCancel={() => { setRestoreId(null); }}
+        onRestoreConfirm={() => { if (restoreId) void handleRestore(restoreId).then(() => { setRestoreId(null); }); }}
+        showBatchDelete={showBatchDeleteConfirm}
+        selectedCount={selectedIds.length}
+        hasArchivedSelected={hasDeletedSelected}
+        onBatchDeleteCancel={() => { setShowBatchDeleteConfirm(false); }}
+        onBatchDeleteConfirm={() => { void handleBatchDelete().then(() => { setShowBatchDeleteConfirm(false); }); }}
+        showBatchRestore={showBatchRestoreConfirm}
+        onBatchRestoreCancel={() => { setShowBatchRestoreConfirm(false); }}
+        onBatchRestoreConfirm={() => { void handleBatchRestore().then(() => { setShowBatchRestoreConfirm(false); }); }}
+        batchStatusConfig={batchStatusConfig}
+        onBatchStatusCancel={() => { setBatchStatusConfig(null); }}
+        onBatchStatusConfirm={(isActive) => { void handleBatchUpdateStatus(isActive).then(() => { setBatchStatusConfig(null); }); }}
         loading={loading}
-        onConfirm={() => { if (deleteId) void handleDelete(deleteId).then(() => { setDeleteId(null); }); }}
-        onCancel={() => { setDeleteId(null); }}
-        variant="danger"
       />
-
-       <ConfirmModal
-        isOpen={!!restoreId}
-        title={t("uikit:restore")}
-        message={t("uikit:confirmation.restore", { entity: t("categories:entity") })}
-        confirmText={t("uikit:confirm")}
-        cancelText={t("uikit:cancel")}
-        loading={loading}
-        onConfirm={() => { if (restoreId) void handleRestore(restoreId).then(() => { setRestoreId(null); }); }}
-        onCancel={() => { setRestoreId(null); }}
-      />
-
-      <ConfirmModal
-        isOpen={showBatchDeleteConfirm}
-        title={t("uikit:delete")}
-        message={
-          hasDeletedSelected
-            ? t("uikit:batch_confirmation.hard_delete", { count: selectedIds.length, entities: t("categories:entities") })
-            : t("uikit:batch_confirmation.delete", { count: selectedIds.length, entities: t("categories:entities") })
-        }
-        confirmText={t("uikit:delete")}
-        cancelText={t("uikit:cancel")}
-        loading={loading}
-        onConfirm={() => { void handleBatchDelete().then(() => { setShowBatchDeleteConfirm(false); }); }}
-        onCancel={() => { setShowBatchDeleteConfirm(false); }}
-        variant="danger"
-      />
-
-       <ConfirmModal
-        isOpen={!!batchStatusConfig?.isOpen}
-        title={t("uikit:confirm")}
-        message={t("uikit:batch_confirmation.status", {
-          count: selectedIds.length,
-          entities: t("categories:entities"),
-          action: batchStatusConfig?.isActive ? t("uikit:actions.activate") : t("uikit:actions.deactivate"),
-        })}
-        loading={loading}
-        onConfirm={() => { if (batchStatusConfig) void handleBatchUpdateStatus(batchStatusConfig.isActive).then(() => { setBatchStatusConfig(null); }); }}
-        onCancel={() => { setBatchStatusConfig(null); }}
-      />
-
-       <ConfirmModal
-         isOpen={showBatchRestoreConfirm}
-         title={t("uikit:restore")}
-         message={t("uikit:batch_confirmation.restore", { count: selectedIds.length, entities: t("categories:entities") })}
-         loading={loading}
-         onConfirm={() => { void handleBatchRestore().then(() => { setShowBatchRestoreConfirm(false); }); }}
-         onCancel={() => { setShowBatchRestoreConfirm(false); }}
-      />
-
     </div>
   );
 }

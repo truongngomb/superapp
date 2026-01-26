@@ -4,13 +4,14 @@
  */
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { GradientText } from '../GradientText';
 
 export function NotFoundPage() {
   const { t } = useTranslation('uikit');
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[50vh] text-center">
-      <h1 className="text-6xl font-bold text-gradient mb-4">404</h1>
+      <GradientText className="text-6xl font-bold mb-4">404</GradientText>
       <p className="text-xl text-muted mb-6">
         {t('errors.page_not_found', { defaultValue: 'Page not found' })}
       </p>

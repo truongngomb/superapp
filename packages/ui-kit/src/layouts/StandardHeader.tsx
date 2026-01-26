@@ -1,8 +1,10 @@
 import { useCallback, useState, useLayoutEffect, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LogOut, Menu, Moon, Sun, User, X, ChevronDown, MoreVertical } from 'lucide-react';
+import { LogOut, Menu, Moon, Sun, X, ChevronDown, MoreVertical } from 'lucide-react';
+import { Avatar } from '../components/Avatar';
 import { cn } from '../utils';
+import { GradientText } from '../components/GradientText';
 import { IMenuItem, IHeaderProps } from '@superapp/shared-types';
 
 export interface StandardHeaderProps extends IHeaderProps {
@@ -298,17 +300,7 @@ interface UserAvatarProps {
 function UserAvatar({ avatar, name, email }: UserAvatarProps) {
   return (
     <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-surface">
-      {avatar ? (
-        <img
-          src={avatar}
-          alt={name || 'User'}
-          className="w-7 h-7 rounded-full object-cover"
-        />
-      ) : (
-        <div className="w-7 h-7 rounded-full bg-primary/20 flex items-center justify-center">
-          <User className="w-4 h-4 text-primary" />
-        </div>
-      )}
+      <Avatar src={avatar} name={name} size="sm" />
       <span className="text-sm font-medium hidden sm:inline max-w-[100px] truncate">
         {name || email || '---'}
       </span>
@@ -367,9 +359,9 @@ export function StandardHeader({
           >
             <span className="text-white font-bold text-lg">S</span>
           </motion.div>
-          <span className="text-xl font-bold text-gradient hidden sm:inline">
+          <GradientText className="text-xl font-bold hidden sm:inline">
             {t('uikit:brand')}
-          </span>
+          </GradientText>
         </Link>
 
         {/* Desktop Navigation */}

@@ -14,8 +14,8 @@ import {
   SelectContent,
   SelectItem
 } from '@/components/common';
-import { useSettings, useToast } from '@/hooks';
-import { settingsService } from '@superapp/core-logic';
+import { useSettings } from '@/hooks';
+import { settingsService, useToast } from '@superapp/core-logic';
 import { BackupManager } from './BackupManager';
 import { SYSTEM_METRICS_SNAPSHOT_INTERVAL } from '@superapp/shared-types';
 

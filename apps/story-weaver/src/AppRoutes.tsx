@@ -1,7 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { LoadingSpinner } from '@superapp/ui-kit';
-import { ProtectedRoute, NotFoundPage } from '@/components/common';
+import { LoadingSpinner, ProtectedRoute, NotFoundPage } from '@superapp/ui-kit';
 import { MainLayout } from './components/layout';
 
 // Lazy load pages

@@ -16,7 +16,8 @@ import {
   Shield,
   Activity
 } from 'lucide-react';
-import { cn, getDateLocale } from '@/utils';
+import { cn } from '../../utils'; // Relative to components/notifications
+import { getDateLocale } from '@superapp/core-logic';
 import type { ActivityLog } from '@superapp/shared-types';
 
 interface ActivityLogItemProps {

@@ -14,4 +14,4 @@ export {
 export { videoProjectService } from './project.service';
 export { videoSceneService } from './scene.service';
 
-export type { SettingItem } from '@superapp/core-logic';
+export type { SettingItem } from '@superapp/shared-types';

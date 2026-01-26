@@ -8,11 +8,6 @@
     "lint": "eslint .",
     "build": "tsc"
   },
-  "exports": {
-    ".": "./src/index.ts",
-    "./hooks/*": "./src/hooks/*.ts",
-    "./utils/*": "./src/utils/*.ts"
-  },
   "dependencies": {
     "@superapp/shared-types": "workspace:*",
     "clsx": "^2.1.1",

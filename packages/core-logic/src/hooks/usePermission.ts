@@ -3,7 +3,7 @@
  * Hooks for checking user permissions
  */
 
-import { useAuth } from '@superapp/core-logic';
+import { useAuth } from '../context/AuthContext';
 
 /**
  * Hook to check a single permission

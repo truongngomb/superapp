@@ -6,7 +6,7 @@ import { adminPb } from '../config/index.js';
 import { createLogger } from '../utils/index.js';
 import { ServiceUnavailableError, NotFoundError } from '../middleware/index.js';
 
-import { BackupInfo } from '@superapp/shared-types';
+import { BackupItem } from '@superapp/shared-types';
 
 export class BackupService {
   private log = createLogger('BackupService');
@@ -14,7 +14,7 @@ export class BackupService {
   /**
    * List all backups
    */
-  async list(): Promise<BackupInfo[]> {
+  async list(): Promise<BackupItem[]> {
     try {
       const backups = await adminPb.backups.getFullList();
       return backups.map(b => ({

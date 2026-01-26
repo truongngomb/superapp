@@ -2,16 +2,23 @@
  * UserMobileList Component
  * 
  * Mobile list view with infinite scroll for Users.
- * Matches CategoryMobileList pattern.
  */
-import { useEffect } from 'react';
-import { useInView } from 'react-intersection-observer';
 import { useTranslation } from 'react-i18next';
-import { AnimatePresence, motion } from 'framer-motion';
-import { Loader2, CheckCircle2 } from 'lucide-react';
+import { 
+  ResourceMobileCard, 
+  ResourceMobileList,
+  ResourceCardSkeletonList,
+  Avatar,
+  Badge,
+} from '@superapp/ui-kit';
+import { 
+  Edit2, 
+  Trash2, 
+  RotateCcw,
+  Mail,
+  Shield
+} from 'lucide-react';
 import type { User, Role } from '@superapp/shared-types';
-import { UserMobileCard } from './UserMobileCard';
-import { UserMobileCardSkeletonList } from './UserMobileCardSkeleton';
 
 interface UserMobileListProps {
   /** All users to display */
@@ -54,74 +61,96 @@ export function UserMobileList({
   onRestore,
   onAssignRole,
 }: UserMobileListProps) {
-  const { t } = useTranslation('uikit');
+  const { t } = useTranslation(['users', 'uikit']);
   
-  // IntersectionObserver for infinite scroll
-  const { ref: loadMoreRef, inView } = useInView({
-    threshold: 0,
-    rootMargin: '100px', // Trigger 100px before reaching bottom
-  });
-
-  // Trigger fetch when scrolling into view
-  useEffect(() => {
-    if (inView && hasNextPage && !isFetchingNextPage) {
-      void fetchNextPage();
-    }
-  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
-
-  // Initial loading state
-  if (isLoading && users.length === 0) {
-    return <UserMobileCardSkeletonList count={5} />;
-  }
-
   return (
-    <div className='grid gap-4'>
-      {/* Cards List */}
-      <AnimatePresence mode="popLayout">
-        {users.map((user, index) => (
-          <UserMobileCard
-            key={user.id}
-            user={user}
-            roles={roles}
-            index={index}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            onRestore={onRestore}
-            onAssignRole={onAssignRole}
-            isSelected={selectedIds.includes(user.id)}
-            onSelect={onSelect}
-          />
-        ))}
-      </AnimatePresence>
-
-      {/* Infinite Scroll Trigger & Loading Indicator */}
-      <div
-        ref={loadMoreRef}
-        className="flex items-center justify-center py-4"
-      >
-        {isFetchingNextPage ? (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="flex items-center gap-2 text-muted-foreground"
-          >
-            <Loader2 className="w-5 h-5 animate-spin" />
-            <span className="text-sm">{t('loading')}</span>
-          </motion.div>
-        ) : hasNextPage ? (
-          // Invisible trigger zone
-          <div className="h-4" />
-        ) : users.length > 0 ? (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-2 text-muted-foreground"
-          >
-            <CheckCircle2 className="w-4 h-4" />
-            <span className="text-sm">{t('list.end_of_list')}</span>
-          </motion.div>
-        ) : null}
-      </div>
-    </div>
+    <ResourceMobileList<User>
+      items={users}
+      keyExtractor={(item) => item.id}
+      hasNextPage={hasNextPage}
+      isFetchingNextPage={isFetchingNextPage}
+      fetchNextPage={fetchNextPage}
+      isLoading={isLoading}
+      skeleton={<ResourceCardSkeletonList count={5} infoRowsCount={2} actionsCount={3} />}
+      renderItem={(user, index) => (
+        <ResourceMobileCard
+          key={user.id}
+          id={user.id}
+          index={index}
+          title={user.name}
+          icon={
+            <div className="w-12 h-12 flex-shrink-0">
+              <Avatar src={user.avatar} name={user.name} className="w-12 h-12 rounded-full ring-2 ring-background" />
+            </div>
+          }
+          status={{
+            isActive: user.isActive,
+            isDeleted: user.isDeleted
+          }}
+          isSelected={selectedIds.includes(user.id)}
+          onSelect={onSelect}
+          infoRows={[
+            {
+              icon: Mail,
+              label: t('uikit:email'),
+              value: user.email,
+              iconBgColor: 'bg-blue-500/20',
+              iconColor: 'text-blue-400'
+            },
+            {
+              icon: Shield,
+              label: t('uikit:role'),
+              value: (
+                <div className="flex flex-wrap justify-end gap-1">
+                  {user.roles && user.roles.length > 0 ? (
+                    user.roles.map((roleId) => {
+                      const role = roles.find(r => r.id === roleId);
+                      return (
+                        <Badge key={roleId} variant="secondary" className="text-xs h-6 px-2 font-medium">
+                          {role ? role.name : roleId}
+                        </Badge>
+                      );
+                    })
+                  ) : (
+                    <span className="text-xs italic text-muted-foreground">{t('uikit:no_roles')}</span>
+                  )}
+                </div>
+              ),
+              iconBgColor: 'bg-purple-500/20',
+              iconColor: 'text-purple-400'
+            }
+          ]}
+          actions={[
+            ...(!user.isDeleted ? [{
+              icon: Edit2,
+              label: t('uikit:edit'),
+              onClick: () => { onEdit(user); },
+              permission: { resource: 'users', action: 'update' }
+            }] : (onRestore ? [{
+              icon: RotateCcw,
+              label: t('uikit:restore'),
+              onClick: () => { onRestore(user.id); },
+              permission: { resource: 'users', action: 'update' },
+              variant: 'primary' as const
+            }] : [])),
+            ...(!user.isDeleted ? [{
+               icon: Shield,
+               label: t('users:assign_role_btn'),
+               onClick: () => { onAssignRole(user); },
+               permission: { resource: 'users', action: 'update' },
+               iconColor: 'text-blue-400'
+            }] : []),
+            {
+              icon: Trash2,
+              label: t('uikit:delete'),
+              onClick: () => { onDelete(user.id); },
+              variant: 'danger',
+              permission: { resource: 'users', action: 'delete' },
+              className: user.isDeleted ? 'text-red-600' : 'text-red-400'
+            }
+          ]}
+        />
+      )}
+    />
   );
 }

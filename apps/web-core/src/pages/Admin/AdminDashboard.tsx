@@ -4,11 +4,11 @@
  */
 
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Users, Shield, FolderTree, Activity, TrendingUp, Clock, Cpu, HardDrive, Server, ArrowRight } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Users, Shield, FolderTree, Activity, Clock, Cpu, HardDrive, Server, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Card, CardContent, Skeleton, Button } from '@/components/common';
+import { Card, CardContent, Skeleton, Button, StatCard } from '@/components/common';
 import { roleService, userService, categoryService, activityLogService } from '@/services';
 import { systemService } from '@superapp/core-logic';
 import type { SystemStats } from '@superapp/shared-types';
@@ -33,6 +33,7 @@ interface DashboardStats {
 
 export default function AdminDashboard() {
   const { t } = useTranslation(['uikit', 'users', 'roles', 'categories', 'activity_logs']);
+  const navigate = useNavigate();
   const [stats, setStats] = useState<DashboardStats>({ users: 0, roles: 0, categories: 0, activityLogs: 0 });
   const [systemStats, setSystemStats] = useState<SystemStats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -99,13 +100,14 @@ export default function AdminDashboard() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[1, 2].map((i) => (
-              <Card key={i}>
+              <Card key={i} className="overflow-hidden">
                 <CardContent className="p-0">
-                  <div className="flex items-center gap-4 p-5">
-                    <Skeleton className="w-12 h-12 rounded-xl" />
+                  <div className="flex items-start gap-4 p-5">
+                    <Skeleton className="w-12 h-12 rounded-xl mt-1" />
                     <div className="flex-1 space-y-2">
                       <Skeleton className="h-3 w-24" />
                       <Skeleton className="h-8 w-16" />
+                      <Skeleton className="h-3 w-full" />
                     </div>
                   </div>
                   <div className="h-1 bg-muted/20" />
@@ -123,13 +125,14 @@ export default function AdminDashboard() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[1, 2].map((i) => (
-              <Card key={i}>
+              <Card key={i} className="overflow-hidden">
                 <CardContent className="p-0">
-                  <div className="flex items-center gap-4 p-5">
-                    <Skeleton className="w-12 h-12 rounded-xl" />
+                  <div className="flex items-start gap-4 p-5">
+                    <Skeleton className="w-12 h-12 rounded-xl mt-1" />
                     <div className="flex-1 space-y-2">
                       <Skeleton className="h-3 w-24" />
                       <Skeleton className="h-8 w-16" />
+                      <Skeleton className="h-3 w-full" />
                     </div>
                   </div>
                   <div className="h-1 bg-muted/20" />
@@ -189,52 +192,24 @@ export default function AdminDashboard() {
           {t('uikit:admin_dashboard.user_access')}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {[
-            {
-              label: t('users:entities'),
-              description: t('uikit:admin_dashboard.manage_users_desc'),
-              value: stats.users,
-              icon: <Users className="w-6 h-6" />,
-              color: 'from-blue-500 to-blue-600',
-              link: '/admin/users',
-            },
-            {
-              label: t('roles:entities'),
-              description: t('uikit:admin_dashboard.manage_roles_desc'),
-              value: stats.roles,
-              icon: <Shield className="w-6 h-6" />,
-              color: 'from-purple-500 to-purple-600',
-              link: '/admin/roles',
-            },
-          ].map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-            >
-              <Link to={stat.link}>
-                <Card className="hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer overflow-hidden h-full">
-                  <CardContent className="p-0 h-full flex flex-col">
-                    <div className="flex items-start gap-4 p-5 flex-1">
-                      <div className={`p-3 rounded-xl bg-gradient-to-br ${stat.color} text-white shadow-lg mt-1`}>
-                        {stat.icon}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-1">{stat.label}</p>
-                        <p className="text-3xl font-bold text-foreground mb-2">{stat.value}</p>
-                        <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-                          {stat.description}
-                        </p>
-                      </div>
-                      <TrendingUp className="w-5 h-5 text-muted shrink-0" />
-                    </div>
-                    <div className={`h-1 bg-gradient-to-r ${stat.color}`} />
-                  </CardContent>
-                </Card>
-              </Link>
-            </motion.div>
-          ))}
+          <StatCard
+            value={stats.users}
+            label={t('users:entities')}
+            description={t('uikit:admin_dashboard.manage_users_desc')}
+            icon={Users}
+            color="from-blue-500 to-blue-600"
+            onClick={() => { void navigate('/admin/users'); }}
+            delay={0.1}
+          />
+          <StatCard
+            value={stats.roles}
+            label={t('roles:entities')}
+            description={t('uikit:admin_dashboard.manage_roles_desc')}
+            icon={Shield}
+            color="from-purple-500 to-purple-600"
+            onClick={() => { void navigate('/admin/roles'); }}
+            delay={0.2}
+          />
         </div>
       </div>
 
@@ -245,52 +220,24 @@ export default function AdminDashboard() {
           {t('uikit:admin_dashboard.content_system')}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {[
-            {
-              label: t('categories:entities'),
-              description: t('categories:subtitle'),
-              value: stats.categories,
-              icon: <FolderTree className="w-6 h-6" />,
-              color: 'from-emerald-500 to-emerald-600',
-              link: '/categories',
-            },
-            {
-              label: t('activity_logs:entities'),
-              description: t('activity_logs:subtitle'),
-              value: stats.activityLogs,
-              icon: <Activity className="w-6 h-6" />,
-              color: 'from-amber-500 to-amber-600',
-              link: '/admin/activity-logs',
-            },
-          ].map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 + index * 0.1 }}
-            >
-              <Link to={stat.link}>
-                <Card className="hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer overflow-hidden h-full">
-                  <CardContent className="p-0 h-full flex flex-col">
-                    <div className="flex items-start gap-4 p-5 flex-1">
-                      <div className={`p-3 rounded-xl bg-gradient-to-br ${stat.color} text-white shadow-lg mt-1`}>
-                        {stat.icon}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-1">{stat.label}</p>
-                        <p className="text-3xl font-bold text-foreground mb-2">{stat.value}</p>
-                        <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-                          {stat.description}
-                        </p>
-                      </div>
-                      <TrendingUp className="w-5 h-5 text-muted shrink-0" />
-                    </div>
-                    <div className={`h-1 bg-gradient-to-r ${stat.color}`} />
-                  </CardContent>
-                </Card>
-              </Link>
-            </motion.div>
-          ))}
+          <StatCard
+            value={stats.categories}
+            label={t('categories:entities')}
+            description={t('categories:subtitle')}
+            icon={FolderTree}
+            color="from-emerald-500 to-emerald-600"
+            onClick={() => { void navigate('/categories'); }}
+            delay={0.3}
+          />
+          <StatCard
+            value={stats.activityLogs}
+            label={t('activity_logs:entities')}
+            description={t('activity_logs:subtitle')}
+            icon={Activity}
+            color="from-amber-500 to-amber-600"
+            onClick={() => { void navigate('/admin/activity-logs'); }}
+            delay={0.4}
+          />
         </div>
       </div>
 

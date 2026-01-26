@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useEffect, useRef, useCallback, useMemo } from 'react';
-import { logger } from '@/utils';
-
-import { useAuth } from '@/hooks';
+import { logger } from '../utils'; // Fixed path
+import { useAuth } from './AuthContext'; // Fixed path
 
 interface RealtimeContextType {
   isConnected: boolean;
@@ -129,7 +128,6 @@ export const RealtimeProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   );
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useRealtime = () => {
   const context = useContext(RealtimeContext);
   if (!context) throw new Error('useRealtime must be used within RealtimeProvider');

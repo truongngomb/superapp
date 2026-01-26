@@ -3,14 +3,20 @@
  * 
  * Mobile list view with infinite scroll for Roles.
  */
-import { useEffect } from 'react';
-import { useInView } from 'react-intersection-observer';
 import { useTranslation } from 'react-i18next';
-import { AnimatePresence, motion } from 'framer-motion';
-import { Loader2, CheckCircle2 } from 'lucide-react';
+import { 
+  ResourceMobileCard, 
+  ResourceMobileList,
+  ResourceCardSkeletonList,
+} from '@superapp/ui-kit';
+import { 
+  Edit2, 
+  Trash2, 
+  RotateCcw, 
+  Copy,
+  FileText
+} from 'lucide-react';
 import type { Role } from '@superapp/shared-types';
-import { RoleMobileCard } from './RoleMobileCard';
-import { RoleMobileCardSkeletonList } from './RoleMobileCardSkeleton';
 
 interface RoleMobileListProps {
   /** All roles to display */
@@ -50,73 +56,69 @@ export function RoleMobileList({
   onRestore,
   onDuplicate,
 }: RoleMobileListProps) {
-  const { t } = useTranslation('uikit');
+  const { t } = useTranslation(['roles', 'uikit']);
   
-  // IntersectionObserver for infinite scroll
-  const { ref: loadMoreRef, inView } = useInView({
-    threshold: 0,
-    rootMargin: '100px', // Trigger 100px before reaching bottom
-  });
-
-  // Trigger fetch when scrolling into view
-  useEffect(() => {
-    if (inView && hasNextPage && !isFetchingNextPage) {
-      void fetchNextPage();
-    }
-  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
-
-  // Initial loading state
-  if (isLoading && roles.length === 0) {
-    return <RoleMobileCardSkeletonList count={5} />;
-  }
-
   return (
-    <div className='grid gap-4'>
-      {/* Cards List */}
-      <AnimatePresence mode="popLayout">
-        {roles.map((role, index) => (
-          <RoleMobileCard
-            key={role.id}
-            role={role}
-            index={index}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            onRestore={onRestore}
-            onDuplicate={onDuplicate}
-            isSelected={selectedIds.includes(role.id)}
-            onSelect={onSelect}
-          />
-        ))}
-      </AnimatePresence>
-
-      {/* Infinite Scroll Trigger & Loading Indicator */}
-      <div
-        ref={loadMoreRef}
-        className="flex items-center justify-center py-4"
-      >
-        {isFetchingNextPage ? (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="flex items-center gap-2 text-muted-foreground"
-          >
-            <Loader2 className="w-5 h-5 animate-spin" />
-            <span className="text-sm">{t('loading')}</span>
-          </motion.div>
-        ) : hasNextPage ? (
-          // Invisible trigger zone
-          <div className="h-4" />
-        ) : roles.length > 0 ? (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-2 text-muted-foreground"
-          >
-            <CheckCircle2 className="w-4 h-4" />
-            <span className="text-sm">{t('list.end_of_list')}</span>
-          </motion.div>
-        ) : null}
-      </div>
-    </div>
+    <ResourceMobileList<Role>
+      items={roles}
+      keyExtractor={(item) => item.id}
+      hasNextPage={hasNextPage}
+      isFetchingNextPage={isFetchingNextPage}
+      fetchNextPage={fetchNextPage}
+      isLoading={isLoading}
+      skeleton={<ResourceCardSkeletonList count={5} infoRowsCount={1} actionsCount={3} />}
+      renderItem={(role, index) => (
+        <ResourceMobileCard
+          key={role.id}
+          id={role.id}
+          index={index}
+          title={role.name}
+          status={{
+            isActive: role.isActive,
+            isDeleted: role.isDeleted
+          }}
+          isSelected={selectedIds.includes(role.id)}
+          onSelect={onSelect}
+          infoRows={[
+            ...(role.description ? [{
+              icon: FileText,
+              label: t('uikit:form.description'),
+              value: role.description,
+              iconBgColor: 'bg-blue-500/20',
+              iconColor: 'text-blue-400'
+            }] : [])
+          ]}
+          actions={[
+            ...(!role.isDeleted ? [{
+              icon: Edit2,
+              label: t('uikit:edit'),
+              onClick: () => { onEdit(role); },
+              permission: { resource: 'roles', action: 'update' }
+            }] : (onRestore ? [{
+              icon: RotateCcw,
+              label: t('uikit:restore'),
+              onClick: () => { onRestore(role.id); },
+              permission: { resource: 'roles', action: 'update' },
+              variant: 'primary' as const
+            }] : [])),
+            ...(!role.isDeleted && onDuplicate ? [{
+               icon: Copy,
+               label: t('uikit:duplicate'),
+               onClick: () => { onDuplicate(role); },
+               permission: { resource: 'roles', action: 'create' },
+               iconColor: 'text-blue-400'
+            }] : []),
+            {
+              icon: Trash2,
+              label: t('uikit:delete'),
+              onClick: () => { onDelete(role.id); },
+              variant: 'danger',
+              permission: { resource: 'roles', action: 'delete' },
+              className: role.isDeleted ? 'text-red-700' : 'text-red-400'
+            }
+          ]}
+        />
+      )}
+    />
   );
 }

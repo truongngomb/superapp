@@ -1,7 +1,6 @@
 import { createContext, useContext } from 'react';
 import type { ToastType } from '@superapp/shared-types';
 
-// Re-export for convenience
 export type { ToastType };
 
 export interface ToastOptions {
