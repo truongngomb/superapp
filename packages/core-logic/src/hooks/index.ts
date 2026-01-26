@@ -9,3 +9,5 @@ export * from './useResource';
 export * from './useLayoutMode';
 export * from './useMediaQuery';
 export * from './useResponsiveView';
+export { useLayout, LayoutProvider } from '../context/LayoutContext';
+export { useSettings } from '../context/SettingsContext';

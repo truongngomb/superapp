@@ -1,9 +1,9 @@
 import { useCallback, useMemo, type ReactNode } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useAuth } from '@superapp/core-logic';
 import { settingsService, type SettingItem } from '@/services';
 import { queryKeys } from '@/config/queryClient';
 import { useToast } from '@/context';
-import { useAuth } from '@superapp/core-logic';
 import { SettingsContext } from './SettingsContext.base';
 import { getStorageItem, setStorageItem } from '@/utils';
 import { STORAGE_KEYS } from '@/config';

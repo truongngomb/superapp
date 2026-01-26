@@ -15,6 +15,7 @@ export const SettingsContext = createContext<SettingsContextType | null>(null);
 export function useSettings() {
   const context = useContext(SettingsContext);
   if (!context) {
+    console.error('[core-logic] useSettings failed: context is null. Ensure SettingsProvider wraps this component.');
     throw new Error('useSettings must be used within a SettingsProvider');
   }
   return context;
