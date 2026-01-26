@@ -66,6 +66,7 @@
     "delete_success": "{{entity}}을(를) 휴지통으로 이동했습니다!",
     "hard_delete_success": "{{entity}} 영구 삭제 성공!",
     "restore_success": "{{entity}} 복구 성공!",
+    "action_success": "작업이 성공적으로 완료되었습니다!",
     "batch_delete_success": "선택한 {{count}}개의 {{entities}}을(를) 휴지통으로 이동했습니다!",
     "batch_hard_delete_success": "{{count}}개의 {{entities}} 영구 삭제 성공!",
     "batch_restore_success": "{{count}}개의 {{entities}} 복구 성공!",

@@ -12,7 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
   SelectContent,
-  SelectItem
+  SelectItem,
+  Input
 } from '@/components/common';
 import { useSettings } from '@/hooks';
 import { settingsService, useToast } from '@superapp/core-logic';
@@ -81,9 +82,9 @@ export function GeneralSettings() {
     try {
       setSnapshotProcessing(true);
       await settingsService.triggerSnapshot();
-      success(t('settings:monitoring.trigger_success', 'Snapshot triggered successfully'));
+      success(t('settings:monitoring.trigger_success'));
     } catch {
-      showError(t('settings:monitoring.trigger_error', 'Failed to trigger snapshot'));
+      showError(t('settings:monitoring.trigger_error'));
     } finally {
       setSnapshotProcessing(false);
     }
@@ -163,24 +164,24 @@ export function GeneralSettings() {
             </div>
             
             <div className="flex items-center gap-2 w-full sm:w-auto">
-              <div className="relative w-full sm:w-32">
-                 <input 
-                    type="text" 
-                    className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    placeholder="1.0.0"
-                    defaultValue={getSettingValue<string>('system_version', '1.0.0')}
-                    onBlur={(e) => {
-                      if (e.target.value !== getSettingValue<string>('system_version', '1.0.0')) {
-                         void updateSetting('system_version', e.target.value, 'public');
-                      }
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        e.currentTarget.blur();
-                      }
-                    }}
-                 />
-              </div>
+              <div className="w-full sm:w-40">
+               <Input 
+                  type="text" 
+                  className="w-full"
+                  placeholder="1.0.0"
+                  defaultValue={getSettingValue<string>('system_version', '1.0.0')}
+                  onBlur={(e) => {
+                    if (e.target.value !== getSettingValue<string>('system_version', '1.0.0')) {
+                       void updateSetting('system_version', e.target.value, 'public');
+                    }
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.currentTarget.blur();
+                    }
+                  }}
+               />
+            </div>
               
               <Button 
                 variant="danger"
@@ -282,7 +283,7 @@ export function GeneralSettings() {
               <Button
                 variant="outline"
                 size="icon"
-                title={t('settings:monitoring.trigger_now', 'Trigger Snapshot Now')}
+                title={t('settings:monitoring.trigger_now')}
                 onClick={() => void handleTriggerSnapshot()}
                 disabled={snapshotProcessing || loading}
                 className="shrink-0 text-green-600 hover:text-green-700 hover:bg-green-50 dark:hover:bg-green-950/30"

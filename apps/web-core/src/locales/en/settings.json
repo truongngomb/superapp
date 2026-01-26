@@ -25,7 +25,10 @@
     "title": "Monitoring & Snapshots",
     "description": "Configure system monitoring and data retention settings",
     "snapshot_interval": "Snapshot Frequency",
-    "snapshot_interval_desc": "How often to aggregate request history"
+    "snapshot_interval_desc": "How often to aggregate request history",
+    "trigger_now": "Trigger Snapshot Now",
+    "trigger_success": "Snapshot triggered successfully",
+    "trigger_error": "Failed to trigger snapshot"
   },
   "layout": {
     "title": "Layout Configuration",

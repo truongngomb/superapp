@@ -66,6 +66,7 @@
     "delete_success": "Moved {{entity}} to Trash successfully!",
     "hard_delete_success": "Permanently deleted {{entity}}!",
     "restore_success": "{{entity}} restored successfully!",
+    "action_success": "Action completed successfully!",
     "batch_delete_success": "Moved {{count}} {{entities}} to Trash!",
     "batch_hard_delete_success": "Permanently deleted {{count}} {{entities}}!",
     "batch_restore_success": "Successfully restored {{count}} {{entities}}!",

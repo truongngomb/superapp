@@ -228,7 +228,7 @@ export function useUsers() {
     setSubmitting(true);
     try {
       await userService.assignRoles(userId, roleIds);
-      toast.success(t('uikit:toast.action_success', { defaultValue: 'Roles assigned successfully' }));
+      toast.success(t('uikit:toast.action_success'));
       await reloadUsers();
       return true;
     } catch (error) {

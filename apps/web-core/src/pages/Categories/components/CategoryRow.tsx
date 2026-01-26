@@ -48,7 +48,7 @@ export function CategoryRow({ index, style, data, isSelected, onSelect }: Catego
             variant="ghost"
             size="sm"
             onClick={(e) => { e.stopPropagation(); data.onDuplicate?.(category); }}
-            aria-label={t('duplicate', { defaultValue: 'Duplicate' })}
+            aria-label={t('duplicate')}
           >
             <Copy className="w-4 h-4 text-blue-500" />
           </Button>
@@ -66,7 +66,7 @@ export function CategoryRow({ index, style, data, isSelected, onSelect }: Catego
                   data.onRestore(category.id);
                 }
             }}
-            aria-label={t('restore', { defaultValue: 'Restore' })}
+            aria-label={t('restore')}
           >
             <RotateCcw className="w-4 h-4 text-primary" />
           </Button>

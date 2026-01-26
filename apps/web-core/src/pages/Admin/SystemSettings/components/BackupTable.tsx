@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Download, RefreshCw, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
-import { Button } from '@/components/common';
+import { Button, Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '@/components/common';
 import type { BackupItem } from '@superapp/shared-types';
 
 interface BackupTableProps {
@@ -38,28 +38,25 @@ export function BackupTable({ data, loading, onDownload, onRestore, onDelete }: 
   }
 
   return (
-    <div className="w-full overflow-auto rounded-lg border border-border bg-card shadow-sm">
-      <table className="w-full text-sm">
-        <thead className="bg-background text-muted-foreground">
-          <tr>
-            <th className="h-12 px-4 text-left font-medium">{t('backup.filename')}</th>
-            <th className="h-12 px-4 text-left font-medium">{t('backup.size')}</th>
-            <th className="h-12 px-4 text-left font-medium">{t('backup.date')}</th>
-            <th className="h-12 px-4 text-right font-medium">{t('backup.actions')}</th>
-          </tr>
-        </thead>
-        <tbody>
+    <div className="w-full overflow-hidden rounded-lg border border-border bg-card shadow-sm">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>{t('backup.filename')}</TableHead>
+            <TableHead>{t('backup.size')}</TableHead>
+            <TableHead>{t('backup.date')}</TableHead>
+            <TableHead className="text-right">{t('backup.actions')}</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {data.map((backup, index) => (
-            <tr 
-              key={backup.key || index} 
-              className="border-t border-border transition-colors hover:bg-muted/5"
-            >
-              <td className="p-4 align-middle font-medium">{backup.key}</td>
-              <td className="p-4 align-middle text-muted-foreground">{formatSize(backup.size)}</td>
-              <td className="p-4 align-middle text-muted-foreground">
+            <TableRow key={backup.key || index}>
+              <TableCell className="font-medium">{backup.key}</TableCell>
+              <TableCell className="text-muted-foreground">{formatSize(backup.size)}</TableCell>
+              <TableCell className="text-muted-foreground">
                 {format(new Date(backup.modified), 'PP pp')}
-              </td>
-              <td className="p-4 align-middle">
+              </TableCell>
+              <TableCell>
                 <div className="flex items-center justify-end gap-1">
                   <Button
                     variant="ghost"
@@ -86,11 +83,11 @@ export function BackupTable({ data, loading, onDownload, onRestore, onDelete }: 
                     <Trash2 className="w-4 h-4 text-red-500" />
                   </Button>
                 </div>
-              </td>
-            </tr>
+              </TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     </div>
   );
 }

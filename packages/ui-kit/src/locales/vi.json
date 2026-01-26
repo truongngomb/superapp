@@ -66,6 +66,7 @@
     "delete_success": "Đã chuyển {{entity}} vào Thùng rác thành công!",
     "hard_delete_success": "Đã xóa vĩnh viễn {{entity}}!",
     "restore_success": "Đã khôi phục {{entity}} thành công!",
+    "action_success": "Thực hiện thao tác thành công!",
     "batch_delete_success": "Đã chuyển {{count}} {{entities}} vào Thùng rác!",
     "batch_hard_delete_success": "Đã xóa vĩnh viễn {{count}} {{entities}}!",
     "batch_restore_success": "Đã khôi phục {{count}} {{entities}} thành công!",

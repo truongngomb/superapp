@@ -23,11 +23,11 @@ export function useMediaUpload(refId?: string, refType?: string) {
     setUploading(true);
     try {
       const response = await mediaService.upload(file, refId, refType);
-      toast.success(t('upload_success', { defaultValue: 'File uploaded successfully' }));
+      toast.success(t('upload_success'));
       return response.url;
     } catch (error: unknown) {
       console.error('Upload failed:', error);
-      toast.error(t('upload_error', { defaultValue: 'Upload failed' }));
+      toast.error(t('upload_error'));
       throw error;
     } finally {
       setUploading(false);

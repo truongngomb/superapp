@@ -25,7 +25,10 @@
     "title": "Giám sát & Snapshot",
     "description": "Cấu hình giám sát hệ thống và lưu trữ dữ liệu",
     "snapshot_interval": "Tần suất Snapshot",
-    "snapshot_interval_desc": "Tần gian tổng hợp lịch sử request"
+    "snapshot_interval_desc": "Tần gian tổng hợp lịch sử request",
+    "trigger_now": "Kích hoạt Snapshot ngay",
+    "trigger_success": "Đã kích hoạt Snapshot thành công",
+    "trigger_error": "Lỗi khi kích hoạt Snapshot"
   },
   "layout": {
     "title": "Cấu hình Giao diện",
