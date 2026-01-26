@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useCallback, useContext } from 'react';
 import { useLocation, Outlet } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Bell } from 'lucide-react';
@@ -10,7 +10,7 @@ import { IMenuItem } from '@superapp/shared-types';
 import { 
   useAuth, 
   useLayoutMode, 
-  useActivityLogContext, 
+  ActivityLogContext, 
   useLayout,
   useTheme,
   getStorageItem,
@@ -30,7 +30,10 @@ export function SharedLayoutAdapter({ menuItems: rawMenuItems, onViewAllNotifica
   const { headerContent } = useLayout();
   const location = useLocation();
   const { t } = useTranslation(['uikit', 'home']);
-  const { unreadCount } = useActivityLogContext();
+  
+  // Hande optional ActivityLogContext
+  const activityLog = useContext(ActivityLogContext);
+  const unreadCount = activityLog?.unreadCount || 0;
 
   const [notifOpen, setNotifOpen] = useState(false);
 
@@ -76,6 +79,8 @@ export function SharedLayoutAdapter({ menuItems: rawMenuItems, onViewAllNotifica
   }, [rawMenuItems, checkPermission]);
 
   const renderNotifications = () => {
+     if (!activityLog) return null;
+     
      return (
       <div className="relative">
         <Button

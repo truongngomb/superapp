@@ -59,5 +59,11 @@
         "step3": "A new draft project will be created for you to edit."
       }
     }
+  },
+  "status": {
+    "draft": "Draft",
+    "generating": "Generating",
+    "rendering": "Rendering",
+    "completed": "Completed"
   }
 }

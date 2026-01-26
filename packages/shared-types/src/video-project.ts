@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { BaseListParams } from './common.js';
+import { BaseListParams, BaseEntity } from './common.js';
 
 // Enums
 export const VIDEO_PROJECT_STATUS = {

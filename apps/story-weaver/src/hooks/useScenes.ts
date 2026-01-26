@@ -21,7 +21,7 @@ export const useCreateVideoScene = () => {
   return useMutation({
     mutationFn: (data: CreateVideoSceneInput) => videoSceneService.create(data),
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['video-scenes', variables.project_id] });
+      queryClient.invalidateQueries({ queryKey: ['video-scenes', variables.projectId] });
     }
   });
 };
@@ -32,7 +32,7 @@ export const useUpdateVideoScene = () => {
   return useMutation({
     mutationFn: ({ id, data }: { id: string, data: UpdateVideoSceneInput }) => videoSceneService.update(id, data),
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['video-scenes', data.project_id] });
+      queryClient.invalidateQueries({ queryKey: ['video-scenes', data.projectId] });
     }
   });
 };

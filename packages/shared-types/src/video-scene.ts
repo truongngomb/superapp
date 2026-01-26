@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const videoSceneSchema = z.object({
   id: z.string(),
-  project_id: z.string(),
+  projectId: z.string(),
   order: z.number(),
   script_text: z.string().optional(),
   visual_prompt: z.string().optional(),
@@ -20,7 +20,7 @@ export const videoSceneSchema = z.object({
 export type VideoScene = z.infer<typeof videoSceneSchema>;
 
 export const createVideoSceneSchema = z.object({
-  project_id: z.string(),
+  projectId: z.string(),
   order: z.number(),
   script_text: z.string().optional(),
   visual_prompt: z.string().optional(),
@@ -29,7 +29,7 @@ export const createVideoSceneSchema = z.object({
 });
 export type CreateVideoSceneInput = z.infer<typeof createVideoSceneSchema>;
 
-export const updateVideoSceneSchema = createVideoSceneSchema.partial().omit({ project_id: true }).extend({
+export const updateVideoSceneSchema = createVideoSceneSchema.partial().omit({ projectId: true }).extend({
     isActive: z.boolean().optional(),
     isDeleted: z.boolean().optional(),
 });

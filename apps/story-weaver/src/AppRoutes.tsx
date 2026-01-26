@@ -21,7 +21,7 @@ const SettingsPlaceholder = () => {
             <EmptyState 
                 icon={Settings}
                 title={t('uikit:settings')}
-                description="This feature is coming soon."
+                description={t('uikit:coming_soon')}
             />
         </div>
     );

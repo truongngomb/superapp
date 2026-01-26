@@ -42,7 +42,7 @@ export const EditorPage = () => {
                     <div>
                         <h1 className="font-bold text-lg">{project.name}</h1>
                         <Badge variant={project.status === 'completed' ? 'success' : project.status === 'rendering' ? 'primary' : 'secondary'} size="sm" className="mt-0.5">
-                            {t(`uikit:status.${project.status}`, { defaultValue: project.status })}
+                            {t(`video_projects:status.${project.status}`)}
                         </Badge>
                     </div>
                 </div>

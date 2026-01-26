@@ -59,5 +59,11 @@
         "step3": "Một dự án nháp mới sẽ được tạo để bạn chỉnh sửa."
       }
     }
+  },
+  "status": {
+    "draft": "Nháp",
+    "generating": "Đang soạn thảo",
+    "rendering": "Đang tạo video",
+    "completed": "Hoàn thành"
   }
 }

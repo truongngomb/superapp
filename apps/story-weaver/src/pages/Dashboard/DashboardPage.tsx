@@ -63,7 +63,7 @@ export const DashboardPage = () => {
                                         project.status === 'rendering' ? 'primary' :
                                         'secondary'
                                     } size="sm">
-                                        {t(`uikit:status.${project.status}`, { defaultValue: project.status })}
+                                        {t(`video_projects:status.${project.status}`)}
                                     </Badge>
                                 </div>
                             </CardContent>
