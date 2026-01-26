@@ -15,12 +15,12 @@ import {
 import { 
   ResourceMobileList,
   ResourceMobileCard,
+  ResourceCardSkeletonList,
   Avatar,
   Badge,
 } from '@superapp/ui-kit';
 import { cn } from '@superapp/core-logic';
 import type { ActivityLog } from '@superapp/shared-types';
-import { ActivityLogMobileCardSkeletonList } from './ActivityLogMobileCardSkeleton';
 
 interface ActivityLogWithUser extends Omit<ActivityLog, 'expand'> {
   expand?: {
@@ -83,7 +83,7 @@ export function ActivityLogMobileList({
       isFetchingNextPage={isFetchingNextPage}
       fetchNextPage={fetchNextPage}
       isLoading={isLoading}
-      skeleton={<ActivityLogMobileCardSkeletonList count={5} />}
+      skeleton={<ResourceCardSkeletonList count={5} infoRowsCount={3} actionsCount={0} />}
       renderItem={(log, index) => {
         const actionColor = getActionColor(log.action);
         

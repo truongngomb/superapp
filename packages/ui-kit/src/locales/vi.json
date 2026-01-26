@@ -63,7 +63,7 @@
   "toast": {
     "create_success": "Tạo {{entity}} thành công!",
     "update_success": "Cập nhật {{entity}} thành công!",
-    "delete_success": "Đã chuyển vào Thùng rác thành công!",
+    "delete_success": "Đã chuyển {{entity}} vào Thùng rác thành công!",
     "hard_delete_success": "Đã xóa vĩnh viễn {{entity}}!",
     "restore_success": "Đã khôi phục {{entity}} thành công!",
     "batch_delete_success": "Đã chuyển {{count}} {{entities}} vào Thùng rác!",

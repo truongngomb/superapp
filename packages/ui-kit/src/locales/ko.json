@@ -63,10 +63,10 @@
   "toast": {
     "create_success": "{{entity}} 생성 성공!",
     "update_success": "{{entity}} 수정 성공!",
-    "delete_success": "휴지통으로 이동 성공!",
+    "delete_success": "{{entity}}을(를) 휴지통으로 이동했습니다!",
     "hard_delete_success": "{{entity}} 영구 삭제 성공!",
     "restore_success": "{{entity}} 복구 성공!",
-    "batch_delete_success": "{{count}}개의 {{entities}} 휴지통 이동 성공!",
+    "batch_delete_success": "선택한 {{count}}개의 {{entities}}을(를) 휴지통으로 이동했습니다!",
     "batch_hard_delete_success": "{{count}}개의 {{entities}} 영구 삭제 성공!",
     "batch_restore_success": "{{count}}개의 {{entities}} 복구 성공!",
     "batch_status_success": "{{count}}개의 {{entities}} 상태 변경 성공!",

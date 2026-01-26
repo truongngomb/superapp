@@ -11,10 +11,9 @@ import { queryClient } from '@/config/queryClient';
 import {
   ToastProvider,
   RealtimeProvider,
-  SettingsProvider,
+  SettingsProvider
 } from '@/context';
-import { AuthProvider, ThemeProvider, LayoutProvider } from '@superapp/core-logic';
-import { ActivityLogProvider } from '@/context/ActivityLogContext';
+import { AuthProvider, ThemeProvider, LayoutProvider, ActivityLogProvider } from '@superapp/core-logic';
 
 interface AppProvidersProps {
   children: ReactNode;

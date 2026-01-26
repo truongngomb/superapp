@@ -83,7 +83,8 @@ export function useUsers() {
     setSubmitting(true);
     try {
       await userService.create(data);
-      toast.success(t('uikit:toast.create_success'));
+      const entity = t('users:entity');
+      toast.success(t('uikit:toast.create_success', { entity }));
       await reloadUsers();
       return true;
     } catch (error) {
@@ -99,7 +100,8 @@ export function useUsers() {
     setSubmitting(true);
     try {
       await userService.updateUser(id, data);
-      toast.success(t('uikit:toast.update_success'));
+      const entity = t('users:entity');
+      toast.success(t('uikit:toast.update_success', { entity }));
       await reloadUsers();
       return true;
     } catch (error) {
@@ -115,7 +117,8 @@ export function useUsers() {
     setSubmitting(true);
     try {
       await userService.restoreUser(id);
-      toast.success(t('uikit:toast.restore_success'));
+      const entity = t('users:entity');
+      toast.success(t('uikit:toast.restore_success', { entity }));
       await reloadUsers();
       return true;
     } catch (error) {
@@ -130,8 +133,14 @@ export function useUsers() {
   const deleteUser = async (id: string) => {
     setDeleting(true);
     try {
+      const user = users.find(u => u.id === id);
       await userService.deleteUser(id);
-      toast.success(t('uikit:toast.delete_success'));
+      const entity = t('users:entity');
+      const successMessage = user?.isDeleted 
+        ? t('uikit:toast.hard_delete_success', { entity }) 
+        : t('uikit:toast.delete_success', { entity });
+      
+      toast.success(successMessage);
       await reloadUsers();
       return true;
     } catch (error) {
@@ -146,8 +155,14 @@ export function useUsers() {
   const deleteUsers = async (ids: string[]) => {
     setBatchDeleting(true);
     try {
+      const hasDeleted = ids.some(id => users.find(u => u.id === id)?.isDeleted);
       await userService.deleteMany(ids);
-      toast.success(t('uikit:toast.batch_delete_success', { count: ids.length }));
+      const entities = t('users:entities');
+      const successMessage = hasDeleted
+        ? t('uikit:toast.batch_hard_delete_success', { count: ids.length, entities })
+        : t('uikit:toast.batch_delete_success', { count: ids.length, entities });
+
+      toast.success(successMessage);
       await reloadUsers();
       return true;
     } catch (error) {
@@ -163,7 +178,8 @@ export function useUsers() {
     setSubmitting(true);
     try {
       await userService.restoreMany(ids);
-      toast.success(t('uikit:toast.batch_restore_success', { count: ids.length }));
+      const entities = t('users:entities');
+      toast.success(t('uikit:toast.batch_restore_success', { count: ids.length, entities }));
       await reloadUsers();
       return true;
     } catch (error) {
@@ -179,7 +195,8 @@ export function useUsers() {
     setSubmitting(true);
     try {
       await userService.batchUpdateStatus(ids, isActive);
-      toast.success(t('uikit:toast.batch_status_success', { count: ids.length }));
+      const entities = t('users:entities');
+      toast.success(t('uikit:toast.batch_status_success', { count: ids.length, entities }));
       await reloadUsers();
       return true;
     } catch (error) {

@@ -62,7 +62,7 @@ export function StatCard({
                "p-3 rounded-xl bg-gradient-to-br text-white shadow-lg mt-1",
                color
             )}>
-              {typeof icon === 'function' ? <Icon className="w-6 h-6" /> : icon}
+              {icon && (typeof icon === 'function' || (typeof icon === 'object' && !React.isValidElement(icon))) ? <Icon className="w-6 h-6" /> : icon}
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-1">

@@ -48,7 +48,7 @@ export function DataTableSkeleton({
         return <Skeleton className="h-5 w-16 rounded-full" />;
       case 'actions':
         return (
-          <div className="flex items-center gap-1.5 ml-auto">
+          <div className="flex items-center gap-2">
             <Skeleton className="w-8 h-8 rounded-md" />
             <Skeleton className="w-8 h-8 rounded-md" />
             <Skeleton className="w-8 h-8 rounded-md" />

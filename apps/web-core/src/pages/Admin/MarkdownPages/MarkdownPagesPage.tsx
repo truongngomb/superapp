@@ -38,6 +38,7 @@ import {
   useInfiniteResource,
   useAuth
 } from "@/hooks";
+import { useToast } from "@/context";
 
 import { markdownService } from "@/services";
 
@@ -51,6 +52,7 @@ const MarkdownPageForm = lazy(() => import("./components/MarkdownPageForm").then
 
 export default function MarkdownPagesPage() {
   const { t } = useTranslation(["markdown", "uikit"]);
+  const toast = useToast();
   const [searchParams] = useSearchParams();
   
   // Setup Search
@@ -104,6 +106,43 @@ export default function MarkdownPagesPage() {
       order: sortConfig.order,
       isDeleted: showArchived || undefined,
     },
+    onSuccess: (action, count) => {
+      const entity = t('markdown:name');
+      const entities = t('markdown:name');
+
+      switch (action) {
+        case 'create':
+          toast.success(t('uikit:toast.create_success', { entity }));
+          break;
+        case 'update':
+          toast.success(t('uikit:toast.update_success', { entity }));
+          break;
+        case 'delete': {
+          const isHardDelete = pages.find(p => p.id === deleteId)?.isDeleted;
+          toast.success(t(isHardDelete ? 'uikit:toast.hard_delete_success' : 'uikit:toast.delete_success', { entity }));
+          break;
+        }
+        case 'restore':
+          toast.success(t('uikit:toast.restore_success', { entity }));
+          break;
+        case 'batch_delete': {
+          const isBatchHardDelete = selectedIds.some(id => pages.find(p => p.id === id)?.isDeleted);
+          toast.success(t(isBatchHardDelete ? 'uikit:toast.batch_hard_delete_success' : 'uikit:toast.batch_delete_success', { count, entities }));
+          break;
+        }
+        case 'batch_restore':
+          toast.success(t('uikit:toast.batch_restore_success', { count, entities }));
+          break;
+        case 'batch_status':
+          toast.success(t('uikit:toast.batch_status_success', { count, entities }));
+          break;
+      }
+    },
+    onError: (action, error) => {
+      const message = error instanceof Error ? error.message : t('uikit:toast.error');
+      const actionLabel = t(`uikit:${action}`, { defaultValue: action });
+      toast.error(`${actionLabel}: ${message}`);
+    }
   });
 
   // Responsive View
@@ -227,7 +266,6 @@ export default function MarkdownPagesPage() {
         onExport={() => { void handleExport(); }}
         onCreateClick={() => { setEditingPage(undefined); setShowForm(true); }}
         createButtonKey="markdown:create_title"
-        icon={<FileText className="w-8 h-8 md:w-10 md:h-10 text-primary" />}
       />
 
       {/* Search & Filter */}

@@ -84,7 +84,8 @@ export function useMarkdownPages() {
     setSubmitting(true);
     try {
       await markdownService.create(data);
-      toast.success(t('uikit:toast.create_success'));
+      const entity = t('markdown:name');
+      toast.success(t('uikit:toast.create_success', { entity }));
       await reloadPages();
       return true;
     } catch (error) {
@@ -100,7 +101,8 @@ export function useMarkdownPages() {
     setSubmitting(true);
     try {
       await markdownService.update(id, data);
-      toast.success(t('uikit:toast.update_success'));
+      const entity = t('markdown:name');
+      toast.success(t('uikit:toast.update_success', { entity }));
       await reloadPages();
       return true;
     } catch (error) {
@@ -118,9 +120,10 @@ export function useMarkdownPages() {
       const page = pages.find(p => p.id === id);
       await markdownService.delete(id);
       
+      const entity = t('markdown:name');
       const successMessage = page?.isDeleted 
-        ? t('uikit:toast.hard_delete_success') 
-        : t('uikit:toast.delete_success');
+        ? t('uikit:toast.hard_delete_success', { entity }) 
+        : t('uikit:toast.delete_success', { entity });
       
       toast.success(successMessage);
       await reloadPages();
@@ -140,9 +143,10 @@ export function useMarkdownPages() {
       const hasDeleted = ids.some(id => pages.find(p => p.id === id)?.isDeleted);
       await markdownService.deleteMany(ids);
       
+      const entities = t('markdown:name');
       const successMessage = hasDeleted
-        ? t('uikit:toast.batch_hard_delete_success', { count: ids.length })
-        : t('uikit:toast.batch_delete_success', { count: ids.length });
+        ? t('uikit:toast.batch_hard_delete_success', { count: ids.length, entities })
+        : t('uikit:toast.batch_delete_success', { count: ids.length, entities });
 
       toast.success(successMessage);
       await reloadPages();
@@ -160,7 +164,8 @@ export function useMarkdownPages() {
     setSubmitting(true);
     try {
       await markdownService.restore(id);
-      toast.success(t('uikit:toast.restore_success'));
+      const entity = t('markdown:name');
+      toast.success(t('uikit:toast.restore_success', { entity }));
       await reloadPages();
       return true;
     } catch (error) {
@@ -176,7 +181,8 @@ export function useMarkdownPages() {
     setSubmitting(true);
     try {
       await markdownService.restoreMany(ids);
-      toast.success(t('uikit:toast.batch_restore_success', { count: ids.length }));
+      const entities = t('markdown:name');
+      toast.success(t('uikit:toast.batch_restore_success', { count: ids.length, entities }));
       await reloadPages();
       return true;
     } catch (error) {
@@ -192,7 +198,8 @@ export function useMarkdownPages() {
     setSubmitting(true);
     try {
       await markdownService.batchUpdateStatus(ids, isActive);
-      toast.success(t('uikit:toast.batch_status_success', { count: ids.length }));
+      const entities = t('markdown:name');
+      toast.success(t('uikit:toast.batch_status_success', { count: ids.length, entities }));
       await reloadPages();
       return true;
     } catch (error) {

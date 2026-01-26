@@ -2,7 +2,5 @@
  * Context Module Exports
  */
 
-export { AuthProvider, ThemeProvider, useTheme, AuthContext, useAuth } from '@superapp/core-logic';
-export type { AuthContextType } from '@superapp/core-logic';
-export * from './SettingsContext';
+export { AuthProvider, ThemeProvider, useTheme, AuthContext, useAuth, type AuthContextType } from '@superapp/core-logic';
 export { ToastProvider, useToast, ToastContext } from '@superapp/ui-kit';

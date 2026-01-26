@@ -17,7 +17,7 @@ import { config, checkPocketBaseHealth } from './config/index.js';
 import { createLogger } from './utils/index.js';
 import { schedulerService } from './services/scheduler.service.js';
 
-const log = createLogger('Server');
+const logger = createLogger('Server');
 
 // =============================================================================
 // Server Startup
@@ -28,7 +28,7 @@ async function startServer(): Promise<void> {
   const dbHealthy = await checkPocketBaseHealth();
   
   if (!dbHealthy) {
-    log.warn('PocketBase is not available. Server will start with limited functionality.');
+    logger.warn('PocketBase is not available. Server will start with limited functionality.');
   }
 
   // Initialize Scheduler
@@ -36,7 +36,7 @@ async function startServer(): Promise<void> {
 
   // Start Express server
   const server = app.listen(config.port, config.host, () => {
-    log.info(`
+    logger.info(`
 🚀 SuperApp Server is running!
 📍 Environment: ${config.nodeEnv}
 🌐 URL: ${config.serverUrl}
@@ -48,15 +48,15 @@ async function startServer(): Promise<void> {
 
   // Graceful shutdown
   const shutdown = (signal: string) => {
-    log.info(`${signal} received. Shutting down gracefully...`);
+    logger.info(`${signal} received. Shutting down gracefully...`);
     server.close(() => {
-      log.info('Server closed.');
+      logger.info('Server closed.');
       process.exit(0);
     });
 
     // Force close after 10 seconds
     setTimeout(() => {
-      log.error('Forced shutdown after timeout.');
+      logger.error('Forced shutdown after timeout.');
       process.exit(1);
     }, config.server.gracefulShutdownTimeout);
   };
@@ -70,6 +70,6 @@ async function startServer(): Promise<void> {
 // =============================================================================
 
 startServer().catch((error: unknown) => {
-  log.error('Failed to start server', error);
+  logger.error('Failed to start server', error);
   process.exit(1);
 });

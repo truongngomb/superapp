@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { 
   ResourceMobileList,
   ResourceMobileCard,
-  ResourceCardSkeleton,
+  ResourceCardSkeletonList,
   Badge,
 } from '@superapp/ui-kit';
 import { Edit, Trash2, Globe, FileText, Image as ImageIcon, Languages, Link as LinkIcon, Menu } from 'lucide-react';
@@ -58,7 +58,7 @@ export function MarkdownPageMobileList({
       isFetchingNextPage={isFetchingNextPage}
       fetchNextPage={fetchNextPage}
       isLoading={isLoading}
-      skeleton={<div className="space-y-4">{Array.from({ length: 5 }).map((_, i) => <ResourceCardSkeleton key={i} infoRowsCount={2} actionsCount={4} />)}</div>}
+      skeleton={<ResourceCardSkeletonList count={5} infoRowsCount={3} actionsCount={4} />}
       renderItem={(page, index) => {
         const lang = i18n.language;
         const trans = page.translations[lang] || page.translations['en'] || Object.values(page.translations)[0];

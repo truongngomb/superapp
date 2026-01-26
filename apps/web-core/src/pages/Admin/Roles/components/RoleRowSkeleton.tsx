@@ -30,12 +30,10 @@ export function RoleRowSkeleton() {
           </div>
           {/* Description placeholder */}
           <Skeleton className="h-4 w-1/2" />
-          {/* Permissions count placeholder */}
-          <Skeleton className="h-3 w-24" />
         </div>
         
         {/* Actions placeholder */}
-        <div className="flex items-center justify-end gap-2 w-full md:w-auto border-t md:border-t-0 pt-3 md:pt-0 mt-2 md:mt-0">
+        <div className="flex items-center justify-end gap-5 w-full md:w-auto border-t md:border-t-0 pt-3 md:pt-0 mt-2 md:mt-0">
           <Skeleton className="w-8 h-8 rounded-md" />
           <Skeleton className="w-8 h-8 rounded-md" />
           <Skeleton className="w-8 h-8 rounded-md" />

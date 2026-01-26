@@ -3,7 +3,7 @@ import { PageHeader, GradientText, EmptyState, Card, CardContent, CardTitle, Car
 import { useVideoProjects } from '@/hooks/useProjects';
 import { CreateProjectModal } from './components/CreateProjectModal';
 import { useNavigate } from 'react-router-dom';
-import { Rocket, Video } from 'lucide-react';
+import { Video } from 'lucide-react';
 
 export const DashboardPage = () => {
     const { projects, isLoading } = useVideoProjects();
@@ -20,7 +20,6 @@ export const DashboardPage = () => {
                 showExport={false}
                 onCreateClick={() => setIsCreateModalOpen(true)}
                 createButtonKey="Create Project"
-                icon={<Rocket className="w-8 h-8 md:w-10 md:h-10 text-primary" />}
             >
                 <GradientText className="text-sm font-semibold mr-4">AI Ready</GradientText>
             </PageHeader>

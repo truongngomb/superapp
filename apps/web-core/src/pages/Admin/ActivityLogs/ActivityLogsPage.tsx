@@ -162,7 +162,6 @@ export default function ActivityLogsPage() {
           exporting={exporting}
           itemCount={logs.length}
           onExport={() => { void handleExport(); }}
-          icon={<Search className="w-8 h-8 md:w-10 md:h-10 text-primary" />}
         />
 
         {/* Search and filters */}

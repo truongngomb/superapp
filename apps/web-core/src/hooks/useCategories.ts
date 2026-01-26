@@ -84,7 +84,8 @@ export function useCategories() {
     setSubmitting(true);
     try {
       await categoryService.create(data);
-      toast.success(t('uikit:toast.create_success'));
+      const entity = t('categories:entity');
+      toast.success(t('uikit:toast.create_success', { entity }));
       // Reload list after create
       await reloadCategories();
       return true;
@@ -101,7 +102,8 @@ export function useCategories() {
     setSubmitting(true);
     try {
       await categoryService.update(id, data);
-      toast.success(t('uikit:toast.update_success'));
+      const entity = t('categories:entity');
+      toast.success(t('uikit:toast.update_success', { entity }));
       // Reload list after update
       await reloadCategories();
       return true;
@@ -120,9 +122,10 @@ export function useCategories() {
       const category = categories.find(c => c.id === id);
       await categoryService.delete(id);
       
+      const entity = t('categories:entity');
       const successMessage = category?.isDeleted 
-        ? t('uikit:toast.hard_delete_success') 
-        : t('uikit:toast.delete_success');
+        ? t('uikit:toast.hard_delete_success', { entity }) 
+        : t('uikit:toast.delete_success', { entity });
       
       toast.success(successMessage);
       // Reload list after delete
@@ -143,9 +146,10 @@ export function useCategories() {
       const hasDeleted = ids.some(id => categories.find(c => c.id === id)?.isDeleted);
       await categoryService.deleteMany(ids);
       
+      const entities = t('categories:entities');
       const successMessage = hasDeleted
-        ? t('uikit:toast.batch_hard_delete_success', { count: ids.length })
-        : t('uikit:toast.batch_delete_success', { count: ids.length });
+        ? t('uikit:toast.batch_hard_delete_success', { count: ids.length, entities })
+        : t('uikit:toast.batch_delete_success', { count: ids.length, entities });
 
       toast.success(successMessage);
       // Reload list after delete
@@ -166,7 +170,8 @@ export function useCategories() {
       // Assuming categoryService has a batchUpdateStatus or we use a custom fetch
       // For now, let's use the explicit endpoint we added to Backend
       await categoryService.batchUpdateStatus(ids, isActive);
-      toast.success(t('uikit:toast.batch_status_success', { count: ids.length }));
+      const entities = t('categories:entities');
+      toast.success(t('uikit:toast.batch_status_success', { count: ids.length, entities }));
       await reloadCategories();
       return true;
     } catch (error) {
@@ -183,7 +188,8 @@ export function useCategories() {
     setSubmitting(true);
     try {
       await categoryService.restore(id);
-      toast.success(t('uikit:toast.restore_success', { defaultValue: 'Category restored successfully' }));
+      const entity = t('categories:entity');
+      toast.success(t('uikit:toast.restore_success', { entity }));
       // Reload list after restore
       await reloadCategories();
       return true;
@@ -202,7 +208,8 @@ export function useCategories() {
     setSubmitting(true);
     try {
       await categoryService.restoreMany(ids);
-      toast.success(t('uikit:toast.batch_restore_success', { count: ids.length, defaultValue: 'Successfully restored {{count}} categories' }));
+      const entities = t('categories:entities');
+      toast.success(t('uikit:toast.batch_restore_success', { count: ids.length, entities }));
       await reloadCategories();
       return true;
     } catch (error) {

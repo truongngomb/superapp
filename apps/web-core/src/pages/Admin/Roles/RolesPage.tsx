@@ -20,6 +20,7 @@ import { ViewMode } from "@superapp/shared-types";
 import { getStorageItem, setStorageItem } from "@/utils";
 import { STORAGE_KEYS } from "@/config";
 import { useSort, useDebounce, useAuth, useResource, useExcelExport, useResponsiveView, useInfiniteResource } from "@/hooks";
+import { useToast } from "@/context";
 
 import { roleService } from "@/services";
 
@@ -35,6 +36,7 @@ import { useSearchParams } from "react-router-dom";
 
 export default function RolesPage() {
   const { t } = useTranslation(["roles", "uikit"]);
+  const toast = useToast();
   const { checkPermission } = useAuth();
   const [searchParams] = useSearchParams();
   
@@ -97,6 +99,43 @@ export default function RolesPage() {
        limit: 10,
        sort: sortConfig.field,
        order: sortConfig.order
+    },
+    onSuccess: (action, count) => {
+      const entity = t('roles:entity');
+      const entities = t('roles:entities');
+
+      switch (action) {
+        case 'create':
+          toast.success(t('uikit:toast.create_success', { entity }));
+          break;
+        case 'update':
+          toast.success(t('uikit:toast.update_success', { entity }));
+          break;
+        case 'delete': {
+          const isHardDelete = roles.find(r => r.id === deleteId)?.isDeleted;
+          toast.success(t(isHardDelete ? 'uikit:toast.hard_delete_success' : 'uikit:toast.delete_success', { entity }));
+          break;
+        }
+        case 'restore':
+          toast.success(t('uikit:toast.restore_success', { entity }));
+          break;
+        case 'batch_delete': {
+          const isBatchHardDelete = selectedIds.some(id => roles.find(r => r.id === id)?.isDeleted);
+          toast.success(t(isBatchHardDelete ? 'uikit:toast.batch_hard_delete_success' : 'uikit:toast.batch_delete_success', { count, entities }));
+          break;
+        }
+        case 'batch_restore':
+          toast.success(t('uikit:toast.batch_restore_success', { count, entities }));
+          break;
+        case 'batch_status':
+          toast.success(t('uikit:toast.batch_status_success', { count, entities }));
+          break;
+      }
+    },
+    onError: (action, error) => {
+      const message = error instanceof Error ? error.message : t('uikit:toast.error');
+      const actionLabel = t(`uikit:${action}`, { defaultValue: action });
+      toast.error(`${actionLabel}: ${message}`);
     }
   });
 
@@ -234,7 +273,6 @@ export default function RolesPage() {
         onExport={() => { void handleExport(); }}
         onCreateClick={() => { setEditingRole(null); setShowForm(true); }}
         createButtonKey="roles:create_btn"
-        icon={<Shield className="w-8 h-8 md:w-10 md:h-10 text-primary" />}
       />
 
       {/* Toolbar */}

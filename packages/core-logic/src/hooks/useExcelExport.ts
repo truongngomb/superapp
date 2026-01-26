@@ -5,9 +5,12 @@
  */
 import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Workbook } from 'exceljs';
-import { saveAs } from 'file-saver';
+import ExcelJS from 'exceljs';
+import saveAs from 'file-saver';
 import { logger } from '../utils';
+
+// Access Workbook from ExcelJS default import to support ESM
+const { Workbook } = ExcelJS;
 
 export interface ExportColumn<T> {
   /** Property key - supports dot notation for nested properties (e.g. 'expand.user.name') */

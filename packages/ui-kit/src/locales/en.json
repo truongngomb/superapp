@@ -63,7 +63,7 @@
   "toast": {
     "create_success": "{{entity}} created successfully!",
     "update_success": "{{entity}} updated successfully!",
-    "delete_success": "Moved to Trash successfully!",
+    "delete_success": "Moved {{entity}} to Trash successfully!",
     "hard_delete_success": "Permanently deleted {{entity}}!",
     "restore_success": "{{entity}} restored successfully!",
     "batch_delete_success": "Moved {{count}} {{entities}} to Trash!",

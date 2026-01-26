@@ -105,6 +105,43 @@ export default function UsersPage() {
        limit: 10,
        sort: sortConfig.field,
        order: sortConfig.order
+    },
+    onSuccess: (action, count) => {
+      const entity = t('users:entity');
+      const entities = t('users:entities');
+
+      switch (action) {
+        case 'create':
+          success(t('uikit:toast.create_success', { entity }));
+          break;
+        case 'update':
+          success(t('uikit:toast.update_success', { entity }));
+          break;
+        case 'delete': {
+          const isHardDelete = users.find(u => u.id === deleteId)?.isDeleted;
+          success(t(isHardDelete ? 'uikit:toast.hard_delete_success' : 'uikit:toast.delete_success', { entity }));
+          break;
+        }
+        case 'restore':
+          success(t('uikit:toast.restore_success', { entity }));
+          break;
+        case 'batch_delete': {
+          const isBatchHardDelete = selectedIds.some(id => users.find(u => u.id === id)?.isDeleted);
+          success(t(isBatchHardDelete ? 'uikit:toast.batch_hard_delete_success' : 'uikit:toast.batch_delete_success', { count, entities }));
+          break;
+        }
+        case 'batch_restore':
+          success(t('uikit:toast.batch_restore_success', { count, entities }));
+          break;
+        case 'batch_status':
+          success(t('uikit:toast.batch_status_success', { count, entities }));
+          break;
+      }
+    },
+    onError: (action, error) => {
+      const message = error instanceof Error ? error.message : t('uikit:toast.error');
+      const actionLabel = t(`uikit:${action}`, { defaultValue: action });
+      errorToast(`${actionLabel}: ${message}`);
     }
   });
 
@@ -261,7 +298,6 @@ export default function UsersPage() {
         onExport={() => { void handleExport(); }}
         onCreateClick={() => { setEditingUser(null); setShowForm(true); }}
         createButtonKey="users:create_btn"
-        icon={<Users className="w-8 h-8 md:w-10 md:h-10 text-primary" />}
       />
 
       {/* Search Filter Bar */}

@@ -13,7 +13,10 @@ export {
   ActivityLogContext,
   RealtimeProvider,
   useRealtime,
+  SettingsContext,
+  SettingsProvider,
+  type SettingsContextType,
+  type AuthContextType,
+  type ActivityLogContextType
 } from '@superapp/core-logic';
-export type { AuthContextType, ActivityLogContextType } from '@superapp/core-logic';
-export * from './SettingsContext';
 export { ToastProvider, useToast, ToastContext } from '@superapp/ui-kit';

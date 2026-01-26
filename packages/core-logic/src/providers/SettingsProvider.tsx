@@ -1,9 +1,8 @@
+import { SettingItem } from '@superapp/shared-types';
 import { useState, useCallback, useEffect, useMemo, ReactNode } from 'react';
-import { SettingsContext } from './SettingsContext.base';
-import type { SettingsContextType } from './SettingsContext.types';
-import { settingsService, SettingItem } from '@/services';
-import { logger } from '@/utils';
-import { useAuth } from '@superapp/core-logic';
+import { SettingsContext, SettingsContextType, useAuth } from '../context';
+import { settingsService } from '../services';
+import { logger } from '../utils';
 
 interface SettingsProviderProps {
   children: ReactNode;

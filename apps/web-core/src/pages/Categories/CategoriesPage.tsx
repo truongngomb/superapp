@@ -20,6 +20,7 @@ import type { Category, CreateCategoryInput, SortColumn, CategoryListParams, Vie
 import { getStorageItem, setStorageItem } from "@/utils";
 import { STORAGE_KEYS } from "@/config";
 import { useResource, useSort, useDebounce, useAuth, useExcelExport, useResponsiveView, useInfiniteResource } from "@/hooks";
+import { useToast } from "@/context";
 
 import { categoryService } from "@/services";
 import { CategoryForm } from "./components/CategoryForm";
@@ -33,6 +34,7 @@ import { CategoryMobileList } from "./components/CategoryMobileList";
 
 export default function CategoriesPage() {
   const { t } = useTranslation(["categories", "uikit"]);
+  const toast = useToast();
   const [searchParams] = useSearchParams();
   
   // Setup Search
@@ -90,6 +92,44 @@ export default function CategoriesPage() {
        limit: 10,
        sort: sortConfig.field,
        order: sortConfig.order
+    },
+    onSuccess: (action, count) => {
+      const entity = t('categories:entity');
+      const entities = t('categories:entities');
+
+      switch (action) {
+        case 'create':
+          toast.success(t('uikit:toast.create_success', { entity }));
+          break;
+        case 'update':
+          toast.success(t('uikit:toast.update_success', { entity }));
+          break;
+        case 'delete': {
+          const isHardDelete = categories.find(c => c.id === deleteId)?.isDeleted;
+          toast.success(t(isHardDelete ? 'uikit:toast.hard_delete_success' : 'uikit:toast.delete_success', { entity }));
+          break;
+        }
+        case 'restore':
+          toast.success(t('uikit:toast.restore_success', { entity }));
+          break;
+        case 'batch_delete': {
+          const isBatchHardDelete = selectedIds.some(id => categories.find(c => c.id === id)?.isDeleted);
+          toast.success(t(isBatchHardDelete ? 'uikit:toast.batch_hard_delete_success' : 'uikit:toast.batch_delete_success', { count, entities }));
+          break;
+        }
+        case 'batch_restore':
+          toast.success(t('uikit:toast.batch_restore_success', { count, entities }));
+          break;
+        case 'batch_status':
+          toast.success(t('uikit:toast.batch_status_success', { count, entities }));
+          break;
+      }
+    },
+    onError: (action, error) => {
+      const message = error instanceof Error ? error.message : t('uikit:toast.error');
+      // Use direct translation key if available, otherwise fallback to action code
+      const actionLabel = t(`uikit:${action}`, { defaultValue: action });
+      toast.error(`${actionLabel}: ${message}`);
     }
   });
 
@@ -244,7 +284,6 @@ export default function CategoriesPage() {
         onExport={() => { void handleExport(); }}
         onCreateClick={() => { setShowForm(true); }}
         createButtonKey="categories:create_btn"
-        icon={<Folder className="w-8 h-8 md:w-10 md:h-10 text-primary" />}
       />
 
       {/* Search Filter Bar */}
