@@ -6,7 +6,7 @@ import {
   Avatar,
   PermissionGuard
 } from '@superapp/ui-kit';
-import { DataTable, type DataTableColumn } from '@/components/common';
+import { DataTable, type DataTableColumn } from '@superapp/ui-kit';
 import { MarkdownPage } from '@superapp/shared-types';
 import { Edit, Trash2, Globe, FileText, Languages } from 'lucide-react';
 

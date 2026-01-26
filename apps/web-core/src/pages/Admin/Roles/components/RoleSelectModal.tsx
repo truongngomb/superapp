@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Shield, X } from 'lucide-react';
-import { Button, Modal, Badge, Checkbox } from '@/components/common';
+import { Button, Modal, Badge, Checkbox } from '@superapp/ui-kit';
 import type { User, Role } from '@superapp/shared-types';
 
 interface RoleSelectModalProps {

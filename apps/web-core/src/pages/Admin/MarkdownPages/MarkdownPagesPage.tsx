@@ -18,7 +18,7 @@ import {
   PageHeader,
   ResourceConfirmModals,
   ResourceCardSkeletonList,
-} from "@/components/common";
+} from "@superapp/ui-kit";
 import type { 
   MarkdownPage, 
   MarkdownPageCreateInput, 

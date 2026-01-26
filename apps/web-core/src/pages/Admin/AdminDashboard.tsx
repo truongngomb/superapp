@@ -8,7 +8,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Users, Shield, FolderTree, Activity, Clock, Cpu, HardDrive, Server, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Card, CardContent, Skeleton, Button, StatCard } from '@/components/common';
+import { Card, CardContent, Skeleton, Button, StatCard } from '@superapp/ui-kit';
 import { roleService, userService, categoryService, activityLogService } from '@/services';
 import { systemService } from '@superapp/core-logic';
 import type { SystemStats } from '@superapp/shared-types';

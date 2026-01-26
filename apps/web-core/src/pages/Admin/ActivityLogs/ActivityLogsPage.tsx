@@ -4,7 +4,7 @@ import { AnimatePresence, motion as framerMotion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import { RefreshCw, Search, Loader2 } from 'lucide-react';
-import { Button, Pagination, SortPopup, Input, PermissionGuard, PageHeader, ResourceCardSkeletonList } from '@/components/common';
+import { Button, Pagination, SortPopup, Input, PermissionGuard, PageHeader, ResourceCardSkeletonList } from '@superapp/ui-kit';
 import { STORAGE_KEYS } from '@/config';
 import { ActivityLogTable } from './components/ActivityLogTable';
 import { ActivityLogTableSkeleton } from './components/ActivityLogTableSkeleton';

@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Input, Modal, Toggle, Checkbox } from '@/components/common';
+import { Button, Input, Modal, Toggle, Checkbox } from '@superapp/ui-kit';
 import { PERMISSIONS } from '@/config/constants';
 import { type Role, type CreateRoleInput, PermissionAction, type PermissionResource } from '@superapp/shared-types';
 import { useSettings } from '@/hooks';

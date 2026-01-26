@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks';
-import { LoadingSpinner } from '@/components/common';
+import { LoadingSpinner } from '@superapp/ui-kit';
 
 // ============================================================================
 // Google Icon Component

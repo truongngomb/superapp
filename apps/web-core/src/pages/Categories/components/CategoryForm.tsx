@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, ColorPicker, Input, Modal, Toggle } from '@/components/common';
+import { Button, ColorPicker, Input, Modal, Toggle } from '@superapp/ui-kit';
 import type { Category, CreateCategoryInput } from '@superapp/shared-types';
 import { IconPicker } from '@superapp/ui-kit';
 

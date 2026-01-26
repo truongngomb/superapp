@@ -12,7 +12,7 @@ import {
 import { markdownService } from '@/services';
 import { MarkdownPage } from '@superapp/shared-types';
 import { Calendar, Clock, ArrowLeft } from 'lucide-react';
-import { Button } from '@/components/common';
+import { Button } from '@superapp/ui-kit';
 import { MarkdownViewerSkeleton } from './components/MarkdownViewerSkeleton';
 
 const containerVariants = {

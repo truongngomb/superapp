@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Shield, Save, Plus } from 'lucide-react';
-import { Button, Card, CardHeader, CardContent, CardFooter, Input } from '@/components/common';
+import { Button, Card, CardHeader, CardContent, CardFooter, Input } from '@superapp/ui-kit';
 import { Reorder } from 'framer-motion';
 import { useSettings } from '@/hooks';
 import { RoleResourceRow } from './RoleResourceRow';

@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Rectangle } from 'recharts';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/common';
+import { Card, CardContent, CardHeader, CardTitle } from '@superapp/ui-kit';
 import type { ResponseTimeDistribution } from '@superapp/shared-types';
 
 interface ResponseTimeChartProps {

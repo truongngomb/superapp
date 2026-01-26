@@ -16,7 +16,7 @@ import {
   ResourceConfirmModals,
   ResourceCardSkeletonList,
   EmptyState,
-} from '@/components/common';
+} from '@superapp/ui-kit';
 import { useSort, useDebounce, useAuth, useResource, useExcelExport, useResponsiveView, useInfiniteResource } from '@/hooks';
 import type { User, SortColumn, UserCreateInput, UserListParams, UserUpdateInput, ViewMode } from '@superapp/shared-types';
 import { getStorageItem, setStorageItem } from '@/utils';

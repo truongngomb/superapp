@@ -3,7 +3,7 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-} from "@/components/common";
+} from "@superapp/ui-kit";
 import { useTranslation } from "react-i18next";
 
 interface SystemInfoProps {

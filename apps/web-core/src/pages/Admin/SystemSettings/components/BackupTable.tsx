@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Download, RefreshCw, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
-import { Button, Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '@/components/common';
+import { Button, Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '@superapp/ui-kit';
 import type { BackupItem } from '@superapp/shared-types';
 
 interface BackupTableProps {

@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Archive, HardDrive } from 'lucide-react';
-import { Card, CardHeader, CardContent, Button, ConfirmModal } from '@/components/common';
+import { Card, CardHeader, CardContent, Button, ConfirmModal } from '@superapp/ui-kit';
 import { backupService } from '@superapp/core-logic';
 import { BackupTable } from './BackupTable';
 import { useToast } from '@superapp/core-logic';

@@ -1,5 +1,5 @@
 import { LucideIcon } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/common';
+import { Card, CardContent, CardHeader, CardTitle } from '@superapp/ui-kit';
 
 interface RequestStatsCardProps {
   title: string;

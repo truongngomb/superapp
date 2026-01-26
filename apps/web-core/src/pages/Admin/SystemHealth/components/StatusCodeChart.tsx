@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/common';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@superapp/ui-kit';
 
 interface StatusCodeChartProps {
   data: Record<number, number>;

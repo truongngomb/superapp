@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Edit2, Trash2, Globe, FileText } from 'lucide-react';
-import { Button, DataRow } from '@/components/common';
+import { Button, DataRow } from '@superapp/ui-kit';
 import { cn } from '@/utils';
 import type { MarkdownPage } from '@superapp/shared-types';
 import { Avatar, PermissionGuard } from '@superapp/ui-kit';

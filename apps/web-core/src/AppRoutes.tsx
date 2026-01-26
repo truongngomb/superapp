@@ -7,7 +7,7 @@
 import { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { LoadingSpinner } from '@superapp/ui-kit';
-import { ProtectedRoute, GuestGuard, NotFoundPage } from '@/components/common';
+import { ProtectedRoute, GuestGuard, NotFoundPage } from '@superapp/ui-kit';
 import { PermissionResource, PermissionAction } from '@superapp/shared-types';
 import { MainLayout } from './components/layout';
 

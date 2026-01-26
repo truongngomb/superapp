@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/common";
+import { Card, CardContent, CardHeader, CardTitle } from "@superapp/ui-kit";
 import type { LucideIcon } from "lucide-react";
 
 interface HealthCardProps {

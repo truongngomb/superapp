@@ -1,4 +1,4 @@
-import { Skeleton } from '@/components/common';
+import { Skeleton } from '@superapp/ui-kit';
 
 /**
  * MarkdownPageSkeleton Component

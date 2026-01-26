@@ -4,7 +4,7 @@ import {
   CardHeader,
   CardTitle,
   CardDescription
-} from "@/components/common";
+} from "@superapp/ui-kit";
 import {
   LineChart,
   Line,

@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@superapp/ui-kit";
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/common';
+import { Card, CardContent, CardHeader, CardTitle } from '@superapp/ui-kit';
 import type { EndpointMetric } from '@superapp/shared-types';
 
 interface TopEndpointsTableProps {

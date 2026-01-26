@@ -1,4 +1,4 @@
-import { DataTableSkeleton } from '@/components/common';
+import { DataTableSkeleton } from '@superapp/ui-kit';
 
 export function CategoryTableSkeleton() {
   return (

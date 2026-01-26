@@ -15,7 +15,7 @@ import {
   ResourceConfirmModals,
   ResourceCardSkeletonList,
   EmptyState,
-} from "@/components/common";
+} from "@superapp/ui-kit";
 import type { Category, CreateCategoryInput, SortColumn, CategoryListParams, ViewMode } from "@superapp/shared-types";
 import { getStorageItem, setStorageItem } from "@/utils";
 import { STORAGE_KEYS } from "@/config";

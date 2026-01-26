@@ -14,7 +14,7 @@ import {
   ResourceConfirmModals,
   ResourceCardSkeletonList,
   EmptyState,
-} from "@/components/common";
+} from "@superapp/ui-kit";
 import type { Role, SortColumn, CreateRoleInput, UpdateRoleInput, RoleListParams } from "@superapp/shared-types";
 import { ViewMode } from "@superapp/shared-types";
 import { getStorageItem, setStorageItem } from "@/utils";

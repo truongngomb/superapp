@@ -13,7 +13,7 @@ import { useTheme } from '@/context';
 import { env, STORAGE_KEYS } from '@/config';
 import { getStorageItem, setStorageItem, cn } from '@/utils';
 import { useLayoutMode } from '@/hooks';
-import { Button } from '@/components/common';
+import { Button } from '@superapp/ui-kit';
 import { useToast } from '@/context';
 import { useEffect } from 'react';
 

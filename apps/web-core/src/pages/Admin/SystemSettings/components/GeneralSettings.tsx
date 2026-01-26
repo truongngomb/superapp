@@ -14,7 +14,7 @@ import {
   SelectContent,
   SelectItem,
   Input
-} from '@/components/common';
+} from '@superapp/ui-kit';
 import { useSettings } from '@/hooks';
 import { settingsService, useToast } from '@superapp/core-logic';
 import { BackupManager } from './BackupManager';

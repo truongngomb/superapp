@@ -4,7 +4,7 @@ import {
   CardHeader,
   CardTitle,
   CardDescription
-} from "@/components/common";
+} from "@superapp/ui-kit";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import { formatBytes } from "@/utils/format";
 import { useTranslation } from "react-i18next";

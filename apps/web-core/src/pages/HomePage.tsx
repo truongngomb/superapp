@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Smartphone, LayoutDashboard, ScrollText, FileText, Users, UserCog, Zap } from 'lucide-react';
-import { Button, Card, CardContent } from '@/components/common';
+import { Button, Card, CardContent } from '@superapp/ui-kit';
 
 const features = [
   {

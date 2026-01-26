@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Input, Modal, Toggle, Avatar } from '@/components/common';
+import { Button, Input, Modal, Toggle, Avatar } from '@superapp/ui-kit';
 import type { User, UserCreateInput, UserUpdateInput } from '@superapp/shared-types';
 import { PermissionGuard } from '@superapp/ui-kit';
 

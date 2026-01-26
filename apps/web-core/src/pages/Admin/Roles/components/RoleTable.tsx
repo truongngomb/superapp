@@ -2,7 +2,7 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Edit2, Copy, Trash2, RotateCcw, Shield } from 'lucide-react';
-import { Button, Badge, DataTable, type DataTableColumn } from '@/components/common';
+import { Button, Badge, DataTable, type DataTableColumn } from '@superapp/ui-kit';
 import { cn } from '@/utils';
 import type { Role } from '@superapp/shared-types';
 import { PermissionGuard } from '@superapp/ui-kit';

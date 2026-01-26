@@ -12,7 +12,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { Card, CardContent, CardHeader, CardTitle, Skeleton } from '@/components/common';
+import { Card, CardContent, CardHeader, CardTitle, Skeleton } from '@superapp/ui-kit';
 import { logger } from '@/utils';
 import { systemService } from '@superapp/core-logic';
 import type { SystemMetricSnapshot } from '@superapp/shared-types';

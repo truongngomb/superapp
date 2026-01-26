@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Layout, Save, Check } from 'lucide-react';
-import { Button, Card, CardHeader, CardContent, CardFooter } from '@/components/common';
+import { Button, Card, CardHeader, CardContent, CardFooter } from '@superapp/ui-kit';
 import { cn } from '@/utils';
 import { useSettings } from '@/hooks';
 import { LayoutResourceRow } from './LayoutResourceRow';

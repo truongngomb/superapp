@@ -1,7 +1,7 @@
 import { GripVertical, ArrowUp, ArrowDown, Trash2 } from 'lucide-react';
 import { Reorder, useDragControls } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { Button } from '@/components/common';
+import { Button } from '@superapp/ui-kit';
 
 interface RoleResourceRowProps {
   res: string;

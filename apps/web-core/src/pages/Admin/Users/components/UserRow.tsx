@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Edit2, Trash2, UserCog, RotateCcw } from 'lucide-react';
-import { Button, Badge, DataRow, Avatar } from '@/components/common';
+import { Button, Badge, DataRow, Avatar } from '@superapp/ui-kit';
 import { formatDate } from '@/utils';
 import type { User } from '@superapp/shared-types';
 import { cn } from '@/utils';

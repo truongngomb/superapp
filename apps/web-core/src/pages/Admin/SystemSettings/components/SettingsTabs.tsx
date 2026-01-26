@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Layout, Shield, Settings as SettingsIcon } from 'lucide-react';
 import { cn } from '@/utils';
-import { Button } from '@/components/common';
+import { Button } from '@superapp/ui-kit';
 
 export type Tab = 'layout' | 'roles' | 'general';
 

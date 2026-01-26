@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Edit2, Trash2, RotateCcw, Copy } from 'lucide-react';
-import { Button, DataRow } from '@/components/common';
+import { Button, DataRow } from '@superapp/ui-kit';
 import { cn } from '@/utils';
 import type { Category } from '@superapp/shared-types';
 import { CATEGORY_ICONS, PermissionGuard, type CategoryIcon } from '@superapp/ui-kit';

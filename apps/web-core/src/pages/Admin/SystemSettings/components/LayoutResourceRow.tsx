@@ -5,7 +5,7 @@ import {
   SelectValue, 
   SelectContent, 
   SelectItem 
-} from '@/components/common';
+} from '@superapp/ui-kit';
 
 interface LayoutResourceRowProps {
   resource: string;

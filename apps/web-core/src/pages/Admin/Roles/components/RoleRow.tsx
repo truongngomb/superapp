@@ -1,7 +1,7 @@
 import { Shield, Edit2, Trash2, RotateCcw, Copy } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { Role } from '@superapp/shared-types';
-import { Button, DataRow } from '@/components/common';
+import { Button, DataRow } from '@superapp/ui-kit';
 import { cn } from '@/utils';
 import { PermissionGuard } from '@superapp/ui-kit';
 
