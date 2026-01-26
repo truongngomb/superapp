@@ -11,40 +11,43 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import { uikitLocales } from '@superapp/ui-kit';
 
 // Import translation files - English
-import homeEn from '../locales/en/home.json';
+import activityLogsEn from '../locales/en/activity_logs.json';
+import apiDocsEn from '../locales/en/api_docs.json';
 import authEn from '../locales/en/auth.json';
 import categoriesEn from '../locales/en/categories.json';
-import rolesEn from '../locales/en/roles.json';
-import usersEn from '../locales/en/users.json';
-import activityLogsEn from '../locales/en/activity_logs.json';
-import notificationsEn from '../locales/en/notifications.json';
-import settingsEn from '../locales/en/settings.json';
+import homeEn from '../locales/en/home.json';
 import markdownEn from '../locales/en/markdown.json';
+import notificationsEn from '../locales/en/notifications.json';
+import rolesEn from '../locales/en/roles.json';
+import settingsEn from '../locales/en/settings.json';
 import systemHealthEn from '../locales/en/system_health.json';
+import usersEn from '../locales/en/users.json';
 
 // Import translation files - Vietnamese
-import homeVi from '../locales/vi/home.json';
+import activityLogsVi from '../locales/vi/activity_logs.json';
+import apiDocsVi from '../locales/vi/api_docs.json';
 import authVi from '../locales/vi/auth.json';
 import categoriesVi from '../locales/vi/categories.json';
-import rolesVi from '../locales/vi/roles.json';
-import usersVi from '../locales/vi/users.json';
-import activityLogsVi from '../locales/vi/activity_logs.json';
-import notificationsVi from '../locales/vi/notifications.json';
-import settingsVi from '../locales/vi/settings.json';
+import homeVi from '../locales/vi/home.json';
 import markdownVi from '../locales/vi/markdown.json';
+import notificationsVi from '../locales/vi/notifications.json';
+import rolesVi from '../locales/vi/roles.json';
+import settingsVi from '../locales/vi/settings.json';
 import systemHealthVi from '../locales/vi/system_health.json';
+import usersVi from '../locales/vi/users.json';
 
 // Import translation files - Korean
-import homeKo from '../locales/ko/home.json';
+import activityLogsKo from '../locales/ko/activity_logs.json';
+import apiDocsKo from '../locales/ko/api_docs.json';
 import authKo from '../locales/ko/auth.json';
 import categoriesKo from '../locales/ko/categories.json';
-import rolesKo from '../locales/ko/roles.json';
-import usersKo from '../locales/ko/users.json';
-import activityLogsKo from '../locales/ko/activity_logs.json';
-import notificationsKo from '../locales/ko/notifications.json';
-import settingsKo from '../locales/ko/settings.json';
+import homeKo from '../locales/ko/home.json';
 import markdownKo from '../locales/ko/markdown.json';
+import notificationsKo from '../locales/ko/notifications.json';
+import rolesKo from '../locales/ko/roles.json';
+import settingsKo from '../locales/ko/settings.json';
 import systemHealthKo from '../locales/ko/system_health.json';
+import usersKo from '../locales/ko/users.json';
 
 // Configure resources
 export const resources = {
@@ -59,6 +62,7 @@ export const resources = {
     settings: settingsEn,
     markdown: markdownEn,
     system_health: systemHealthEn,
+    api_docs: apiDocsEn,
     uikit: uikitLocales.en,
   },
   vi: {
@@ -72,6 +76,7 @@ export const resources = {
     settings: settingsVi,
     markdown: markdownVi,
     system_health: systemHealthVi,
+    api_docs: apiDocsVi,
     uikit: uikitLocales.vi,
   },
   ko: {
@@ -85,12 +90,10 @@ export const resources = {
     settings: settingsKo,
     markdown: markdownKo,
     system_health: systemHealthKo,
+    api_docs: apiDocsKo,
     uikit: uikitLocales.ko,
   },
 } as const;
-
-// Configure resources
-
 
 // Initialize i18next
 void i18n
@@ -101,7 +104,7 @@ void i18n
   .init({
     resources,
     defaultNS: 'uikit',
-    ns: ['uikit', 'home', 'auth', 'categories', 'roles', 'users', 'activity_logs', 'notifications', 'settings', 'markdown', 'system_health'],
+    ns: ['uikit', 'home', 'auth', 'categories', 'roles', 'users', 'activity_logs', 'notifications', 'settings', 'markdown', 'system_health', 'api_docs'],
 
     fallbackLng: 'en', // Default language if detection fails
     supportedLngs: ['en', 'vi', 'ko'],
