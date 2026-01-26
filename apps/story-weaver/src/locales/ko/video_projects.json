@@ -1,0 +1,63 @@
+{
+  "navigation": {
+    "dashboard": "대시보드",
+    "create": "새로 만들기",
+    "library": "라이브러리",
+    "editor": "편집기"
+  },
+  "dashboard": {
+    "title": "내 프로젝트",
+    "subtitle": "AI 비디오 스토리를 생성하고 관리하세요",
+    "create_btn": "프로젝트 생성",
+    "empty": {
+      "title": "아직 프로젝트가 없습니다",
+      "description": "첫 번째 비디오 프로젝트를 만들어 시작해 보세요. 직접 만들거나 AI 어시스턴트의 도움을 받을 수 있습니다.",
+      "action": "첫 번째 프로젝트 만들기"
+    },
+    "no_description": "설명 없음",
+    "ai_ready": "AI 준비됨"
+  },
+  "editor": {
+    "project_not_found": "프로젝트를 찾을 수 없습니다",
+    "back_to_dashboard": "대시보드로 돌아가기",
+    "generate_video": "비디오 생성",
+    "rendering": "렌더링 중...",
+    "preview_placeholder": "미리보기 플레이어 자리표시자",
+    "timeline": "타임라인",
+    "loading_scenes": "장면을 불러오는 중...",
+    "no_scenes_title": "아직 장면이 없습니다",
+    "no_scenes_desc": "비디오 스토리를 구축하려면 첫 번째 장면을 추가하세요.",
+    "add_scene": "장면 추가",
+    "scene_label": "장면 {{index}}",
+    "no_image": "이미지 없음",
+    "no_script": "스크립트 내용 없음...",
+    "has_audio": "오디오 있음",
+    "no_audio": "오디오 없음",
+    "delete_scene_title": "장면 삭제",
+    "delete_scene_message": "이 장면을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
+  },
+  "modal": {
+    "create": {
+      "title_manual": "새 프로젝트 생성",
+      "title_ai": "AI로 생성",
+      "desc_manual": "새로운 이야기를 직접 만들어 보세요.",
+      "desc_ai": "AI가 스크립트를 작성하고 장면을 계획해 드립니다.",
+      "ai_power": "Google Gemini 1.5 Flash 기반",
+      "generate_idea": "아이디어 생성",
+      "manual": "수동",
+      "ai_assistant": "AI 어시스턴트",
+      "name_label": "프로젝트 이름",
+      "name_placeholder": "나의 멋진 비디오",
+      "desc_label": "설명 (선택 사항)",
+      "desc_placeholder": "간단한 설명...",
+      "ai_topic_label": "비디오의 주제는 무엇인가요?",
+      "ai_topic_placeholder": "예: 원격 근무 중 올바른 자세에 대한 15초 홍보 영상...",
+      "next_steps": {
+        "title": "✨ 다음 단계는?",
+        "step1": "AI가 주제에 따라 스크립트를 작성합니다.",
+        "step2": "시각적 설명과 함께 장면이 자동으로 생성됩니다.",
+        "step3": "편집할 수 있는 새로운 초안 프로젝트가 생성됩니다."
+      }
+    }
+  }
+}

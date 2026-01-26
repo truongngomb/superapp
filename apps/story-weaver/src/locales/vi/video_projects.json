@@ -1,0 +1,63 @@
+{
+  "navigation": {
+    "dashboard": "Tổng quan",
+    "create": "Tạo mới",
+    "library": "Thư viện",
+    "editor": "Trình chỉnh sửa"
+  },
+  "dashboard": {
+    "title": "Dự án của tôi",
+    "subtitle": "Tạo và quản lý các câu chuyện video AI của bạn",
+    "create_btn": "Tạo dự án",
+    "empty": {
+      "title": "Chưa có dự án nào",
+      "description": "Bắt đầu bằng cách tạo dự án video đầu tiên của bạn. Bạn có thể xây dựng thủ công hoặc để trợ lý AI của chúng tôi giúp đỡ.",
+      "action": "Tạo dự án đầu tiên"
+    },
+    "no_description": "Không có mô tả",
+    "ai_ready": "Sẵn sàng cho AI"
+  },
+  "editor": {
+    "project_not_found": "Không tìm thấy dự án",
+    "back_to_dashboard": "Quay lại Tổng quan",
+    "generate_video": "Tạo Video",
+    "rendering": "Đang tạo...",
+    "preview_placeholder": "Trình phát mẫu",
+    "timeline": "Dòng thời gian",
+    "loading_scenes": "Đang tải các cảnh...",
+    "no_scenes_title": "Chưa có cảnh nào",
+    "no_scenes_desc": "Thêm cảnh đầu tiên để bắt đầu xây dựng câu chuyện video của bạn.",
+    "add_scene": "Thêm cảnh",
+    "scene_label": "Cảnh {{index}}",
+    "no_image": "Không có ảnh",
+    "no_script": "Chưa có nội dung kịch bản...",
+    "has_audio": "Có âm thanh",
+    "no_audio": "Không có âm thanh",
+    "delete_scene_title": "Xóa cảnh",
+    "delete_scene_message": "Bạn có chắc chắn muốn xóa cảnh này? Hành động này không thể hoàn tác."
+  },
+  "modal": {
+    "create": {
+      "title_manual": "Tạo dự án mới",
+      "title_ai": "Tạo bằng AI",
+      "desc_manual": "Bắt đầu dệt nên câu chuyện mới của bạn một cách thủ công.",
+      "desc_ai": "Để AI viết kịch bản và lập kế hoạch các cảnh quay cho bạn.",
+      "ai_power": "Hỗ trợ bởi Google Gemini 1.5 Flash",
+      "generate_idea": "Tạo ý tưởng",
+      "manual": "Thủ công",
+      "ai_assistant": "Trợ lý AI",
+      "name_label": "Tên dự án",
+      "name_placeholder": "Video tuyệt vời của tôi",
+      "desc_label": "Mô tả (Tùy chọn)",
+      "desc_placeholder": "Mô tả ngắn gọn...",
+      "ai_topic_label": "Video của bạn nói về điều gì?",
+      "ai_topic_placeholder": "VD: Một đoạn teaser 15 giây về tư thế đúng khi làm việc từ xa...",
+      "next_steps": {
+        "title": "✨ Điều gì sẽ xảy ra tiếp theo?",
+        "step1": "AI sẽ viết kịch bản dựa trên chủ đề của bạn.",
+        "step2": "Các cảnh quay sẽ được tự động tạo với mô tả hình ảnh.",
+        "step3": "Một dự án nháp mới sẽ được tạo để bạn chỉnh sửa."
+      }
+    }
+  }
+}

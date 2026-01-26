@@ -1,4 +1,4 @@
-import { Home, Folder, Settings, FileText } from 'lucide-react';
+import { Home, Settings, PlusCircle, Video } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 import type { ParseKeys } from 'i18next';
@@ -16,27 +16,23 @@ export interface NavigationItem {
 
 export const NAVIGATION_ITEMS: NavigationItem[] = [
   { 
-    path: '/', 
-    labelKey: 'home:title', 
+    path: '/dashboard', 
+    labelKey: 'video_projects:navigation.dashboard', 
     icon: Home 
   },
   { 
-    path: '/categories', 
-    labelKey: 'categories:title', 
-    icon: Folder,
-    permission: { resource: 'categories', action: 'view' }
+    path: '/create', 
+    labelKey: 'video_projects:navigation.create', 
+    icon: PlusCircle 
   },
   { 
-    path: '/markdown-pages', 
-    labelKey: 'markdown:title', 
-    icon: FileText,
-    permission: { resource: 'markdown_pages', action: 'view' }
+    path: '/library', 
+    labelKey: 'video_projects:navigation.library', 
+    icon: Video 
   },
   { 
-    path: '/admin', 
-    labelKey: 'admin', 
-    icon: Settings,
-    permission: { resource: 'dashboard', action: 'view' },
-    matchPrefix: true
+    path: '/settings', 
+    labelKey: 'uikit:settings', 
+    icon: Settings
   }
 ] as const;

@@ -1,6 +1,8 @@
 import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { LoadingSpinner, ProtectedRoute, NotFoundPage } from '@superapp/ui-kit';
+import { useTranslation } from 'react-i18next';
+import { LoadingSpinner, ProtectedRoute, NotFoundPage, EmptyState } from '@superapp/ui-kit';
+import { Settings } from 'lucide-react';
 import { MainLayout } from './components/layout';
 
 // Lazy load pages
@@ -11,6 +13,19 @@ const EditorPage = lazy(() => import('./pages/Editor/EditorPage').then(m => ({ d
 function LazyPage({ children }: { children: React.ReactNode }) {
   return <Suspense fallback={<div className="flex h-screen items-center justify-center"><LoadingSpinner /></div>}>{children}</Suspense>;
 }
+
+const SettingsPlaceholder = () => {
+    const { t } = useTranslation(['uikit']);
+    return (
+        <div className="p-8">
+            <EmptyState 
+                icon={Settings}
+                title={t('uikit:settings')}
+                description="This feature is coming soon."
+            />
+        </div>
+    );
+};
 
 export function AppRoutes() {
   return (
@@ -29,7 +44,7 @@ export function AppRoutes() {
         <Route path="create" element={
             <ProtectedRoute>
               <LazyPage>
-                <DashboardPage /> {/* Valid temporary placeholder until CreatePage exists */}
+                <DashboardPage /> 
               </LazyPage>
             </ProtectedRoute>
           } 
@@ -38,7 +53,7 @@ export function AppRoutes() {
         <Route path="library" element={
             <ProtectedRoute>
               <LazyPage>
-                <DashboardPage /> {/* Valid temporary placeholder until LibraryPage exists */}
+                <DashboardPage />
               </LazyPage>
             </ProtectedRoute>
           } 
@@ -52,17 +67,15 @@ export function AppRoutes() {
           </ProtectedRoute>
         } />
         
-        {/* Settings placeholder */}
         <Route path="settings" element={
             <ProtectedRoute>
               <LazyPage>
-                 <div className="p-8">Settings Page (Coming Soon)</div>
+                 <SettingsPlaceholder />
               </LazyPage>
             </ProtectedRoute>
           } 
         />
         
-        {/* 404 */}
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>

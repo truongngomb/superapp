@@ -75,3 +75,21 @@ export const generateScriptSchema = z.object({
   topic: z.string().min(3),
 });
 export type GenerateScriptInput = z.infer<typeof generateScriptSchema>;
+
+// =============================================================================
+// Video Content Types
+// =============================================================================
+
+export interface VideoScript extends BaseEntity {
+  projectId: string;
+  content: string;
+}
+
+export interface VideoAsset extends BaseEntity {
+  projectId: string;
+  type: 'image' | 'video' | 'audio';
+  url: string;
+}
+
+export type AIModelType = 'gemini-1.5-flash' | 'gemini-1.5-pro';
+export type VideoOrientation = 'landscape' | 'portrait' | 'square';

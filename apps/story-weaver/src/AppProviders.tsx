@@ -8,8 +8,13 @@ import { type ReactNode } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { queryClient } from "@/config/queryClient";
-import { AuthProvider, ThemeProvider, LayoutProvider } from "@superapp/core-logic";
-import { ToastProvider, SettingsProvider } from "@/context";
+import { 
+  AuthProvider, 
+  ThemeProvider, 
+  LayoutProvider,
+  ToastProvider, 
+  SettingsProvider 
+} from "@/context";
 
 interface AppProvidersProps {
   children: ReactNode;

@@ -11,80 +11,44 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import { uikitLocales } from '@superapp/ui-kit';
 
 // Import translation files - English
-import homeEn from '../locales/en/home.json';
 import authEn from '../locales/en/auth.json';
-import categoriesEn from '../locales/en/categories.json';
-import rolesEn from '../locales/en/roles.json';
-import usersEn from '../locales/en/users.json';
-import activityLogsEn from '../locales/en/activity_logs.json';
 import notificationsEn from '../locales/en/notifications.json';
 import settingsEn from '../locales/en/settings.json';
-import markdownEn from '../locales/en/markdown.json';
-import systemHealthEn from '../locales/en/system_health.json';
+import videoProjectsEn from '../locales/en/video_projects.json';
 
 // Import translation files - Vietnamese
-import homeVi from '../locales/vi/home.json';
 import authVi from '../locales/vi/auth.json';
-import categoriesVi from '../locales/vi/categories.json';
-import rolesVi from '../locales/vi/roles.json';
-import usersVi from '../locales/vi/users.json';
-import activityLogsVi from '../locales/vi/activity_logs.json';
 import notificationsVi from '../locales/vi/notifications.json';
 import settingsVi from '../locales/vi/settings.json';
-import markdownVi from '../locales/vi/markdown.json';
-import systemHealthVi from '../locales/vi/system_health.json';
+import videoProjectsVi from '../locales/vi/video_projects.json';
 
 // Import translation files - Korean
-import homeKo from '../locales/ko/home.json';
 import authKo from '../locales/ko/auth.json';
-import categoriesKo from '../locales/ko/categories.json';
-import rolesKo from '../locales/ko/roles.json';
-import usersKo from '../locales/ko/users.json';
-import activityLogsKo from '../locales/ko/activity_logs.json';
 import notificationsKo from '../locales/ko/notifications.json';
 import settingsKo from '../locales/ko/settings.json';
-import markdownKo from '../locales/ko/markdown.json';
-import systemHealthKo from '../locales/ko/system_health.json';
+import videoProjectsKo from '../locales/ko/video_projects.json';
 
 // Configure resources
 export const resources = {
   en: {
-    home: homeEn,
     auth: authEn,
-    categories: categoriesEn,
-    roles: rolesEn,
-    users: usersEn,
-    activity_logs: activityLogsEn,
     notifications: notificationsEn,
     settings: settingsEn,
-    markdown: markdownEn,
-    system_health: systemHealthEn,
+    video_projects: videoProjectsEn,
     uikit: uikitLocales.en,
   },
   vi: {
-    home: homeVi,
     auth: authVi,
-    categories: categoriesVi,
-    roles: rolesVi,
-    users: usersVi,
-    activity_logs: activityLogsVi,
     notifications: notificationsVi,
     settings: settingsVi,
-    markdown: markdownVi,
-    system_health: systemHealthVi,
+    video_projects: videoProjectsVi,
     uikit: uikitLocales.vi,
   },
   ko: {
-    home: homeKo,
     auth: authKo,
-    categories: categoriesKo,
-    roles: rolesKo,
-    users: usersKo,
-    activity_logs: activityLogsKo,
     notifications: notificationsKo,
     settings: settingsKo,
-    markdown: markdownKo,
-    system_health: systemHealthKo,
+    video_projects: videoProjectsKo,
     uikit: uikitLocales.ko,
   },
 } as const;
@@ -101,7 +65,7 @@ void i18n
   .init({
     resources,
     defaultNS: 'uikit',
-    ns: ['uikit', 'home', 'auth', 'categories', 'roles', 'users', 'activity_logs', 'notifications', 'settings', 'markdown', 'system_health'],
+    ns: ['uikit', 'auth', 'notifications', 'settings', 'video_projects'],
 
     fallbackLng: 'en', // Default language if detection fails
     supportedLngs: ['en', 'vi', 'ko'],

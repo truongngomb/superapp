@@ -5,13 +5,10 @@
 // Re-exports from core-logic package
 export {
   useAuth,
-  useResource,
-  usePreferenceSync,
   useDebounce,
   useDebounceCallback,
   useSort,
   useDataSorting,
-  useExcelExport,
   useOnClickOutside,
   useSettings,
 } from '@superapp/core-logic';

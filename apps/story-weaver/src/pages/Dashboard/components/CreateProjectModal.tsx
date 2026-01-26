@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCreateVideoProject, useGenerateVideoScript } from '@/hooks/useProjects';
 import { 
@@ -16,6 +17,7 @@ interface CreateProjectModalProps {
 }
 
 export const CreateProjectModal = ({ open, onOpenChange }: CreateProjectModalProps) => {
+    const { t } = useTranslation(['video_projects', 'uikit']);
     const [activeTab, setActiveTab] = useState('manual');
     const { mutate: createProject, isPending: isCreating } = useCreateVideoProject();
     const { mutate: generateScript, isPending: isGenerating } = useGenerateVideoScript();
@@ -58,21 +60,21 @@ export const CreateProjectModal = ({ open, onOpenChange }: CreateProjectModalPro
         <Modal 
             isOpen={open} 
             onClose={() => onOpenChange(false)} 
-            title={activeTab === 'manual' ? "Create New Project" : "Generate with AI"}
-            description={activeTab === 'manual' ? "Start weaving your new story manually." : "Let AI write the script and plan scenes for you."}
+            title={activeTab === 'manual' ? t('video_projects:modal.create.title_manual') : t('video_projects:modal.create.title_ai')}
+            description={activeTab === 'manual' ? t('video_projects:modal.create.desc_manual') : t('video_projects:modal.create.desc_ai')}
             size="md"
             footer={
                 <div className="flex justify-between w-full items-center">
                     <div className="text-xs text-muted-foreground">
-                        {activeTab === 'ai' && "Powered by Google Gemini 1.5 Flash"}
+                        {activeTab === 'ai' && t('video_projects:modal.create.ai_power')}
                     </div>
                     <div className="flex gap-2">
-                        <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
+                        <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>{t('uikit:cancel')}</Button>
                         {activeTab === 'manual' ? (
-                            <Button onClick={form.handleSubmit(onManualSubmit)} loading={isCreating}>Create Project</Button>
+                            <Button onClick={form.handleSubmit(onManualSubmit)} loading={isCreating}>{t('video_projects:dashboard.create_btn')}</Button>
                         ) : (
                             <Button onClick={aiForm.handleSubmit(onAiSubmit)} loading={isGenerating} className="gap-2">
-                                <Wand2 size={16} /> Generate Idea
+                                <Wand2 size={16} /> {t('video_projects:modal.create.generate_idea')}
                             </Button>
                         )}
                     </div>
@@ -81,8 +83,8 @@ export const CreateProjectModal = ({ open, onOpenChange }: CreateProjectModalPro
         >
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                 <TabsList className="grid w-full grid-cols-2 mb-4">
-                    <TabsTrigger value="manual" className="gap-2"><PenTool size={16} /> Manual</TabsTrigger>
-                    <TabsTrigger value="ai" className="gap-2"><Wand2 size={16} /> AI Assistant</TabsTrigger>
+                    <TabsTrigger value="manual" className="gap-2"><PenTool size={16} /> {t('video_projects:modal.create.manual')}</TabsTrigger>
+                    <TabsTrigger value="ai" className="gap-2"><Wand2 size={16} /> {t('video_projects:modal.create.ai_assistant')}</TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="manual">
@@ -93,9 +95,9 @@ export const CreateProjectModal = ({ open, onOpenChange }: CreateProjectModalPro
                                 name="name"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Project Name</FormLabel>
+                                        <FormLabel>{t('video_projects:modal.create.name_label')}</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="My Awesome Video" {...field} value={field.value || ''} />
+                                            <Input placeholder={t('video_projects:modal.create.name_placeholder')} {...field} value={field.value || ''} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -106,9 +108,9 @@ export const CreateProjectModal = ({ open, onOpenChange }: CreateProjectModalPro
                                 name="description"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Description (Optional)</FormLabel>
+                                        <FormLabel>{t('video_projects:modal.create.desc_label')}</FormLabel>
                                         <FormControl>
-                                            <Textarea placeholder="Short description..." {...field} value={field.value || ''} />
+                                            <Textarea placeholder={t('video_projects:modal.create.desc_placeholder')} {...field} value={field.value || ''} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -126,10 +128,10 @@ export const CreateProjectModal = ({ open, onOpenChange }: CreateProjectModalPro
                                 name="topic"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>What is your video about?</FormLabel>
+                                        <FormLabel>{t('video_projects:modal.create.ai_topic_label')}</FormLabel>
                                         <FormControl>
                                             <Textarea 
-                                                placeholder="E.g. A 15-second teaser about correct posture while working remotely..." 
+                                                placeholder={t('video_projects:modal.create.ai_topic_placeholder')} 
                                                 className="min-h-[120px]"
                                                 {...field} 
                                             />
@@ -138,12 +140,12 @@ export const CreateProjectModal = ({ open, onOpenChange }: CreateProjectModalPro
                                     </FormItem>
                                 )}
                             />
-                            <div className="bg-blue-50 text-blue-700 text-sm p-3 rounded-md border border-blue-100">
-                                <p className="font-semibold mb-1"> ✨ What happens next?</p>
+                            <div className="bg-blue-50 text-blue-700 text-sm p-3 rounded-md border border-blue-100 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-900/50">
+                                <p className="font-semibold mb-1"> {t('video_projects:modal.create.next_steps.title')}</p>
                                 <ul className="list-disc list-inside space-y-1 text-xs opacity-90">
-                                    <li>AI will write a script based on your topic.</li>
-                                    <li>Scenes will be automatically generated with visual descriptions.</li>
-                                    <li>A new draft project will be created for you to edit.</li>
+                                    <li>{t('video_projects:modal.create.next_steps.step1')}</li>
+                                    <li>{t('video_projects:modal.create.next_steps.step2')}</li>
+                                    <li>{t('video_projects:modal.create.next_steps.step3')}</li>
                                 </ul>
                             </div>
                         </form>

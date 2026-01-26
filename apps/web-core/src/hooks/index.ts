@@ -13,6 +13,7 @@ export * from './useSystemHealth';
 export * from './useResourceService';
 export * from './usePageTitle';
 export { useAutoVersionCheck } from './useAutoVersionCheck';
+export * from './useRequestMetrics';
 
 // Re-exports from core-logic package
 export {

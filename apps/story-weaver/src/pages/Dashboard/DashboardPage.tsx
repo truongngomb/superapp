@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { PageHeader, GradientText, EmptyState, Card, CardContent, CardTitle, CardDescription, Badge, LoadingSpinner } from '@superapp/ui-kit';
 import { useVideoProjects } from '@/hooks/useProjects';
 import { CreateProjectModal } from './components/CreateProjectModal';
@@ -6,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { Video } from 'lucide-react';
 
 export const DashboardPage = () => {
+    const { t } = useTranslation(['video_projects', 'uikit']);
     const { projects, isLoading } = useVideoProjects();
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const navigate = useNavigate();
@@ -13,15 +15,17 @@ export const DashboardPage = () => {
     return (
         <div className="p-8">
             <PageHeader
-                resource="projects"
-                titleKey="My Projects"
-                subtitleKey="Create and manage your AI video stories"
+                resource="video_projects"
+                titleKey="video_projects:dashboard.title"
+                subtitleKey="video_projects:dashboard.subtitle"
                 onExport={() => {}} 
                 showExport={false}
                 onCreateClick={() => setIsCreateModalOpen(true)}
-                createButtonKey="Create Project"
+                createButtonKey="video_projects:dashboard.create_btn"
             >
-                <GradientText className="text-sm font-semibold mr-4">AI Ready</GradientText>
+                <GradientText className="text-sm font-semibold mr-4">
+                    {t('video_projects:dashboard.ai_ready')}
+                </GradientText>
             </PageHeader>
 
             {isLoading ? (
@@ -31,9 +35,9 @@ export const DashboardPage = () => {
             ) : projects.length === 0 ? (
                 <EmptyState
                     icon={Video}
-                    title="No projects yet"
-                    description="Start by creating your first video project. You can build it manually or let our AI assistant help you."
-                    actionText="Create Your First Project"
+                    title={t('video_projects:dashboard.empty.title')}
+                    description={t('video_projects:dashboard.empty.description')}
+                    actionText={t('video_projects:dashboard.empty.action')}
                     onAction={() => setIsCreateModalOpen(true)}
                 />
             ) : (
@@ -50,7 +54,7 @@ export const DashboardPage = () => {
                                     {project.name}
                                 </CardTitle>
                                 <CardDescription className="line-clamp-2">
-                                    {project.description || 'No description'}
+                                    {project.description || t('video_projects:dashboard.no_description')}
                                 </CardDescription>
                                 <div className="mt-4 flex justify-between items-center text-xs text-muted-foreground">
                                     <span>{new Date(project.created).toLocaleDateString()}</span>
@@ -59,7 +63,7 @@ export const DashboardPage = () => {
                                         project.status === 'rendering' ? 'primary' :
                                         'secondary'
                                     } size="sm">
-                                        {project.status}
+                                        {t(`uikit:status.${project.status}`, { defaultValue: project.status })}
                                     </Badge>
                                 </div>
                             </CardContent>

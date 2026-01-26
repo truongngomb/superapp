@@ -1,8 +1,0 @@
-{
-  "view_reference": "Tài liệu tương tác",
-  "view_raw": "Dữ liệu thô JSON",
-  "expand_all": "Mở rộng tất cả",
-  "collapse_all": "Thu gọn tất cả",
-  "failed_load_spec": "Không thể tải tài liệu API",
-  "failed_fetch": "Không thể lấy thông số OpenAPI"
-}
