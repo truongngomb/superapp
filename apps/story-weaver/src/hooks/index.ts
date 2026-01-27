@@ -6,11 +6,6 @@
 export {
   useAuth,
   useDebounce,
-  useDebounceCallback,
-  useSort,
-  useDataSorting,
-  useOnClickOutside,
-  useSettings,
 } from '@superapp/core-logic';
 
 
@@ -26,7 +21,3 @@ export {
 } from '@superapp/core-logic';
 export * from './useProjects';
 export * from './useScenes';
-
-// Re-export shared context hooks for convenience
-export { useTheme } from '@/context';
-

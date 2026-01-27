@@ -19,25 +19,25 @@ import {
   fadeSlideUp,
   defaultTransition,
 } from '@superapp/ui-kit';
-import { useSort, useDebounce, useAuth, useResource, useExcelExport, useResponsiveView, useInfiniteResource } from '@/hooks';
+import { useSort, useDebounce, useAuth, useResource, useExcelExport, useResponsiveView, useInfiniteResource, useToast } from '@superapp/core-logic';
 import type { User, SortColumn, UserCreateInput, UserListParams, UserUpdateInput, ViewMode } from '@superapp/shared-types';
 import { getStorageItem, setStorageItem } from '@/utils';
 import { STORAGE_KEYS } from '@/config';
+import { userService, roleService } from '@superapp/core-logic';
 
 import { UserRow } from './components/UserRow';
 import { UserTable } from './components/UserTable';
 import { UserForm } from './components/UserForm';
-import { RoleSelectModal } from '@/pages/Admin/Roles/components/RoleSelectModal';
-import { userService, roleService } from '@/services';
 import { UserTableSkeleton } from './components/UserTableSkeleton';
 import { UserRowSkeleton } from './components/UserRowSkeleton';
 import { UserMobileList } from './components/UserMobileList';
+import { RoleSelectModal } from '@/pages/Admin/Roles/components/RoleSelectModal';
 
 /**
  * UsersPage Component
  */
 import { useSearchParams } from 'react-router-dom';
-import { useToast } from '@superapp/core-logic';
+
 
 export default function UsersPage() {
   const { t } = useTranslation(['users', 'uikit']);
@@ -142,7 +142,7 @@ export default function UsersPage() {
     },
     onError: (action, error) => {
       const message = error instanceof Error ? error.message : t('uikit:toast.error');
-      const actionLabel = t(`uikit:${action}`, { defaultValue: action });
+      const actionLabel = t(`uikit:${action}`);
       errorToast(`${actionLabel}: ${message}`);
     }
   });

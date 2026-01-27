@@ -1,7 +1,5 @@
-import { activityLogService } from '@/services';
+import { useResource, type ResourceService, activityLogService } from '@superapp/core-logic';
 import type { ActivityLog, ActivityLogParams } from '@superapp/shared-types';
-import { useResource } from '@/hooks';
-import type { ResourceService } from '@superapp/core-logic';
 
 /**
  * useActivityLogs Hook

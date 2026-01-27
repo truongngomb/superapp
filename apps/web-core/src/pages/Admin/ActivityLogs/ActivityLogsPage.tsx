@@ -10,8 +10,9 @@ import { ActivityLogTable } from './components/ActivityLogTable';
 import { ActivityLogTableSkeleton } from './components/ActivityLogTableSkeleton';
 import type { ActivityLog } from '@superapp/shared-types';
 import { cn } from '@/utils';
-import { useSort, useDebounce, useActivityLogs, useExcelExport, useResponsiveView, useInfiniteResource } from '@/hooks';
+import { useSort, useDebounce, useExcelExport, useResponsiveView, useInfiniteResource } from '@superapp/core-logic';
 import { ActivityLogMobileList } from './components/ActivityLogMobileList';
+import { useActivityLogs } from '@/hooks';
 
 export default function ActivityLogsPage() {
   const { t } = useTranslation(['activity_logs', 'uikit']);

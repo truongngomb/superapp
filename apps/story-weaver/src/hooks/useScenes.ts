@@ -6,6 +6,7 @@ export const useVideoScenes = (projectId: string) => {
   const query = useQuery({
     queryKey: ['video-scenes', projectId],
     queryFn: () => videoSceneService.getByProject(projectId),
+    placeholderData: (previousData) => previousData,
     enabled: !!projectId
   });
 

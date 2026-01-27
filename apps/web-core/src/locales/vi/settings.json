@@ -47,7 +47,15 @@
     "resource": "Tài nguyên quản lý",
     "select_resource": "Chọn tài nguyên...",
     "mode": "Giao diện",
-    "empty": "Chưa có cấu hình tùy chỉnh nào"
+    "empty": "Chưa có cấu hình tùy chỉnh nào",
+    "custom_paths": {
+      "title": "Đường dẫn tùy chỉnh",
+      "add_pattern": "Thêm Pattern",
+      "pattern_placeholder": "VD: story-weaver/* hoặc admin/**",
+      "priority": "Ưu tiên",
+      "empty": "Chưa có đường dẫn tùy chỉnh nào",
+      "hint": "Dùng * cho 1 cấp, ** cho đệ quy"
+    }
   },
   "roles": {
     "title": "Tài nguyên Role",
@@ -55,7 +63,15 @@
     "add_resource": "Thêm tài nguyên",
     "resource_name": "Tên tài nguyên",
     "resource_placeholder": "Ví dụ: example_resource...",
-    "empty": "Chưa có tài nguyên bổ sung nào"
+    "empty": "Chưa có tài nguyên bổ sung nào",
+    "groups": {
+      "title": "Nhóm tài nguyên",
+      "add_group": "Thêm nhóm",
+      "group_name": "Tên nhóm",
+      "ungrouped": "Chưa phân nhóm",
+      "empty_group": "Kéo tài nguyên vào đây",
+      "move_to_group": "Chuyển sang nhóm"
+    }
   },
   "actions": {
     "add": "Thêm",

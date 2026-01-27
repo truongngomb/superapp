@@ -22,3 +22,9 @@ export {
 
 // TanStack Query
 export { queryClient, queryKeys, type QueryKeys } from './queryClient';
+
+// Internationalization
+export { default as i18n } from './i18n';
+
+// Navigation
+export * from './navigation';

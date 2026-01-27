@@ -21,10 +21,17 @@ import type { Role, SortColumn, CreateRoleInput, UpdateRoleInput, RoleListParams
 import { ViewMode } from "@superapp/shared-types";
 import { getStorageItem, setStorageItem } from "@/utils";
 import { STORAGE_KEYS } from "@/config";
-import { useSort, useDebounce, useAuth, useResource, useExcelExport, useResponsiveView, useInfiniteResource } from "@/hooks";
+import { 
+  useResource, 
+  useSort, 
+  useDebounce, 
+  useResponsiveView, 
+  useExcelExport,
+  useInfiniteResource,
+  useAuth
+} from "@superapp/core-logic";
 import { useToast } from "@superapp/ui-kit";
-
-import { roleService } from "@/services";
+import { roleService } from "@superapp/core-logic";
 
 import { RoleForm } from "./components/RoleForm";
 import { RoleRow } from "./components/RoleRow";
@@ -136,7 +143,7 @@ export default function RolesPage() {
     },
     onError: (action, error) => {
       const message = error instanceof Error ? error.message : t('uikit:toast.error');
-      const actionLabel = t(`uikit:${action}`, { defaultValue: action });
+      const actionLabel = t(`uikit:${action}`);
       toast.error(`${actionLabel}: ${message}`);
     }
   });

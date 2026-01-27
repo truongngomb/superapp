@@ -12,7 +12,7 @@ import { FileJson, BookOpen, ChevronRight, ChevronDown, Maximize2, Minimize2 } f
 import { useTheme } from "@superapp/core-logic";
 import { env, STORAGE_KEYS } from '@/config';
 import { getStorageItem, setStorageItem, cn } from '@/utils';
-import { useLayoutMode } from '@/hooks';
+import { useLayoutMode } from '@superapp/core-logic';
 import { Button } from '@superapp/ui-kit';
 import { useToast } from "@superapp/ui-kit";
 import { useEffect } from 'react';

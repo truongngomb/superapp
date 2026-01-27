@@ -1,10 +1,28 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Layout, Save, Check } from 'lucide-react';
-import { Button, Card, CardHeader, CardContent, CardFooter } from '@superapp/ui-kit';
+import { 
+  Button, 
+  Card, 
+  CardHeader, 
+  CardContent, 
+  CardFooter,
+} from '@superapp/ui-kit';
 import { cn } from '@/utils';
-import { useSettings } from '@/hooks';
+import { useSettings } from '@superapp/core-logic';
 import { LayoutResourceRow } from './LayoutResourceRow';
+import type { 
+  ResourceGroup, 
+  LayoutConfig, 
+  LayoutMode,
+  LayoutPathConfig,
+} from '@superapp/shared-types';
+import { 
+  isLegacyRoleResources,
+} from '@superapp/shared-types';
+import { 
+  migrateLegacyRoleResources,
+} from '@superapp/core-logic';
 
 import { PERMISSIONS } from '@/config/constants';
 
@@ -12,62 +30,58 @@ export function LayoutSettings() {
   const { t } = useTranslation(['settings', 'uikit']);
   const { settings, updateSetting, getSettingValue, loading } = useSettings();
 
-  // Local state
-  const [layoutConfig, setLayoutConfig] = useState<{
-    global: string;
-    pages: Record<string, string>;
-  }>({
+  // Local state - using new format
+  const [layoutConfig, setLayoutConfig] = useState<LayoutConfig>({
     global: 'standard',
-    pages: {}
+    paths: []
   });
   
-  const [roleResources, setRoleResources] = useState<string[]>([]);
-  const [initialLayoutConfig, setInitialLayoutConfig] = useState<{
-    global: string;
-    pages: Record<string, string>;
-  } | null>(null);
-  
+  const [resourceGroups, setResourceGroups] = useState<ResourceGroup[]>([]);
+  const [initialLayoutConfig, setInitialLayoutConfig] = useState<LayoutConfig | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   // Sync with global settings
   useEffect(() => {
     if (!loading) {
-      const rawConfig = getSettingValue('layout_config', {
+      // Load layout config with migration support
+      const config = getSettingValue('layout_config', {
         global: 'standard',
-        pages: {} as Record<string, string>
-      });
+        paths: []
+      }) as LayoutConfig;
 
-      // Migrate legacy config if needed
-      const migratedPages = { ...rawConfig.pages };
-      if (migratedPages['home']) {
-        migratedPages['/'] = migratedPages['home'];
-        delete migratedPages['home'];
+      setLayoutConfig(config);
+      setInitialLayoutConfig(JSON.parse(JSON.stringify(config)) as LayoutConfig);
+
+      // Load role resources with migration support
+      const rawResources = getSettingValue('role_resources', PERMISSIONS.RESOURCES as string[]);
+      
+      let groups: ResourceGroup[];
+      if (isLegacyRoleResources(rawResources)) {
+        groups = migrateLegacyRoleResources(rawResources, t('settings:roles.groups.ungrouped'));
+      } else {
+        groups = rawResources as ResourceGroup[];
       }
-      if (migratedPages['categories']) {
-        migratedPages['/categories'] = migratedPages['categories'];
-        delete migratedPages['categories'];
-      }
-
-      const cleanConfig = {
-        ...rawConfig,
-        pages: migratedPages
-      };
-
-      setLayoutConfig(cleanConfig);
-      setInitialLayoutConfig(JSON.parse(JSON.stringify(cleanConfig)) as typeof layoutConfig);
-
-      // We also need role resources to list the pages
-      const resources = getSettingValue('role_resources', PERMISSIONS.RESOURCES as string[]);
-      setRoleResources(resources);
+      
+      // Sanitize data to ensure all ids and resources are strings
+      const sanitizedGroups = groups.map((g, index) => ({
+        id: typeof g.id === 'string' ? g.id : `group_${String(index)}`,
+        name: typeof g.name === 'string' ? g.name : `Group ${String(index + 1)}`,
+        resources: Array.isArray(g.resources) 
+          ? g.resources.filter((r): r is string => typeof r === 'string')
+          : [],
+        order: typeof g.order === 'number' ? g.order : index,
+      }));
+      
+      setResourceGroups(sanitizedGroups);
     }
-  }, [loading, settings, getSettingValue]);
+  }, [loading, settings, getSettingValue, t]);
 
   const handleSave = async () => {
     setSubmitting(true);
     try {
       // Set visibility to 'public' so all users can see layout config
       await updateSetting('layout_config', layoutConfig, 'public');
-      setInitialLayoutConfig(JSON.parse(JSON.stringify(layoutConfig)) as typeof layoutConfig);
+      setInitialLayoutConfig(JSON.parse(JSON.stringify(layoutConfig)) as LayoutConfig);
     } finally {
       setSubmitting(false);
     }
@@ -75,48 +89,54 @@ export function LayoutSettings() {
 
   const handleReset = () => {
     if (initialLayoutConfig) {
-      setLayoutConfig(JSON.parse(JSON.stringify(initialLayoutConfig)) as typeof layoutConfig);
+      setLayoutConfig(JSON.parse(JSON.stringify(initialLayoutConfig)) as LayoutConfig);
     }
   };
 
-  const isDirty = () => {
+  const isDirty = useCallback(() => {
     if (!initialLayoutConfig) return false;
-    
-    if (layoutConfig.global !== initialLayoutConfig.global) return true;
-    
-    const currentKeys = Object.keys(layoutConfig.pages);
-    const initialKeys = Object.keys(initialLayoutConfig.pages);
-    
-    if (currentKeys.length !== initialKeys.length) return true;
-    
-    for (const key of currentKeys) {
-      if (layoutConfig.pages[key] !== initialLayoutConfig.pages[key]) return true;
-    }
-    
-    return false;
-  };
+    return JSON.stringify(layoutConfig) !== JSON.stringify(initialLayoutConfig);
+  }, [layoutConfig, initialLayoutConfig]);
 
   // Handle layout change for a specific resource
   const handleResourceLayoutChange = (resource: string, mode: string) => {
-    // Special case: "home" resource maps to "/" path (root)
     const path = resource === 'home' ? '/' : `/${resource}`;
-    const newPages = { ...layoutConfig.pages };
+    
+    setLayoutConfig(prev => {
+      const existingIndex = prev.paths.findIndex(p => p.pattern === path);
+      
+      if (mode === 'default') {
+        // Remove the path config
+        return {
+          ...prev,
+          paths: prev.paths.filter(p => p.pattern !== path)
+        };
+      }
 
-    if (mode === 'default') {
-      // Remove override to use global default
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { [path]: _, ...rest } = newPages;
-      setLayoutConfig({
-        ...layoutConfig,
-        pages: rest
-      });
-    } else {
-      // Set specific layout mode
-      setLayoutConfig({
-        ...layoutConfig,
-        pages: { ...newPages, [path]: mode }
-      });
-    }
+      if (existingIndex >= 0) {
+        // Update existing
+        const newPaths = [...prev.paths];
+        const existingPath = newPaths[existingIndex];
+        if (existingPath) {
+          newPaths[existingIndex] = {
+            ...existingPath,
+            mode: mode as LayoutMode | 'default',
+          };
+        }
+        return { ...prev, paths: newPaths };
+      }
+
+      // Add new
+      const newPath: LayoutPathConfig = { 
+        pattern: path, 
+        mode: mode as LayoutMode | 'default', 
+        priority: 100 
+      };
+      return {
+        ...prev,
+        paths: [...prev.paths, newPath]
+      };
+    });
   };
 
   return (
@@ -177,32 +197,42 @@ export function LayoutSettings() {
             </div>
           </div>
 
-          {/* Page Specific */}
+          {/* Page Specific by Resource Groups */}
           <div className="space-y-4 pt-4 border-t border-border">
             <h3 className="font-medium text-foreground">{t('settings:layout.page_specific')}</h3>
             
-            <div>
-              {roleResources.length === 0 ? (
-                <div className="p-8 text-center text-muted-foreground text-sm border border-dashed border-border rounded-lg">
-                  {t('settings:roles.empty')}
+            {resourceGroups.length === 0 ? (
+              <div className="p-8 text-center text-muted-foreground text-sm border border-dashed border-border rounded-lg">
+                {t('settings:roles.empty')}
+              </div>
+            ) : (
+              resourceGroups.map(group => (
+                <div key={group.id} className="space-y-2">
+                  <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                    {group.name}
+                    <span className="text-xs bg-muted px-2 py-0.5 rounded-full">
+                      {group.resources.length}
+                    </span>
+                  </h4>
+                  <div>
+                    {group.resources.map(resource => {
+                      const path = resource === 'home' ? '/' : `/${resource}`;
+                      const pathConfig = layoutConfig.paths.find(p => p.pattern === path);
+                      const currentMode = pathConfig?.mode ?? 'default';
+                      
+                      return (
+                        <LayoutResourceRow
+                          key={resource}
+                          resource={resource}
+                          currentMode={currentMode}
+                          onModeChange={handleResourceLayoutChange}
+                        />
+                      );
+                    })}
+                  </div>
                 </div>
-              ) : (
-                roleResources.map(resource => {
-                  // Special case: "home" resource maps to "/" path
-                  const path = resource === 'home' ? '/' : `/${resource}`;
-                  const currentMode = layoutConfig.pages[path] || 'default';
-                  
-                  return (
-                    <LayoutResourceRow
-                      key={resource}
-                      resource={resource}
-                      currentMode={currentMode}
-                      onModeChange={handleResourceLayoutChange}
-                    />
-                  );
-                })
-              )}
-            </div>
+              ))
+            )}
           </div>
         </CardContent>
         <CardFooter className="flex items-center justify-end gap-3">

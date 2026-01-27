@@ -6,7 +6,7 @@ export function SharedLayoutAdapter() {
 
   return (
     <BaseSharedLayoutAdapter 
-      menuItems={menuItems} 
+      menuItems={menuItems}
     />
   );
 }

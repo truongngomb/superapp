@@ -47,7 +47,15 @@
     "resource": "Managed Resource",
     "select_resource": "Select resource...",
     "mode": "Mode",
-    "empty": "No custom layouts configured"
+    "empty": "No custom layouts configured",
+    "custom_paths": {
+      "title": "Custom Path Patterns",
+      "add_pattern": "Add Pattern",
+      "pattern_placeholder": "e.g. story-weaver/* or admin/**",
+      "priority": "Priority",
+      "empty": "No custom path patterns configured",
+      "hint": "Use * for single-level match, ** for recursive match"
+    }
   },
   "roles": {
     "title": "Role Resources",
@@ -55,7 +63,15 @@
     "add_resource": "Add Resource",
     "resource_name": "Resource Name",
     "resource_placeholder": "e.g., example_resource...",
-    "empty": "No additional resources configured"
+    "empty": "No additional resources configured",
+    "groups": {
+      "title": "Resource Groups",
+      "add_group": "Add Group",
+      "group_name": "Group Name",
+      "ungrouped": "Ungrouped",
+      "empty_group": "Drag resources here",
+      "move_to_group": "Move to Group"
+    }
   },
   "actions": {
     "add": "Add",

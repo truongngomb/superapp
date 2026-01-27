@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useVideoProject, useRenderVideo } from '@/hooks/useProjects';
+import { useVideoProject, useRenderVideo } from '@/hooks';
 import { SceneList } from './components/SceneList';
 import { Button, Badge, LoadingSpinner, fadeSlideUp, defaultTransition } from '@superapp/ui-kit';
 import { ChevronLeft, Rocket, Settings } from 'lucide-react';

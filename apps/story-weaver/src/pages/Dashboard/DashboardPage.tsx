@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
-import { PageHeader, GradientText, EmptyState, Card, CardContent, CardTitle, CardDescription, Badge, LoadingSpinner, fadeSlideUp, defaultTransition } from '@superapp/ui-kit';
-import { useVideoProjects } from '@/hooks/useProjects';
+import { PageHeader, GradientText, EmptyState, Card, CardContent, CardTitle, CardDescription, Badge, fadeSlideUp, defaultTransition } from '@superapp/ui-kit';
+import { useVideoProjects } from '@/hooks';
 import { CreateProjectModal } from './components/CreateProjectModal';
 import { useNavigate } from 'react-router-dom';
 import { Video } from 'lucide-react';
@@ -30,19 +30,7 @@ export const DashboardPage = () => {
             </PageHeader>
 
             <AnimatePresence mode="wait">
-            {isLoading ? (
-                <motion.div 
-                    key="loading"
-                    variants={fadeSlideUp}
-                    initial="initial"
-                    animate="animate"
-                    exit="exit"
-                    transition={defaultTransition}
-                    className="flex items-center justify-center py-20"
-                >
-                    <LoadingSpinner size="lg" />
-                </motion.div>
-            ) : projects.length === 0 ? (
+            {projects.length === 0 && !isLoading ? (
                 <motion.div
                     key="empty"
                     variants={fadeSlideUp}
@@ -99,6 +87,7 @@ export const DashboardPage = () => {
                 </motion.div>
             )}
             </AnimatePresence>
+
 
             <CreateProjectModal 
                 open={isCreateModalOpen} 

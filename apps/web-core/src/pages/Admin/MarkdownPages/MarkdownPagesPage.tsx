@@ -36,10 +36,10 @@ import {
   useExcelExport,
   useInfiniteResource,
   useAuth
-} from "@/hooks";
+} from "@superapp/core-logic";
 import { useToast } from "@superapp/ui-kit";
 
-import { markdownService } from "@/services";
+import { markdownService } from "@superapp/core-logic";
 
 import { MarkdownPageTable } from "./components/MarkdownPageTable";
 import { MarkdownPageRow } from "./components/MarkdownPageRow";
@@ -139,7 +139,7 @@ export default function MarkdownPagesPage() {
     },
     onError: (action, error) => {
       const message = error instanceof Error ? error.message : t('uikit:toast.error');
-      const actionLabel = t(`uikit:${action}`, { defaultValue: action });
+      const actionLabel = t(`uikit:${action}`);
       toast.error(`${actionLabel}: ${message}`);
     }
   });

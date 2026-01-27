@@ -21,7 +21,7 @@ import {
 import type { Category, CreateCategoryInput, SortColumn, CategoryListParams, ViewMode } from "@superapp/shared-types";
 import { getStorageItem, setStorageItem } from "@/utils";
 import { STORAGE_KEYS } from "@/config";
-import { useResource, useSort, useDebounce, useAuth, useExcelExport, useResponsiveView, useInfiniteResource } from "@/hooks";
+import { useResource, useSort, useDebounce, useAuth, useExcelExport, useResponsiveView, useInfiniteResource } from '@superapp/core-logic';
 import { useToast } from "@superapp/ui-kit";
 
 import { categoryService } from "@/services";
@@ -130,7 +130,7 @@ export default function CategoriesPage() {
     onError: (action, error) => {
       const message = error instanceof Error ? error.message : t('uikit:toast.error');
       // Use direct translation key if available, otherwise fallback to action code
-      const actionLabel = t(`uikit:${action}`, { defaultValue: action });
+      const actionLabel = t(`uikit:${action}`);
       toast.error(`${actionLabel}: ${message}`);
     }
   });

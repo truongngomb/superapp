@@ -5,7 +5,8 @@ import { VideoProjectListParams, CreateVideoProjectInput, UpdateVideoProjectInpu
 export const useVideoProjects = (params: VideoProjectListParams = {}) => {
   const query = useQuery({
     queryKey: ['video-projects', params],
-    queryFn: () => videoProjectService.getPage(params)
+    queryFn: () => videoProjectService.getPage(params),
+    placeholderData: (previousData) => previousData
   });
 
   return {

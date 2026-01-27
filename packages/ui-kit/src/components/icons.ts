@@ -23,6 +23,9 @@ import {
   Camera, 
   Gamepad2, 
   Shirt,
+  Video,
+  Film,
+  Clapperboard,
   type LucideIcon
 } from 'lucide-react';
 
@@ -54,4 +57,7 @@ export const CATEGORY_ICONS: Record<string, CategoryIcon> = {
   camera: Camera,
   gamepad: Gamepad2,
   shirt: Shirt,
+  video: Video,
+  film: Film,
+  media: Clapperboard,
 };

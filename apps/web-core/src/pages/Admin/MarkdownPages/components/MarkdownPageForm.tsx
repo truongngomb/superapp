@@ -32,7 +32,8 @@ import {
   MediaManagerModal
 } from '@superapp/ui-kit';
 import { generateSlug } from '@superapp/core-logic';
-import { useMarkdownPages, useDebounce, useMediaUpload } from '@/hooks';
+import { useMarkdownPages, useMediaUpload } from '@/hooks';
+import { useDebounce } from '@superapp/core-logic';
 import { useToast } from "@superapp/ui-kit";
 import { Wand2, FileText, Link as LinkIcon, Folder, Copy, X, Loader2 } from 'lucide-react';
 import { markdownService } from '@superapp/core-logic';

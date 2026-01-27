@@ -2,8 +2,8 @@ import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Input, Modal, Toggle, Checkbox } from '@superapp/ui-kit';
 import { PERMISSIONS } from '@/config/constants';
-import { type Role, type CreateRoleInput, PermissionAction, type PermissionResource } from '@superapp/shared-types';
-import { useSettings } from '@/hooks';
+import { type Role, type CreateRoleInput, PermissionAction, type PermissionResource, type ResourceGroup, isLegacyRoleResources } from '@superapp/shared-types';
+import { useSettings } from '@superapp/core-logic';
 
 interface RoleFormProps {
   role: Role | null;
@@ -17,15 +17,26 @@ export function RoleForm({ role, onSubmit, onClose, loading, isOpen }: RoleFormP
   const { t } = useTranslation(['roles', 'uikit']);
   const { getSettingValue } = useSettings();
   
-  // Get dynamic resources from settings, fallback to empty array
-  const settingResources = getSettingValue<string[]>('role_resources', []);
+  // Get dynamic resources from settings - can be string[] (legacy) or ResourceGroup[] (new)
+  const settingResources = getSettingValue<string[] | ResourceGroup[]>('role_resources', []);
 
   // Merge default resources with setting resources, ensuring uniqueness
   const resources = useMemo(() => {
     const defaults = [...PERMISSIONS.RESOURCES];
-    const fromSettings = settingResources;
+    
+    // Extract resources from settings (handle both legacy and new formats)
+    let fromSettings: string[];
+    if (isLegacyRoleResources(settingResources)) {
+      // Legacy format: string[]
+      fromSettings = settingResources;
+    } else {
+      // New format: ResourceGroup[] - extract all resources from all groups
+      fromSettings = settingResources.flatMap(g => g.resources);
+    }
+    
     return Array.from(new Set([...fromSettings, ...defaults])) as PermissionResource[];
   }, [settingResources]);
+
 
   const [formData, setFormData] = useState<CreateRoleInput>({
     name: '',

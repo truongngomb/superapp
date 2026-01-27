@@ -15,7 +15,7 @@ import {
   SelectItem,
   Input
 } from '@superapp/ui-kit';
-import { useSettings } from '@/hooks';
+import { useSettings } from '@superapp/core-logic';
 import { settingsService, useToast } from '@superapp/core-logic';
 import { BackupManager } from './BackupManager';
 import { SYSTEM_METRICS_SNAPSHOT_INTERVAL } from '@superapp/shared-types';
@@ -165,22 +165,22 @@ export function GeneralSettings() {
             
             <div className="flex items-center gap-2 w-full sm:w-auto">
               <div className="w-full sm:w-40">
-               <Input 
-                  type="text" 
-                  className="w-full"
-                  placeholder="1.0.0"
-                  defaultValue={getSettingValue<string>('system_version', '1.0.0')}
-                  onBlur={(e) => {
-                    if (e.target.value !== getSettingValue<string>('system_version', '1.0.0')) {
-                       void updateSetting('system_version', e.target.value, 'public');
-                    }
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.currentTarget.blur();
-                    }
-                  }}
-               />
+                <Input 
+                   type="text" 
+                   className="w-full"
+                   placeholder="1.0.0"
+                   defaultValue={getSettingValue<string>('system_version', '1.0.0')}
+                   onBlur={(e) => {
+                     if (e.target.value !== getSettingValue<string>('system_version', '1.0.0')) {
+                        void updateSetting('system_version', e.target.value, 'public');
+                     }
+                   }}
+                   onKeyDown={(e) => {
+                     if (e.key === 'Enter') {
+                       e.currentTarget.blur();
+                     }
+                   }}
+                />
             </div>
               
               <Button 

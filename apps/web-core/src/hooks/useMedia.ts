@@ -26,7 +26,6 @@ export function useMediaUpload(refId?: string, refType?: string) {
       toast.success(t('upload_success'));
       return response.url;
     } catch (error: unknown) {
-      console.error('Upload failed:', error);
       toast.error(t('upload_error'));
       throw error;
     } finally {

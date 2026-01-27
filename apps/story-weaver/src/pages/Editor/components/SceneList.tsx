@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useVideoScenes, useDeleteVideoScene } from '@/hooks/useScenes';
+import { useVideoScenes, useDeleteVideoScene } from '@/hooks';
 import { SceneCard } from './SceneCard';
 import { Button, EmptyState, ConfirmModal } from '@superapp/ui-kit';
 import { Plus, Video } from 'lucide-react';

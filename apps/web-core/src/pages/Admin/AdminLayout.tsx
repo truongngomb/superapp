@@ -4,7 +4,7 @@ import { Users, Shield, LayoutDashboard, FileClock, Settings, MoreVertical } fro
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/utils';
-import { useLayout, useLayoutMode } from '@/hooks';
+import { useLayout, useLayoutMode } from '@superapp/core-logic';
 import { PermissionGuard } from '@superapp/ui-kit';
 
 // ============================================================================

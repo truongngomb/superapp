@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { LoadingSpinner } from '@superapp/ui-kit';
-import { useSettings } from '@/hooks';
+import { useSettings } from '@superapp/core-logic';
 
 // Sub-components
 import { SettingsTabs, type Tab } from './components/SettingsTabs';

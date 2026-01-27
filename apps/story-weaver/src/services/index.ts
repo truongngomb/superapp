@@ -5,7 +5,6 @@
 
 export {
     authService,
-    settingsService
 } from '@superapp/core-logic';
 
 export { videoProjectService } from './project.service';

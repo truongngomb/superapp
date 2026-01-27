@@ -7,7 +7,7 @@ import { useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/hooks';
+import { useAuth } from '@superapp/core-logic';
 import { LoadingSpinner } from '@superapp/ui-kit';
 
 // ============================================================================

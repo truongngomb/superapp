@@ -1,10 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { systemService } from '@/services';
+import { systemService } from '@superapp/core-logic';
+import { queryKeys } from '@/config';
 import type { SystemStats } from '@superapp/shared-types';
 
 export function useSystemHealth() {
   const { data, isLoading, error, refetch } = useQuery<SystemStats>({
-    queryKey: ['system-health'],
+    queryKey: queryKeys.systemHealth.status(),
     queryFn: systemService.getStats,
     refetchInterval: 2000, // Poll every 2 seconds
     refetchOnWindowFocus: true,

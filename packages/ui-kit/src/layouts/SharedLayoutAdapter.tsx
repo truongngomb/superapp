@@ -21,15 +21,20 @@ import {
 interface SharedLayoutAdapterProps {
   menuItems: IMenuItem[];
   onViewAllNotifications?: () => void;
+  /** Force a specific layout mode, ignoring user settings */
+  forceLayoutMode?: 'standard' | 'modern';
 }
 
-export function SharedLayoutAdapter({ menuItems: rawMenuItems, onViewAllNotifications }: SharedLayoutAdapterProps) {
+export function SharedLayoutAdapter({ menuItems: rawMenuItems, onViewAllNotifications, forceLayoutMode }: SharedLayoutAdapterProps) {
   const { user, isAuthenticated, logout } = useAuth();
   const { isDark, toggleTheme } = useTheme();
-  const layoutMode = useLayoutMode();
+  const layoutModeFromSettings = useLayoutMode();
   const { headerContent } = useLayout();
   const location = useLocation();
   const { t } = useTranslation(['uikit', 'home']);
+  
+  // Use forced layout mode if provided, otherwise use settings
+  const layoutMode = forceLayoutMode ?? layoutModeFromSettings;
   
   // Hande optional ActivityLogContext
   const activityLog = useContext(ActivityLogContext);
@@ -126,6 +131,7 @@ export function SharedLayoutAdapter({ menuItems: rawMenuItems, onViewAllNotifica
   };
 
   if (layoutMode === 'modern') {
+
     return (
       <AppLayout
         layoutMode="modern"

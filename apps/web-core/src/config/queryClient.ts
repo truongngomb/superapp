@@ -84,7 +84,7 @@ export const queryKeys = {
   
   // Activity Logs
   activityLogs: {
-    all: ['activityLogs'] as const,
+    all: ['activity_logs'] as const,
     lists: () => [...queryKeys.activityLogs.all, 'list'] as const,
     list: (params: Record<string, unknown>) => [...queryKeys.activityLogs.lists(), params] as const,
   },
@@ -93,6 +93,28 @@ export const queryKeys = {
   settings: {
     all: ['settings'] as const,
     public: () => [...queryKeys.settings.all, 'public'] as const,
+  },
+
+  // Markdown Pages
+  markdownPages: {
+    all: ['markdown_pages'] as const,
+    lists: () => [...queryKeys.markdownPages.all, 'list'] as const,
+    list: (params: Record<string, unknown>) => [...queryKeys.markdownPages.lists(), params] as const,
+    details: () => [...queryKeys.markdownPages.all, 'detail'] as const,
+    detail: (id: string) => [...queryKeys.markdownPages.details(), id] as const,
+  },
+
+  // System Health
+  systemHealth: {
+    all: ['system_health'] as const,
+    status: () => [...queryKeys.systemHealth.all, 'status'] as const,
+    metrics: (type: string) => [...queryKeys.systemHealth.all, 'metrics', type] as const,
+  },
+
+  // API Docs
+  apiDocs: {
+    all: ['api_docs'] as const,
+    spec: () => [...queryKeys.apiDocs.all, 'spec'] as const,
   },
 } as const;
 
