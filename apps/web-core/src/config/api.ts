@@ -21,6 +21,8 @@ export interface RequestConfig {
   retryDelay?: number;
   /** Skip automatic response unwrapping */
   rawResponse?: boolean;
+  /** Request timeout in ms */
+  timeout?: number;
 }
 
 export interface ApiErrorData {

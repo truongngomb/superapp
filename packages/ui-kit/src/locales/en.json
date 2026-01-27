@@ -47,7 +47,10 @@
     "delete": "Delete",
     "restore": "Restore",
     "duplicate": "Duplicate",
-    "view": "View"
+    "view": "View",
+    "create": "Create",
+    "update": "Update",
+    "manage": "Manage"
   },
   "confirmation": {
     "delete": "Are you sure you want to move this {{entity}} to Trash?",
@@ -165,7 +168,9 @@
     "dashboard": "Dashboard",
     "home": "Home",
     "api_docs": "API Documentation",
-    "system_health": "System Health"
+    "system_health": "System Health",
+    "login": "Login",
+    "video_projects": "Video Projects"
   },
   "maintenance": {
     "title": "System Maintenance",

@@ -71,9 +71,10 @@ export function RoleSelectModal({
       isOpen={isOpen}
       onClose={onClose}
       title={t('users:form.assign_role_title')}
+      size="xl"
       footer={
-        <div className="flex gap-3">
-          <Button type="button" variant="outline" onClick={onClose} className="flex-1">
+        <div className="flex justify-end gap-3 w-full">
+          <Button type="button" variant="outline" onClick={onClose}>
             {t('uikit:cancel')}
           </Button>
           <Button
@@ -81,7 +82,6 @@ export function RoleSelectModal({
             form="role-select-form"
             loading={loading}
             disabled={!hasChanges()}
-            className="flex-1"
           >
             {t('uikit:save')}
           </Button>
@@ -144,9 +144,9 @@ export function RoleSelectModal({
           <label className="block text-sm font-medium text-foreground mb-2">
             {t('users:form.select_roles')}
           </label>
-          <div className="space-y-2 max-h-60 overflow-y-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {roles.length === 0 ? (
-              <p className="text-sm text-muted text-center py-4">
+              <p className="text-sm text-muted text-center py-4 col-span-full">
                 {t('users:list.empty')}
               </p>
             ) : (

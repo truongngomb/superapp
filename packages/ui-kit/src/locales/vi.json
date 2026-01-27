@@ -47,7 +47,10 @@
     "delete": "Xóa",
     "restore": "Khôi phục",
     "duplicate": "Sao chép",
-    "view": "Xem"
+    "view": "Xem",
+    "create": "Tạo",
+    "update": "Cập nhật",
+    "manage": "Quản lý"
   },
   "confirmation": {
     "delete": "Bạn có chắc muốn chuyển {{entity}} này vào Thùng rác?",
@@ -165,7 +168,9 @@
     "dashboard": "Tổng quan",
     "home": "Trang chủ",
     "api_docs": "Tài liệu API",
-    "system_health": "Trạng thái Hệ thống"
+    "system_health": "Trạng thái Hệ thống",
+    "login": "Đăng nhập",
+    "video_projects": "Dự án Video"
   },
   "maintenance": {
     "title": "Hệ thống đang bảo trì",

@@ -3,148 +3,78 @@
  * Handles all category-related API calls
  */
 
-import { api, createAbortController, API_ENDPOINTS, type RequestConfig, env } from '@/config';
-import type { Category, CreateCategoryInput, UpdateCategoryInput, CategoryListParams, PaginatedCategories } from '@superapp/shared-types';
+import { BaseService, api } from '@superapp/core-logic';
+import { API_ENDPOINTS, type RequestConfig, env, createAbortController } from '@/config';
+import type { Category, CategoryListParams, PaginatedCategories } from '@superapp/shared-types';
 
-// ============================================================================
-// Types
-// ============================================================================
+class CategoryService extends BaseService<Category> {
+  protected get endpoint(): string {
+    return API_ENDPOINTS.CATEGORIES;
+  }
 
-interface ServiceConfig extends Omit<RequestConfig, 'signal'> {
-  /** Request timeout in ms (default: env.API_REQUEST_TIMEOUT) */
-  timeout?: number;
-  /** AbortSignal for cancellation */
-  signal?: AbortSignal;
-}
-
-// ============================================================================
-// Service
-// ============================================================================
-
-export const categoryService = {
   /**
-   * Get all categories
-   * @param params Optional filters for search/color
+   * Get all categories (with optional filters)
    */
-  async getAll(params?: CategoryListParams, config?: ServiceConfig): Promise<Category[]> {
+  async getAll(params?: CategoryListParams, config?: RequestConfig): Promise<Category[]> {
     const { controller, clear } = createAbortController(config?.timeout ?? env.API_REQUEST_TIMEOUT);
     
     try {
-      // Build query params if params provided
-      let endpoint = API_ENDPOINTS.CATEGORIES;
+      // Build query params
+      const searchParams = new URLSearchParams();
       if (params) {
-        const queryParams = new URLSearchParams();
-        if (params.search) queryParams.append('search', params.search);
-        if (params.color) queryParams.append('color', params.color);
-        if (params.isActive !== undefined) queryParams.append('isActive', params.isActive.toString());
-        const queryString = queryParams.toString();
-        if (queryString) endpoint += `?${queryString}`;
+        if (params.search) searchParams.append('search', params.search);
+        if (params.color) searchParams.append('color', params.color);
+        if (params.isActive !== undefined) searchParams.append('isActive', params.isActive.toString());
       }
       
-      return await api.get<Category[]>(endpoint, {
+      const queryString = searchParams.toString();
+      const url = queryString ? `${this.endpoint}?${queryString}` : this.endpoint;
+      
+      return await api.get<Category[]>(url, {
         signal: config?.signal ?? controller.signal,
       });
     } finally {
       clear();
     }
-  },
+  }
 
   /**
    * Get paginated categories
+   * Override to handle specific params conversion if needed, 
+   * or rely on BaseService if params match.
+   * Since we have specific params like isActive, color, we keep strict typing
    */
-  async getPage(params?: CategoryListParams, config?: ServiceConfig): Promise<PaginatedCategories> {
-    const { controller, clear } = createAbortController(config?.timeout ?? env.API_REQUEST_TIMEOUT);
-    
-    try {
-      const queryParams = new URLSearchParams();
-      if (params?.page) queryParams.append('page', params.page.toString());
-      if (params?.limit) queryParams.append('limit', params.limit.toString());
-      if (params?.sort) queryParams.append('sort', params.sort);
-      if (params?.order) queryParams.append('order', params.order);
-      if (params?.search) queryParams.append('search', params.search);
-      if (params?.color) queryParams.append('color', params.color);
-      if (params?.isActive !== undefined) queryParams.append('isActive', params.isActive.toString());
-      if (params?.isDeleted !== undefined) queryParams.append('isDeleted', params.isDeleted.toString());
-
-      const queryString = queryParams.toString();
-      const endpoint = queryString ? `${API_ENDPOINTS.CATEGORIES}?${queryString}` : API_ENDPOINTS.CATEGORIES;
-
-      return await api.get<PaginatedCategories>(endpoint, {
-        signal: config?.signal ?? controller.signal,
-      });
-    } finally {
-      clear();
-    }
-  },
-
-  /**
-   * Get category by ID
-   */
-  async getById(id: string, config?: ServiceConfig): Promise<Category> {
-    const { controller, clear } = createAbortController(config?.timeout ?? env.API_REQUEST_TIMEOUT);
-    
-    try {
-      return await api.get<Category>(`${API_ENDPOINTS.CATEGORIES}/${id}`, {
-        signal: config?.signal ?? controller.signal,
-      });
-    } finally {
-      clear();
-    }
-  },
-
-  /**
-   * Create new category
-   */
-  async create(data: CreateCategoryInput): Promise<Category> {
-    return api.post<Category>(API_ENDPOINTS.CATEGORIES, data);
-  },
-
-  /**
-   * Update existing category
-   */
-  async update(id: string, data: UpdateCategoryInput): Promise<Category> {
-    return api.put<Category>(`${API_ENDPOINTS.CATEGORIES}/${id}`, data);
-  },
-
-  /**
-   * Restore soft-deleted category
-   */
-  async restore(id: string): Promise<boolean | undefined> {
-    return api.post(`${API_ENDPOINTS.CATEGORIES}/${id}/restore`);
-  },
-
-  /**
-   * Delete category by ID
-   */
-  async delete(id: string): Promise<boolean | undefined> {
-    return api.delete(`${API_ENDPOINTS.CATEGORIES}/${id}`);
-  },
+  async getPage(params?: CategoryListParams, config?: RequestConfig): Promise<PaginatedCategories> {
+    // BaseService uses JSON.stringify for non-string values.
+    // If backend expects "true"/"false" for boolean, it works fine.
+    return super.getPage(params, config);
+  }
 
   /**
    * Batch delete categories
    */
   async deleteMany(ids: string[]): Promise<boolean | undefined> {
-    return api.post(`${API_ENDPOINTS.CATEGORIES}/batch-delete`, { ids });
-  },
+    return api.post(`${this.endpoint}/batch-delete`, { ids });
+  }
 
   /**
    * Batch update categories status
    */
   async batchUpdateStatus(ids: string[], isActive: boolean): Promise<boolean | undefined> {
-    return api.post(`${API_ENDPOINTS.CATEGORIES}/batch-status`, { ids, isActive });
-  },
+    return api.post(`${this.endpoint}/batch-status`, { ids, isActive });
+  }
 
   /**
    * Batch restore categories
    */
   async restoreMany(ids: string[]): Promise<boolean | undefined> {
-    return api.post(`${API_ENDPOINTS.CATEGORIES}/batch-restore`, { ids });
-  },
+    return api.post(`${this.endpoint}/batch-restore`, { ids });
+  }
 
   /**
    * Get all categories for export (no pagination)
    */
-  async getAllForExport(params?: CategoryListParams, config?: ServiceConfig): Promise<Category[]> {
+  async getAllForExport(params?: CategoryListParams, config?: RequestConfig): Promise<Category[]> {
     const { controller, clear } = createAbortController(config?.timeout ?? env.API_REQUEST_TIMEOUT);
     
     try {
@@ -157,15 +87,17 @@ export const categoryService = {
       if (params?.isDeleted !== undefined) queryParams.append('isDeleted', params.isDeleted.toString());
 
       const queryString = queryParams.toString();
-      const endpoint = queryString 
-        ? `${API_ENDPOINTS.CATEGORIES}/export?${queryString}` 
-        : `${API_ENDPOINTS.CATEGORIES}/export`;
+      const url = queryString 
+        ? `${this.endpoint}/export?${queryString}` 
+        : `${this.endpoint}/export`;
 
-      return await api.get<Category[]>(endpoint, {
+      return await api.get<Category[]>(url, {
         signal: config?.signal ?? controller.signal,
       });
     } finally {
       clear();
     }
-  },
-};
+  }
+}
+
+export const categoryService = new CategoryService();

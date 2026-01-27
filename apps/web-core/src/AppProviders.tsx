@@ -9,11 +9,11 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { queryClient } from '@/config/queryClient';
 import {
-  ToastProvider,
   RealtimeProvider,
   SettingsProvider
 } from '@superapp/core-logic';
 import { AuthProvider, ThemeProvider, LayoutProvider, ActivityLogProvider } from '@superapp/core-logic';
+import { ToastProvider } from '@superapp/ui-kit';
 
 interface AppProvidersProps {
   children: ReactNode;
