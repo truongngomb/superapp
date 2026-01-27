@@ -1,5 +1,6 @@
 import { env } from './env';
 import { PermissionResource, PermissionAction } from '@superapp/shared-types';
+
 /**
  * Application Constants
  * Centralized constant values used across the app

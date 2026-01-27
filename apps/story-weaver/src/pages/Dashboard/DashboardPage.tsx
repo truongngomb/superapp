@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { PageHeader, GradientText, EmptyState, Card, CardContent, CardTitle, CardDescription, Badge, LoadingSpinner } from '@superapp/ui-kit';
+import { AnimatePresence, motion } from 'framer-motion';
+import { PageHeader, GradientText, EmptyState, Card, CardContent, CardTitle, CardDescription, Badge, LoadingSpinner, fadeSlideUp, defaultTransition } from '@superapp/ui-kit';
 import { useVideoProjects } from '@/hooks/useProjects';
 import { CreateProjectModal } from './components/CreateProjectModal';
 import { useNavigate } from 'react-router-dom';
@@ -20,7 +21,7 @@ export const DashboardPage = () => {
                 subtitleKey="video_projects:dashboard.subtitle"
                 onExport={() => {}} 
                 showExport={false}
-                onCreateClick={() => setIsCreateModalOpen(true)}
+                onCreateClick={() => { setIsCreateModalOpen(true); }}
                 createButtonKey="video_projects:dashboard.create_btn"
             >
                 <GradientText className="text-sm font-semibold mr-4">
@@ -28,25 +29,51 @@ export const DashboardPage = () => {
                 </GradientText>
             </PageHeader>
 
+            <AnimatePresence mode="wait">
             {isLoading ? (
-                <div className="flex items-center justify-center py-20">
+                <motion.div 
+                    key="loading"
+                    variants={fadeSlideUp}
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    transition={defaultTransition}
+                    className="flex items-center justify-center py-20"
+                >
                     <LoadingSpinner size="lg" />
-                </div>
+                </motion.div>
             ) : projects.length === 0 ? (
-                <EmptyState
-                    icon={Video}
-                    title={t('video_projects:dashboard.empty.title')}
-                    description={t('video_projects:dashboard.empty.description')}
-                    actionText={t('video_projects:dashboard.empty.action')}
-                    onAction={() => setIsCreateModalOpen(true)}
-                />
+                <motion.div
+                    key="empty"
+                    variants={fadeSlideUp}
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    transition={defaultTransition}
+                >
+                    <EmptyState
+                        icon={Video}
+                        title={t('video_projects:dashboard.empty.title')}
+                        description={t('video_projects:dashboard.empty.description')}
+                        actionText={t('video_projects:dashboard.empty.action')}
+                        onAction={() => { setIsCreateModalOpen(true); }}
+                    />
+                </motion.div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <motion.div 
+                    key="content"
+                    variants={fadeSlideUp}
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    transition={defaultTransition}
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                >
                     {projects.map((project) => (
                         <Card 
                             key={project.id} 
                             hoverable
-                            onClick={() => navigate(`/editor/${project.id}`)}
+                            onClick={() => { void navigate(`/editor/${project.id}`); }}
                             className="group"
                         >
                             <CardContent className="p-6">
@@ -69,8 +96,9 @@ export const DashboardPage = () => {
                             </CardContent>
                         </Card>
                     ))}
-                </div>
+                </motion.div>
             )}
+            </AnimatePresence>
 
             <CreateProjectModal 
                 open={isCreateModalOpen} 

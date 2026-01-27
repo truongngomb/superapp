@@ -2,7 +2,7 @@
  * Base Service Class
  * Provides common functionality for all services
  */
-import { api, RequestConfig } from '@/config';
+import { api, type RequestConfig } from '../config';
 import { BaseEntity, PaginatedResponse, BaseListParams } from '@superapp/shared-types';
 
 export abstract class BaseService<T extends BaseEntity> {
@@ -17,7 +17,8 @@ export abstract class BaseService<T extends BaseEntity> {
     if (params) {
       Object.entries(params).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
-          searchParams.append(key, String(value));
+          const stringValue = typeof value === 'string' ? value : JSON.stringify(value);
+          searchParams.append(key, stringValue);
         }
       });
     }
@@ -52,14 +53,16 @@ export abstract class BaseService<T extends BaseEntity> {
   /**
    * Delete item
    */
-  async delete(id: string, config?: RequestConfig): Promise<void> {
-    return api.delete<void>(`${this.endpoint}/${id}`, config);
+  async delete(id: string, config?: RequestConfig): Promise<boolean | undefined> {
+    await api.delete<boolean>(`${this.endpoint}/${id}`, config);
+    return true;
   }
 
   /**
    * Restore (soft-deleted) item
    */
-  async restore(id: string, config?: RequestConfig): Promise<void> {
-    return api.post<void>(`${this.endpoint}/${id}/restore`, undefined, config);
+  async restore(id: string, config?: RequestConfig): Promise<boolean | undefined> {
+    await api.post<boolean>(`${this.endpoint}/${id}/restore`, undefined, config);
+    return true;
   }
 }

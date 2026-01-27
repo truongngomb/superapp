@@ -17,8 +17,7 @@ import {
   PermissionGuard,
   PageHeader,
   ResourceConfirmModals,
-  ResourceCardSkeletonList,
-} from "@superapp/ui-kit";
+  ResourceCardSkeletonList } from "@superapp/ui-kit";
 import type { 
   MarkdownPage, 
   MarkdownPageCreateInput, 
@@ -38,7 +37,7 @@ import {
   useInfiniteResource,
   useAuth
 } from "@/hooks";
-import { useToast } from "@/context";
+import { useToast } from "@superapp/ui-kit";
 
 import { markdownService } from "@/services";
 
@@ -482,3 +481,5 @@ export default function MarkdownPagesPage() {
     </div>
   );
 }
+
+

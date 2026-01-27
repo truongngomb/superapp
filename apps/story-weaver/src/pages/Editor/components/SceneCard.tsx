@@ -35,7 +35,7 @@ export const SceneCard = ({ scene, index, onDelete }: SceneCardProps) => {
                     <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => onDelete(scene.id)}
+                        onClick={() => { onDelete(scene.id); }}
                         className="text-muted-foreground hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8"
                     >
                         <Trash2 size={16} />

@@ -16,6 +16,8 @@ import {
   ResourceConfirmModals,
   ResourceCardSkeletonList,
   EmptyState,
+  fadeSlideUp,
+  defaultTransition,
 } from '@superapp/ui-kit';
 import { useSort, useDebounce, useAuth, useResource, useExcelExport, useResponsiveView, useInfiniteResource } from '@/hooks';
 import type { User, SortColumn, UserCreateInput, UserListParams, UserUpdateInput, ViewMode } from '@superapp/shared-types';
@@ -344,10 +346,7 @@ export default function UsersPage() {
       <AnimatePresence mode="wait">
         <framerMotion.div
           key={loading && users.length === 0 ? "loading" : users.length === 0 ? "empty" : "content"}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.2, ease: "easeOut" }}
+          variants={fadeSlideUp} initial="initial" animate="animate" exit="exit" transition={defaultTransition}
           className="min-h-[400px]"
         >
         { (loading && users.length === 0) || isRefreshing ? (
@@ -507,3 +506,4 @@ export default function UsersPage() {
     </div>
   );
 }
+

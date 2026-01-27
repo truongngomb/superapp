@@ -30,7 +30,7 @@ export const videoAspectRatioSchema = z.enum([
 ]);
 
 export const videoProjectSettingsSchema = z.object({
-  aspectRatio: videoAspectRatioSchema.optional().default('9:16'),
+  aspectRatio: videoAspectRatioSchema.optional(),
   stylePreset: z.string().optional(),
   voiceId: z.string().optional(),
 });

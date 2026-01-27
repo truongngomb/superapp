@@ -29,3 +29,4 @@ export * from './useScenes';
 
 // Re-export shared context hooks for convenience
 export { useTheme } from '@/context';
+

@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { markdownService } from '@/services';
-import { useToast } from '@/context';
+import { useToast } from '@superapp/ui-kit';
 import type { 
   MarkdownPage, 
   MarkdownPageCreateInput, 

@@ -15,6 +15,4 @@ export {
     backupService
 } from '@superapp/core-logic';
 
-export type { SettingItem } from '@superapp/core-logic';
-
 export * from './category.service';

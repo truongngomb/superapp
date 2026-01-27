@@ -12,3 +12,4 @@ export * from './markdown.service';
 export * from './system.service';
 export * from './media.service';
 export * from './backup.service';
+export * from './base.service';

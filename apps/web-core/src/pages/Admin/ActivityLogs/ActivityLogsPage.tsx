@@ -4,7 +4,7 @@ import { AnimatePresence, motion as framerMotion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import { RefreshCw, Search, Loader2 } from 'lucide-react';
-import { Button, Pagination, SortPopup, Input, PermissionGuard, PageHeader, ResourceCardSkeletonList } from '@superapp/ui-kit';
+import { Button, Pagination, SortPopup, Input, PermissionGuard, PageHeader, ResourceCardSkeletonList, fadeSlideUp, defaultTransition } from '@superapp/ui-kit';
 import { STORAGE_KEYS } from '@/config';
 import { ActivityLogTable } from './components/ActivityLogTable';
 import { ActivityLogTableSkeleton } from './components/ActivityLogTableSkeleton';
@@ -202,10 +202,7 @@ export default function ActivityLogsPage() {
         <AnimatePresence mode="wait">
           <framerMotion.div
             key={loading && logs.length === 0 ? "loading" : logs.length === 0 ? "empty" : "content"}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
+            variants={fadeSlideUp} initial="initial" animate="animate" exit="exit" transition={defaultTransition}
             className="min-h-[400px]"
           >
             {(loading && logs.length === 0) || isRefreshing ? (
@@ -259,3 +256,4 @@ export default function ActivityLogsPage() {
     </PermissionGuard>
   );
 }
+

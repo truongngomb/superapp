@@ -5,7 +5,7 @@
  */
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useToast } from '@/context';
+import { useToast } from '@superapp/ui-kit';
 import { mediaService } from '@superapp/core-logic';
 
 

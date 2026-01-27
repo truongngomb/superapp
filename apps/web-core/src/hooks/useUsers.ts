@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { User, UserCreateInput, UserUpdateInput, UserListParams } from '@superapp/shared-types';
-import { useToast } from '@/context';
+import { useToast } from '@superapp/ui-kit';
 import { logger } from '@/utils';
 import { ApiException } from '@/config';
 import { userService } from '@superapp/core-logic';
@@ -261,3 +261,4 @@ export function useUsers() {
     assignRoles,
   };
 }
+

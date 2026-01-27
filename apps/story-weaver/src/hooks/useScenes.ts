@@ -21,7 +21,7 @@ export const useCreateVideoScene = () => {
   return useMutation({
     mutationFn: (data: CreateVideoSceneInput) => videoSceneService.create(data),
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['video-scenes', variables.projectId] });
+      void queryClient.invalidateQueries({ queryKey: ['video-scenes', variables.projectId] });
     }
   });
 };
@@ -32,7 +32,7 @@ export const useUpdateVideoScene = () => {
   return useMutation({
     mutationFn: ({ id, data }: { id: string, data: UpdateVideoSceneInput }) => videoSceneService.update(id, data),
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['video-scenes', data.projectId] });
+      void queryClient.invalidateQueries({ queryKey: ['video-scenes', data.projectId] });
     }
   });
 };
@@ -45,7 +45,7 @@ export const useDeleteVideoScene = () => {
         onSuccess: () => {
              // Invalidate all scenes queries since we don't know the project ID easily here
              // Ideally we pass projectId to onSuccess to invalidate specifically
-             queryClient.invalidateQueries({ queryKey: ['video-scenes'] });
+             void queryClient.invalidateQueries({ queryKey: ['video-scenes'] });
         }
     })
 }

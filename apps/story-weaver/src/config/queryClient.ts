@@ -27,7 +27,7 @@ export const queryClient = new QueryClient({
       // Retry failed requests once
       retry: 1,
       
-      // Refetch when window regains focus (important for long running jobs checking)
+      // Refetch when window regains focus
       refetchOnWindowFocus: true,
       
       // Refetch when network reconnects

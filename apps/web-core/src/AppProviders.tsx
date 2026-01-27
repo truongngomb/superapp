@@ -12,7 +12,7 @@ import {
   ToastProvider,
   RealtimeProvider,
   SettingsProvider
-} from '@/context';
+} from '@superapp/core-logic';
 import { AuthProvider, ThemeProvider, LayoutProvider, ActivityLogProvider } from '@superapp/core-logic';
 
 interface AppProvidersProps {
@@ -48,3 +48,5 @@ export function AppProviders({ children }: AppProvidersProps) {
     </QueryClientProvider>
   );
 }
+
+

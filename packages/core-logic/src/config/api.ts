@@ -44,8 +44,11 @@ export class ApiException extends Error {
     this.code = code;
     this.isNetworkError = isNetworkError;
     
-    // Maintains proper stack trace for where error was thrown (V8 only)    
-    Error.captureStackTrace(this, ApiException);
+    // Maintains proper stack trace for where error was thrown (V8 only)
+    const errorConstructor = Error as unknown as { captureStackTrace?: (target: object, constructorOpt?: unknown) => void };
+    if (errorConstructor.captureStackTrace) {
+      errorConstructor.captureStackTrace(this, ApiException);
+    }
   }
 
   /** Check if error is unauthorized (401) */

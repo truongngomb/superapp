@@ -24,8 +24,7 @@ export const CreateProjectModal = ({ open, onOpenChange }: CreateProjectModalPro
     
     // Manual Form
     const form = useForm<CreateVideoProjectInput>({
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        resolver: zodResolver(createVideoProjectSchema) as any,
+        resolver: zodResolver(createVideoProjectSchema),
         defaultValues: {
             name: '',
             description: '',
@@ -59,7 +58,7 @@ export const CreateProjectModal = ({ open, onOpenChange }: CreateProjectModalPro
     return (
         <Modal 
             isOpen={open} 
-            onClose={() => onOpenChange(false)} 
+            onClose={() => { onOpenChange(false); }} 
             title={activeTab === 'manual' ? t('video_projects:modal.create.title_manual') : t('video_projects:modal.create.title_ai')}
             description={activeTab === 'manual' ? t('video_projects:modal.create.desc_manual') : t('video_projects:modal.create.desc_ai')}
             size="md"
@@ -69,11 +68,20 @@ export const CreateProjectModal = ({ open, onOpenChange }: CreateProjectModalPro
                         {activeTab === 'ai' && t('video_projects:modal.create.ai_power')}
                     </div>
                     <div className="flex gap-2">
-                        <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>{t('uikit:cancel')}</Button>
+                        <Button type="button" variant="outline" onClick={() => { onOpenChange(false); }}>{t('uikit:cancel')}</Button>
                         {activeTab === 'manual' ? (
-                            <Button onClick={form.handleSubmit(onManualSubmit)} loading={isCreating}>{t('video_projects:dashboard.create_btn')}</Button>
+                            <Button 
+                                onClick={() => { void form.handleSubmit(onManualSubmit)(); }} 
+                                loading={isCreating}
+                            >
+                                {t('video_projects:dashboard.create_btn')}
+                            </Button>
                         ) : (
-                            <Button onClick={aiForm.handleSubmit(onAiSubmit)} loading={isGenerating} className="gap-2">
+                            <Button 
+                                onClick={() => { void aiForm.handleSubmit(onAiSubmit)(); }} 
+                                loading={isGenerating} 
+                                className="gap-2"
+                            >
                                 <Wand2 size={16} /> {t('video_projects:modal.create.generate_idea')}
                             </Button>
                         )}
@@ -89,7 +97,7 @@ export const CreateProjectModal = ({ open, onOpenChange }: CreateProjectModalPro
                 
                 <TabsContent value="manual">
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onManualSubmit)} className="space-y-4">
+                        <form onSubmit={(e) => { void form.handleSubmit(onManualSubmit)(e); }} className="space-y-4">
                             <FormField
                                 control={form.control}
                                 name="name"
@@ -122,7 +130,7 @@ export const CreateProjectModal = ({ open, onOpenChange }: CreateProjectModalPro
 
                 <TabsContent value="ai">
                     <Form {...aiForm}>
-                        <form onSubmit={aiForm.handleSubmit(onAiSubmit)} className="space-y-4">
+                        <form onSubmit={(e) => { void aiForm.handleSubmit(onAiSubmit)(e); }} className="space-y-4">
                             <FormField
                                 control={aiForm.control}
                                 name="topic"

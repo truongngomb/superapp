@@ -45,9 +45,9 @@ export class ApiException extends Error {
     this.isNetworkError = isNetworkError;
     
     // Maintains proper stack trace for where error was thrown (V8 only)
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, ApiException);
+    const errorConstructor = Error as unknown as { captureStackTrace?: (target: object, constructorOpt?: unknown) => void };
+    if (errorConstructor.captureStackTrace) {
+      errorConstructor.captureStackTrace(this, ApiException);
     }
   }
 

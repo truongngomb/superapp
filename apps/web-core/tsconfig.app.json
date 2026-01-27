@@ -24,6 +24,8 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
     "noUncheckedIndexedAccess": true,
+
+    /* Path aliases - Copied from web-core tsconfig.json */
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],

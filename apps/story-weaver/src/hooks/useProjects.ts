@@ -28,8 +28,8 @@ export const useCreateVideoProject = () => {
   
   return useMutation({
     mutationFn: (data: CreateVideoProjectInput) => videoProjectService.create(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['video-projects'] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['video-projects'] });
     }
   });
 };
@@ -39,9 +39,9 @@ export const useUpdateVideoProject = () => {
   
   return useMutation({
     mutationFn: ({ id, data }: { id: string, data: UpdateVideoProjectInput }) => videoProjectService.update(id, data),
-    onSuccess: (_, { id }) => {
-      queryClient.invalidateQueries({ queryKey: ['video-projects'] });
-      queryClient.invalidateQueries({ queryKey: ['video-project', id] });
+    onSuccess: async (_, { id }) => {
+      await queryClient.invalidateQueries({ queryKey: ['video-projects'] });
+      await queryClient.invalidateQueries({ queryKey: ['video-project', id] });
     }
   });
 };
@@ -51,8 +51,8 @@ export const useGenerateVideoScript = () => {
   
   return useMutation({
     mutationFn: (topic: string) => videoProjectService.generateScript(topic),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['video-projects'] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['video-projects'] });
     }
   });
 };
@@ -62,10 +62,10 @@ export const useRenderVideo = () => {
   
   return useMutation({
     mutationFn: (projectId: string) => videoProjectService.renderVideo(projectId),
-    onSuccess: (_, projectId) => {
+    onSuccess:  async (_, projectId) => {
       // Invalidate to refetch project status
-      queryClient.invalidateQueries({ queryKey: ['video-project', projectId] });
-      queryClient.invalidateQueries({ queryKey: ['video-projects'] });
+      await queryClient.invalidateQueries({ queryKey: ['video-project', projectId] });
+      await queryClient.invalidateQueries({ queryKey: ['video-projects'] });
     }
   });
 };

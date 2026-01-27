@@ -14,13 +14,15 @@ import {
   ResourceConfirmModals,
   ResourceCardSkeletonList,
   EmptyState,
+  fadeSlideUp,
+  defaultTransition,
 } from "@superapp/ui-kit";
 import type { Role, SortColumn, CreateRoleInput, UpdateRoleInput, RoleListParams } from "@superapp/shared-types";
 import { ViewMode } from "@superapp/shared-types";
 import { getStorageItem, setStorageItem } from "@/utils";
 import { STORAGE_KEYS } from "@/config";
 import { useSort, useDebounce, useAuth, useResource, useExcelExport, useResponsiveView, useInfiniteResource } from "@/hooks";
-import { useToast } from "@/context";
+import { useToast } from "@superapp/ui-kit";
 
 import { roleService } from "@/services";
 
@@ -320,10 +322,7 @@ export default function RolesPage() {
       <AnimatePresence mode="wait">
         <framerMotion.div
           key={loading && roles.length === 0 ? "loading" : roles.length === 0 ? "empty" : "content"}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.2, ease: "easeOut" }}
+          variants={fadeSlideUp} initial="initial" animate="animate" exit="exit" transition={defaultTransition}
           className="min-h-[400px]"
         >
         { (loading && roles.length === 0) || isRefreshing ? (
@@ -477,3 +476,5 @@ export default function RolesPage() {
     </div>
   );
 }
+
+

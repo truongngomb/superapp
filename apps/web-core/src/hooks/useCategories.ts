@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { categoryService } from '@/services';
-import { useToast } from '@/context';
+import { useToast } from '@superapp/ui-kit';
 import type { Category, CreateCategoryInput, CategoryListParams } from '@superapp/shared-types';
 import { logger } from '@/utils';
 import { ApiException } from '@/config';

@@ -7,8 +7,8 @@
 import { BrowserRouter } from 'react-router-dom';
 import { AppProviders } from './AppProviders';
 import { AppRoutes } from './AppRoutes';
-import { MaintenanceOverlay } from './components/common';
 import { api } from '@superapp/core-logic';
+import { MaintenanceOverlay } from '@superapp/ui-kit';
 
 // ============================================================================
 // App Component

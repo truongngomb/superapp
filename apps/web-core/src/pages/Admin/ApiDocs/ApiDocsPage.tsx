@@ -9,12 +9,12 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FileJson, BookOpen, ChevronRight, ChevronDown, Maximize2, Minimize2 } from 'lucide-react';
-import { useTheme } from '@/context';
+import { useTheme } from "@superapp/core-logic";
 import { env, STORAGE_KEYS } from '@/config';
 import { getStorageItem, setStorageItem, cn } from '@/utils';
 import { useLayoutMode } from '@/hooks';
 import { Button } from '@superapp/ui-kit';
-import { useToast } from '@/context';
+import { useToast } from "@superapp/ui-kit";
 import { useEffect } from 'react';
 
 // ============================================================================
@@ -370,3 +370,4 @@ export default function ApiDocsPage() {
     </div>
   );
 }
+

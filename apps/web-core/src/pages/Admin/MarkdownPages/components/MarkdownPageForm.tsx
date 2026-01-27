@@ -33,7 +33,7 @@ import {
 } from '@superapp/ui-kit';
 import { generateSlug } from '@superapp/core-logic';
 import { useMarkdownPages, useDebounce, useMediaUpload } from '@/hooks';
-import { useToast } from '@/context';
+import { useToast } from "@superapp/ui-kit";
 import { Wand2, FileText, Link as LinkIcon, Folder, Copy, X, Loader2 } from 'lucide-react';
 import { markdownService } from '@superapp/core-logic';
 
@@ -987,3 +987,4 @@ export function MarkdownPageForm({
     </>
   );
 }
+

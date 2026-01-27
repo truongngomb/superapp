@@ -1,4 +1,4 @@
-import { BaseService } from './base.service';
+import { BaseService } from '@superapp/core-logic';
 import { API_ENDPOINTS } from '@/config';
 import { VideoProject } from '@superapp/shared-types';
 
@@ -11,7 +11,7 @@ class VideoProjectService extends BaseService<VideoProject> {
     // Dynamic import to avoid circular dependency if any, though import at top level is safer usually if no cycle.
     // Using simple api.post is better.
     const { api } = await import('@/config');
-    return api.post<{ projectId: string, scenesCount: number }>(
+    return await api.post<{ projectId: string, scenesCount: number }>(
       `${this.endpoint}/generate-script`, 
       { topic }
     );
@@ -19,7 +19,7 @@ class VideoProjectService extends BaseService<VideoProject> {
 
   async renderVideo(projectId: string) {
     const { api } = await import('@/config');
-    return api.post<{ message: string }>(
+    return await api.post<{ message: string }>(
       `${this.endpoint}/${projectId}/render`
     );
   }

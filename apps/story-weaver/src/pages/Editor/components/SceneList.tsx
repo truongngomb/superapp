@@ -37,7 +37,7 @@ export const SceneList = ({ projectId }: SceneListProps) => {
                             key={scene.id} 
                             scene={scene} 
                             index={index} 
-                            onDelete={(id) => setDeleteId(id)}
+                            onDelete={(id) => { setDeleteId(id); }}
                         />
                     ))
                 )}
@@ -57,11 +57,11 @@ export const SceneList = ({ projectId }: SceneListProps) => {
                 onConfirm={() => {
                     if (deleteId) {
                         deleteScene(deleteId, {
-                            onSuccess: () => setDeleteId(null)
+                            onSuccess: () => { setDeleteId(null); }
                         });
                     }
                 }}
-                onCancel={() => setDeleteId(null)}
+                onCancel={() => { setDeleteId(null); }}
             />
         </div>
     );
