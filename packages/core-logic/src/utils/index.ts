@@ -7,6 +7,7 @@ export * from './logger';
 export * from './storage';
 export * from './date';
 export * from './validation';
+export * from './format';
 export * from './eruda';
 export * from './string';
 export * from './object';

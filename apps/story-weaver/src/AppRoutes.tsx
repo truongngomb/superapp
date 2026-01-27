@@ -1,7 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { LoadingSpinner, ProtectedRoute, NotFoundPage, EmptyState } from '@superapp/ui-kit';
+import { ProtectedRoute, NotFoundPage, EmptyState } from '@superapp/ui-kit';
 import { Settings } from 'lucide-react';
 import { MainLayout } from './components/layout';
 
@@ -11,7 +11,7 @@ const EditorPage = lazy(() => import('./pages/Editor/EditorPage').then(m => ({ d
 
 // Helper for lazy loading
 function LazyPage({ children }: { children: React.ReactNode }) {
-  return <Suspense fallback={<div className="flex h-screen items-center justify-center"><LoadingSpinner /></div>}>{children}</Suspense>;
+  return <Suspense fallback={null}>{children}</Suspense>;
 }
 
 const SettingsPlaceholder = () => {

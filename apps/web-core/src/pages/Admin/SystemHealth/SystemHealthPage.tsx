@@ -8,7 +8,7 @@ import {
   Activity
 } from "lucide-react";
 import { useSystemHealth } from "@/hooks";
-import { formatBytes } from "@/utils/format";
+import { formatBytes } from "@superapp/core-logic";
 import { motion } from "framer-motion";
 
 import { HealthCard } from "./components/HealthCard";

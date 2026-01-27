@@ -14,7 +14,7 @@ import {
   TableCell,
   Table
 } from "@superapp/ui-kit";
-import { formatBytes } from "@/utils/format";
+import { formatBytes } from "@superapp/core-logic";
 import { useTranslation } from "react-i18next";
 
 interface DiskTableProps {

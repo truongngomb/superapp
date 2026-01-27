@@ -6,7 +6,7 @@ import {
   CardDescription
 } from "@superapp/ui-kit";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
-import { formatBytes } from "@/utils/format";
+import { formatBytes } from "@superapp/core-logic";
 import { useTranslation } from "react-i18next";
 
 interface MemoryGaugeProps {
