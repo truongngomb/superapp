@@ -26,7 +26,7 @@ export function ViewSwitcher({ value, onChange, className }: ViewSwitcherProps) 
           'p-2 rounded-md transition-colors',
           value === 'list'
             ? 'bg-background text-primary shadow-sm'
-            : 'text-muted hover:text-foreground hover:bg-muted/30'
+            : 'text-muted-foreground hover:text-foreground hover:bg-muted/30'
         )}
         title={t('view_mode.list')}
         aria-label={t('view_mode.list')}
@@ -41,7 +41,7 @@ export function ViewSwitcher({ value, onChange, className }: ViewSwitcherProps) 
           'p-2 rounded-md transition-colors',
           value === 'table'
             ? 'bg-background text-primary shadow-sm'
-            : 'text-muted hover:text-foreground hover:bg-muted/30'
+            : 'text-muted-foreground hover:text-foreground hover:bg-muted/30'
         )}
         title={t('view_mode.table')}
         aria-label={t('view_mode.table')}

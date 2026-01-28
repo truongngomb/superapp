@@ -15,7 +15,7 @@ interface BadgeProps {
 const variantClasses = {
   default: 'bg-surface text-foreground',
   primary: 'bg-primary/10 text-primary',
-  secondary: 'bg-muted/20 text-muted',
+  secondary: 'bg-muted/20 text-muted-foreground',
   success: 'bg-green-500/10 text-green-600 dark:text-green-400',
   warning: 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400',
   danger: 'bg-red-500/10 text-red-600 dark:text-red-400',

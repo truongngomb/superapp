@@ -54,7 +54,7 @@ export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
         aria-haspopup="listbox"
       >
         <span className={`fi fi-${currentLang.flag} text-lg`} />
-        <ChevronDown className={`w-3 h-3 text-muted transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`w-3 h-3 text-muted-foreground transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </Button>
 
       <AnimatePresence>

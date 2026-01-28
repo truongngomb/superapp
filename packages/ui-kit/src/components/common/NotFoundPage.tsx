@@ -12,7 +12,7 @@ export function NotFoundPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[50vh] text-center">
       <GradientText className="text-6xl font-bold mb-4">404</GradientText>
-      <p className="text-xl text-muted mb-6">
+      <p className="text-xl text-muted-foreground mb-6">
         {t('errors.page_not_found', { defaultValue: 'Page not found' })}
       </p>
       <Link

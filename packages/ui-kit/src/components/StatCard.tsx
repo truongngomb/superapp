@@ -75,7 +75,7 @@ export function StatCard({
                 </p>
               )}
             </div>
-            {TrendIcon && <TrendIcon className="w-5 h-5 text-muted shrink-0" />}
+            {TrendIcon && <TrendIcon className="w-5 h-5 text-muted-foreground shrink-0" />}
           </div>
           <div className={cn("h-1 bg-gradient-to-r", color)} />
         </CardContent>

@@ -106,7 +106,7 @@ function ForbiddenPage(): ReactElement {
     <div className="flex flex-col items-center justify-center min-h-[50vh] text-center">
       <div className="text-6xl mb-4">🚫</div>
       <h1 className="text-3xl font-bold text-foreground mb-2">{t('uikit:auth.access_denied')}</h1>
-      <p className="text-muted mb-6 max-w-md">
+      <p className="text-muted-foreground mb-6 max-w-md">
         {t('uikit:auth.access_denied_desc')}
       </p>
       <a

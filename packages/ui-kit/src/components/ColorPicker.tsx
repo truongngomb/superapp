@@ -278,7 +278,7 @@ export function ColorPicker({
               onClick={toggleMode}
               disabled={disabled}
               className={cn(
-                'text-muted hover:text-foreground h-8',
+                'text-muted-foreground hover:text-foreground h-8',
                 disabled && 'opacity-50 cursor-not-allowed'
               )}
               title={mode === 'picker' 
@@ -442,7 +442,7 @@ export function ColorPicker({
       {/* Opacity Slider */}
       {showOpacity && (
         <div className="flex items-center gap-3">
-          <span className="text-sm text-muted min-w-[60px]">
+          <span className="text-sm text-muted-foreground min-w-[60px]">
             {t('opacity')}
           </span>
           <input

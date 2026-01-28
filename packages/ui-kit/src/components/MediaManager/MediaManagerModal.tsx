@@ -84,7 +84,7 @@ export function MediaManagerModal({ open, onClose, onSelect, refId, refType }: M
       size="xl"
       footer={
         <div className="flex justify-between w-full">
-           <div className="text-sm text-muted flex items-center">
+           <div className="text-sm text-muted-foreground flex items-center">
              {total} {t('common.items', { defaultValue: 'items' })}
            </div>
            <Button variant="outline" onClick={onClose}>

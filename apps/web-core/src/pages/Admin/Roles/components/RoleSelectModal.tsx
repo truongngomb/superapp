@@ -106,7 +106,7 @@ export function RoleSelectModal({
           )}
           <div>
             <p className="font-medium text-foreground">{user.name || user.email}</p>
-            <p className="text-sm text-muted">{user.email}</p>
+            <p className="text-sm text-muted-foreground">{user.email}</p>
           </div>
         </div>
 
@@ -146,7 +146,7 @@ export function RoleSelectModal({
           </label>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {roles.length === 0 ? (
-              <p className="text-sm text-muted text-center py-4 col-span-full">
+              <p className="text-sm text-muted-foreground text-center py-4 col-span-full">
                 {t('users:list.empty')}
               </p>
             ) : (
@@ -173,7 +173,7 @@ export function RoleSelectModal({
                     <div className="flex-1">
                       <p className="font-medium text-foreground">{role.name}</p>
                       {role.description && (
-                        <p className="text-sm text-muted">{role.description}</p>
+                        <p className="text-sm text-muted-foreground">{role.description}</p>
                       )}
                     </div>
                   </div>
@@ -184,7 +184,7 @@ export function RoleSelectModal({
         </div>
 
         {/* Selection count */}
-        <p className="text-sm text-muted text-center">
+        <p className="text-sm text-muted-foreground text-center">
           {t('users:form.roles_selected', { count: selectedRoleIds.length })}
         </p>
       </form>

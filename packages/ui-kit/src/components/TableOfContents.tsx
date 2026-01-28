@@ -135,7 +135,7 @@ export function TableOfContents({ content, className }: TableOfContentsProps) {
                 'block py-1 hover:text-primary transition-colors border-l-2 pl-4 -ml-4',
                 activeId === id 
                   ? 'text-primary font-medium border-primary bg-primary/5' 
-                  : 'text-muted border-transparent hover:border-muted/30'
+                  : 'text-muted-foreground border-transparent hover:border-muted/30'
               )}
             >
               {text}

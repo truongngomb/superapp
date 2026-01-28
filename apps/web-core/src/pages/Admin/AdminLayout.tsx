@@ -12,7 +12,7 @@ import { PermissionGuard } from '@superapp/ui-kit';
 // ============================================================================
 
 const ICON_BUTTON_CLASS = 'p-2 rounded-lg hover:bg-surface transition-colors cursor-pointer flex items-center justify-center shrink-0';
-const ICON_CLASS = 'w-5 h-5 text-muted';
+const ICON_CLASS = 'w-5 h-5 text-muted-foreground';
 
 interface NavItem {
   to: string;
@@ -55,7 +55,7 @@ function MoreMenu({ items, locationPathname }: MoreMenuProps) {
             transition={{ duration: 0.15, ease: "easeOut" }}
             className="absolute right-0 top-full pt-2 w-56 z-50 origin-top-right"
           >
-            <div className="bg-popover border border-border rounded-lg shadow-xl p-1 bg-white dark:bg-slate-900 ring-1 ring-black/5">
+            <div className="bg-popover border border-border rounded-lg shadow-xl p-1 dark:bg-slate-900 ring-1 ring-black/5">
               {items.map((item) => {
                 const isActive = locationPathname.startsWith(item.to);
                 return (
@@ -64,7 +64,7 @@ function MoreMenu({ items, locationPathname }: MoreMenuProps) {
                       to={item.to}
                       className={cn(
                         "flex items-center gap-2 px-3 py-2 text-sm rounded-md transition-colors",
-                        isActive ? "bg-primary/10 text-primary font-medium" : "text-muted hover:text-foreground hover:bg-surface"
+                        isActive ? "bg-primary/10 text-primary font-medium" : "text-muted-foreground hover:text-foreground hover:bg-surface"
                       )}
                     >
                       <div className="flex items-center gap-2 min-w-0">

@@ -22,6 +22,7 @@ export default {
           800: 'hsl(var(--color-primary-800) / <alpha-value>)',
           900: 'hsl(var(--color-primary-900) / <alpha-value>)',
           DEFAULT: 'hsl(var(--color-primary) / <alpha-value>)',
+          foreground: 'hsl(var(--color-primary-foreground) / <alpha-value>)',
         },
         secondary: {
           50: 'hsl(var(--color-secondary-50) / <alpha-value>)',
@@ -35,6 +36,7 @@ export default {
           800: 'hsl(var(--color-secondary-800) / <alpha-value>)',
           900: 'hsl(var(--color-secondary-900) / <alpha-value>)',
           DEFAULT: 'hsl(var(--color-secondary) / <alpha-value>)',
+          foreground: 'hsl(var(--color-secondary-foreground) / <alpha-value>)',
         },
         accent: {
           50: 'hsl(var(--color-accent-50) / <alpha-value>)',
@@ -48,6 +50,7 @@ export default {
           800: 'hsl(var(--color-accent-800) / <alpha-value>)',
           900: 'hsl(var(--color-accent-900) / <alpha-value>)',
           DEFAULT: 'hsl(var(--color-accent) / <alpha-value>)',
+          foreground: 'hsl(var(--color-accent-foreground) / <alpha-value>)',
         },
         surface: {
           DEFAULT: 'hsl(var(--color-surface) / <alpha-value>)',
@@ -55,8 +58,25 @@ export default {
         },
         background: 'hsl(var(--color-background) / <alpha-value>)',
         foreground: 'hsl(var(--color-foreground) / <alpha-value>)',
-        muted: 'hsl(var(--color-muted) / <alpha-value>)',
+        muted: {
+          DEFAULT: 'hsl(var(--color-muted) / <alpha-value>)',
+          foreground: 'hsl(var(--color-muted-foreground) / <alpha-value>)',
+        },
         border: 'hsl(var(--color-border) / <alpha-value>)',
+        input: 'hsl(var(--color-input) / <alpha-value>)',
+        ring: 'hsl(var(--color-ring) / <alpha-value>)',
+        popover: {
+          DEFAULT: 'hsl(var(--color-popover) / <alpha-value>)',
+          foreground: 'hsl(var(--color-popover-foreground) / <alpha-value>)',
+        },
+        card: {
+          DEFAULT: 'hsl(var(--color-card) / <alpha-value>)',
+          foreground: 'hsl(var(--color-card-foreground) / <alpha-value>)',
+        },
+        destructive: {
+          DEFAULT: 'hsl(var(--color-destructive) / <alpha-value>)',
+          foreground: 'hsl(var(--color-destructive-foreground) / <alpha-value>)',
+        },
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],

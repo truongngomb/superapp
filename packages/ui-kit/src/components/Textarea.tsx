@@ -42,7 +42,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           className={cn(
             'w-full px-4 py-2.5 rounded-lg',
             'bg-surface border border-border',
-            'text-foreground placeholder:text-muted',
+            'text-foreground placeholder:text-muted-foreground',
             'transition-all duration-200',
             'focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20',
             'resize-y min-h-[100px]',
@@ -53,7 +53,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           {...props}
         />
         {error && <p className="text-sm text-red-500">{error}</p>}
-        {helperText && !error && <p className="text-sm text-muted">{helperText}</p>}
+        {helperText && !error && <p className="text-sm text-muted-foreground">{helperText}</p>}
       </div>
     );
   }

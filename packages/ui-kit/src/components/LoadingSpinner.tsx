@@ -28,7 +28,7 @@ export function LoadingSpinner({ size = 'md', text, fullScreen = false, classNam
       >
         <Loader2 className={cn('text-primary', sizeStyles[size])} />
       </motion.div>
-      {text && <p className="text-muted text-sm">{text}</p>}
+      {text && <p className="text-muted-foreground text-sm">{text}</p>}
     </motion.div>
   );
 

@@ -128,7 +128,7 @@ export function ResourceToolbar({
       {/* Right side: Batch Actions + Total Items (always same row) */}
       <div className="flex items-center gap-3">
         {batchActions}
-        <p className="text-sm text-muted whitespace-nowrap">{t('uikit:total_items', { count: totalItems })}</p>
+        <p className="text-sm text-muted-foreground whitespace-nowrap">{t('uikit:total_items', { count: totalItems })}</p>
       </div>
     </div>
   );

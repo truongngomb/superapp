@@ -36,7 +36,7 @@ export function SortableHeader({
       className={cn(
         'flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-lg transition-colors',
         'hover:bg-surface-hover',
-        isActive ? 'text-primary bg-primary/10' : 'text-muted',
+        isActive ? 'text-primary bg-primary/10' : 'text-muted-foreground',
         className
       )}
     >

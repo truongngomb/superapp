@@ -110,7 +110,7 @@ export function MarkdownRenderer({
                       }
                     }}
                   />
-                  {props.title && <span className="mt-3 text-sm text-muted italic">{props.title}</span>}
+                  {props.title && <span className="mt-3 text-sm text-muted-foreground italic">{props.title}</span>}
                 </span>
               );
             },

@@ -110,7 +110,7 @@ export default function MarkdownViewerPage() {
     return (
       <div className="container py-16 flex flex-col items-center justify-center text-center">
         <h1 className="text-4xl font-bold mb-4">404</h1>
-        <p className="text-xl text-muted mb-8">{t('uikit:page_not_found')}</p>
+        <p className="text-xl text-muted-foreground mb-8">{t('uikit:page_not_found')}</p>
         <Button onClick={() => { window.history.back(); }} variant="outline">
           <ArrowLeft className="w-4 h-4 mr-2" />
           {t('uikit:actions.back')}
@@ -146,7 +146,7 @@ export default function MarkdownViewerPage() {
              <motion.div variants={itemVariants} className="space-y-4 border-b pb-6">
                <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground">{trans.title}</h1>
                
-               <div className="flex items-center gap-4 text-sm text-muted">
+               <div className="flex items-center gap-4 text-sm text-muted-foreground">
                  <div className="flex items-center gap-1">
                    <Calendar className="w-4 h-4" />
                    {new Date(page.created).toLocaleDateString(i18n.language)}

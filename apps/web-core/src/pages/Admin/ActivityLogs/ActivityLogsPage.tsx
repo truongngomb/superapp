@@ -168,7 +168,7 @@ export default function ActivityLogsPage() {
         {/* Search and filters */}
         <div className="flex gap-3 mb-4">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
             <Input
               value={searchQuery}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setSearchQuery(e.target.value); }}
@@ -194,7 +194,7 @@ export default function ActivityLogsPage() {
 
         {/* Total items */}
         <div className="flex items-center justify-end mb-4">
-          <p className="text-sm text-muted">
+          <p className="text-sm text-muted-foreground">
             {t('uikit:total_items', { count: total })}
           </p>
         </div>

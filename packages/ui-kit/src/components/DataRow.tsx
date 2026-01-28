@@ -94,13 +94,13 @@ export function DataRow({
           </div>
           
           {description && (
-            <p className="text-sm text-muted line-clamp-2 md:truncate mt-1 md:mt-0">{description}</p>
+            <p className="text-sm text-muted-foreground line-clamp-2 md:truncate mt-1 md:mt-0">{description}</p>
           )}
         </div>
 
         {/* Meta Info */}
         {meta && (
-          <div className="hidden md:block text-sm text-muted whitespace-nowrap">
+          <div className="hidden md:block text-sm text-muted-foreground whitespace-nowrap">
             {meta}
           </div>
         )}

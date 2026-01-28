@@ -90,7 +90,7 @@ export function UserForm({ user, onSubmit, onClose, loading, isOpen }: UserFormP
             />
             <div className="overflow-hidden">
               <p className="text-sm font-medium truncate">{user.name}</p>
-              <p className="text-xs text-muted truncate">{user.email}</p>
+              <p className="text-xs text-muted-foreground truncate">{user.email}</p>
             </div>
           </div>
         )}

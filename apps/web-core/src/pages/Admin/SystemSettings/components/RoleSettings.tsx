@@ -296,7 +296,7 @@ export function RoleSettings() {
           <div className="space-y-4 pt-4 border-t border-border">
             {resourceGroups.length === 0 ? (
               <div className="p-8 text-center bg-muted/20 rounded-xl border-2 border-dashed border-border h-[200px] flex flex-col items-center justify-center">
-                <Shield className="w-8 h-8 text-muted mx-auto mb-2 opacity-20" />
+                <Shield className="w-8 h-8 text-muted-foreground mx-auto mb-2 opacity-20" />
                 <p className="text-sm text-muted-foreground">{t('settings:roles.empty')}</p>
               </div>
             ) : (

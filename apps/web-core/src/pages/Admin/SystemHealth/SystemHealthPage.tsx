@@ -27,7 +27,7 @@ function Header() {
       <div className="flex items-start gap-3">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t('title')}</h1>
-          <p className="text-muted mt-1">{t('subtitle')}</p>
+          <p className="text-muted-foreground mt-1">{t('subtitle')}</p>
         </div>
       </div>
     </div>

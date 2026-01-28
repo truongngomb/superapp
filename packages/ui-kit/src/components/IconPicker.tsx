@@ -23,7 +23,7 @@ export function IconPicker({ value, onChange, color }: IconPickerProps) {
   return (
     <div className="space-y-3">
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <Input
           value={search}
           onChange={(e) => { setSearch(e.target.value); }}
@@ -49,7 +49,7 @@ export function IconPicker({ value, onChange, color }: IconPickerProps) {
               <Icon 
                 className={cn(
                   'w-5 h-5 transition-transform group-hover:scale-110',
-                  isSelected ? 'text-primary' : 'text-muted'
+                  isSelected ? 'text-primary' : 'text-muted-foreground'
                 )} 
                 style={isSelected && color ? { color } : undefined}
               />
@@ -62,7 +62,7 @@ export function IconPicker({ value, onChange, color }: IconPickerProps) {
           );
         })}
         {filteredIcons.length === 0 && (
-          <div className="col-span-full py-6 text-center text-sm text-muted">
+          <div className="col-span-full py-6 text-center text-sm text-muted-foreground">
             {t('no_icons_found')}
           </div>
         )}

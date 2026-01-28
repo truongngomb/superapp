@@ -330,8 +330,8 @@ export default function MarkdownPagesPage() {
           ) : pages.length === 0 ? (
              <Card className="py-12 text-center h-full flex flex-col justify-center">
                <CardContent>
-                 <FileText className="w-12 h-12 text-muted mx-auto mb-4" />
-                 <p className="text-muted">
+                 <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                 <p className="text-muted-foreground">
                    {searchQuery ? t("uikit:list.empty_search", { entities: t("name") }) : t("uikit:list.empty", { entities: t("name") })}
                  </p>
                  {!searchQuery && (

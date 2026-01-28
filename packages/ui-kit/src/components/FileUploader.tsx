@@ -128,12 +128,12 @@ export function FileUploader({
           onDrop={handleDrop}
           onClick={() => !disabled && inputRef.current?.click()}
         >
-          <ImageIcon className="w-12 h-12 mx-auto mb-3 text-muted" />
-          <p className="text-sm text-muted mb-2">{label}</p>
+          <ImageIcon className="w-12 h-12 mx-auto mb-3 text-muted-foreground" />
+          <p className="text-sm text-muted-foreground mb-2">{label}</p>
           {!disabled && (
             <>
-              <p className="text-xs text-muted">or drag and drop</p>
-              <p className="text-xs text-muted mt-1">
+              <p className="text-xs text-muted-foreground">or drag and drop</p>
+              <p className="text-xs text-muted-foreground mt-1">
                 Max {(maxSize / 1024 / 1024).toFixed(1)}MB
               </p>
             </>

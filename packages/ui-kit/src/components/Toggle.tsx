@@ -29,7 +29,7 @@ export function Toggle({ checked, onChange, label, hideLabelOnMobile = false, de
       {(label || description) && (
         <div className={cn(hideLabelOnMobile && 'hidden sm:inline')}>
           {label && <label className={cn('font-medium text-foreground text-sm')}>{label}</label>}
-          {description && <p className="text-sm text-muted">{description}</p>}
+          {description && <p className="text-sm text-muted-foreground">{description}</p>}
         </div>
       )}
       <button

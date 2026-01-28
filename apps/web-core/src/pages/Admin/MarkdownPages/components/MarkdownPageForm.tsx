@@ -520,7 +520,7 @@ export function MarkdownPageForm({
             {!isEdit || !manageAllLanguages ? (
               <div className="space-y-6">
                 <div className="flex items-center gap-2 mb-4">
-                  <h3 className="text-sm font-medium text-muted">
+                  <h3 className="text-sm font-medium text-muted-foreground">
                     {isEdit 
                       ? `${t('form.editing')}: ${LANGUAGES.find(l => l.value === defaultLanguage)?.label || defaultLanguage}`
                       : `${t('form.default_language')}: ${LANGUAGES.find(l => l.value === defaultLanguage)?.label || defaultLanguage}`
@@ -550,10 +550,10 @@ export function MarkdownPageForm({
                       <div className="space-y-2">
                         <label className="text-sm font-medium flex items-center justify-between">
                           <span>{t('form.slug')} <span className="text-red-500">*</span></span>
-                          <span className="text-xs text-muted font-normal">{t('form.slug_help')}</span>
+                          <span className="text-xs text-muted-foreground font-normal">{t('form.slug_help')}</span>
                         </label>
                         <div className="relative">
-                          <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
+                          <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                           <Input
                             {...register(`translations.${defaultLanguage}.slug`)}
                             className="pl-9 pr-10"
@@ -709,10 +709,10 @@ export function MarkdownPageForm({
                         <div className="space-y-2">
                           <label className="text-sm font-medium flex items-center justify-between">
                             <span>{t('form.slug')} <span className="text-red-500">*</span></span>
-                            <span className="text-xs text-muted font-normal">{t('form.slug_help')}</span>
+                            <span className="text-xs text-muted-foreground font-normal">{t('form.slug_help')}</span>
                           </label>
                           <div className="relative">
-                            <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
+                            <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                             <Input
                               {...register(`translations.${lang.value}.slug`)}
                               className="pl-9 pr-10"
@@ -755,7 +755,7 @@ export function MarkdownPageForm({
                           <label className="text-sm font-medium">
                             {t('form.cover_image')}
                             {lang.value !== defaultLanguage && (
-                              <span className="text-xs text-muted ml-2">({t('uikit:shared')})</span>
+                              <span className="text-xs text-muted-foreground ml-2">({t('uikit:shared')})</span>
                             )}
                           </label>
                           <Controller
@@ -868,7 +868,7 @@ export function MarkdownPageForm({
               {/* Parent Page */}
               <div className="flex items-center justify-between border-t pt-3">
                  <label className="text-sm font-medium flex items-center gap-2">
-                    <Folder className="w-4 h-4 text-muted" />
+                    <Folder className="w-4 h-4 text-muted-foreground" />
                     {t('form.parent_page')}
                  </label>
               </div>
@@ -903,7 +903,7 @@ export function MarkdownPageForm({
               {/* Order, Menu Title, and Icon */}
                <div className="space-y-3 pt-2 border-t">
                   <div className="space-y-1">
-                    <label className="text-xs text-muted">{t('form.order')}</label>
+                    <label className="text-xs text-muted-foreground">{t('form.order')}</label>
                     <Input
                       type="number"
                       {...register('order', { valueAsNumber: true })}
@@ -912,7 +912,7 @@ export function MarkdownPageForm({
 
                   {/* Menu Title (Per-Language) */}
                   <div className="space-y-1">
-                    <label className="text-xs text-muted">{t('form.menu_title')}</label>
+                    <label className="text-xs text-muted-foreground">{t('form.menu_title')}</label>
                     <Input
                       {...register(manageAllLanguages ? `translations.${activeTab}.menuTitle` : `translations.${defaultLanguage}.menuTitle`)}
                       placeholder={t('form.menu_title_placeholder')}
@@ -921,7 +921,7 @@ export function MarkdownPageForm({
 
                   {/* Icon (Global) */}
                   <div className="space-y-1">
-                    <label className="text-xs text-muted">{t('form.icon')}</label>
+                    <label className="text-xs text-muted-foreground">{t('form.icon')}</label>
                     <Controller
                       name="icon"
                       control={control}

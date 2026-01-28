@@ -79,7 +79,7 @@ export function LoginPage() {
             <span className="text-white font-bold text-3xl">S</span>
           </div>
           <h1 className="text-2xl font-bold text-gradient">{t('auth:login.title')}</h1>
-          <p className="text-muted mt-2">{t('auth:login.subtitle')}</p>
+          <p className="text-muted-foreground mt-2">{t('auth:login.subtitle')}</p>
         </div>
 
         {/* Login Card */}
@@ -103,7 +103,7 @@ export function LoginPage() {
             )}
           </motion.button>
 
-          <p className="text-center text-sm text-muted mt-4">
+          <p className="text-center text-sm text-muted-foreground mt-4">
             {t('auth:login.terms_prefix')}{' '}
             <a href="#" className="text-primary hover:underline">
               {t('auth:login.terms_link')}

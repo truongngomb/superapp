@@ -254,7 +254,7 @@ export default function ApiDocsPage() {
               'px-3 py-2 transition-colors flex items-center gap-2 text-sm font-medium h-9',
               viewMode === 'reference'
                 ? 'bg-background text-primary shadow-sm'
-                : 'text-muted hover:text-foreground hover:bg-muted/30'
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted/30'
             )}
             title={t('api_docs:view_reference')}
             aria-label={t('api_docs:view_reference')}
@@ -273,7 +273,7 @@ export default function ApiDocsPage() {
               'px-3 py-2 transition-colors flex items-center gap-2 text-sm font-medium h-9',
               viewMode === 'raw'
                 ? 'bg-background text-primary shadow-sm'
-                : 'text-muted hover:text-foreground hover:bg-muted/30'
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted/30'
             )}
             title={t('api_docs:view_raw')}
             aria-label={t('api_docs:view_raw')}

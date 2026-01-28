@@ -27,7 +27,7 @@ export interface StandardHeaderProps extends IHeaderProps {
 }
 
 const ICON_BUTTON_CLASS = 'p-2 rounded-lg hover:bg-surface transition-colors cursor-pointer';
-const ICON_CLASS = 'w-5 h-5 text-muted';
+const ICON_CLASS = 'w-5 h-5 text-muted-foreground';
 
 // ============================================================================
 // Internal Sub-components
@@ -50,7 +50,7 @@ function NavLink({ link, isActive, label, isLinkActive }: NavLinkProps) {
     'flex items-center gap-1.5',
     isActive
       ? 'bg-primary/10 text-primary'
-      : 'text-muted hover:text-foreground hover:bg-surface',
+      : 'text-muted-foreground hover:text-foreground hover:bg-surface',
      link.isTitle ? 'cursor-default' : 'cursor-pointer'
   );
 
@@ -101,7 +101,7 @@ function NavLink({ link, isActive, label, isLinkActive }: NavLinkProps) {
                         "flex items-center gap-2 px-3 py-2 text-sm rounded-md transition-colors",
                         isChildActive 
                           ? "bg-primary/10 text-primary font-medium" 
-                          : "text-muted hover:text-foreground hover:bg-surface"
+                          : "text-muted-foreground hover:text-foreground hover:bg-surface"
                       )}
                    >
                       <ChildIcon className={cn("w-4 h-4", isChildActive ? "text-primary" : "text-muted-foreground")} />
@@ -155,7 +155,7 @@ function MoreMenu({ items, isLinkActive }: MoreMenuProps) {
                     to={link.path}
                     className={cn(
                       "flex items-center justify-between gap-2 px-3 py-2 text-sm rounded-md transition-colors",
-                      isActive ? "bg-primary/10 text-primary font-medium" : "text-muted hover:text-foreground hover:bg-surface"
+                      isActive ? "bg-primary/10 text-primary font-medium" : "text-muted-foreground hover:text-foreground hover:bg-surface"
                     )}
                   >
                     <div className="flex items-center gap-2 min-w-0">
@@ -405,7 +405,7 @@ export function StandardHeader({
                   type="button"
                   whileTap={{ scale: 0.95 }}
                   onClick={onLogout}
-                  className={cn(ICON_BUTTON_CLASS, 'text-muted hover:text-red-500')}
+                  className={cn(ICON_BUTTON_CLASS, 'text-muted-foreground hover:text-red-500')}
                   aria-label={t('uikit:logout')}
                   title={t('uikit:logout')}
                 >

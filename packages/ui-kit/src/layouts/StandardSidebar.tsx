@@ -43,7 +43,7 @@ export function StandardSidebar({ open, onClose, items, currentPath, t = (k) => 
                 onClick={onClose}
                 className="p-2 h-9 w-9"
               >
-                <X className="w-5 h-5 text-muted" />
+                <X className="w-5 h-5 text-muted-foreground" />
               </Button>
             </div>
 
@@ -59,7 +59,7 @@ export function StandardSidebar({ open, onClose, items, currentPath, t = (k) => 
                 
                 if (item.isTitle) {
                    link = (
-                      <div key={item.path} className="px-4 py-2 mt-4 mb-2 text-xs font-bold text-muted tracking-wider cursor-default">
+                      <div key={item.path} className="px-4 py-2 mt-4 mb-2 text-xs font-bold text-muted-foreground tracking-wider cursor-default">
                          {item.label}
                       </div>
                    );
@@ -73,7 +73,7 @@ export function StandardSidebar({ open, onClose, items, currentPath, t = (k) => 
                           'flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200',
                           isActive
                             ? 'bg-primary/10 text-primary font-medium'
-                            : 'text-muted hover:text-foreground hover:bg-surface'
+                            : 'text-muted-foreground hover:text-foreground hover:bg-surface'
                         )}
                       >
                         <Icon className="w-5 h-5" />
@@ -106,7 +106,7 @@ export function StandardSidebar({ open, onClose, items, currentPath, t = (k) => 
                                 'flex items-center gap-3 px-4 py-2 rounded-lg transition-colors',
                                 isChildActive
                                   ? 'text-primary font-medium'
-                                  : 'text-muted hover:text-foreground hover:bg-surface'
+                                  : 'text-muted-foreground hover:text-foreground hover:bg-surface'
                               )}
                             >
                               <ChildIcon className="w-5 h-5" />

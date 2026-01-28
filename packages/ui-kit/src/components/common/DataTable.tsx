@@ -289,7 +289,7 @@ function DataTableInner<T>({
               <div
                 key={header.id}
                 className={cn(
-                  "px-4 py-3 text-sm font-semibold text-muted tracking-wider whitespace-nowrap overflow-hidden select-none h-full flex items-center",
+                  "px-4 py-3 text-sm font-semibold text-muted-foreground tracking-wider whitespace-nowrap overflow-hidden select-none h-full flex items-center",
                   isSortable && "cursor-pointer hover:bg-muted/5",
                   colDef.className
                 )}

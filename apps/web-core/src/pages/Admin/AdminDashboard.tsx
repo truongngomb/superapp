@@ -179,7 +179,7 @@ export default function AdminDashboard() {
         <h1 className="text-2xl md:text-3xl font-bold text-foreground">
           {t('uikit:admin_dashboard.dashboard')}
         </h1>
-        <p className="text-muted mt-1 flex items-center gap-2">
+        <p className="text-muted-foreground mt-1 flex items-center gap-2">
           <Clock className="w-4 h-4" />
           {formatDateTime(new Date().toISOString())}
         </p>
@@ -304,7 +304,7 @@ export default function AdminDashboard() {
                     <Cpu className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="text-sm text-muted">{t('admin_dashboard.cpu')}</p>
+                    <p className="text-sm text-muted-foreground">{t('admin_dashboard.cpu')}</p>
                     <p className="font-medium text-sm line-clamp-1" title={`${systemStats.cpu.manufacturer} ${systemStats.cpu.brand}`}>
                       {systemStats.cpu.manufacturer} {systemStats.cpu.brand}
                     </p>
@@ -315,7 +315,7 @@ export default function AdminDashboard() {
                   {/* System Load */}
                   <div className="space-y-1">
                     <div className="flex justify-between text-xs">
-                      <span className="text-muted">{t('admin_dashboard.system_load')}</span>
+                      <span className="text-muted-foreground">{t('admin_dashboard.system_load')}</span>
                       <span className="font-medium">{Math.round(systemStats.cpu.usage.system)}%</span>
                     </div>
                     <div className="w-full bg-secondary rounded-full h-1.5">
@@ -329,7 +329,7 @@ export default function AdminDashboard() {
                   {/* Server Load */}
                   <div className="space-y-1">
                     <div className="flex justify-between text-xs">
-                      <span className="text-muted">{t('admin_dashboard.server_load')}</span>
+                      <span className="text-muted-foreground">{t('admin_dashboard.server_load')}</span>
                       <span className="font-medium">{Math.round(systemStats.cpu.usage.server)}%</span>
                     </div>
                     <div className="w-full bg-secondary rounded-full h-1.5">
@@ -340,7 +340,7 @@ export default function AdminDashboard() {
                     </div>
                   </div>
 
-                  <div className="pt-2 border-t border-border flex justify-between text-xs text-muted">
+                  <div className="pt-2 border-t border-border flex justify-between text-xs text-muted-foreground">
                     <span>{t('admin_dashboard.cores')}: {systemStats.cpu.cores}</span>
                     <span>{systemStats.cpu.speed} GHz</span>
                   </div>
@@ -356,7 +356,7 @@ export default function AdminDashboard() {
                     <Activity className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="text-sm text-muted">{t('admin_dashboard.memory')}</p>
+                    <p className="text-sm text-muted-foreground">{t('admin_dashboard.memory')}</p>
                     <p className="font-medium text-sm">
                       {Math.round((systemStats.memory.active / 1024 / 1024 / 1024) * 100) / 100} / {Math.round((systemStats.memory.total / 1024 / 1024 / 1024) * 100) / 100} GB
                     </p>
@@ -367,7 +367,7 @@ export default function AdminDashboard() {
                   {/* System Memory */}
                   <div className="space-y-1">
                      <div className="flex justify-between text-xs">
-                      <span className="text-muted">{t('admin_dashboard.system_memory')}</span>
+                      <span className="text-muted-foreground">{t('admin_dashboard.system_memory')}</span>
                       <span className="font-medium">{Math.round((systemStats.memory.active / systemStats.memory.total) * 100)}%</span>
                     </div>
                     <div className="w-full bg-secondary rounded-full h-1.5">
@@ -381,7 +381,7 @@ export default function AdminDashboard() {
                   {/* Server Memory */}
                   <div className="space-y-1">
                      <div className="flex justify-between text-xs">
-                      <span className="text-muted">{t('admin_dashboard.server_memory')}</span>
+                      <span className="text-muted-foreground">{t('admin_dashboard.server_memory')}</span>
                       <span className="font-medium">
                         {Math.round((systemStats.memory.serverUsed / 1024 / 1024) * 100) / 100} MB
                       </span>
@@ -394,7 +394,7 @@ export default function AdminDashboard() {
                     </div>
                   </div>
                   
-                  <div className="pt-2 border-t border-border flex justify-between text-xs text-muted">
+                  <div className="pt-2 border-t border-border flex justify-between text-xs text-muted-foreground">
                     <span>{t('admin_dashboard.free')}: {Math.round((systemStats.memory.free / 1024 / 1024 / 1024) * 100) / 100} GB</span>
                     <span>{Math.round((systemStats.memory.serverUsed / systemStats.memory.total) * 1000) / 10}% {t('admin_dashboard.used')}</span>
                   </div>
@@ -410,17 +410,17 @@ export default function AdminDashboard() {
                     <HardDrive className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="text-sm text-muted">{t('admin_dashboard.os')}</p>
+                    <p className="text-sm text-muted-foreground">{t('admin_dashboard.os')}</p>
                       <p className="font-medium">{systemStats.os.distro} {systemStats.os.release}</p>
                   </div>
                 </div>
                 <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                    <span className="text-muted">{t('admin_dashboard.platform')}</span>
+                    <span className="text-muted-foreground">{t('admin_dashboard.platform')}</span>
                     <span className="font-medium">{systemStats.os.platform} ({systemStats.os.arch})</span>
                   </div>
                     <div className="flex justify-between">
-                    <span className="text-muted">{t('admin_dashboard.hostname')}</span>
+                    <span className="text-muted-foreground">{t('admin_dashboard.hostname')}</span>
                     <span className="font-medium">{systemStats.os.hostname}</span>
                   </div>
                 </div>

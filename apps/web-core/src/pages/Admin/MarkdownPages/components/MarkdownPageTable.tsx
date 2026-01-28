@@ -65,7 +65,7 @@ export function MarkdownPageTable({
             )}
             <div className="min-w-0 flex-1">
               <div className="font-medium text-foreground whitespace-normal break-words leading-tight mb-0.5">{title}</div>
-              <div className="text-xs text-muted whitespace-normal break-all">/{slug}</div>
+              <div className="text-xs text-muted-foreground whitespace-normal break-all">/{slug}</div>
             </div>
           </div>
         );
@@ -81,7 +81,7 @@ export function MarkdownPageTable({
              {t('form.show_in_menu')}
           </Badge>
         ) : (
-          <span className="text-muted text-sm">-</span>
+          <span className="text-muted-foreground text-sm">-</span>
         )
       )
     },

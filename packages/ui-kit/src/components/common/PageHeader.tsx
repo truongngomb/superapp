@@ -56,7 +56,7 @@ export function PageHeader({
         {icon}
         <div className="overflow-hidden">
           <h1 className="text-2xl md:text-3xl font-bold text-foreground truncate">{t(titleKey)}</h1>
-          <p className="text-muted mt-1 truncate">{t(subtitleKey)}</p>
+          <p className="text-muted-foreground mt-1 truncate">{t(subtitleKey)}</p>
         </div>
         {showExport && onExport && (
           <PermissionGuard resource={resource} action="view">

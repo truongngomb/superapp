@@ -86,7 +86,7 @@ export function HomePage() {
           <span className="text-foreground">{t('home:hero.subtitle')}</span>
         </h1>
 
-        <p className="text-lg md:text-xl text-muted max-w-2xl mx-auto mb-8">
+        <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
           {t('home:hero.description')}
         </p>
 
@@ -125,7 +125,7 @@ export function HomePage() {
                   <h3 className="text-lg font-semibold text-foreground mb-2">
                     {t(feature.titleKey)}
                   </h3>
-                  <p className="text-sm text-muted">
+                  <p className="text-sm text-muted-foreground">
                     {t(feature.descKey)}
                   </p>
                 </CardContent>
@@ -212,7 +212,7 @@ export function HomePage() {
         viewport={{ once: true }}
         className="py-8 mt-8 border-t border-border"
       >
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <span className="text-gradient font-semibold">{t('uikit:brand')}</span>
             <span>{t('uikit:version')}</span>

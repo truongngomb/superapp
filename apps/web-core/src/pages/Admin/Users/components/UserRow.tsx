@@ -98,7 +98,7 @@ export function UserRow({ index, style, data, isSelected, onSelect }: UserRowPro
             ))}
           </div>
         ) : (
-          <span className="text-xs text-muted">{t('users:form.no_role')}</span>
+          <span className="text-xs text-muted-foreground">{t('users:form.no_role')}</span>
         )
       }
       meta={formatDate(user.created)}
