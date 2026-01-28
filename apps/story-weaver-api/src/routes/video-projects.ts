@@ -15,7 +15,7 @@ import {
   VideoProjectUpdateSchema 
 } from '../schemas/index.js';
 
-export const videoProjectsRouter = Router();
+export const videoProjectsRouter: Router = Router();
 
 // =============================================================================
 // Routes

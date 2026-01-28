@@ -1,17 +1,44 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AnimatePresence, motion } from 'framer-motion';
-import { PageHeader, GradientText, EmptyState, Card, CardContent, CardTitle, CardDescription, Badge, fadeSlideUp, defaultTransition } from '@superapp/ui-kit';
-import { useVideoProjects } from '@/hooks';
-import { CreateProjectModal } from './components/CreateProjectModal';
 import { useNavigate } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
+import { 
+    PageHeader, 
+    GradientText, 
+    EmptyState, 
+    Card, 
+    CardContent, 
+    CardTitle, 
+    CardDescription, 
+    Badge, 
+    fadeSlideUp, 
+    defaultTransition 
+} from '@superapp/ui-kit';
+import { useResource } from '@superapp/core-logic';
+import { VideoProject, VideoProjectListParams, CreateVideoProjectInput, UpdateVideoProjectInput } from '@superapp/shared-types';
+import { videoProjectService } from '@/services';
+import { CreateProjectModal } from './components/CreateProjectModal';
 import { Video } from 'lucide-react';
 
 export const DashboardPage = () => {
     const { t } = useTranslation(['video_projects', 'uikit']);
-    const { projects, isLoading } = useVideoProjects();
-    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const navigate = useNavigate();
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
+    // Use standardized useResource hook (SSoT from Category Management)
+    const { 
+        items: projects, 
+        loading: isLoading 
+    } = useResource<VideoProject, CreateVideoProjectInput, UpdateVideoProjectInput, VideoProjectListParams>({
+        service: videoProjectService,
+        resourceName: 'video_projects',
+        initialParams: {
+            // Default to generous limit for dashboard grid
+            limit: 12,
+            sort: 'created',
+            order: 'desc'
+        }
+    });
 
     return (
         <div className="p-8">

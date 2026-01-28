@@ -10,10 +10,10 @@ import { PermissionResource, PermissionAction } from '@superapp/shared-types';
 
 /**
  * Schema for role permissions object
- * Maps resource names to arrays of action strings
+ * Maps resource names (can be dynamic strings) to arrays of action strings
  */
 const permissionsSchema = z.record(
-  z.nativeEnum(PermissionResource),
+  z.string(),
   z.array(z.nativeEnum(PermissionAction))
 );
 

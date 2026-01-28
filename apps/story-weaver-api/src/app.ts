@@ -102,8 +102,8 @@ export function createApp(): Express {
   // API Routes
   // =========================================================================
   
-  // Use /api as base prefix
-  app.use('/api', apiRouter);
+  // Use /api/story-weaver as base prefix
+  app.use('/api/story-weaver', apiRouter);
 
   // =========================================================================
   // API Documentation
@@ -113,7 +113,7 @@ export function createApp(): Express {
   const openApiDocument = generateOpenApiDocument(config.serverUrl) as unknown as Record<string, unknown>;
 
   // Serve raw OpenAPI JSON
-  app.get('/api/openapi.json', (_req, res) => {
+  app.get('/api/story-weaver/openapi.json', (_req, res) => {
     res.json(openApiDocument);
   });
 
@@ -121,7 +121,7 @@ export function createApp(): Express {
   // Health Check
   // =========================================================================
 
-  app.get('/api/health', (_req, res) => {
+  app.get('/api/story-weaver/health', (_req, res) => {
     res.json({
       success: true,
       data: {
@@ -140,7 +140,7 @@ export function createApp(): Express {
   // =========================================================================
   
   // 404 handler for API routes
-  app.use('/api/{*path}', (_req, _res, next) => {
+  app.use('/api/story-weaver/{*path}', (_req, _res, next) => {
     next(new NotFoundError('Endpoint not found'));
   });
 

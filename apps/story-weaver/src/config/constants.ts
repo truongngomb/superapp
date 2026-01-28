@@ -10,15 +10,9 @@ import { PermissionResource, PermissionAction } from '@superapp/shared-types';
 export const API_ENDPOINTS = {
   AUTH: {
     ME: '/auth/me',
-    GOOGLE: '/auth/google',
-    LOGOUT: '/auth/logout',
   },
-  MARKDOWN_PAGES: '/markdown-pages',
-  ACTIVITY_LOGS: '/activity-logs',
-  USERS: '/users',
-
-  VIDEO_PROJECTS: '/video-projects',
-  VIDEO_SCENES: '/video-scenes',
+  VIDEO_PROJECTS: '/story-weaver/video-projects',
+  VIDEO_SCENES: '/story-weaver/video-scenes',
 } as const;
 
 // HTTP Methods

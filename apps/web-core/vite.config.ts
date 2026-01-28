@@ -93,7 +93,6 @@ export default defineConfig(({ mode }) => {
         '/api/story-weaver': {
           target: 'http://127.0.0.1:3002',
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api\/story-weaver/, '/api'),
         },
         // Main API - proxy to api-server
         '/api': {

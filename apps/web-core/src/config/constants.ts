@@ -10,8 +10,6 @@ import { PermissionResource, PermissionAction } from '@superapp/shared-types';
 export const API_ENDPOINTS = {
   AUTH: {
     ME: '/auth/me',
-    GOOGLE: '/auth/google',
-    LOGOUT: '/auth/logout',
   },
   CATEGORIES: '/categories',
   ROLES: '/roles',
