@@ -6,6 +6,7 @@ import { useDocumentTitle } from '@superapp/core-logic';
 import { SceneList } from './components/SceneList';
 import { Button, Badge, LoadingSpinner, fadeSlideUp, defaultTransition } from '@superapp/ui-kit';
 import { ChevronLeft, Rocket, Settings } from 'lucide-react';
+import { APP_NAME } from '@/config/constants';
 
 export const EditorPage = () => {
     const { t } = useTranslation(['video_projects', 'uikit']);
@@ -14,7 +15,7 @@ export const EditorPage = () => {
     const { data: project, isLoading } = useVideoProject(id || '');
     const { mutate: renderVideo, isPending: isRendering } = useRenderVideo();
 
-    useDocumentTitle(project?.name ? `${project.name} | Story Weaver` : 'Story Weaver');
+    useDocumentTitle(project?.name ? `${project.name} | ${APP_NAME}` : APP_NAME);
 
     if (isLoading) return <div className="p-8 flex items-center justify-center h-screen"><LoadingSpinner size="lg" /></div>;
     if (!project) return (

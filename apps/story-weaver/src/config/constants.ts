@@ -5,6 +5,8 @@ import { PermissionResource, PermissionAction } from '@superapp/shared-types';
  * Centralized constant values used across the app
  */
 
+export const APP_NAME = 'Story Weaver';
+
 // API Endpoints
 export const API_ENDPOINTS = {
   AUTH: {

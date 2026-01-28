@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ProtectedRoute, NotFoundPage, EmptyState } from '@superapp/ui-kit';
 import { Settings } from 'lucide-react';
 import { MainLayout } from './components/layout';
+import { APP_NAME } from './config/constants';
 
 // Lazy load pages
 const DashboardPage = lazy(() => import('./pages/Dashboard/DashboardPage').then(m => ({ default: m.DashboardPage })));
@@ -76,7 +77,7 @@ export function AppRoutes() {
           } 
         />
         
-        <Route path="*" element={<NotFoundPage />} />
+        <Route path="*" element={<NotFoundPage appName={APP_NAME} />} />
       </Route>
     </Routes>
   );

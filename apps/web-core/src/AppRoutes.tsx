@@ -9,6 +9,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { ProtectedRoute, GuestGuard, NotFoundPage } from '@superapp/ui-kit';
 import { PermissionResource, PermissionAction } from '@superapp/shared-types';
 import { MainLayout } from './components/layout';
+import { APP_NAME } from '@/config/constants';
 
 // ============================================================================
 // Lazy Loaded Pages
@@ -247,7 +248,7 @@ export function AppRoutes() {
 
 
         {/* Catch-all 404 */}
-        <Route path="*" element={<NotFoundPage />} />
+        <Route path="*" element={<NotFoundPage appName={APP_NAME} />} />
       </Route>
     </Routes>
   );

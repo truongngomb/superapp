@@ -324,7 +324,9 @@ export function StandardHeader({
   renderLanguageSwitcher,
   renderNotifications,
   renderUserActions,
-  t = (k) => k
+  t = (k) => k,
+  appName,
+  appLogo
 }: StandardHeaderProps) {
   
   // Use location for active state
@@ -353,14 +355,20 @@ export function StandardHeader({
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
+          {appLogo ? (
+             <div className="flex items-center justify-center">
+                 {appLogo as React.ReactNode}
+             </div>
+          ): (
           <motion.div
             whileHover={{ scale: 1.05 }}
             className="w-9 h-9 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center"
           >
             <span className="text-white font-bold text-lg">S</span>
           </motion.div>
+          )}
           <GradientText className="text-xl font-bold hidden sm:inline">
-            {t('uikit:brand')}
+            {appName || t('uikit:brand')}
           </GradientText>
         </Link>
 

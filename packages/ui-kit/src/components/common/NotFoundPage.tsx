@@ -6,8 +6,16 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { GradientText } from '../GradientText';
 
-export function NotFoundPage() {
+import { useDocumentTitle } from '@superapp/core-logic';
+
+export interface NotFoundPageProps {
+  appName?: string;
+}
+
+export function NotFoundPage({ appName }: NotFoundPageProps) {
   const { t } = useTranslation('uikit');
+  
+  useDocumentTitle(`404 | ${appName || t('uikit:brand')}`);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[50vh] text-center">

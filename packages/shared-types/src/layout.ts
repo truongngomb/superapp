@@ -41,6 +41,8 @@ export interface IHeaderProps {
   onMenuToggle?: () => void;
   menuOpen?: boolean;
   breadcrumbs?: { label: string; path?: string }[];
+  appName?: string;
+  appLogo?: unknown;
 }
 
 // ============================================================================

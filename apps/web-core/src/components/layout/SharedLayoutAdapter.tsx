@@ -3,8 +3,10 @@ import { SharedLayoutAdapter as BaseSharedLayoutAdapter } from "@superapp/ui-kit
 import { useTranslation } from "react-i18next";
 import { useDocumentTitle } from "@superapp/core-logic";
 import { useAppMenu } from "@/hooks";
+import { APP_NAME } from "@/config/constants";
 import { NAVIGATION_ITEMS } from "@/config/navigation";
 import { useMemo } from "react";
+import { LayoutGrid } from "lucide-react";
 
 export function SharedLayoutAdapter() {
   const navigate = useNavigate();
@@ -33,7 +35,7 @@ export function SharedLayoutAdapter() {
         }
 
         // Translation keys might be in specific namespaces, ensure we have them loaded
-        return `${t(item.labelKey)} | SuperApp`;
+        return `${t(item.labelKey)} | ${APP_NAME}`;
     }
 
     // Default fallback if no item matches (won't set anything so page can set it)
@@ -48,6 +50,12 @@ export function SharedLayoutAdapter() {
       onViewAllNotifications={() => {
         void navigate("/admin/activity-logs");
       }}
+      appName={APP_NAME}
+      appLogo={
+        <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center shadow-lg">
+           <LayoutGrid className="w-5 h-5 text-white" />
+        </div>
+      }
     />
   );
 }

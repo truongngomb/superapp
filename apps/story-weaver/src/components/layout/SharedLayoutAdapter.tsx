@@ -3,8 +3,10 @@ import { useAppMenu } from '@/hooks';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useDocumentTitle } from '@superapp/core-logic';
+import { APP_NAME } from '@/config/constants';
 import { NAVIGATION_ITEMS } from '@/config/navigation';
 import { useMemo } from 'react';
+import { Clapperboard } from 'lucide-react';
 
 export function SharedLayoutAdapter() {
   const { menuItems } = useAppMenu();
@@ -23,7 +25,7 @@ export function SharedLayoutAdapter() {
     });
     
     if (item) {
-        return `${t(item.labelKey)} | Story Weaver`;
+        return `${t(item.labelKey)} | ${APP_NAME}`;
     }
     return null;
   }, [pathname, t]);
@@ -33,6 +35,12 @@ export function SharedLayoutAdapter() {
   return (
     <BaseSharedLayoutAdapter 
       menuItems={menuItems}
+      appName={APP_NAME}
+      appLogo={
+          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg">
+             <Clapperboard className="w-5 h-5 text-white" />
+          </div>
+      }
     />
   );
 }

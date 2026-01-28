@@ -11,6 +11,7 @@ import {
 } from '@superapp/ui-kit';
 import { markdownService } from '@superapp/core-logic';
 import { MarkdownPage } from '@superapp/shared-types';
+import { APP_NAME } from '@/config/constants';
 import { Calendar, Clock, ArrowLeft } from 'lucide-react';
 import { Button } from '@superapp/ui-kit';
 import { MarkdownViewerSkeleton } from './components/MarkdownViewerSkeleton';
@@ -95,8 +96,8 @@ export default function MarkdownViewerPage() {
     translations['en'] || 
     Object.values(translations)[0]
   ) : null;
-
-  useDocumentTitle(trans?.title ? `${trans.title} | ${t('uikit:brand')}` : null);
+  // Use APP_NAME instead of t('uikit:brand') for explicit customization
+  useDocumentTitle(trans?.title ? `${trans.title} | ${APP_NAME}` : null);
 
   if (loading) {
     return <MarkdownViewerSkeleton />;

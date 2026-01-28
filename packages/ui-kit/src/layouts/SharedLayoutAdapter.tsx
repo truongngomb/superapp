@@ -23,9 +23,11 @@ interface SharedLayoutAdapterProps {
   onViewAllNotifications?: () => void;
   /** Force a specific layout mode, ignoring user settings */
   forceLayoutMode?: 'standard' | 'modern';
+  appName?: string;
+  appLogo?: React.ReactNode;
 }
 
-export function SharedLayoutAdapter({ menuItems: rawMenuItems, onViewAllNotifications, forceLayoutMode }: SharedLayoutAdapterProps) {
+export function SharedLayoutAdapter({ menuItems: rawMenuItems, onViewAllNotifications, forceLayoutMode, appName, appLogo }: SharedLayoutAdapterProps) {
   const { user, isAuthenticated, logout } = useAuth();
   const { isDark, toggleTheme } = useTheme();
   const layoutModeFromSettings = useLayoutMode();
@@ -128,6 +130,8 @@ export function SharedLayoutAdapter({ menuItems: rawMenuItems, onViewAllNotifica
     renderNotifications: renderNotifications,
     renderLanguageSwitcher: renderLanguageSwitcher,
     t: (k: string, opt?: Record<string, unknown>) => t(k, opt),
+    appName: appName,
+    appLogo: appLogo,
   };
 
   if (layoutMode === 'modern') {

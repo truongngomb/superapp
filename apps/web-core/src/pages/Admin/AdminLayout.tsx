@@ -4,6 +4,7 @@ import { Users, Shield, LayoutDashboard, FileClock, Settings, MoreVertical } fro
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/utils';
+import { APP_NAME } from '@/config/constants';
 import { useLayout, useLayoutMode, useDocumentTitle } from '@superapp/core-logic';
 import { PermissionGuard } from '@superapp/ui-kit';
 
@@ -261,7 +262,7 @@ export default function AdminLayout() {
     // Exact match logic for admin sub-pages
     const item = navItems.find(item => pathname === item.to);
     if (item) {
-      return `${item.label} | SuperApp`;
+      return `${item.label} | ${APP_NAME}`;
     }
     return null;
   }, [pathname, navItems]);

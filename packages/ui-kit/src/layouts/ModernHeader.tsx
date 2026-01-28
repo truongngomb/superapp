@@ -49,7 +49,9 @@ export function ModernHeader({
   onToggleTheme,
   renderLanguageSwitcher,
   renderNotifications,
-  t = (k) => k
+  t = (k) => k,
+  appName,
+  appLogo
 }: ModernHeaderProps) {
   
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -81,11 +83,17 @@ export function ModernHeader({
           </Button>
           
           <Link to="/" className="flex items-center gap-3">
+            {appLogo ? (
+              <div className="flex items-center justify-center">
+                 {appLogo as React.ReactNode}
+              </div>
+            ) : (
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
               <span className="text-white font-bold text-lg">S</span>
             </div>
+            )}
             <GradientText className="text-lg font-bold uppercase tracking-wide hidden sm:inline">
-              {t('uikit:brand')}
+              {appName || t('uikit:brand')}
             </GradientText>
           </Link>
 
