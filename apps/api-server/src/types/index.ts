@@ -25,12 +25,8 @@ export type {
   UpdateInput,
 } from './common.js';
 
-// Category types - imported directly from shared-types
-export type {
-  Category,
-  CategoryCreateInput,
-  CategoryUpdateInput,
-} from '@superapp/shared-types';
+// Category types - locally defined
+export * from './category.js';
 
 // Role & Permission types - imported directly from shared-types
 export type {

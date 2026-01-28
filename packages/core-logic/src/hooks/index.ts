@@ -9,6 +9,7 @@ export * from './useResource';
 export * from './useLayoutMode';
 export * from './useMediaQuery';
 export * from './useResponsiveView';
+export * from './useDocumentTitle';
 export * from './usePermission';
 export * from './useAppMenu.base';
 export * from './useActivityLogContext';

@@ -3,6 +3,7 @@ import { Download, RefreshCw, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { Button, Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '@superapp/ui-kit';
 import type { BackupItem } from '@superapp/shared-types';
+import { formatBytes } from '@superapp/core-logic';
 
 interface BackupTableProps {
   data: BackupItem[];
@@ -14,14 +15,6 @@ interface BackupTableProps {
 
 export function BackupTable({ data, loading, onDownload, onRestore, onDelete }: BackupTableProps) {
   const { t } = useTranslation(['settings']);
-
-  const formatSize = (bytes: number) => {
-    if (bytes === 0) return '0 B';
-    const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return `${String(parseFloat((bytes / Math.pow(k, i)).toFixed(2)))} ${sizes[i] ?? 'B'}`;
-  };
 
   if (loading) {
     return (
@@ -52,7 +45,7 @@ export function BackupTable({ data, loading, onDownload, onRestore, onDelete }: 
           {data.map((backup, index) => (
             <TableRow key={backup.key || index}>
               <TableCell className="font-medium">{backup.key}</TableCell>
-              <TableCell className="text-muted-foreground">{formatSize(backup.size)}</TableCell>
+              <TableCell className="text-muted-foreground">{formatBytes(backup.size)}</TableCell>
               <TableCell className="text-muted-foreground">
                 {format(new Date(backup.modified), 'PP pp')}
               </TableCell>

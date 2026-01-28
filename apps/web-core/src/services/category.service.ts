@@ -3,13 +3,13 @@
  * Handles all category-related API calls
  */
 
-import { BaseService, api } from '@superapp/core-logic';
-import { API_ENDPOINTS, type RequestConfig, env, createAbortController } from '@/config';
-import type { Category, CategoryListParams, PaginatedCategories } from '@superapp/shared-types';
+import { BaseService } from '@superapp/core-logic';
+import { api, env, createAbortController, type RequestConfig } from '@/config';
+import type { Category, CategoryListParams, PaginatedCategories } from '@/types';
 
 class CategoryService extends BaseService<Category> {
   protected get endpoint(): string {
-    return API_ENDPOINTS.CATEGORIES;
+    return '/categories';
   }
 
   /**
@@ -40,13 +40,8 @@ class CategoryService extends BaseService<Category> {
 
   /**
    * Get paginated categories
-   * Override to handle specific params conversion if needed, 
-   * or rely on BaseService if params match.
-   * Since we have specific params like isActive, color, we keep strict typing
    */
   async getPage(params?: CategoryListParams, config?: RequestConfig): Promise<PaginatedCategories> {
-    // BaseService uses JSON.stringify for non-string values.
-    // If backend expects "true"/"false" for boolean, it works fine.
     return super.getPage(params, config);
   }
 

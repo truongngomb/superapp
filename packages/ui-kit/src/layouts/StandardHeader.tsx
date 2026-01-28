@@ -262,7 +262,7 @@ function DesktopNav({ items, isLinkActive }: DesktopNavProps) {
             key={`measure-${link.path}`}
             link={link}
             isActive={isLinkActive(link)}
-            label={link.label}
+            label={link.label || ''}
             isLinkActive={isLinkActive}
           />
         ))}
@@ -275,7 +275,7 @@ function DesktopNav({ items, isLinkActive }: DesktopNavProps) {
             key={link.path}
             link={link}
             isActive={isLinkActive(link)}
-            label={link.label}
+            label={link.label || ''}
             isLinkActive={isLinkActive}
           />
         ))}

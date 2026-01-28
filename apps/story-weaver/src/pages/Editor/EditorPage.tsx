@@ -2,6 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useVideoProject, useRenderVideo } from '@/hooks';
+import { useDocumentTitle } from '@superapp/core-logic';
 import { SceneList } from './components/SceneList';
 import { Button, Badge, LoadingSpinner, fadeSlideUp, defaultTransition } from '@superapp/ui-kit';
 import { ChevronLeft, Rocket, Settings } from 'lucide-react';
@@ -12,6 +13,8 @@ export const EditorPage = () => {
     const navigate = useNavigate();
     const { data: project, isLoading } = useVideoProject(id || '');
     const { mutate: renderVideo, isPending: isRendering } = useRenderVideo();
+
+    useDocumentTitle(project?.name ? `${project.name} | Story Weaver` : 'Story Weaver');
 
     if (isLoading) return <div className="p-8 flex items-center justify-center h-screen"><LoadingSpinner size="lg" /></div>;
     if (!project) return (

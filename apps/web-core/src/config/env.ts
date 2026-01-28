@@ -3,27 +3,7 @@
  * Centralized, typed environment variables
  */
 
-// Environment types
-type Environment = 'development' | 'production' | 'test';
-
-interface EnvConfig {
-  readonly NODE_ENV: Environment;
-  readonly API_BASE_URL: string;
-  readonly IS_DEV: boolean;
-  readonly IS_PROD: boolean;
-  readonly ENABLE_DEBUG: boolean;
-  
-  // Pagination
-  readonly DEFAULT_PAGE_SIZE: number;
-  readonly MAX_PAGE_SIZE: number;
-
-  // API Timing
-  readonly API_REQUEST_TIMEOUT: number;
-  readonly API_RETRY_DELAY: number;
-
-  // UI Timing
-  readonly DEBOUNCE_DELAY: number;
-}
+import type { Environment, EnvConfig } from '@superapp/shared-types';
 
 /**
  * Get environment variable with default value

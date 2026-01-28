@@ -2,7 +2,7 @@
  * Category Types
  */
 
-import type { BaseEntity, PaginatedResponse, BaseListParams } from './common.js';
+import type { BaseEntity, PaginatedResponse, BaseListParams } from '@superapp/shared-types';
 
 // ============================================================================
 // Entity

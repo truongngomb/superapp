@@ -1,6 +1,7 @@
 export interface IMenuItem {
   path: string;
-  label: string;
+  label?: string;
+  labelKey?: string;
   icon?: unknown; // Use unknown instead of any to force casting in UI
   permission?: {
     resource: string;

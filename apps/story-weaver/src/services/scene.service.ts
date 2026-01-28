@@ -1,6 +1,7 @@
 import { BaseService } from '@superapp/core-logic';
 import { API_ENDPOINTS } from '@/config';
-import type { VideoScene, PaginatedResponse } from '@superapp/shared-types';
+import type { PaginatedResponse } from '@superapp/shared-types';
+import { VideoScene } from '@/types';
 
 class VideoSceneService extends BaseService<VideoScene> {
   protected get endpoint(): string {

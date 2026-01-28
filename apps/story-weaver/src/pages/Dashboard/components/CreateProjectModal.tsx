@@ -8,7 +8,7 @@ import {
     Button, Input, Form, FormField, FormItem, FormLabel, FormControl, FormMessage,
     Textarea, Tabs, TabsList, TabsTrigger, TabsContent
 } from '@superapp/ui-kit';
-import { createVideoProjectSchema, CreateVideoProjectInput } from '@superapp/shared-types';
+import { createVideoProjectSchema, type CreateVideoProjectInput } from '@/types';
 import { Wand2, PenTool } from 'lucide-react';
 
 interface CreateProjectModalProps {

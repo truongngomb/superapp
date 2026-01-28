@@ -18,7 +18,8 @@ import {
   fadeSlideUp,
   defaultTransition
 } from "@superapp/ui-kit";
-import type { Category, CreateCategoryInput, SortColumn, CategoryListParams, ViewMode } from "@superapp/shared-types";
+import type { SortColumn, ViewMode } from "@superapp/shared-types";
+import type { Category, CreateCategoryInput, CategoryListParams } from "@/types";
 import { getStorageItem, setStorageItem } from "@/utils";
 import { STORAGE_KEYS } from "@/config";
 import { useResource, useSort, useDebounce, useAuth, useExcelExport, useResponsiveView, useInfiniteResource } from '@superapp/core-logic';

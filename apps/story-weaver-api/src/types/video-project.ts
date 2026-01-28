@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { BaseListParams, BaseEntity } from './common.js';
+import { type BaseListParams, type BaseEntity } from '@superapp/shared-types';
 
 // Enums
 export const VIDEO_PROJECT_STATUS = {
@@ -15,7 +15,6 @@ export const VIDEO_ASPECT_RATIO = {
   R_1_1: '1:1',
 } as const;
 
-// Zod Schemas
 // Zod Schemas
 export const videoProjectStatusSchema = z.enum([
   VIDEO_PROJECT_STATUS.DRAFT,

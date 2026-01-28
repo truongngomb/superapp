@@ -1,6 +1,6 @@
 import { BaseService } from '@superapp/core-logic';
 import { API_ENDPOINTS } from '@/config';
-import { VideoProject } from '@superapp/shared-types';
+import type { VideoProject } from '@/types';
 
 class VideoProjectService extends BaseService<VideoProject> {
   protected get endpoint(): string {

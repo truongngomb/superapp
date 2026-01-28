@@ -5,29 +5,13 @@
 
 import { env } from './env';
 import { HTTP_STATUS } from './constants';
+import type { ApiResponse, RequestConfig, ApiErrorData } from '@superapp/shared-types';
 
 // ============================================================================
 // Types
 // ============================================================================
 
-export interface RequestConfig {
-  /** Additional headers */
-  headers?: Record<string, string>;
-  /** AbortSignal for request cancellation */
-  signal?: AbortSignal;
-  /** Number of retry attempts (default: 0) */
-  retries?: number;
-  /** Retry delay in ms (default: 1000) */
-  retryDelay?: number;
-  /** Skip automatic response unwrapping */
-  rawResponse?: boolean;
-}
-
-export interface ApiErrorData {
-  message: string;
-  status: number;
-  code?: string;
-}
+export type { ApiResponse, RequestConfig, ApiErrorData };
 
 /**
  * Custom error class for API errors
@@ -72,12 +56,9 @@ export class ApiException extends Error {
   }
 }
 
-import type { ApiResponse } from '@superapp/shared-types';
-export type { ApiResponse };
-
-// ============================================================================
-// Request Interceptors
-// ============================================================================
+/**
+ * Request Interceptors
+ */
 
 type RequestInterceptor = (config: RequestInit) => RequestInit | Promise<RequestInit>;
 type ResponseInterceptor = (response: Response) => Response | Promise<Response>;
@@ -216,7 +197,7 @@ async function request<T>(
         lastError = error;
         
         // Handle Maintenance Mode (503)
-        if (error.status === 503) {
+        if (error.status === 503 && typeof window !== 'undefined') {
           window.dispatchEvent(new Event('maintenance_mode_event'));
         }
         

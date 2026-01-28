@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useDocumentTitle } from '@superapp/core-logic';
 import { 
   MarkdownRenderer, 
-  TableOfContents, 
-
+  TableOfContents,
   Card,
   CardContent
 } from '@superapp/ui-kit';
@@ -96,11 +96,7 @@ export default function MarkdownViewerPage() {
     Object.values(translations)[0]
   ) : null;
 
-  useEffect(() => {
-    if (trans?.title) {
-      document.title = `${trans.title} | ${t('uikit:brand')}`;
-    }
-  }, [t, trans]);
+  useDocumentTitle(trans?.title ? `${trans.title} | ${t('uikit:brand')}` : null);
 
   if (loading) {
     return <MarkdownViewerSkeleton />;

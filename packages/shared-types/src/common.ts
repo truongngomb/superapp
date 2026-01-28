@@ -8,6 +8,37 @@
 // ============================================================================
 
 /**
+ * Environment types
+ */
+export type Environment = 'development' | 'production' | 'test';
+
+/**
+ * Environment Configuration Interface
+ */
+export interface EnvConfig {
+  readonly NODE_ENV: Environment;
+  readonly API_BASE_URL: string;
+  readonly IS_DEV: boolean;
+  readonly IS_PROD: boolean;
+  readonly ENABLE_DEBUG: boolean;
+  
+  // Pagination
+  readonly DEFAULT_PAGE_SIZE: number;
+  readonly MAX_PAGE_SIZE: number;
+  readonly NOTIFICATION_LIMIT?: number;
+
+  // API Timing
+  readonly API_REQUEST_TIMEOUT: number;
+  readonly API_RETRY_DELAY: number;
+
+  // UI Timing
+  readonly DEBOUNCE_DELAY: number;
+
+  // Connection
+  readonly POCKETBASE_URL?: string;
+}
+
+/**
  * Make specific properties optional
  */
 export type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
@@ -17,10 +48,6 @@ export type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
  */
 export type RequiredBy<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>;
 
-/**
- * Extract the resolved type from a Promise
- */
-export type Awaited<T> = T extends Promise<infer U> ? U : T;
 
 /**
  * Make all properties readonly recursively
@@ -74,6 +101,33 @@ export interface ApiErrorResponse {
   message: string;
   code?: string;
   stack?: string;
+}
+
+/**
+ * API Request Configuration
+ */
+export interface RequestConfig {
+  /** Additional headers */
+  headers?: Record<string, string>;
+  /** AbortSignal for request cancellation */
+  signal?: AbortSignal;
+  /** Number of retry attempts (default: 0) */
+  retries?: number;
+  /** Retry delay in ms (default: 1000) */
+  retryDelay?: number;
+  /** Skip automatic response unwrapping */
+  rawResponse?: boolean;
+  /** Request timeout in ms */
+  timeout?: number;
+}
+
+/**
+ * API Error Data structure from server
+ */
+export interface ApiErrorData {
+  message: string;
+  status: number;
+  code?: string;
 }
 
 /**

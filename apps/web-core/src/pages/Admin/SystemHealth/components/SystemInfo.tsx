@@ -5,21 +5,11 @@ import {
   CardTitle,
 } from "@superapp/ui-kit";
 import { useTranslation } from "react-i18next";
+import type { SystemStats } from "@superapp/shared-types";
 
 interface SystemInfoProps {
-  os: {
-    platform: string;
-    distro: string;
-    release: string;
-    hostname: string;
-    arch: string;
-  };
-  cpu: {
-    manufacturer: string;
-    brand: string;
-    speed: number;
-    cores: number;
-  };
+  os: SystemStats['os'];
+  cpu: SystemStats['cpu'];
 }
 
 export function SystemInfo({ os, cpu }: SystemInfoProps) {

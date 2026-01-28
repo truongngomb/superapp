@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { videoProjectService } from '@/services/project.service';
 import { queryKeys } from '@/config/queryClient';
-import { CreateVideoProjectInput } from '@superapp/shared-types';
+import type { CreateVideoProjectInput } from '@/types';
 
 
 export const useVideoProject = (id: string) => {

@@ -4,7 +4,7 @@ import { Users, Shield, LayoutDashboard, FileClock, Settings, MoreVertical } fro
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/utils';
-import { useLayout, useLayoutMode } from '@superapp/core-logic';
+import { useLayout, useLayoutMode, useDocumentTitle } from '@superapp/core-logic';
 import { PermissionGuard } from '@superapp/ui-kit';
 
 // ============================================================================
@@ -254,6 +254,19 @@ export default function AdminLayout() {
       resource: 'activity_logs',
     },
   ], [t]);
+
+  const { pathname } = useLocation();
+
+  const title = useMemo(() => {
+    // Exact match logic for admin sub-pages
+    const item = navItems.find(item => pathname === item.to);
+    if (item) {
+      return `${item.label} | SuperApp`;
+    }
+    return null;
+  }, [pathname, navItems]);
+
+  useDocumentTitle(title);
 
   useEffect(() => {
     if (layoutMode === 'modern') {

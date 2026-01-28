@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
-import { VideoScene } from '@superapp/shared-types';
 import { Card, Button } from '@superapp/ui-kit';
 import { GripVertical, Image as ImageIcon, Music as MusicIcon, Clock, Trash2 } from 'lucide-react';
+import { VideoScene } from '@/types';
 
 interface SceneCardProps {
     scene: VideoScene;

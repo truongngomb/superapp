@@ -1,20 +1,7 @@
 import { Home, Folder, Settings, FileText } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
+import type { StaticNavigationItem } from '@superapp/ui-kit';
 
-import type { ParseKeys } from 'i18next';
-
-export interface NavigationItem {
-  path: string;
-  labelKey: ParseKeys;
-  icon: LucideIcon;
-  permission?: {
-    resource: string;
-    action: string;
-  };
-  matchPrefix?: boolean;
-}
-
-export const NAVIGATION_ITEMS: NavigationItem[] = [
+export const NAVIGATION_ITEMS: StaticNavigationItem[] = [
   { 
     path: '/', 
     labelKey: 'home:title', 

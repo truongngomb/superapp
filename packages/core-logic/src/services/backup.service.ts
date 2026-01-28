@@ -36,7 +36,7 @@ export const backupService = {
    * Get download URL (Admin only)
    */
   getDownloadUrl: (key: string): string => {
-    const baseUrl = env.POCKETBASE_URL.replace(/\/$/, '');
+    const baseUrl = (env.POCKETBASE_URL || '').replace(/\/$/, '');
     return `${baseUrl}/api/backups/${encodeURIComponent(key)}`;
   }
 };

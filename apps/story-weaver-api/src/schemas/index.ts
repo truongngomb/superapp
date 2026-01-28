@@ -7,7 +7,7 @@ import {
   createVideoProjectSchema, 
   updateVideoProjectSchema,
   videoProjectSettingsSchema
-} from '@superapp/shared-types';
+} from '../types/index.js';
 import { z } from 'zod';
 
 // We can extend or modify schemas here if API needs specific validation logic

@@ -15,10 +15,13 @@ export {
   addRequestInterceptor,
   addResponseInterceptor,
   createAbortController,
-  type ApiResponse,
-  type RequestConfig,
-  type ApiErrorData,
-} from './api';
+} from '@superapp/core-logic';
+
+export type {
+  ApiResponse,
+  RequestConfig,
+  ApiErrorData,
+} from '@superapp/shared-types';
 
 // TanStack Query
 export { queryClient, queryKeys, type QueryKeys } from './queryClient';

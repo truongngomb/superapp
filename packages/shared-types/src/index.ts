@@ -5,12 +5,6 @@
 // Common/Shared types
 export * from './common.js';
 
-// Auth types (User types cover AuthUser)
-
-
-// Category types
-export * from './category.js';
-
 // Role types
 export * from './role.js';
 
@@ -18,23 +12,7 @@ export * from './role.js';
 export * from './activity_log.js';
 
 // User types
-export type {
-  User,
-  AuthUser,
-  AuthStatusResponse,
-  UserSession,
-  LoginResponse,
-  AuthResult,
-  UserCreateInput,
-  UserUpdateInput,
-  UserRoleAssignment,
-  LoginInput,
-  RegisterInput,
-  OAuthProvider,
-  OAuthConfigResponse,
-  PaginatedUsers,
-  UserListParams
-} from './user.js';
+export * from './user.js';
 
 // System types
 export * from './system.js';
@@ -45,14 +23,8 @@ export * from './markdown.js';
 // Media types
 export * from './media.js';
 
-// Request Metrics types
-export * from './request-metrics.types.js';
+// Metrics types
 export * from './metrics.js';
-export * from './constants.js';
-
-// Video Project types
-export * from './video-project.js';
-export * from './video-scene.js';
 
 // Layout types
 export * from './layout.js';

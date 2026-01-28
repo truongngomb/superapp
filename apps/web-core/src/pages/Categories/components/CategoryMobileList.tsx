@@ -18,7 +18,7 @@ import {
   Copy,
   FileText
 } from 'lucide-react';
-import type { Category } from '@superapp/shared-types';
+import type { Category } from '@/types';
 
 interface CategoryMobileListProps {
   /** All categories to display */

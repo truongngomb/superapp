@@ -15,7 +15,7 @@ import {
     defaultTransition 
 } from '@superapp/ui-kit';
 import { useResource } from '@superapp/core-logic';
-import { VideoProject, VideoProjectListParams, CreateVideoProjectInput, UpdateVideoProjectInput } from '@superapp/shared-types';
+import { VideoProject, VideoProjectListParams, CreateVideoProjectInput, UpdateVideoProjectInput } from '@/types';
 import { videoProjectService } from '@/services';
 import { CreateProjectModal } from './components/CreateProjectModal';
 import { Video } from 'lucide-react';

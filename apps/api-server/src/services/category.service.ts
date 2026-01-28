@@ -5,8 +5,8 @@
  * Extends BaseService for all common operations.
  */
 import { BaseService } from './base.service.js';
-import { CacheKeys } from '../config/index.js';
-import type { Category } from '@superapp/shared-types';
+import { CacheKeys } from '../config';
+import type { Category } from '../types';
 import { CollectionNames } from '../database/collections/index.js';
 
 // =============================================================================
