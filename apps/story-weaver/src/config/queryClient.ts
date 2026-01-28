@@ -54,7 +54,7 @@ export const queryClient = new QueryClient({
 export const queryKeys = {
   // Video Projects
   videoProjects: {
-    all: ['videoProjects'] as const,
+    all: ['video_projects'] as const,
     lists: () => [...queryKeys.videoProjects.all, 'list'] as const,
     list: (params: Record<string, unknown>) => [...queryKeys.videoProjects.lists(), params] as const,
     details: () => [...queryKeys.videoProjects.all, 'detail'] as const,
@@ -63,7 +63,7 @@ export const queryKeys = {
 
   // Video Scenes
   videoScenes: {
-    all: ['videoScenes'] as const,
+    all: ['video_scenes'] as const,
     lists: () => [...queryKeys.videoScenes.all, 'list'] as const,
     list: (params: Record<string, unknown>) => [...queryKeys.videoScenes.lists(), params] as const,
     details: () => [...queryKeys.videoScenes.all, 'detail'] as const,

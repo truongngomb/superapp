@@ -17,7 +17,6 @@ import authEn from '../locales/en/auth.json';
 import categoriesEn from '../locales/en/categories.json';
 import homeEn from '../locales/en/home.json';
 import markdownEn from '../locales/en/markdown.json';
-import notificationsEn from '../locales/en/notifications.json';
 import rolesEn from '../locales/en/roles.json';
 import settingsEn from '../locales/en/settings.json';
 import systemHealthEn from '../locales/en/system_health.json';
@@ -30,7 +29,6 @@ import authVi from '../locales/vi/auth.json';
 import categoriesVi from '../locales/vi/categories.json';
 import homeVi from '../locales/vi/home.json';
 import markdownVi from '../locales/vi/markdown.json';
-import notificationsVi from '../locales/vi/notifications.json';
 import rolesVi from '../locales/vi/roles.json';
 import settingsVi from '../locales/vi/settings.json';
 import systemHealthVi from '../locales/vi/system_health.json';
@@ -43,7 +41,6 @@ import authKo from '../locales/ko/auth.json';
 import categoriesKo from '../locales/ko/categories.json';
 import homeKo from '../locales/ko/home.json';
 import markdownKo from '../locales/ko/markdown.json';
-import notificationsKo from '../locales/ko/notifications.json';
 import rolesKo from '../locales/ko/roles.json';
 import settingsKo from '../locales/ko/settings.json';
 import systemHealthKo from '../locales/ko/system_health.json';
@@ -58,7 +55,6 @@ export const resources = {
     roles: rolesEn,
     users: usersEn,
     activity_logs: activityLogsEn,
-    notifications: notificationsEn,
     settings: settingsEn,
     markdown: markdownEn,
     system_health: systemHealthEn,
@@ -72,7 +68,6 @@ export const resources = {
     roles: rolesVi,
     users: usersVi,
     activity_logs: activityLogsVi,
-    notifications: notificationsVi,
     settings: settingsVi,
     markdown: markdownVi,
     system_health: systemHealthVi,
@@ -86,7 +81,6 @@ export const resources = {
     roles: rolesKo,
     users: usersKo,
     activity_logs: activityLogsKo,
-    notifications: notificationsKo,
     settings: settingsKo,
     markdown: markdownKo,
     system_health: systemHealthKo,
@@ -104,7 +98,7 @@ void i18n
   .init({
     resources,
     defaultNS: 'uikit',
-    ns: ['uikit', 'home', 'auth', 'categories', 'roles', 'users', 'activity_logs', 'notifications', 'settings', 'markdown', 'system_health', 'api_docs'],
+    ns: ['uikit', 'home', 'auth', 'categories', 'roles', 'users', 'activity_logs', 'settings', 'markdown', 'system_health', 'api_docs'],
 
     fallbackLng: 'en', // Default language if detection fails
     supportedLngs: ['en', 'vi', 'ko'],

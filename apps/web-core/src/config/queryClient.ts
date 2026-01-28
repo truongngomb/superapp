@@ -59,7 +59,6 @@ export const queryKeys = {
     list: (params: Record<string, unknown>) => [...queryKeys.categories.lists(), params] as const,
     details: () => [...queryKeys.categories.all, 'detail'] as const,
     detail: (id: string) => [...queryKeys.categories.details(), id] as const,
-    export: (params?: Record<string, unknown>) => [...queryKeys.categories.all, 'export', params] as const,
   },
   
   // Users
@@ -69,7 +68,6 @@ export const queryKeys = {
     list: (params: Record<string, unknown>) => [...queryKeys.users.lists(), params] as const,
     details: () => [...queryKeys.users.all, 'detail'] as const,
     detail: (id: string) => [...queryKeys.users.details(), id] as const,
-    export: (params?: Record<string, unknown>) => [...queryKeys.users.all, 'export', params] as const,
   },
   
   // Roles
@@ -79,7 +77,6 @@ export const queryKeys = {
     list: (params: Record<string, unknown>) => [...queryKeys.roles.lists(), params] as const,
     details: () => [...queryKeys.roles.all, 'detail'] as const,
     detail: (id: string) => [...queryKeys.roles.details(), id] as const,
-    export: (params?: Record<string, unknown>) => [...queryKeys.roles.all, 'export', params] as const,
   },
   
   // Activity Logs

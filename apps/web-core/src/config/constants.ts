@@ -1,4 +1,3 @@
-import { env } from './env';
 import { PermissionResource, PermissionAction } from '@superapp/shared-types';
 
 /**
@@ -18,14 +17,6 @@ export const API_ENDPOINTS = {
   MARKDOWN_PAGES: '/markdown-pages',
 } as const;
 
-// HTTP Methods
-export const HTTP_METHODS = {
-  GET: 'GET',
-  POST: 'POST',
-  PUT: 'PUT',
-  PATCH: 'PATCH',
-  DELETE: 'DELETE',
-} as const;
 
 // HTTP Status Codes
 export const HTTP_STATUS = {
@@ -66,28 +57,6 @@ export const THEME = {
   DARK: 'dark',
 } as const;
 
-// Pagination Defaults
-export const PAGINATION = {
-  DEFAULT_PAGE: 1,
-  DEFAULT_LIMIT: env.DEFAULT_PAGE_SIZE,
-  MAX_LIMIT: env.MAX_PAGE_SIZE,
-} as const;
-
-// Animation Durations (ms)
-export const ANIMATION = {
-  FAST: 150,
-  NORMAL: 300,
-  SLOW: 500,
-} as const;
-
-// Breakpoints (px) - matches Tailwind defaults
-export const BREAKPOINTS = {
-  SM: 640,
-  MD: 768,
-  LG: 1024,
-  XL: 1280,
-  '2XL': 1536,
-} as const;
 
 // RBAC Constants
 // RBAC Constants

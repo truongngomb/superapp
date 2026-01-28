@@ -98,9 +98,9 @@ export default function MarkdownViewerPage() {
 
   useEffect(() => {
     if (trans?.title) {
-      document.title = `${trans.title} | SuperApp`;
+      document.title = `${trans.title} | ${t('uikit:brand')}`;
     }
-  }, [trans]);
+  }, [t, trans]);
 
   if (loading) {
     return <MarkdownViewerSkeleton />;

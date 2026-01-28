@@ -16,7 +16,6 @@ interface EnvConfig {
   // Pagination
   readonly DEFAULT_PAGE_SIZE: number;
   readonly MAX_PAGE_SIZE: number;
-  readonly NOTIFICATION_LIMIT: number;
 
   // API Timing
   readonly API_REQUEST_TIMEOUT: number;
@@ -46,7 +45,6 @@ export const env: EnvConfig = {
   // Pagination
   DEFAULT_PAGE_SIZE: parseInt(getEnvVar('VITE_DEFAULT_PAGE_SIZE', '20'), 10),
   MAX_PAGE_SIZE: parseInt(getEnvVar('VITE_MAX_PAGE_SIZE', '100'), 10),
-  NOTIFICATION_LIMIT: parseInt(getEnvVar('VITE_NOTIFICATION_LIMIT', '10'), 10),
 
   // API Timing
   API_REQUEST_TIMEOUT: parseInt(getEnvVar('VITE_API_REQUEST_TIMEOUT', '10000'), 10),
