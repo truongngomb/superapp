@@ -36,6 +36,51 @@
     "delete_scene_title": "Xóa cảnh",
     "delete_scene_message": "Bạn có chắc chắn muốn xóa cảnh này? Hành động này không thể hoàn tác."
   },
+  "wizard": {
+    "title_story": "Kể Câu Chuyện",
+    "title_settings": "Cấu Hình Cài Đặt",
+    "title_confirm": "Xem Lại & Tạo",
+    "desc_story": "Nhập nội dung câu chuyện sẽ được chuyển thành video.",
+    "desc_settings": "Chọn nền tảng mục tiêu và cài đặt video.",
+    "desc_confirm": "Xem lại chi tiết dự án trước khi tạo.",
+    "create_project": "Tạo Dự Án",
+    "steps": {
+      "story": "Câu chuyện",
+      "settings": "Cài đặt",
+      "confirm": "Xác nhận"
+    },
+    "story": {
+      "name_label": "Tên Dự Án",
+      "name_placeholder": "Câu Chuyện Video Tuyệt Vời",
+      "name_hint": "Đặt tên dễ nhớ cho dự án của bạn.",
+      "desc_label": "Mô Tả (Tùy chọn)",
+      "desc_placeholder": "Mô tả ngắn gọn về dự án...",
+      "content_label": "Nội Dung Câu Chuyện",
+      "content_placeholder": "Viết hoặc dán câu chuyện của bạn ở đây...\n\nVí dụ:\nNgày xửa ngày xưa, trong một ngôi làng nhỏ, có một cô gái tên là Maya. Cô ấy có một món quà đặc biệt - cô ấy có thể nói chuyện với động vật...",
+      "content_hint": "Câu chuyện này sẽ được phân tích để trích xuất nhân vật và tạo các cảnh quay.",
+      "tips_title": "Mẹo để có câu chuyện tuyệt vời",
+      "tip1": "Bao gồm mô tả nhân vật rõ ràng (ngoại hình, tính cách)",
+      "tip2": "Mô tả các địa điểm và bối cảnh quan trọng",
+      "tip3": "Giữ ngắn gọn - hướng tới video 15-60 giây"
+    },
+    "settings": {
+      "platform_label": "Nền Tảng Mục Tiêu",
+      "platform_hint": "Cài đặt sẽ tự động điều chỉnh dựa trên yêu cầu của nền tảng.",
+      "aspect_label": "Tỷ Lệ Khung Hình",
+      "duration_label": "Thời Lượng Mục Tiêu",
+      "duration_hint": "Phạm vi khuyến nghị: {{min}}s - {{max}}s cho nền tảng này.",
+      "platform_tip": "Mẹo chuyên nghiệp"
+    },
+    "confirm": {
+      "review_message": "Vui lòng xem lại chi tiết dự án trước khi tạo.",
+      "project_info": "Thông Tin Dự Án",
+      "settings_info": "Cài Đặt Video",
+      "next_steps_title": "Điều gì sẽ xảy ra tiếp theo?",
+      "next_step1": "AI sẽ phân tích câu chuyện và đề xuất nhân vật",
+      "next_step2": "Bạn có thể xem lại và chỉnh sửa chi tiết nhân vật",
+      "next_step3": "Tạo kịch bản và prompt hình ảnh cho từng cảnh"
+    }
+  },
   "modal": {
     "create": {
       "title_manual": "Tạo dự án mới",

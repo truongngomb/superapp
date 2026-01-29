@@ -36,6 +36,51 @@
     "delete_scene_title": "장면 삭제",
     "delete_scene_message": "이 장면을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
   },
+  "wizard": {
+    "title_story": "스토리 입력",
+    "title_settings": "설정 구성",
+    "title_confirm": "검토 및 생성",
+    "desc_story": "비디오로 변환할 스토리 콘텐츠를 입력하세요.",
+    "desc_settings": "대상 플랫폼과 비디오 설정을 선택하세요.",
+    "desc_confirm": "생성하기 전에 프로젝트 세부 정보를 검토하세요.",
+    "create_project": "프로젝트 생성",
+    "steps": {
+      "story": "스토리",
+      "settings": "설정",
+      "confirm": "확인"
+    },
+    "story": {
+      "name_label": "프로젝트 이름",
+      "name_placeholder": "멋진 비디오 스토리",
+      "name_hint": "프로젝트에 기억하기 쉬운 이름을 지정하세요.",
+      "desc_label": "설명 (선택 사항)",
+      "desc_placeholder": "프로젝트에 대한 간단한 설명...",
+      "content_label": "스토리 내용",
+      "content_placeholder": "여기에 스토리를 작성하거나 붙여넣으세요...\n\n예시:\n옛날 옛적에 작은 마을에 마야라는 어린 소녀가 살았습니다. 그녀에게는 특별한 재능이 있었는데 - 동물들과 대화할 수 있었습니다...",
+      "content_hint": "이 스토리를 분석하여 캐릭터를 추출하고 장면을 생성합니다.",
+      "tips_title": "훌륭한 스토리를 위한 팁",
+      "tip1": "명확한 캐릭터 묘사 포함 (외모, 성격)",
+      "tip2": "중요한 장소와 배경 묘사",
+      "tip3": "간결하게 유지 - 15-60초 비디오 목표"
+    },
+    "settings": {
+      "platform_label": "대상 플랫폼",
+      "platform_hint": "플랫폼 요구 사항에 따라 설정이 자동으로 조정됩니다.",
+      "aspect_label": "화면 비율",
+      "duration_label": "목표 길이",
+      "duration_hint": "이 플랫폼의 권장 범위: {{min}}초 - {{max}}초.",
+      "platform_tip": "프로 팁"
+    },
+    "confirm": {
+      "review_message": "생성하기 전에 프로젝트 세부 정보를 검토해 주세요.",
+      "project_info": "프로젝트 정보",
+      "settings_info": "비디오 설정",
+      "next_steps_title": "다음 단계는?",
+      "next_step1": "AI가 스토리를 분석하고 캐릭터를 제안합니다",
+      "next_step2": "캐릭터 세부 정보를 검토하고 편집할 수 있습니다",
+      "next_step3": "각 장면에 대한 스크립트와 시각적 프롬프트 생성"
+    }
+  },
   "modal": {
     "create": {
       "title_manual": "새 프로젝트 생성",

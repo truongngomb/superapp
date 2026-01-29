@@ -13,6 +13,7 @@ export * from './Modal';
 export * from './Pagination';
 export * from './Select';
 export * from './Skeleton';
+export * from './Slider';
 export * from './SortPopup';
 export * from './EmptyState';
 export * from './GradientText';

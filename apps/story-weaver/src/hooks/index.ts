@@ -21,3 +21,4 @@ export {
 } from '@superapp/core-logic';
 export * from './useProjects';
 export * from './useScenes';
+export * from './useProjectWizard';
