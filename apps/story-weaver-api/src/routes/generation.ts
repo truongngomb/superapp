@@ -26,3 +26,9 @@ generationRouter.post(
   '/generate-scenes/:projectId',
   asyncHandler(generationController.generateScenes)
 );
+
+/** POST /generate-images/:sceneId - Generate visual keyframes for a scene */
+generationRouter.post(
+  '/generate-images/:sceneId',
+  asyncHandler(generationController.generateKeyframes)
+);

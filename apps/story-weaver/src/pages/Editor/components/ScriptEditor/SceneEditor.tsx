@@ -12,7 +12,7 @@
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Type, Users, Eye, Mic, X, Save, Clock, Camera } from 'lucide-react';
+import { Type, Users, Eye, Mic, X, Save, Clock, Camera, Image as ImageIcon, FileText } from 'lucide-react';
 import { 
   Button, 
   Input, 
@@ -25,6 +25,8 @@ import {
 } from '@superapp/ui-kit';
 import type { VideoScene } from '@/types';
 import { CAMERA_MOVEMENT, type CameraMovement, type ExtendedScene } from '@/types/scene-script';
+import { ImageGeneratorPanel } from './ImageGeneratorPanel';
+
 
 
 interface SceneEditorProps {
@@ -55,10 +57,10 @@ export const SceneEditor = ({
   
   // Form state
   const [visualDescription, setVisualDescription] = useState(
-    extendedScene.visualDescription ?? extendedScene.visual_prompt ?? ''
+    extendedScene.visualDescription ?? extendedScene.visualPrompt ?? ''
   );
   const [voiceover, setVoiceover] = useState(
-    extendedScene.voiceover ?? extendedScene.script_text ?? ''
+    extendedScene.voiceover ?? extendedScene.scriptText ?? ''
   );
   const [textOverlay, setTextOverlay] = useState(extendedScene.textOverlay ?? '');
   const [estimatedDuration, setEstimatedDuration] = useState(
@@ -67,17 +69,21 @@ export const SceneEditor = ({
   const [cameraMovement, setCameraMovement] = useState<CameraMovement>(
     extendedScene.cameraMovement ?? CAMERA_MOVEMENT.STATIC
   );
+  const [selectedKeyframe, setSelectedKeyframe] = useState(extendedScene.selectedKeyframe ?? extendedScene.imageUrl);
+  const [activeTab, setActiveTab] = useState<'script' | 'visuals'>('script');
+
 
   // Track if form is dirty (useMemo to avoid re-render during render)
   const isDirty = useMemo(() => {
     return (
-      visualDescription !== (extendedScene.visualDescription ?? extendedScene.visual_prompt ?? '') ||
-      voiceover !== (extendedScene.voiceover ?? extendedScene.script_text ?? '') ||
+      visualDescription !== (extendedScene.visualDescription ?? extendedScene.visualPrompt ?? '') ||
+      voiceover !== (extendedScene.voiceover ?? extendedScene.scriptText ?? '') ||
       textOverlay !== (extendedScene.textOverlay ?? '') ||
       estimatedDuration !== (extendedScene.estimatedDuration ?? extendedScene.duration ?? 5) ||
-      cameraMovement !== (extendedScene.cameraMovement ?? CAMERA_MOVEMENT.STATIC)
+      cameraMovement !== (extendedScene.cameraMovement ?? CAMERA_MOVEMENT.STATIC) ||
+      selectedKeyframe !== (extendedScene.selectedKeyframe ?? extendedScene.imageUrl)
     );
-  }, [visualDescription, voiceover, textOverlay, estimatedDuration, cameraMovement, extendedScene]);
+  }, [visualDescription, voiceover, textOverlay, estimatedDuration, cameraMovement, selectedKeyframe, extendedScene]);
 
   const handleSave = async () => {
     await onSave(scene.id, {
@@ -86,10 +92,13 @@ export const SceneEditor = ({
       textOverlay,
       estimatedDuration,
       cameraMovement,
+
+      selectedKeyframe,
       // Also update legacy fields for compatibility
-      visual_prompt: visualDescription,
-      script_text: voiceover,
+      visualPrompt: visualDescription,
+      scriptText: voiceover,
       duration: estimatedDuration,
+      imageUrl: selectedKeyframe,
     } as unknown as Partial<VideoScene>);
     onClose();
   };
@@ -111,10 +120,34 @@ export const SceneEditor = ({
         </Button>
       </div>
 
-      {/* Form */}
+      {/* Tabs */}
+      <div className="flex p-2 gap-2 border-b border-border bg-muted/20">
+        <Button
+          variant={activeTab === 'script' ? 'secondary' : 'ghost'}
+          size="sm"
+          className="flex-1"
+          onClick={() => { setActiveTab('script'); }}
+        >
+          <FileText size={16} className="mr-2" />
+          {t('video_projects:editor.script_tab')}
+        </Button>
+        <Button
+          variant={activeTab === 'visuals' ? 'secondary' : 'ghost'}
+          size="sm"
+          className="flex-1"
+          onClick={() => { setActiveTab('visuals'); }}
+        >
+          <ImageIcon size={16} className="mr-2" />
+          {t('video_projects:editor.visuals_tab')}
+        </Button>
+      </div>
+
+      {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto p-4 space-y-6">
-        {/* Visual Description */}
-        <div className="space-y-2">
+        {activeTab === 'script' ? (
+          <div className="space-y-6">
+            {/* Visual Description */}
+            <div className="space-y-2">
           <label className="text-sm font-medium flex items-center gap-2">
             <Eye size={16} className="text-muted-foreground" />
             {t('video_projects:script.visual_description')}
@@ -220,6 +253,20 @@ export const SceneEditor = ({
               {String(extendedScene.characterIds.length)} {t('video_projects:script.characters_count')}
             </div>
           </div>
+        )}
+          </div>
+        ) : (
+          <ImageGeneratorPanel
+            scene={{
+              ...extendedScene,
+              visualDescription, // Use current form state
+              selectedKeyframe   // Use current selection state
+            }}
+            onUpdate={(updates) => {
+              if (updates.selectedKeyframe) setSelectedKeyframe(updates.selectedKeyframe);
+              if (updates.visualDescription) setVisualDescription(updates.visualDescription);
+            }}
+          />
         )}
       </div>
 

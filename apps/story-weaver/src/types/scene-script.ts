@@ -107,10 +107,10 @@ export const extendedSceneSchema = z.object({
   status: sceneStatusSchema,
   
   // Legacy fields (from existing video-scene.ts)
-  script_text: z.string().optional(),
-  visual_prompt: z.string().optional(),
-  image_url: z.string().optional(),
-  audio_url: z.string().optional(),
+  scriptText: z.string().optional(),
+  visualPrompt: z.string().optional(),
+  imageUrl: z.string().optional(),
+  audioUrl: z.string().optional(),
   duration: z.number().optional(),
   transition: z.string().optional(),
   

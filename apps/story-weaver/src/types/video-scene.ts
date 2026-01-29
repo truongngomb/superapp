@@ -4,10 +4,10 @@ export const videoSceneSchema = z.object({
   id: z.string(),
   projectId: z.string(),
   order: z.number(),
-  script_text: z.string().optional(),
-  visual_prompt: z.string().optional(),
-  image_url: z.string().optional(),
-  audio_url: z.string().optional(),
+  scriptText: z.string().optional(),
+  visualPrompt: z.string().optional(),
+  imageUrl: z.string().optional(),
+  audioUrl: z.string().optional(),
   duration: z.number().optional(),
   transition: z.string().optional(),
   // BaseEntity fields
@@ -22,8 +22,8 @@ export type VideoScene = z.infer<typeof videoSceneSchema>;
 export const createVideoSceneSchema = z.object({
   projectId: z.string(),
   order: z.number(),
-  script_text: z.string().optional(),
-  visual_prompt: z.string().optional(),
+  scriptText: z.string().optional(),
+  visualPrompt: z.string().optional(),
   duration: z.number().optional(),
   transition: z.string().optional(),
 });

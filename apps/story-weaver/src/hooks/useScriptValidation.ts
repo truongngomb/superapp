@@ -61,7 +61,7 @@ function validateScene(
   }
 
   // 2. Visual description validation
-  const visualDesc = scene.visualDescription ?? scene.visual_prompt ?? '';
+  const visualDesc = scene.visualDescription ?? scene.visualPrompt ?? '';
   if (!visualDesc || visualDesc.trim().length < 10) {
     issues.push({
       sceneId: scene.id,
@@ -74,7 +74,7 @@ function validateScene(
   }
 
   // 3. Voiceover validation
-  const voiceover = scene.voiceover ?? scene.script_text ?? '';
+  const voiceover = scene.voiceover ?? scene.scriptText ?? '';
   if (!voiceover || voiceover.trim().length === 0) {
     issues.push({
       sceneId: scene.id,

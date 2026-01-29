@@ -13,6 +13,7 @@ import type {
   PortraitOption
 } from '../types/index.js';
 import type { Character } from '../types/character.js';
+import crypto from 'crypto';
 
 
 class ImageGenService {
@@ -54,7 +55,7 @@ Focus on facial features and clear character appearance.`;
   /**
    * Generate keyframe options for a scene
    */
-  async generateSceneKeyframes(sceneId: string): Promise<PortraitOption[]> {
+  async generateSceneKeyframes(sceneId: string) {
     const scene = await videoSceneService.getById(sceneId);
     const project = await videoProjectService.getById(scene.projectId);
     
@@ -100,9 +101,12 @@ Focus on facial features and clear character appearance.`;
         });
       }
 
-      const options: PortraitOption[] = result.images.map(img => ({
+      const options = result.images.map(img => ({
+        id: crypto.randomUUID(),
         url: img.url,
         prompt: img.prompt,
+        seed: undefined, // Seed might be available in result, but for now undefined
+        generatedAt: new Date().toISOString(),
       }));
 
       // Update scene with options

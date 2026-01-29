@@ -19,8 +19,8 @@ export const SceneCard = ({ scene, index, onDelete }: SceneCardProps) => {
             </div>
             
             <div className="w-1/4 aspect-video bg-muted rounded-md flex items-center justify-center overflow-hidden border border-border">
-                {scene.image_url ? (
-                    <img src={scene.image_url} alt={t('video_projects:editor.scene_label', { index: index + 1 })} className="w-full h-full object-cover" />
+                {scene.imageUrl ? (
+                    <img src={scene.imageUrl} alt={t('video_projects:editor.scene_label', { index: index + 1 })} className="w-full h-full object-cover" />
                 ) : (
                     <div className="flex flex-col items-center text-muted-foreground">
                         <ImageIcon size={24} />
@@ -42,7 +42,7 @@ export const SceneCard = ({ scene, index, onDelete }: SceneCardProps) => {
                     </Button>
                 </div>
                 
-                <p className="text-sm line-clamp-2">{scene.script_text || <span className="text-muted-foreground italic">{t('video_projects:editor.no_script')}</span>}</p>
+                <p className="text-sm line-clamp-2">{scene.scriptText || <span className="text-muted-foreground italic">{t('video_projects:editor.no_script')}</span>}</p>
                 
                 <div className="flex gap-3 text-xs text-muted-foreground mt-2">
                     <div className="flex items-center gap-1">
@@ -51,7 +51,7 @@ export const SceneCard = ({ scene, index, onDelete }: SceneCardProps) => {
                     </div>
                     <div className="flex items-center gap-1">
                         <MusicIcon size={12} />
-                        <span>{scene.audio_url ? t('video_projects:editor.has_audio') : t('video_projects:editor.no_audio')}</span>
+                        <span>{scene.audioUrl ? t('video_projects:editor.has_audio') : t('video_projects:editor.no_audio')}</span>
                     </div>
                 </div>
             </div>

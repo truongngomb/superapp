@@ -16,11 +16,6 @@ interface GenerateScenesParams {
   projectId: string;
 }
 
-interface GenerateScenesResponse {
-  success: boolean;
-  data: VideoScene[];
-}
-
 /**
  * Hook we generate AI script/scenes for a project
  * 
@@ -35,13 +30,14 @@ export const useScriptGeneration = () => {
 
   const mutation = useMutation({
     mutationFn: async ({ projectId }: GenerateScenesParams): Promise<VideoScene[]> => {
-      const response = await api.post<ApiResponse<GenerateScenesResponse>>(
+      const response = await api.post<ApiResponse<VideoScene[]>>(
         `${API_ENDPOINTS.GENERATION}/generate-scenes/${projectId}`
       );
       
-      // Handle nested response structure
-      const responseData = response.data;
-      return responseData.data;
+      if (Array.isArray(response.data)) {
+        return response.data;
+      }
+      return [];
     },
     onSuccess: (_data, variables) => {
       // Invalidate scenes query to refresh the list

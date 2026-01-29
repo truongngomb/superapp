@@ -61,7 +61,7 @@ const SceneScriptCard = ({
   const { t } = useTranslation(['video_projects']);
   const extendedScene = scene as unknown as ExtendedScene;
   
-  const voiceover = extendedScene.voiceover ?? extendedScene.script_text ?? '';
+  const voiceover = extendedScene.voiceover ?? extendedScene.scriptText ?? '';
   const duration = extendedScene.estimatedDuration ?? extendedScene.duration ?? 0;
   const camera = extendedScene.cameraMovement ?? CAMERA_MOVEMENT.STATIC;
 

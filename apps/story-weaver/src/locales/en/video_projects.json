@@ -40,6 +40,8 @@
       "script": "Script",
       "visuals": "Visuals"
     },
+    "script_tab": "Script",
+    "visuals_tab": "Visuals",
     "coming_soon": "Coming soon..."
   },
   "script": {
@@ -152,5 +154,16 @@
     "generating": "Generating",
     "rendering": "Rendering",
     "completed": "Completed"
+  },
+  "visuals": {
+    "generated_keyframes": "Generated Images",
+    "select_hint": "Select the best image for this scene",
+    "regenerate": "Regenerate",
+    "generate": "Generate Images",
+    "generate_now": "Generate Images",
+    "selected": "Selected",
+    "empty_state": "No images generated yet for this scene.",
+    "generate_success": "Images generated successfully!",
+    "generate_error": "Failed to generate images"
   }
 }

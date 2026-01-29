@@ -39,7 +39,13 @@ export const videoSceneSchema = z.object({
   textOverlay: z.string().optional(),
   visualPrompt: z.string().optional(),
   cameraMovement: cameraMovementSchema.optional(),
-  keyframeOptions: z.array(z.object({ url: z.string(), prompt: z.string().optional() })).optional(),
+  keyframeOptions: z.array(z.object({ 
+    id: z.string(),
+    url: z.string(), 
+    prompt: z.string(),
+    seed: z.number().optional(),
+    generatedAt: z.string(), 
+  })).optional(),
   selectedKeyframe: z.string().optional(),
   imageUrl: z.string().optional(),
   audioUrl: z.string().optional(),
@@ -72,7 +78,13 @@ export const createVideoSceneSchema = z.object({
 export type CreateVideoSceneInput = z.infer<typeof createVideoSceneSchema>;
 
 export const updateVideoSceneSchema = createVideoSceneSchema.partial().omit({ projectId: true }).extend({
-    keyframeOptions: z.array(z.object({ url: z.string(), prompt: z.string().optional() })).optional(),
+    keyframeOptions: z.array(z.object({ 
+      id: z.string(),
+      url: z.string(), 
+      prompt: z.string(),
+      seed: z.number().optional(),
+      generatedAt: z.string(),
+    })).optional(),
     selectedKeyframe: z.string().optional(),
     imageUrl: z.string().optional(),
     audioUrl: z.string().optional(),
