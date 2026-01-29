@@ -15,57 +15,41 @@ import { logger } from '../utils/logger.js';
  * Available AI models for text generation
  * Add new models here as they become available
  */
+// =============================================================================
+// AI Model Definitions
+// =============================================================================
+
+/**
+ * Available AI models for text generation
+ * Updated based on Antigravity provider list
+ */
 export const AI_TEXT_MODELS = {
-  // Gemini Models
+  // Fast / Efficiency Models
   GEMINI_3_FLASH_PREVIEW: 'gemini-3-flash-preview',
-  GEMINI_2_FLASH: 'gemini-2.0-flash-exp',
-  GEMINI_15_FLASH: 'gemini-1.5-flash',
-  GEMINI_15_PRO: 'gemini-1.5-pro',
-  
-  // Claude Models
-  CLAUDE_35_SONNET: 'claude-3-5-sonnet-20241022',
-  CLAUDE_35_HAIKU: 'claude-3-5-haiku-20241022',
-  
-  // OpenAI Models
-  GPT_4O: 'gpt-4o',
-  GPT_4O_MINI: 'gpt-4o-mini',
-  GPT_5: 'gpt-5',
-  
-  // Open Source (via proxy)
-  LLAMA_3: 'llama-3',
-  QWEN_25: 'qwen-2.5',
+  GEMINI_2_5_FLASH: 'gemini-2.5-flash',
+  GEMINI_2_5_FLASH_LITE: 'gemini-2.5-flash-lite',
+
+  // High Quality / Creative Models
+  GEMINI_3_PRO_HIGH: 'gemini-3-pro-high',
+  GEMINI_CLAUDE_SONNET_4_5: 'gemini-claude-sonnet-4-5',
+
+  // Reasoning / Specialized Models
+  GEMINI_CLAUDE_SONNET_4_5_THINKING: 'gemini-claude-sonnet-4-5-thinking',
+  GEMINI_CLAUDE_OPUS_4_5_THINKING: 'gemini-claude-opus-4-5-thinking',
+
+  // Open Source / Other
+  GPT_OSS_120B_MEDIUM: 'gpt-oss-120b-medium',
 } as const;
 
 export type AITextModel = (typeof AI_TEXT_MODELS)[keyof typeof AI_TEXT_MODELS];
 
-export const aiTextModelSchema = z.enum([
-  AI_TEXT_MODELS.GEMINI_3_FLASH_PREVIEW,
-  AI_TEXT_MODELS.GEMINI_2_FLASH,
-  AI_TEXT_MODELS.GEMINI_15_FLASH,
-  AI_TEXT_MODELS.GEMINI_15_PRO,
-  AI_TEXT_MODELS.CLAUDE_35_SONNET,
-  AI_TEXT_MODELS.CLAUDE_35_HAIKU,
-  AI_TEXT_MODELS.GPT_4O,
-  AI_TEXT_MODELS.GPT_4O_MINI,
-  AI_TEXT_MODELS.GPT_5,
-  AI_TEXT_MODELS.LLAMA_3,
-  AI_TEXT_MODELS.QWEN_25,
-]);
+export const aiTextModelSchema = z.nativeEnum(AI_TEXT_MODELS);
 
 /**
  * Available AI models for image generation
  */
 export const AI_IMAGE_MODELS = {
-  // Stable Diffusion
-  SDXL: 'stable-diffusion-xl',
-  SD_3: 'stable-diffusion-3',
-  
-  // Flux
-  FLUX_SCHNELL: 'flux-schnell',
-  FLUX_DEV: 'flux-dev',
-  
-  // Others
-  DALLE_3: 'dall-e-3',
+  GEMINI_3_PRO_IMAGE_PREVIEW: 'gemini-3-pro-image-preview',
 } as const;
 
 export type AIImageModel = (typeof AI_IMAGE_MODELS)[keyof typeof AI_IMAGE_MODELS];
@@ -83,7 +67,7 @@ const aiEnvSchema = z.object({
   
   AI_API_KEY: z
     .string()
-    .default('sk-dummy'), // CLIProxyAPI ignores real key
+    .default('sk-dummy'), 
   
   // Default Models
   AI_DEFAULT_TEXT_MODEL: z
@@ -92,7 +76,7 @@ const aiEnvSchema = z.object({
   
   AI_DEFAULT_IMAGE_MODEL: z
     .string()
-    .default(AI_IMAGE_MODELS.FLUX_SCHNELL),
+    .default(AI_IMAGE_MODELS.GEMINI_3_PRO_IMAGE_PREVIEW),
   
   // Retry Configuration
   AI_MAX_RETRIES: z
@@ -114,7 +98,7 @@ const aiEnvSchema = z.object({
   // Rate Limiting
   AI_RATE_LIMIT_RPM: z
     .string()
-    .default('15')
+    .default('60') // Higher limit for Flash models
     .transform((val) => parseInt(val, 10)),
 });
 
