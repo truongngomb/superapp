@@ -22,3 +22,5 @@ export {
 export * from './useProjects';
 export * from './useScenes';
 export * from './useProjectWizard';
+export * from './useCharacters';
+export * from './useCharacterPortrait';

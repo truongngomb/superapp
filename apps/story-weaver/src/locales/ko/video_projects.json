@@ -34,7 +34,12 @@
     "has_audio": "오디오 있음",
     "no_audio": "오디오 없음",
     "delete_scene_title": "장면 삭제",
-    "delete_scene_message": "이 장면을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
+    "delete_scene_message": "이 장면을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+    "tabs": {
+      "scenes": "장면",
+      "visuals": "시각"
+    },
+    "coming_soon": "곧 출시 예정..."
   },
   "wizard": {
     "title_story": "스토리 입력",

@@ -1,0 +1,85 @@
+{
+  "title": "Nhân Vật",
+  "description": "Quản lý nhân vật cho dự án video của bạn",
+  
+  "panel": {
+    "title": "Xưởng Nhân Vật",
+    "subtitle": "Định nghĩa nhân vật để đảm bảo tính nhất quán xuyên suốt các cảnh"
+  },
+  
+  "actions": {
+    "add": "Thêm Nhân Vật",
+    "edit": "Sửa Nhân Vật",
+    "delete": "Xóa Nhân Vật",
+    "extract": "Trích Xuất từ Câu Chuyện",
+    "generate_portrait": "Tạo Chân Dung",
+    "regenerate": "Tạo Lại",
+    "select_master": "Đặt làm Chính",
+    "approve": "Duyệt",
+    "save": "Lưu Nhân Vật"
+  },
+  
+  "form": {
+    "name_label": "Tên Nhân Vật",
+    "name_placeholder": "VD: Luna, nữ phi hành gia dũng cảm",
+    "name_required": "Tên nhân vật là bắt buộc",
+    "description_label": "Mô Tả",
+    "description_placeholder": "Mô tả ngoại hình, tính cách, đặc điểm nổi bật...",
+    "description_hint": "Mô tả chi tiết giúp AI tạo chân dung nhất quán"
+  },
+  
+  "status": {
+    "draft": "Nháp",
+    "approved": "Đã Duyệt"
+  },
+  
+  "portrait": {
+    "title": "Chân Dung Nhân Vật",
+    "master_label": "Chân Dung Chính",
+    "options_title": "Tùy Chọn Chân Dung",
+    "select_hint": "Chọn một ảnh làm chân dung chính để đảm bảo tính nhất quán",
+    "generating": "Đang tạo chân dung...",
+    "no_portraits": "Chưa có chân dung nào",
+    "upload_manual": "Hoặc tải lên thủ công"
+  },
+  
+  "extract": {
+    "title": "Trích Xuất Nhân Vật",
+    "description": "AI sẽ phân tích câu chuyện và gợi ý nhân vật",
+    "extracting": "Đang phân tích câu chuyện...",
+    "found_title": "Đã Tìm Thấy Nhân Vật",
+    "found_description": "Xem xét và thêm nhân vật được gợi ý",
+    "confidence": "Độ tin cậy",
+    "add_selected": "Thêm Đã Chọn",
+    "add_all": "Thêm Tất Cả",
+    "no_characters": "Không tìm thấy nhân vật trong câu chuyện"
+  },
+  
+  "empty": {
+    "title": "Chưa Có Nhân Vật",
+    "description": "Thêm nhân vật thủ công hoặc trích xuất từ câu chuyện của bạn",
+    "cta": "Trích Xuất từ Câu Chuyện"
+  },
+  
+  "messages": {
+    "created": "Đã tạo nhân vật thành công",
+    "updated": "Đã cập nhật nhân vật thành công",
+    "deleted": "Đã xóa nhân vật thành công",
+    "approved": "Nhân vật đã được duyệt và sẵn sàng sử dụng",
+    "portrait_set": "Đã đặt chân dung chính thành công",
+    "extract_success": "Đã tìm thấy {{count}} nhân vật trong câu chuyện",
+    "extract_empty": "Không tìm thấy nhân vật trong câu chuyện"
+  },
+  
+  "confirm": {
+    "delete_title": "Xóa Nhân Vật",
+    "delete_message": "Bạn có chắc muốn xóa \"{{name}}\"? Hành động này không thể hoàn tác."
+  },
+
+  "tips": {
+    "title": "Mẹo Tạo Nhân Vật Tốt Hơn",
+    "tip1": "Mô tả cụ thể về ngoại hình",
+    "tip2": "Thêm đặc điểm nhận dạng độc đáo",
+    "tip3": "Mô tả phong cách ăn mặc nếu phù hợp"
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "title": "Characters",
+  "description": "Manage characters for your video project",
+  
+  "panel": {
+    "title": "Character Studio",
+    "subtitle": "Define characters for consistent appearances across scenes"
+  },
+  
+  "actions": {
+    "add": "Add Character",
+    "edit": "Edit Character",
+    "delete": "Delete Character",
+    "extract": "Extract from Story",
+    "generate_portrait": "Generate Portrait",
+    "regenerate": "Regenerate",
+    "select_master": "Set as Master",
+    "approve": "Approve",
+    "save": "Save Character"
+  },
+  
+  "form": {
+    "name_label": "Character Name",
+    "name_placeholder": "e.g., Luna, the brave astronaut",
+    "name_required": "Character name is required",
+    "description_label": "Description",
+    "description_placeholder": "Describe appearance, personality, key traits...",
+    "description_hint": "Detailed description helps AI generate consistent portraits"
+  },
+  
+  "status": {
+    "draft": "Draft",
+    "approved": "Approved"
+  },
+  
+  "portrait": {
+    "title": "Character Portrait",
+    "master_label": "Master Portrait",
+    "options_title": "Portrait Options",
+    "select_hint": "Select one as the master portrait for consistency",
+    "generating": "Generating portraits...",
+    "no_portraits": "No portraits generated yet",
+    "upload_manual": "Or upload manually"
+  },
+  
+  "extract": {
+    "title": "Extract Characters",
+    "description": "AI will analyze your story and suggest characters",
+    "extracting": "Analyzing story...",
+    "found_title": "Characters Found",
+    "found_description": "Review and add suggested characters",
+    "confidence": "Confidence",
+    "add_selected": "Add Selected",
+    "add_all": "Add All",
+    "no_characters": "No characters found in the story"
+  },
+  
+  "empty": {
+    "title": "No Characters Yet",
+    "description": "Add characters manually or extract them from your story",
+    "cta": "Extract from Story"
+  },
+  
+  "messages": {
+    "created": "Character created successfully",
+    "updated": "Character updated successfully",
+    "deleted": "Character deleted successfully",
+    "approved": "Character approved and ready for use",
+    "portrait_set": "Master portrait set successfully",
+    "extract_success": "Found {{count}} characters in your story",
+    "extract_empty": "No characters were found in the story"
+  },
+  
+  "confirm": {
+    "delete_title": "Delete Character",
+    "delete_message": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone."
+  },
+
+  "tips": {
+    "title": "Tips for Better Characters",
+    "tip1": "Be specific about physical appearance",
+    "tip2": "Include unique identifying features",
+    "tip3": "Describe clothing style if relevant"
+  }
+}

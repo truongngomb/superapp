@@ -13,30 +13,36 @@ import { uikitLocales } from '@superapp/ui-kit';
 // Import translation files - English
 import authEn from '../locales/en/auth.json';
 import videoProjectsEn from '../locales/en/video_projects.json';
+import charactersEn from '../locales/en/characters.json';
 
 // Import translation files - Vietnamese
 import authVi from '../locales/vi/auth.json';
 import videoProjectsVi from '../locales/vi/video_projects.json';
+import charactersVi from '../locales/vi/characters.json';
 
 // Import translation files - Korean
 import authKo from '../locales/ko/auth.json';
 import videoProjectsKo from '../locales/ko/video_projects.json';
+import charactersKo from '../locales/ko/characters.json';
 
 // Configure resources
 export const resources = {
   en: {
     auth: authEn,
     video_projects: videoProjectsEn,
+    characters: charactersEn,
     uikit: uikitLocales.en,
   },
   vi: {
     auth: authVi,
     video_projects: videoProjectsVi,
+    characters: charactersVi,
     uikit: uikitLocales.vi,
   },
   ko: {
     auth: authKo,
     video_projects: videoProjectsKo,
+    characters: charactersKo,
     uikit: uikitLocales.ko,
   },
 } as const;
@@ -53,7 +59,7 @@ void i18n
   .init({
     resources,
     defaultNS: 'uikit',
-    ns: ['uikit', 'auth', 'video_projects'],
+    ns: ['uikit', 'auth', 'video_projects', 'characters'],
 
     fallbackLng: 'en', // Default language if detection fails
     supportedLngs: ['en', 'vi', 'ko'],

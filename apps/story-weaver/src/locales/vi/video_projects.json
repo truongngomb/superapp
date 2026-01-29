@@ -34,7 +34,12 @@
     "has_audio": "Có âm thanh",
     "no_audio": "Không có âm thanh",
     "delete_scene_title": "Xóa cảnh",
-    "delete_scene_message": "Bạn có chắc chắn muốn xóa cảnh này? Hành động này không thể hoàn tác."
+    "delete_scene_message": "Bạn có chắc chắn muốn xóa cảnh này? Hành động này không thể hoàn tác.",
+    "tabs": {
+      "scenes": "Cảnh",
+      "visuals": "Hình Ảnh"
+    },
+    "coming_soon": "Sắp ra mắt..."
   },
   "wizard": {
     "title_story": "Kể Câu Chuyện",

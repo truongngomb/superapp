@@ -14,6 +14,8 @@ export const API_ENDPOINTS = {
   },
   VIDEO_PROJECTS: '/story-weaver/video-projects',
   VIDEO_SCENES: '/story-weaver/video-scenes',
+  CHARACTERS: '/story-weaver/characters',
+  GENERATION: '/story-weaver/generation',
 } as const;
 
 

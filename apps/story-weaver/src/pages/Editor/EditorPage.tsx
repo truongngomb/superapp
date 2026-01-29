@@ -1,19 +1,25 @@
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useVideoProject, useRenderVideo } from '@/hooks';
 import { useDocumentTitle } from '@superapp/core-logic';
 import { SceneList } from './components/SceneList';
+import { CharacterStudioPanel } from './components/CharacterStudio';
 import { Button, Badge, LoadingSpinner, fadeSlideUp, defaultTransition } from '@superapp/ui-kit';
-import { ChevronLeft, Rocket, Settings } from 'lucide-react';
+import { ChevronLeft, Rocket, Settings, Users, Film, Palette } from 'lucide-react';
 import { APP_NAME } from '@/config/constants';
 
+type EditorTab = 'scenes' | 'characters' | 'visuals';
+
 export const EditorPage = () => {
-    const { t } = useTranslation(['video_projects', 'uikit']);
+    const { t } = useTranslation(['video_projects', 'uikit', 'characters']);
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const { data: project, isLoading } = useVideoProject(id || '');
     const { mutate: renderVideo, isPending: isRendering } = useRenderVideo();
+    
+    const [activeTab, setActiveTab] = useState<EditorTab>('scenes');
 
     useDocumentTitle(project?.name ? `${project.name} | ${APP_NAME}` : APP_NAME);
 
@@ -35,6 +41,12 @@ export const EditorPage = () => {
 
     const canRender = project.status === 'draft' || project.status === 'completed';
     const isCurrentlyRendering = project.status === 'rendering';
+
+    const tabs = [
+        { key: 'scenes' as const, label: t('video_projects:editor.tabs.scenes'), icon: Film },
+        { key: 'characters' as const, label: t('characters:title'), icon: Users },
+        { key: 'visuals' as const, label: t('video_projects:editor.tabs.visuals'), icon: Palette },
+    ];
 
     return (
         <div className="h-screen flex flex-col overflow-hidden">
@@ -79,9 +91,72 @@ export const EditorPage = () => {
                     transition={defaultTransition}
                     className="flex flex-1 overflow-hidden"
                 >
-                    {/* Left: Script & Scenes */}
-                    <div className="w-1/3 border-r border-border bg-surface p-4 overflow-hidden flex flex-col">
-                        <SceneList projectId={project.id} />
+                    {/* Left Panel with Tabs */}
+                    <div className="w-1/3 border-r border-border bg-surface flex flex-col overflow-hidden">
+                        {/* Tab Navigation */}
+                        <div className="flex border-b border-border shrink-0">
+                            {tabs.map((tab) => {
+                                const Icon = tab.icon;
+                                const isActive = activeTab === tab.key;
+                                return (
+                                    <button
+                                        key={tab.key}
+                                        onClick={() => { setActiveTab(tab.key); }}
+                                        className={`
+                                            flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium
+                                            transition-colors border-b-2
+                                            ${isActive 
+                                                ? 'border-primary text-primary' 
+                                                : 'border-transparent text-muted-foreground hover:text-foreground'}
+                                        `}
+                                    >
+                                        <Icon size={16} />
+                                        <span className="hidden lg:inline">{tab.label}</span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+
+                        {/* Tab Content */}
+                        <div className="flex-1 overflow-auto p-4">
+                            <AnimatePresence mode="wait">
+                                {activeTab === 'scenes' && (
+                                    <motion.div
+                                        key="scenes"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        className="h-full"
+                                    >
+                                        <SceneList projectId={project.id} />
+                                    </motion.div>
+                                )}
+                                
+                                {activeTab === 'characters' && (
+                                    <motion.div
+                                        key="characters"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        className="h-full"
+                                    >
+                                        <CharacterStudioPanel projectId={project.id} />
+                                    </motion.div>
+                                )}
+                                
+                                {activeTab === 'visuals' && (
+                                    <motion.div
+                                        key="visuals"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        className="h-full flex items-center justify-center text-muted-foreground"
+                                    >
+                                        <p>{t('video_projects:editor.coming_soon')}</p>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
                     </div>
 
                     {/* Right: Preview & AI Chat */}
