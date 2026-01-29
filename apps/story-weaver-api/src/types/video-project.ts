@@ -82,6 +82,7 @@ export const videoProjectSchema = z.object({
   targetPlatform: videoTargetPlatformSchema.optional(),
   targetDuration: z.number().optional(),
   currentPhase: videoWorkflowPhaseSchema.optional(),
+  outputUrl: z.string().url().optional(),
   userId: z.string(),
   // BaseEntity fields
   created: z.string(),
@@ -106,6 +107,7 @@ export type CreateVideoProjectInput = z.infer<typeof createVideoProjectSchema>;
 export const updateVideoProjectSchema = createVideoProjectSchema.partial().extend({
   status: videoProjectStatusSchema.optional(),
   currentPhase: videoWorkflowPhaseSchema.optional(),
+  outputUrl: z.string().url().optional(),
   isActive: z.boolean().optional(),
   isDeleted: z.boolean().optional(),
 });

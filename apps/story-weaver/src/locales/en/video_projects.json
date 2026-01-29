@@ -38,10 +38,14 @@
     "tabs": {
       "scenes": "Scenes",
       "script": "Script",
-      "visuals": "Visuals"
+      "visuals": "Visuals",
+      "motion": "Motion"
     },
     "script_tab": "Script",
     "visuals_tab": "Visuals",
+    "motion_tab": "Motion",
+    "visuals_guide_title": "Scene Visuals",
+    "visuals_guide_desc": "Select a scene from the 'Scenes' tab to generate or edit AI images and motion.",
     "coming_soon": "Coming soon..."
   },
   "script": {
@@ -151,6 +155,9 @@
   },
   "status": {
     "draft": "Draft",
+    "prompt_ready": "Script Ready",
+    "visual_ready": "Visuals Ready",
+    "video_ready": "Clips Ready",
     "generating": "Generating",
     "rendering": "Rendering",
     "completed": "Completed"
@@ -165,5 +172,19 @@
     "empty_state": "No images generated yet for this scene.",
     "generate_success": "Images generated successfully!",
     "generate_error": "Failed to generate images"
+  },
+  "motion": {
+    "title": "Scene Motion",
+    "description": "Bring this scene to life with AI motion",
+    "generate": "Animate Scene",
+    "regenerate": "Re-animate",
+    "generate_success": "Motion clip generated!",
+    "generate_error": "Failed to animate scene",
+    "no_image_hint": "Please select or generate a visual keyframe first in the Visuals tab.",
+    "generating_hint": "Generating 4s motion clip...",
+    "ready_title": "Motion Clip Ready",
+    "ready_desc": "This clip will be used during final video rendering.",
+    "ready_to_animate": "Ready to Animate",
+    "cta_hint": "Click the button above to generate motion."
   }
 }

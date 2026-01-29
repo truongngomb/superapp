@@ -38,8 +38,14 @@
     "tabs": {
       "scenes": "Cảnh",
       "script": "Kịch bản",
-      "visuals": "Hình Ảnh"
+      "visuals": "Hình ảnh",
+      "motion": "Chuyển động"
     },
+    "script_tab": "Kịch bản",
+    "visuals_tab": "Hình ảnh",
+    "motion_tab": "Chuyển động",
+    "visuals_guide_title": "Hình ảnh cảnh quay",
+    "visuals_guide_desc": "Chọn một cảnh từ tab 'Cảnh' để tạo hoặc chỉnh sửa hình ảnh AI và chuyển động.",
     "coming_soon": "Sắp ra mắt..."
   },
   "script": {
@@ -149,8 +155,36 @@
   },
   "status": {
     "draft": "Nháp",
-    "generating": "Đang soạn thảo",
-    "rendering": "Đang tạo video",
+    "prompt_ready": "Kịch bản sẵn sàng",
+    "visual_ready": "Hình ảnh sẵn sàng",
+    "video_ready": "Clip sẵn sàng",
+    "generating": "Đang tạo",
+    "rendering": "Đang xuất video",
     "completed": "Hoàn thành"
+  },
+  "visuals": {
+    "generated_keyframes": "Hình ảnh đã tạo",
+    "select_hint": "Chọn hình ảnh tốt nhất cho cảnh này",
+    "regenerate": "Tạo lại",
+    "generate": "Tạo hình ảnh",
+    "generate_now": "Tạo hình ảnh",
+    "selected": "Đã chọn",
+    "empty_state": "Chưa có hình ảnh nào được tạo cho cảnh này.",
+    "generate_success": "Tạo hình ảnh thành công!",
+    "generate_error": "Không thể tạo hình ảnh"
+  },
+  "motion": {
+    "title": "Chuyển động cảnh",
+    "description": "Làm sống động cảnh này với chuyển động AI",
+    "generate": "Tạo chuyển động",
+    "regenerate": "Tạo lại",
+    "generate_success": "Đã tạo clip chuyển động!",
+    "generate_error": "Không thể tạo chuyển động",
+    "no_image_hint": "Vui lòng chọn hoặc tạo hình ảnh trước trong tab Hình ảnh.",
+    "generating_hint": "Đang tạo clip chuyển động 4s...",
+    "ready_title": "Clip chuyển động sẵn sàng",
+    "ready_desc": "Clip này sẽ được sử dụng trong quá trình xuất video cuối cùng.",
+    "ready_to_animate": "Sẵn sàng tạo chuyển động",
+    "cta_hint": "Nhấn nút phía trên để tạo chuyển động."
   }
 }

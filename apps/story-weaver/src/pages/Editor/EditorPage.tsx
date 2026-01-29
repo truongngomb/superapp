@@ -8,7 +8,7 @@ import { SceneList } from './components/SceneList';
 import { CharacterStudioPanel } from './components/CharacterStudio';
 import { ScriptEditorPanel } from './components/ScriptEditor';
 import { Button, Badge, LoadingSpinner, fadeSlideUp, defaultTransition } from '@superapp/ui-kit';
-import { ChevronLeft, Rocket, Settings, Users, Film, Palette, FileText } from 'lucide-react';
+import { ChevronLeft, Rocket, Settings, Users, Film, Palette, FileText, Download, Play } from 'lucide-react';
 import { APP_NAME } from '@/config/constants';
 
 type EditorTab = 'scenes' | 'script' | 'characters' | 'visuals';
@@ -73,6 +73,22 @@ export const EditorPage = () => {
                     <Button variant="outline" size="sm">
                         <Settings size={16} className="mr-2" /> {t('uikit:settings')}
                     </Button>
+                    
+                    {project.status === 'completed' && project.outputUrl && (
+                        <Button 
+                            variant="secondary" 
+                            size="sm"
+                            onClick={() => {
+                                if (project.outputUrl) {
+                                    window.open(project.outputUrl, '_blank');
+                                }
+                            }}
+                        >
+                            <Download size={16} className="mr-2" />
+                            {t('uikit:download', { defaultValue: 'Download' })}
+                        </Button>
+                    )}
+
                     <Button 
                         size="sm" 
                         onClick={handleRender} 
@@ -167,9 +183,17 @@ export const EditorPage = () => {
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
                                         exit={{ opacity: 0 }}
-                                        className="h-full flex items-center justify-center text-muted-foreground"
+                                        className="h-full flex flex-col items-center justify-center text-center p-8 space-y-4"
                                     >
-                                        <p>{t('video_projects:editor.coming_soon')}</p>
+                                        <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                                            <Palette size={32} />
+                                        </div>
+                                        <div>
+                                            <h3 className="font-semibold text-lg">{t('video_projects:editor.visuals_guide_title', { defaultValue: 'Scene Visuals' })}</h3>
+                                            <p className="text-sm text-muted-foreground mt-2">
+                                                {t('video_projects:editor.visuals_guide_desc', { defaultValue: 'Select a scene from the "Scenes" tab to generate or edit AI images and motion.' })}
+                                            </p>
+                                        </div>
                                     </motion.div>
                                 )}
                             </AnimatePresence>
@@ -179,8 +203,30 @@ export const EditorPage = () => {
                     {/* Right: Preview & AI Chat (hidden for full-width tabs) */}
                     {!isFullWidthTab && (
                         <div className="flex-1 bg-muted/30 p-8 flex flex-col items-center justify-center">
-                            <div className="aspect-[9/16] h-[80%] bg-black rounded-xl shadow-2xl flex items-center justify-center text-white/50">
-                                {t('video_projects:editor.preview_placeholder')}
+                            <div className="aspect-[9/16] h-[80%] bg-black rounded-xl shadow-2xl flex flex-col items-center justify-center text-white/50 overflow-hidden relative">
+                                {project.outputUrl ? (
+                                    <video 
+                                        src={project.outputUrl} 
+                                        controls 
+                                        className="w-full h-full object-contain"
+                                        autoPlay={false}
+                                    />
+                                ) : (
+                                    <>
+                                        <Play size={48} className="mb-4 opacity-20" />
+                                        <p className="px-12 text-center text-sm">
+                                            {t('video_projects:editor.preview_placeholder')}
+                                        </p>
+                                        {project.status === 'rendering' && (
+                                            <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center">
+                                                <LoadingSpinner size="lg" className="text-primary mb-4" />
+                                                <p className="text-white text-sm font-medium animate-pulse">
+                                                    {t('video_projects:editor.rendering')}
+                                                </p>
+                                            </div>
+                                        )}
+                                    </>
+                                )}
                             </div>
                         </div>
                     )}

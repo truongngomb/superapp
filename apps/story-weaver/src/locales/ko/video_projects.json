@@ -38,8 +38,14 @@
     "tabs": {
       "scenes": "장면",
       "script": "스크립트",
-      "visuals": "시각"
+      "visuals": "이미지",
+      "motion": "모션"
     },
+    "script_tab": "스크립트",
+    "visuals_tab": "이미지",
+    "motion_tab": "모션",
+    "visuals_guide_title": "장면 이미지",
+    "visuals_guide_desc": "'장면' 탭에서 장면을 선택하여 AI 이미지 및 모션을 생성하거나 편집하세요.",
     "coming_soon": "곧 출시 예정..."
   },
   "script": {
@@ -149,8 +155,36 @@
   },
   "status": {
     "draft": "초안",
-    "generating": "스크립트 생성 중",
+    "prompt_ready": "스크립트 준비됨",
+    "visual_ready": "이미지 준비됨",
+    "video_ready": "클립 준비됨",
+    "generating": "생성 중",
     "rendering": "렌더링 중",
     "completed": "완료됨"
+  },
+  "visuals": {
+    "generated_keyframes": "생성된 이미지",
+    "select_hint": "이 장면에 가장 적합한 이미지를 선택하세요",
+    "regenerate": "다시 생성",
+    "generate": "이미지 생성",
+    "generate_now": "이미지 생성",
+    "selected": "선택됨",
+    "empty_state": "이 장면에 대해 생성된 이미지가 없습니다.",
+    "generate_success": "이미지가 성공적으로 생성되었습니다!",
+    "generate_error": "이미지 생성 실패"
+  },
+  "motion": {
+    "title": "장면 모션",
+    "description": "AI 모션으로 이 장면에 생동감을 불어넣으세요",
+    "generate": "모션 생성",
+    "regenerate": "다시 생성",
+    "generate_success": "모션 클립이 생성되었습니다!",
+    "generate_error": "모션 생성 실패",
+    "no_image_hint": "이미지 탭에서 먼저 이미지를 선택하거나 생성해 주세요.",
+    "generating_hint": "4초 모션 클립 생성 중...",
+    "ready_title": "모션 클립 준비됨",
+    "ready_desc": "이 클립은 최종 비디오 렌더링 중에 사용됩니다.",
+    "ready_to_animate": "모션 생성 준비 완료",
+    "cta_hint": "위의 버튼을 클릭하여 모션을 생성하세요."
   }
 }

@@ -122,34 +122,42 @@ export const SceneEditor = ({
       </div>
 
       {/* Tabs */}
-      <div className="flex p-2 gap-2 border-b border-border bg-muted/20">
-        <Button
-          variant={activeTab === 'script' ? 'secondary' : 'ghost'}
-          size="sm"
-          className="flex-1"
-          onClick={() => { setActiveTab('script'); }}
-        >
-          <FileText size={16} className="mr-2" />
-          {t('video_projects:editor.script_tab')}
-        </Button>
-        <Button
-          variant={activeTab === 'visuals' ? 'secondary' : 'ghost'}
-          size="sm"
-          className="flex-1"
-          onClick={() => { setActiveTab('visuals'); }}
-        >
-          <ImageIcon size={16} className="mr-2" />
-          {t('video_projects:editor.visuals_tab')}
-        </Button>
-        <Button
-          variant={activeTab === 'motion' ? 'secondary' : 'ghost'}
-          size="sm"
-          className="flex-1"
-          onClick={() => { setActiveTab('motion'); }}
-        >
-          <Film size={16} className="mr-2" />
-          {t('video_projects:editor.motion_tab', { defaultValue: 'Motion' })}
-        </Button>
+      <div className="p-1 px-4 border-b border-border bg-muted/30">
+        <div className="flex bg-muted/50 p-1 rounded-lg gap-1">
+          <button
+            onClick={() => { setActiveTab('script'); }}
+            className={`flex-1 flex items-center justify-center gap-2 py-1.5 px-3 text-xs font-medium rounded-md transition-all ${
+              activeTab === 'script' 
+                ? 'bg-background shadow-sm text-foreground' 
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+            }`}
+          >
+            <FileText size={14} />
+            {t('video_projects:editor.script_tab')}
+          </button>
+          <button
+            onClick={() => { setActiveTab('visuals'); }}
+            className={`flex-1 flex items-center justify-center gap-2 py-1.5 px-3 text-xs font-medium rounded-md transition-all ${
+              activeTab === 'visuals' 
+                ? 'bg-background shadow-sm text-foreground' 
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+            }`}
+          >
+            <ImageIcon size={14} />
+            {t('video_projects:editor.visuals_tab')}
+          </button>
+          <button
+            onClick={() => { setActiveTab('motion'); }}
+            className={`flex-1 flex items-center justify-center gap-2 py-1.5 px-3 text-xs font-medium rounded-md transition-all ${
+              activeTab === 'motion' 
+                ? 'bg-background shadow-sm text-foreground' 
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+            }`}
+          >
+            <Film size={14} />
+            {t('video_projects:editor.motion_tab', { defaultValue: 'Motion' })}
+          </button>
+        </div>
       </div>
 
       {/* Scrollable Content */}
