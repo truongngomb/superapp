@@ -39,6 +39,9 @@ export const cache = new NodeCache({
  */
 export const CacheKeys = {
   VIDEO_PROJECTS: 'sw_video_projects',
+  VIDEO_SCENES: 'sw_video_scenes',
+  CHARACTERS: 'sw_characters',
+  ARTIFACTS: 'sw_artifacts',
   SCRIPTS: 'sw_scripts',
   ASSETS: 'sw_assets',
   GENERATIONS: 'sw_generations',
