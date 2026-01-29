@@ -32,3 +32,17 @@ generationRouter.post(
   '/generate-images/:sceneId',
   asyncHandler(generationController.generateKeyframes)
 );
+
+/** POST /generate-motion/:sceneId - Generate motion clip for a scene */
+generationRouter.post(
+  '/generate-motion/:sceneId',
+  asyncHandler(generationController.generateMotion)
+);
+
+/** POST /render/:projectId - Render final video montage */
+generationRouter.post(
+  '/render/:projectId',
+  asyncHandler(generationController.renderVideo)
+);
+
+

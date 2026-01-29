@@ -23,7 +23,6 @@ export const useCreateVideoProject = () => {
   });
 };
 
-
 export const useGenerateVideoScript = () => {
   const queryClient = useQueryClient();
   
@@ -35,14 +34,3 @@ export const useGenerateVideoScript = () => {
   });
 };
 
-export const useRenderVideo = () => {
-  const queryClient = useQueryClient();
-  
-  return useMutation({
-    mutationFn: (projectId: string) => videoProjectService.renderVideo(projectId),
-    onSuccess:  async () => {
-      // Invalidate to refetch project status
-      await queryClient.invalidateQueries({ queryKey: queryKeys.videoProjects.all });
-    }
-  });
-};

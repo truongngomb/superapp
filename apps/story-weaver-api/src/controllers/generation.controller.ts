@@ -9,7 +9,9 @@ import {
   imageGenService, 
   videoProjectService,
   characterService,
-  videoSceneService
+  videoSceneService,
+  motionGenService,
+  renderingService
 } from '../services/index.js';
 
 /**
@@ -68,3 +70,28 @@ export const generateKeyframes = async (req: Request, res: Response) => {
   const options = await imageGenService.generateSceneKeyframes(sceneId);
   res.json({ success: true, data: options });
 };
+
+/**
+ * POST /scenes/:sceneId/generate-motion
+ */
+export const generateMotion = async (req: Request, res: Response) => {
+  const sceneId = req.params['sceneId'] as string;
+  const scene = await videoSceneService.getById(sceneId);
+  await verifyProjectOwnership(scene.projectId, req.user?.id);
+
+  const result = await motionGenService.generateSceneMotion(sceneId);
+  res.json({ success: true, data: result });
+};
+
+/**
+ * POST /projects/:projectId/render
+ */
+export const renderVideo = async (req: Request, res: Response) => {
+  const projectId = req.params['projectId'] as string;
+  await verifyProjectOwnership(projectId, req.user?.id);
+
+  const result = await renderingService.renderProject(projectId);
+  res.json({ success: true, data: result });
+};
+
+

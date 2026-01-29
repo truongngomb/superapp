@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useVideoProject, useRenderVideo } from '@/hooks';
+import { useVideoProject, useVideoRendering } from '@/hooks';
 import { useDocumentTitle } from '@superapp/core-logic';
 import { SceneList } from './components/SceneList';
 import { CharacterStudioPanel } from './components/CharacterStudio';
@@ -18,7 +18,7 @@ export const EditorPage = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const { data: project, isLoading } = useVideoProject(id || '');
-    const { mutate: renderVideo, isPending: isRendering } = useRenderVideo();
+    const { renderVideo, isRendering } = useVideoRendering();
     
     const [activeTab, setActiveTab] = useState<EditorTab>('scenes');
 
@@ -36,7 +36,7 @@ export const EditorPage = () => {
 
     const handleRender = () => {
         if (project.id) {
-            renderVideo(project.id);
+            renderVideo({ projectId: project.id });
         }
     };
 

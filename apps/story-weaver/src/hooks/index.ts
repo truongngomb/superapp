@@ -27,3 +27,5 @@ export * from './useCharacterPortrait';
 export * from './useScriptGeneration';
 export * from './useScriptValidation';
 export * from './useImageGeneration';
+export * from './useMotionGeneration';
+export * from './useVideoRendering';

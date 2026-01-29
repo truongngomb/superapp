@@ -12,3 +12,6 @@ export * from './ai-text.service.js';
 export * from './ai-image.service.js';
 export * from './script.service.js';
 export * from './image-gen.service.js';
+export * from './motion-gen.service.js';
+export * from './rendering.service.js';
+export * from './ai-video.service.js';

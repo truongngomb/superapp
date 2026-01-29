@@ -12,7 +12,7 @@
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Type, Users, Eye, Mic, X, Save, Clock, Camera, Image as ImageIcon, FileText } from 'lucide-react';
+import { Type, Users, Eye, Mic, X, Save, Clock, Camera, Image as ImageIcon, FileText, Film } from 'lucide-react';
 import { 
   Button, 
   Input, 
@@ -26,6 +26,7 @@ import {
 import type { VideoScene } from '@/types';
 import { CAMERA_MOVEMENT, type CameraMovement, type ExtendedScene } from '@/types/scene-script';
 import { ImageGeneratorPanel } from './ImageGeneratorPanel';
+import { MotionPanel } from './MotionPanel';
 
 
 
@@ -70,7 +71,7 @@ export const SceneEditor = ({
     extendedScene.cameraMovement ?? CAMERA_MOVEMENT.STATIC
   );
   const [selectedKeyframe, setSelectedKeyframe] = useState(extendedScene.selectedKeyframe ?? extendedScene.imageUrl);
-  const [activeTab, setActiveTab] = useState<'script' | 'visuals'>('script');
+  const [activeTab, setActiveTab] = useState<'script' | 'visuals' | 'motion'>('script');
 
 
   // Track if form is dirty (useMemo to avoid re-render during render)
@@ -140,122 +141,133 @@ export const SceneEditor = ({
           <ImageIcon size={16} className="mr-2" />
           {t('video_projects:editor.visuals_tab')}
         </Button>
+        <Button
+          variant={activeTab === 'motion' ? 'secondary' : 'ghost'}
+          size="sm"
+          className="flex-1"
+          onClick={() => { setActiveTab('motion'); }}
+        >
+          <Film size={16} className="mr-2" />
+          {t('video_projects:editor.motion_tab', { defaultValue: 'Motion' })}
+        </Button>
       </div>
 
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto p-4 space-y-6">
-        {activeTab === 'script' ? (
+        {activeTab === 'script' && (
           <div className="space-y-6">
             {/* Visual Description */}
             <div className="space-y-2">
-          <label className="text-sm font-medium flex items-center gap-2">
-            <Eye size={16} className="text-muted-foreground" />
-            {t('video_projects:script.visual_description')}
-          </label>
-          <Textarea
-            value={visualDescription}
-            onChange={(e) => { setVisualDescription(e.target.value); }}
-            placeholder={t('video_projects:script.visual_description_placeholder')}
-            rows={4}
-            className="resize-none"
-          />
-          <p className="text-xs text-muted-foreground">
-            {t('video_projects:script.visual_description_hint')}
-          </p>
-        </div>
-
-        {/* Voiceover */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium flex items-center gap-2">
-            <Mic size={16} className="text-muted-foreground" />
-            {t('video_projects:script.voiceover')}
-          </label>
-          <Textarea
-            value={voiceover}
-            onChange={(e) => { setVoiceover(e.target.value); }}
-            placeholder={t('video_projects:script.voiceover_placeholder')}
-            rows={3}
-            className="resize-none"
-          />
-        </div>
-
-        {/* Text Overlay */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium flex items-center gap-2">
-            <Type size={16} className="text-muted-foreground" />
-            {t('video_projects:script.text_overlay')}
-          </label>
-          <Input
-            value={textOverlay}
-            onChange={(e) => { setTextOverlay(e.target.value); }}
-            placeholder={t('video_projects:script.text_overlay_placeholder')}
-          />
-          <p className="text-xs text-muted-foreground">
-            {t('video_projects:script.text_overlay_hint')}
-          </p>
-        </div>
-
-        {/* Duration & Camera */}
-        <div className="grid grid-cols-2 gap-4">
-          {/* Duration */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium flex items-center gap-2">
-              <Clock size={16} className="text-muted-foreground" />
-              {t('video_projects:script.duration')}
-            </label>
-            <div className="flex items-center gap-2">
-              <Input
-                type="number"
-                min={1}
-                max={30}
-                value={estimatedDuration}
-                onChange={(e) => { setEstimatedDuration(Number(e.target.value)); }}
-                className="w-20"
+              <label className="text-sm font-medium flex items-center gap-2">
+                <Eye size={16} className="text-muted-foreground" />
+                {t('video_projects:script.visual_description')}
+              </label>
+              <Textarea
+                value={visualDescription}
+                onChange={(e) => { setVisualDescription(e.target.value); }}
+                placeholder={t('video_projects:script.visual_description_placeholder')}
+                rows={4}
+                className="resize-none"
               />
-              <span className="text-muted-foreground text-sm">
-                {t('video_projects:script.seconds')}
-              </span>
+              <p className="text-xs text-muted-foreground">
+                {t('video_projects:script.visual_description_hint')}
+              </p>
             </div>
-          </div>
 
-          {/* Camera Movement */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium flex items-center gap-2">
-              <Camera size={16} className="text-muted-foreground" />
-              {t('video_projects:script.camera_movement')}
-            </label>
-            <Select
-              value={cameraMovement}
-              onValueChange={(val) => { setCameraMovement(val as CameraMovement); }}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {CAMERA_OPTIONS.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        {/* Characters (Info only for now) */}
-        {extendedScene.characterIds && extendedScene.characterIds.length > 0 && (
-          <div className="space-y-2">
-            <label className="text-sm font-medium flex items-center gap-2">
-              <Users size={16} className="text-muted-foreground" />
-              {t('video_projects:script.characters_in_scene')}
-            </label>
-            <div className="text-sm text-muted-foreground">
-              {String(extendedScene.characterIds.length)} {t('video_projects:script.characters_count')}
+            {/* Voiceover */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium flex items-center gap-2">
+                <Mic size={16} className="text-muted-foreground" />
+                {t('video_projects:script.voiceover')}
+              </label>
+              <Textarea
+                value={voiceover}
+                onChange={(e) => { setVoiceover(e.target.value); }}
+                placeholder={t('video_projects:script.voiceover_placeholder')}
+                rows={3}
+                className="resize-none"
+              />
             </div>
+
+            {/* Text Overlay */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium flex items-center gap-2">
+                <Type size={16} className="text-muted-foreground" />
+                {t('video_projects:script.text_overlay')}
+              </label>
+              <Input
+                value={textOverlay}
+                onChange={(e) => { setTextOverlay(e.target.value); }}
+                placeholder={t('video_projects:script.text_overlay_placeholder')}
+              />
+              <p className="text-xs text-muted-foreground">
+                {t('video_projects:script.text_overlay_hint')}
+              </p>
+            </div>
+
+            {/* Duration & Camera */}
+            <div className="grid grid-cols-2 gap-4">
+              {/* Duration */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium flex items-center gap-2">
+                  <Clock size={16} className="text-muted-foreground" />
+                  {t('video_projects:script.duration')}
+                </label>
+                <div className="flex items-center gap-2">
+                  <Input
+                    type="number"
+                    min={1}
+                    max={30}
+                    value={estimatedDuration}
+                    onChange={(e) => { setEstimatedDuration(Number(e.target.value)); }}
+                    className="w-20"
+                  />
+                  <span className="text-muted-foreground text-sm">
+                    {t('video_projects:script.seconds')}
+                  </span>
+                </div>
+              </div>
+
+              {/* Camera Movement */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium flex items-center gap-2">
+                  <Camera size={16} className="text-muted-foreground" />
+                  {t('video_projects:script.camera_movement')}
+                </label>
+                <Select
+                  value={cameraMovement}
+                  onValueChange={(val) => { setCameraMovement(val as CameraMovement); }}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CAMERA_OPTIONS.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {/* Characters (Info only for now) */}
+            {extendedScene.characterIds && extendedScene.characterIds.length > 0 && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium flex items-center gap-2">
+                  <Users size={16} className="text-muted-foreground" />
+                  {t('video_projects:script.characters_in_scene')}
+                </label>
+                <div className="text-sm text-muted-foreground">
+                  {String(extendedScene.characterIds.length)} {t('video_projects:script.characters_count')}
+                </div>
+              </div>
+            )}
           </div>
         )}
-          </div>
-        ) : (
+
+        {activeTab === 'visuals' && (
           <ImageGeneratorPanel
             scene={{
               ...extendedScene,
@@ -265,6 +277,16 @@ export const SceneEditor = ({
             onUpdate={(updates) => {
               if (updates.selectedKeyframe) setSelectedKeyframe(updates.selectedKeyframe);
               if (updates.visualDescription) setVisualDescription(updates.visualDescription);
+            }}
+          />
+        )}
+
+        {activeTab === 'motion' && (
+          <MotionPanel
+            scene={{
+              ...extendedScene,
+              visualDescription,
+              selectedKeyframe
             }}
           />
         )}
