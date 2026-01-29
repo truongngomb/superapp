@@ -6,17 +6,25 @@
 import { 
   createVideoProjectSchema, 
   updateVideoProjectSchema,
-  videoProjectSettingsSchema
+  videoProjectSettingsSchema,
+  createCharacterSchema,
+  updateCharacterSchema,
+  createArtifactSchema,
+  updateArtifactSchema,
+  createVideoSceneSchema,
+  updateVideoSceneSchema
 } from '../types/index.js';
-import { z } from 'zod';
 
-// We can extend or modify schemas here if API needs specific validation logic
-// distinct from shared types.
+// IMPORTANT: Casting to any/unknown/ZodSchema to avoid version mismatches and simplify exports
+export const VideoProjectCreateSchema = createVideoProjectSchema as unknown;
+export const VideoProjectUpdateSchema = updateVideoProjectSchema as unknown;
+export const VideoProjectSettingsSchema = videoProjectSettingsSchema as unknown;
 
-// IMPORTANT: We need to cast these to ZodSchema because shared-types might be using a different Zod version
-// or instance, causing 'not assignable' errors in strict TypeScript mode.
-export const VideoProjectCreateSchema = createVideoProjectSchema as unknown as z.ZodSchema;
-export const VideoProjectUpdateSchema = updateVideoProjectSchema as unknown as z.ZodSchema;
-export const VideoProjectSettingsSchema = videoProjectSettingsSchema as unknown as z.ZodSchema;
+export const CharacterCreateSchema = createCharacterSchema as unknown;
+export const CharacterUpdateSchema = updateCharacterSchema as unknown;
 
-// Add other schemas as needed
+export const ArtifactCreateSchema = createArtifactSchema as unknown;
+export const ArtifactUpdateSchema = updateArtifactSchema as unknown;
+
+export const VideoSceneCreateSchema = createVideoSceneSchema as unknown;
+export const VideoSceneUpdateSchema = updateVideoSceneSchema as unknown;

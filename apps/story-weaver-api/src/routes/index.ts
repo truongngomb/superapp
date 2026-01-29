@@ -3,8 +3,13 @@
  */
 import { Router } from 'express';
 import { videoProjectsRouter } from './video-projects.js';
+import { charactersRouter } from './characters.js';
+import { scenesRouter } from './scenes.js';
+import { generationRouter } from './generation.js';
 
 export const apiRouter: Router = Router();
 
 apiRouter.use('/video-projects', videoProjectsRouter);
-// Add more routes here as needed
+apiRouter.use('/characters', charactersRouter);
+apiRouter.use('/scenes', scenesRouter);
+apiRouter.use('/generation', generationRouter);

@@ -21,6 +21,12 @@ class VideoProjectService extends BaseService<VideoProject> {
       description: (record['description'] as string) || '',
       status: record['status'] as VideoProject['status'],
       settings: (record['settings'] as VideoProject['settings']) || { aspectRatio: '9:16' },
+      // New Phase 1 fields
+      storyContent: (record['story_content'] as string) || '',
+      aspectRatio: record['aspect_ratio'] as VideoProject['aspectRatio'],
+      targetPlatform: record['target_platform'] as VideoProject['targetPlatform'],
+      targetDuration: (record['target_duration'] as number) || 0,
+      currentPhase: record['current_phase'] as VideoProject['currentPhase'],
       userId: record['user_id'] as string,
       isActive: record['isActive'] as boolean,
       isDeleted: (record['isDeleted'] as boolean) || false,

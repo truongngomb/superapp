@@ -3,7 +3,7 @@
  * 
  * Handles HTTP requests for video project operations.
  */
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { videoProjectService } from '../services/index.js';
 import { CreateVideoProjectInput, UpdateVideoProjectInput } from '../types/index.js';
 
@@ -14,7 +14,7 @@ import { CreateVideoProjectInput, UpdateVideoProjectInput } from '../types/index
 /**
  * GET /video-projects - Get paginated projects
  */
-export const getAll = async (req: Request, res: Response, _next: NextFunction) => {
+export const getAll = async (req: Request, res: Response) => {
   const { page, limit, sort, order, search, status } = req.query;
   
   // Security checks can be added here (e.g., preventing access to deleted items for non-admins)
@@ -50,7 +50,7 @@ export const getAll = async (req: Request, res: Response, _next: NextFunction) =
 /**
  * GET /video-projects/:id - Get project by ID
  */
-export const getById = async (req: Request, res: Response, _next: NextFunction) => {
+export const getById = async (req: Request, res: Response) => {
   const project = await videoProjectService.getById(req.params['id'] as string);
   
   // Check ownership
@@ -66,7 +66,7 @@ export const getById = async (req: Request, res: Response, _next: NextFunction) 
 /**
  * POST /video-projects - Create new project
  */
-export const create = async (req: Request, res: Response, _next: NextFunction) => {
+export const create = async (req: Request, res: Response) => {
   const input = req.body as CreateVideoProjectInput;
   
   const project = await videoProjectService.create(
@@ -85,7 +85,7 @@ export const create = async (req: Request, res: Response, _next: NextFunction) =
 /**
  * PUT /video-projects/:id - Update project
  */
-export const update = async (req: Request, res: Response, _next: NextFunction) => {
+export const update = async (req: Request, res: Response) => {
   const id = req.params['id'] as string;
   const input = req.body as UpdateVideoProjectInput;
 
@@ -107,7 +107,7 @@ export const update = async (req: Request, res: Response, _next: NextFunction) =
 /**
  * DELETE /video-projects/:id - Soft delete project
  */
-export const remove = async (req: Request, res: Response, _next: NextFunction) => {
+export const remove = async (req: Request, res: Response) => {
   const id = req.params['id'] as string;
   
   // Verify existence and ownership
@@ -123,7 +123,7 @@ export const remove = async (req: Request, res: Response, _next: NextFunction) =
 /**
  * POST /video-projects/:id/restore - Restore soft-deleted project
  */
-export const restore = async (req: Request, res: Response, _next: NextFunction) => {
+export const restore = async (req: Request, res: Response) => {
   const id = req.params['id'] as string;
   
   // Note: Standard getById might fail if default filter excludes deleted items.
