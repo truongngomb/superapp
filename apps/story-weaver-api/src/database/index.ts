@@ -51,6 +51,8 @@ export {
 export {
   swVideoProjectsCollection,
   swVideoScenesCollection,
+  swCharactersCollection,
+  swArtifactsCollection,
   allCollections,
   CollectionNames,
   type CollectionName,
