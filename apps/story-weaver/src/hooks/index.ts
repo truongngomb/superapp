@@ -24,3 +24,5 @@ export * from './useScenes';
 export * from './useProjectWizard';
 export * from './useCharacters';
 export * from './useCharacterPortrait';
+export * from './useScriptGeneration';
+export * from './useScriptValidation';

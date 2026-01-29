@@ -6,11 +6,12 @@ import { useVideoProject, useRenderVideo } from '@/hooks';
 import { useDocumentTitle } from '@superapp/core-logic';
 import { SceneList } from './components/SceneList';
 import { CharacterStudioPanel } from './components/CharacterStudio';
+import { ScriptEditorPanel } from './components/ScriptEditor';
 import { Button, Badge, LoadingSpinner, fadeSlideUp, defaultTransition } from '@superapp/ui-kit';
-import { ChevronLeft, Rocket, Settings, Users, Film, Palette } from 'lucide-react';
+import { ChevronLeft, Rocket, Settings, Users, Film, Palette, FileText } from 'lucide-react';
 import { APP_NAME } from '@/config/constants';
 
-type EditorTab = 'scenes' | 'characters' | 'visuals';
+type EditorTab = 'scenes' | 'script' | 'characters' | 'visuals';
 
 export const EditorPage = () => {
     const { t } = useTranslation(['video_projects', 'uikit', 'characters']);
@@ -44,9 +45,13 @@ export const EditorPage = () => {
 
     const tabs = [
         { key: 'scenes' as const, label: t('video_projects:editor.tabs.scenes'), icon: Film },
+        { key: 'script' as const, label: t('video_projects:editor.tabs.script'), icon: FileText },
         { key: 'characters' as const, label: t('characters:title'), icon: Users },
         { key: 'visuals' as const, label: t('video_projects:editor.tabs.visuals'), icon: Palette },
     ];
+
+    // Script tab uses full width layout (has its own split view)
+    const isFullWidthTab = activeTab === 'script';
 
     return (
         <div className="h-screen flex flex-col overflow-hidden">
@@ -91,8 +96,8 @@ export const EditorPage = () => {
                     transition={defaultTransition}
                     className="flex flex-1 overflow-hidden"
                 >
-                    {/* Left Panel with Tabs */}
-                    <div className="w-1/3 border-r border-border bg-surface flex flex-col overflow-hidden">
+                    {/* Left Panel with Tabs (or Full Width for Script) */}
+                    <div className={`${isFullWidthTab ? 'flex-1' : 'w-1/3'} border-r border-border bg-surface flex flex-col overflow-hidden`}>
                         {/* Tab Navigation */}
                         <div className="flex border-b border-border shrink-0">
                             {tabs.map((tab) => {
@@ -131,6 +136,18 @@ export const EditorPage = () => {
                                         <SceneList projectId={project.id} />
                                     </motion.div>
                                 )}
+
+                                {activeTab === 'script' && (
+                                    <motion.div
+                                        key="script"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        className="h-full"
+                                    >
+                                        <ScriptEditorPanel project={project} />
+                                    </motion.div>
+                                )}
                                 
                                 {activeTab === 'characters' && (
                                     <motion.div
@@ -159,12 +176,14 @@ export const EditorPage = () => {
                         </div>
                     </div>
 
-                    {/* Right: Preview & AI Chat */}
-                    <div className="flex-1 bg-muted/30 p-8 flex flex-col items-center justify-center">
-                        <div className="aspect-[9/16] h-[80%] bg-black rounded-xl shadow-2xl flex items-center justify-center text-white/50">
-                            {t('video_projects:editor.preview_placeholder')}
+                    {/* Right: Preview & AI Chat (hidden for full-width tabs) */}
+                    {!isFullWidthTab && (
+                        <div className="flex-1 bg-muted/30 p-8 flex flex-col items-center justify-center">
+                            <div className="aspect-[9/16] h-[80%] bg-black rounded-xl shadow-2xl flex items-center justify-center text-white/50">
+                                {t('video_projects:editor.preview_placeholder')}
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </motion.div>
             </AnimatePresence>
         </div>
