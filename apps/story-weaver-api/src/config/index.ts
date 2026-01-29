@@ -31,3 +31,7 @@ export {
 
 // OpenAPI
 export { openApiRegistry, generateOpenApiDocument } from './openapi.js';
+
+// AI Configuration
+export { aiConfig, AI_TEXT_MODELS, AI_IMAGE_MODELS, logAIConfig } from './ai.config.js';
+export type { AITextModel, AIImageModel, AIConfig } from './ai.config.js';

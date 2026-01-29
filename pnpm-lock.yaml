@@ -337,6 +337,9 @@ importers:
       node-cache:
         specifier: ^5.1.2
         version: 5.1.2
+      openai:
+        specifier: ^6.17.0
+        version: 6.17.0(ws@8.19.0)(zod@4.3.5)
       pocketbase:
         specifier: ^0.26.6
         version: 0.26.6
@@ -4965,6 +4968,18 @@ packages:
   open@8.4.2:
     resolution: {integrity: sha512-7x81NCL719oNbsq/3mh+hVrAWmFuEYUqrq/Iw3kUzH8ReypT9QQ0BLoJS7/G9k6N81XjW4qHWtjWwe/9eLy1EQ==}
     engines: {node: '>=12'}
+
+  openai@6.17.0:
+    resolution: {integrity: sha512-NHRpPEUPzAvFOAFs9+9pC6+HCw/iWsYsKCMPXH5Kw7BpMxqd8g/A07/1o7Gx2TWtCnzevVRyKMRFqyiHyAlqcA==}
+    hasBin: true
+    peerDependencies:
+      ws: ^8.18.0
+      zod: ^3.25 || ^4.0
+    peerDependenciesMeta:
+      ws:
+        optional: true
+      zod:
+        optional: true
 
   openapi3-ts@4.5.0:
     resolution: {integrity: sha512-jaL+HgTq2Gj5jRcfdutgRGLosCy/hT8sQf6VOy+P+g36cZOjI1iukdPnijC+4CmeRzg/jEllJUboEic2FhxhtQ==}
@@ -11458,6 +11473,11 @@ snapshots:
       define-lazy-prop: 2.0.0
       is-docker: 2.2.1
       is-wsl: 2.2.0
+
+  openai@6.17.0(ws@8.19.0)(zod@4.3.5):
+    optionalDependencies:
+      ws: 8.19.0
+      zod: 4.3.5
 
   openapi3-ts@4.5.0:
     dependencies:
