@@ -16,7 +16,7 @@ class RenderingService {
    */
   async renderProject(projectId: string) {
     const project = await videoProjectService.getById(projectId);
-    const scenes = await videoSceneService.list({ projectId });
+    const scenes = await videoSceneService.getByProject(projectId);
     
     // Check if at least some visuals are ready
     if (scenes.length === 0) {
