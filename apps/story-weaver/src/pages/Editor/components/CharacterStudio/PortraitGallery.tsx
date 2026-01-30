@@ -90,10 +90,10 @@ export const PortraitGallery = ({
           const isSelected = selectedUrl === portrait.url || masterPortraitUrl === portrait.url;
           const isMaster = masterPortraitUrl === portrait.url;
 
-          return (
-            <motion.button
-              key={portrait.id}
-              type="button"
+            return (
+              <motion.button
+                key={portrait.id || index}
+                type="button"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: index * 0.1 }}

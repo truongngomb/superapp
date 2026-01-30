@@ -28,14 +28,13 @@ import { CAMERA_MOVEMENT, type CameraMovement, type ExtendedScene } from '@/type
 import { ImageGeneratorPanel } from './ImageGeneratorPanel';
 import { MotionPanel } from './MotionPanel';
 
-
-
 interface SceneEditorProps {
   scene: VideoScene;
   index: number;
   onSave: (sceneId: string, data: Partial<VideoScene>) => Promise<void>;
   onClose: () => void;
   isSubmitting?: boolean;
+  allowedTabs?: ('script' | 'visuals' | 'motion')[];
 }
 
 const CAMERA_OPTIONS = Object.entries(CAMERA_MOVEMENT).map(([_, key]) => {
@@ -52,6 +51,7 @@ export const SceneEditor = ({
   onSave,
   onClose,
   isSubmitting = false,
+  allowedTabs = ['script', 'visuals', 'motion'],
 }: SceneEditorProps) => {
   const { t } = useTranslation(['video_projects', 'uikit']);
   const extendedScene = scene as unknown as ExtendedScene;
@@ -71,8 +71,9 @@ export const SceneEditor = ({
     extendedScene.cameraMovement ?? CAMERA_MOVEMENT.STATIC
   );
   const [selectedKeyframe, setSelectedKeyframe] = useState(extendedScene.selectedKeyframe ?? extendedScene.imageUrl);
-  const [activeTab, setActiveTab] = useState<'script' | 'visuals' | 'motion'>('script');
-
+  
+  // Initialize active tab based on allowed tabs
+  const [activeTab, setActiveTab] = useState<'script' | 'visuals' | 'motion'>(allowedTabs[0] || 'script');
 
   // Track if form is dirty (useMemo to avoid re-render during render)
   const isDirty = useMemo(() => {
@@ -121,48 +122,56 @@ export const SceneEditor = ({
         </Button>
       </div>
 
-      {/* Tabs */}
-      <div className="p-1 px-4 border-b border-border bg-muted/30">
-        <div className="flex bg-muted/50 p-1 rounded-lg gap-1">
-          <button
-            onClick={() => { setActiveTab('script'); }}
-            className={`flex-1 flex items-center justify-center gap-2 py-1.5 px-3 text-xs font-medium rounded-md transition-all ${
-              activeTab === 'script' 
-                ? 'bg-background shadow-sm text-foreground' 
-                : 'text-muted-foreground hover:text-foreground hover:bg-muted'
-            }`}
-          >
-            <FileText size={14} />
-            {t('video_projects:editor.script_tab')}
-          </button>
-          <button
-            onClick={() => { setActiveTab('visuals'); }}
-            className={`flex-1 flex items-center justify-center gap-2 py-1.5 px-3 text-xs font-medium rounded-md transition-all ${
-              activeTab === 'visuals' 
-                ? 'bg-background shadow-sm text-foreground' 
-                : 'text-muted-foreground hover:text-foreground hover:bg-muted'
-            }`}
-          >
-            <ImageIcon size={14} />
-            {t('video_projects:editor.visuals_tab')}
-          </button>
-          <button
-            onClick={() => { setActiveTab('motion'); }}
-            className={`flex-1 flex items-center justify-center gap-2 py-1.5 px-3 text-xs font-medium rounded-md transition-all ${
-              activeTab === 'motion' 
-                ? 'bg-background shadow-sm text-foreground' 
-                : 'text-muted-foreground hover:text-foreground hover:bg-muted'
-            }`}
-          >
-            <Film size={14} />
-            {t('video_projects:editor.motion_tab', { defaultValue: 'Motion' })}
-          </button>
+      {/* Tabs - Only show if more than 1 allowed tab */}
+      {allowedTabs.length > 1 && (
+        <div className="p-1 px-4 border-b border-border bg-muted/30">
+          <div className="flex bg-muted/50 p-1 rounded-lg gap-1">
+            {allowedTabs.includes('script') && (
+              <button
+                onClick={() => { setActiveTab('script'); }}
+                className={`flex-1 flex items-center justify-center gap-2 py-1.5 px-3 text-xs font-medium rounded-md transition-all ${
+                  activeTab === 'script' 
+                    ? 'bg-background shadow-sm text-foreground' 
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                }`}
+              >
+                <FileText size={14} />
+                {t('video_projects:editor.script_tab')}
+              </button>
+            )}
+            {allowedTabs.includes('visuals') && (
+              <button
+                onClick={() => { setActiveTab('visuals'); }}
+                className={`flex-1 flex items-center justify-center gap-2 py-1.5 px-3 text-xs font-medium rounded-md transition-all ${
+                  activeTab === 'visuals' 
+                    ? 'bg-background shadow-sm text-foreground' 
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                }`}
+              >
+                <ImageIcon size={14} />
+                {t('video_projects:editor.visuals_tab')}
+              </button>
+            )}
+            {allowedTabs.includes('motion') && (
+              <button
+                onClick={() => { setActiveTab('motion'); }}
+                className={`flex-1 flex items-center justify-center gap-2 py-1.5 px-3 text-xs font-medium rounded-md transition-all ${
+                  activeTab === 'motion' 
+                    ? 'bg-background shadow-sm text-foreground' 
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                }`}
+              >
+                <Film size={14} />
+                {t('video_projects:editor.motion_tab', { defaultValue: 'Motion' })}
+              </button>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto p-4 space-y-6">
-        {activeTab === 'script' && (
+        {activeTab === 'script' && allowedTabs.includes('script') && (
           <div className="space-y-6">
             {/* Visual Description */}
             <div className="space-y-2">
@@ -275,7 +284,7 @@ export const SceneEditor = ({
           </div>
         )}
 
-        {activeTab === 'visuals' && (
+        {activeTab === 'visuals' && allowedTabs.includes('visuals') && (
           <ImageGeneratorPanel
             scene={{
               ...extendedScene,
@@ -289,7 +298,7 @@ export const SceneEditor = ({
           />
         )}
 
-        {activeTab === 'motion' && (
+        {activeTab === 'motion' && allowedTabs.includes('motion') && (
           <MotionPanel
             scene={{
               ...extendedScene,

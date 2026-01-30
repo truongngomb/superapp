@@ -13,7 +13,7 @@ export const API_ENDPOINTS = {
     ME: '/auth/me',
   },
   VIDEO_PROJECTS: '/story-weaver/video-projects',
-  VIDEO_SCENES: '/story-weaver/video-scenes',
+  VIDEO_SCENES: '/story-weaver/scenes',
   CHARACTERS: '/story-weaver/characters',
   GENERATION: '/story-weaver/generation',
 } as const;

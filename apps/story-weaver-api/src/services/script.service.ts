@@ -38,12 +38,15 @@ Respond with a JSON array of objects.`;
     const prompt = `Story: ${project.storyContent}`;
 
     try {
-      const response = await aiTextService.generateJSON<{ characters: CharacterSuggestion[] }>(prompt, {
+      const response = await aiTextService.generateJSON<{ characters?: CharacterSuggestion[] } | CharacterSuggestion[]>(prompt, {
         systemPrompt,
         temperature: 0.3, // Lower temperature for more consistent extraction
       });
 
-      return response.characters;
+      if (Array.isArray(response)) {
+        return response;
+      }
+      return response.characters || [];
     } catch (error) {
       logger.error('ScriptService', `Character extraction failed for project ${projectId}`, error);
       throw error;
@@ -55,7 +58,7 @@ Respond with a JSON array of objects.`;
    */
   async generateScenes(projectId: string): Promise<VideoScene[]> {
     const project = await videoProjectService.getById(projectId);
-    const characters = await characterService.getAllFiltered({ filter: `project_id = "${projectId}"` });
+    const characters = await characterService.getAllFiltered({ filter: `projectId = "${projectId}"` });
 
     if (!project.storyContent) {
       throw new Error('Project has no story content');
@@ -83,10 +86,21 @@ Respond with a JSON array of scene objects.`;
     const prompt = `Story: ${project.storyContent}\n\nExisting Characters:\n${characterContext}`;
 
     try {
-      const { scenes } = await aiTextService.generateJSON<{ scenes: CreateVideoSceneInput[] }>(prompt, {
+      const aiResponse = await aiTextService.generateJSON<{ scenes?: CreateVideoSceneInput[] } | CreateVideoSceneInput[]>(prompt, {
         systemPrompt,
         temperature: 0.7,
       });
+
+      let scenes: CreateVideoSceneInput[] = [];
+      
+      if (Array.isArray(aiResponse)) {
+        scenes = aiResponse;
+      } else if (aiResponse && Array.isArray(aiResponse.scenes)) {
+        scenes = aiResponse.scenes;
+      } else {
+        logger.error('ScriptService', 'Invalid AI response format', aiResponse);
+        throw new Error('AI failed to generate a valid list of scenes');
+      }
 
       // Clear existing scenes first? Usually yes for a re-generation
       const existingScenes = await videoSceneService.getByProject(projectId);
@@ -97,9 +111,14 @@ Respond with a JSON array of scene objects.`;
       // Create new scenes
       const createdScenes: VideoScene[] = [];
       for (const sceneInput of scenes) {
-        // Simple character mapping (check if names mentioned in visual prompt)
+        // Improved character mapping
         const relevantCharIds = characters
-          .filter(c => sceneInput.visualPrompt?.toLowerCase().includes(c.name.toLowerCase()))
+          .filter(c => {
+            const nameLower = c.name.toLowerCase();
+            const promptLower = (sceneInput.visualPrompt || '').toLowerCase();
+            const scriptLower = (sceneInput.scriptText || '').toLowerCase();
+            return promptLower.includes(nameLower) || scriptLower.includes(nameLower);
+          })
           .map(c => c.id);
 
         const scene = await videoSceneService.create({
@@ -114,6 +133,7 @@ Respond with a JSON array of scene objects.`;
       // Save script artifact for versioning
       await artifactService.create({
         projectId,
+        userId: project.userId,
         type: 'script',
         entityType: 'project',
         entityId: projectId,

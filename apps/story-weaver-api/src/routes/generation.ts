@@ -45,4 +45,10 @@ generationRouter.post(
   asyncHandler(generationController.renderVideo)
 );
 
+/** POST /generate-portraits/:characterId - Generate appearance options for a character */
+generationRouter.post(
+  '/generate-portraits/:characterId',
+  asyncHandler(generationController.generatePortraits)
+);
+
 

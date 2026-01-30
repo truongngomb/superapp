@@ -295,6 +295,7 @@ export const ScriptEditorPanel = ({ project }: ScriptEditorPanelProps) => {
               onSave={handleUpdateScene}
               onClose={() => { setSelectedSceneId(null); }}
               isSubmitting={updateMutation.isPending}
+              allowedTabs={['script']}
             />
           ) : (
             <motion.div

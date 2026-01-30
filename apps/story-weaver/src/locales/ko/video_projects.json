@@ -186,5 +186,29 @@
     "ready_desc": "이 클립은 최종 비디오 렌더링 중에 사용됩니다.",
     "ready_to_animate": "모션 생성 준비 완료",
     "cta_hint": "위의 버튼을 클릭하여 모션을 생성하세요."
+  },
+  "settings": {
+    "title": "프로젝트 설정",
+    "description": "프로젝트 세부 정보 업데이트",
+    "update_success": "프로젝트 설정이 성공적으로 업데이트되었습니다",
+    "update_error": "프로젝트 설정을 업데이트하지 못했습니다",
+    "tab_general": "일반",
+    "tab_format": "형식 및 플랫폼",
+    "warning_title": "중요 알림",
+    "warning_aspect_ratio": "화면 비율을 변경하면 시각적 자산을 다시 생성해야 할 수 있습니다.",
+    "warning_platform": "플랫폼 제약 조건(길이, 안전 영역)이 업데이트됩니다.",
+    "general_section": "일반 정보",
+    "format_section": "형식 및 플랫폼",
+    "fields": {
+        "name": "프로젝트 이름",
+        "description": "설명",
+        "platform": "플랫폼",
+        "aspect_ratio": "화면 비율",
+        "duration": "목표 길이 (초)"
+    },
+    "placeholders": {
+        "name": "프로젝트 이름 입력",
+        "description": "프로젝트 설명 입력"
+    }
   }
 }

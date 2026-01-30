@@ -39,7 +39,15 @@
       "scenes": "Scenes",
       "script": "Script",
       "visuals": "Visuals",
-      "motion": "Motion"
+      "motion": "Motion",
+      "storyboard": "Storyboard"
+    },
+    "storyboard": {
+      "title": "Storyboard & Production",
+      "subtitle": "Generate visuals and motion for each scene.",
+      "scenes_count": "Scenes",
+      "empty_title": "No scenes yet",
+      "empty_desc": "Go back to the Script tab to generate your story scenes first."
     },
     "script_tab": "Script",
     "visuals_tab": "Visuals",
@@ -175,7 +183,7 @@
   },
   "motion": {
     "title": "Scene Motion",
-    "description": "Bring this scene to life with AI motion",
+    "description": "Bring this scene to life with using AI motion",
     "generate": "Animate Scene",
     "regenerate": "Re-animate",
     "generate_success": "Motion clip generated!",
@@ -186,5 +194,29 @@
     "ready_desc": "This clip will be used during final video rendering.",
     "ready_to_animate": "Ready to Animate",
     "cta_hint": "Click the button above to generate motion."
+  },
+  "settings": {
+    "title": "Project Settings",
+    "description": "Update your project details",
+    "update_success": "Project settings updated successfully",
+    "update_error": "Failed to update project settings",
+    "tab_general": "General",
+    "tab_format": "Format & Platform",
+    "warning_title": "Important Note",
+    "warning_aspect_ratio": "Changing aspect ratio may require re-generating visual assets.",
+    "warning_platform": "Platform constraints (duration, safe zones) will be updated.",
+    "general_section": "General Information",
+    "format_section": "Format & Platform",
+    "fields": {
+        "name": "Project Name",
+        "description": "Description",
+        "platform": "Platform",
+        "aspect_ratio": "Aspect Ratio",
+        "duration": "Target Duration (seconds)"
+    },
+    "placeholders": {
+        "name": "Enter project name",
+        "description": "Enter project description"
+    }
   }
 }

@@ -67,7 +67,7 @@ const DEFAULT_DATA: WizardData = {
   description: '',
   storyContent: '',
   aspectRatio: ASPECT_RATIO.PORTRAIT_9_16,
-  targetPlatform: TARGET_PLATFORM.TIKTOK,
+  targetPlatform: TARGET_PLATFORM.YOUTUBE_SHORTS,
   targetDuration: 60,
 };
 

@@ -12,7 +12,7 @@ export const useVideoScenes = (projectId: string) => {
 
   return {
     ...query,
-    scenes: query.data?.items || [],
+    scenes: query.data || [],
   };
 };
 

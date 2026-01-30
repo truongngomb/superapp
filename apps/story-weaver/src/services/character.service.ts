@@ -11,6 +11,14 @@ import type {
   PortraitOption
 } from '@/types';
 
+interface PaginatedResponse<T> {
+  items: T[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
 class CharacterService extends BaseService<Character> {
   protected get endpoint(): string {
     return API_ENDPOINTS.CHARACTERS;
@@ -20,30 +28,60 @@ class CharacterService extends BaseService<Character> {
    * Get all characters for a specific project
    */
   async getByProject(projectId: string): Promise<Character[]> {
-    const response = await api.get<Character[]>(`${this.endpoint}?projectId=${projectId}`);
-    return response;
+    type ResponseType = PaginatedResponse<Character> | Character[];
+    
+    // API client automatically unwraps { success, data }
+    // So we expect either PaginatedResponse or Character[]
+    const response = await api.get<ResponseType>(`${this.endpoint}/by-project/${projectId}`);
+    
+    if (Array.isArray(response)) {
+      return response;
+    }
+
+    if ('items' in response && Array.isArray(response.items)) {
+      return response.items;
+    }
+
+    return [];
   }
 
   /**
    * Extract characters from project story using AI
    */
   async extractCharacters(projectId: string): Promise<CharacterSuggestion[]> {
-    const response = await api.post<{ characters: CharacterSuggestion[] }>(
-      `${API_ENDPOINTS.GENERATION}/characters/extract`,
-      { projectId }
+    type ResponseType = CharacterSuggestion[]; 
+    // Usually extracting returns a flat array of suggestions (unwrapped)
+    
+    const response = await api.post<ResponseType>(
+      `${API_ENDPOINTS.GENERATION}/extract-characters/${projectId}`
     );
-    return response.characters;
+    
+    if (Array.isArray(response)) {
+        return response;
+    }
+    
+    // Fallback if backend wraps it strangely despite api unwrap
+    const asWrapped = response as unknown as { data: CharacterSuggestion[] };
+    if ('data' in asWrapped && Array.isArray(asWrapped.data)) {
+        return asWrapped.data;
+    }
+    
+    return [];
   }
 
   /**
    * Generate portrait options for a character using AI
    */
   async generatePortraits(characterId: string): Promise<PortraitOption[]> {
-    const response = await api.post<{ portraits: PortraitOption[] }>(
-      `${API_ENDPOINTS.GENERATION}/portraits`,
-      { characterId }
+    // API unwraps success envelope, so we get the data payload directly
+    // Controller returns { success: true, data: options }
+    // API returns options (PortraitOption[])
+    const response = await api.post<PortraitOption[]>(
+      `${API_ENDPOINTS.GENERATION}/generate-portraits/${characterId}`
     );
-    return response.portraits;
+    
+    if (Array.isArray(response)) return response;
+    return [];
   }
 
   /**

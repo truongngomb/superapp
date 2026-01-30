@@ -36,8 +36,10 @@ Focus on facial features and clear character appearance.`;
       });
 
       const options: PortraitOption[] = result.images.map(img => ({
+        id: img.id,
         url: img.url,
         prompt: img.prompt,
+        generatedAt: img.generatedAt,
       }));
 
       // Update character with options

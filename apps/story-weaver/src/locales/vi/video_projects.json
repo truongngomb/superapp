@@ -186,5 +186,29 @@
     "ready_desc": "Clip này sẽ được sử dụng trong quá trình xuất video cuối cùng.",
     "ready_to_animate": "Sẵn sàng tạo chuyển động",
     "cta_hint": "Nhấn nút phía trên để tạo chuyển động."
+  },
+  "settings": {
+    "title": "Cài đặt dự án",
+    "description": "Cập nhật thông tin dự án",
+    "update_success": "Cập nhật cài đặt thành công",
+    "update_error": "Cập nhật thất bại",
+    "tab_general": "Thông tin chung",
+    "tab_format": "Định dạng & Nền tảng",
+    "warning_title": "Lưu ý quan trọng",
+    "warning_aspect_ratio": "Thay đổi tỷ lệ khung hình có thể yêu cầu tạo lại hình ảnh.",
+    "warning_platform": "Các ràng buộc nền tảng (thời lượng, vùng an toàn) sẽ được cập nhật.",
+    "general_section": "Thông tin chung",
+    "format_section": "Định dạng & Nền tảng",
+    "fields": {
+        "name": "Tên dự án",
+        "description": "Mô tả",
+        "platform": "Nền tảng",
+        "aspect_ratio": "Tỷ lệ khung hình",
+        "duration": "Thời lượng mục tiêu (giây)"
+    },
+    "placeholders": {
+        "name": "Nhập tên dự án",
+        "description": "Nhập mô tả dự án"
+    }
   }
 }

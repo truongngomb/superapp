@@ -1,26 +1,31 @@
 import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useVideoProject, useVideoRendering } from '@/hooks';
 import { useDocumentTitle } from '@superapp/core-logic';
-import { SceneList } from './components/SceneList';
+
 import { CharacterStudioPanel } from './components/CharacterStudio';
 import { ScriptEditorPanel } from './components/ScriptEditor';
+import { ProjectSettingsDialog } from './components/ProjectSettingsDialog';
 import { Button, Badge, LoadingSpinner, fadeSlideUp, defaultTransition } from '@superapp/ui-kit';
-import { ChevronLeft, Rocket, Settings, Users, Film, Palette, FileText, Download, Play } from 'lucide-react';
+import { ChevronLeft, Rocket, Settings, Users, FileText, Download, Play, Clapperboard } from 'lucide-react';
+import { StoryboardPanel } from './components/Storyboard/StoryboardPanel';
 import { APP_NAME } from '@/config/constants';
 
-type EditorTab = 'scenes' | 'script' | 'characters' | 'visuals';
+type EditorTab = 'script' | 'characters' | 'storyboard';
 
 export const EditorPage = () => {
     const { t } = useTranslation(['video_projects', 'uikit', 'characters']);
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
+    const location = useLocation();
     const { data: project, isLoading } = useVideoProject(id || '');
     const { renderVideo, isRendering } = useVideoRendering();
     
-    const [activeTab, setActiveTab] = useState<EditorTab>('scenes');
+    const hashTab = location.hash.replace('#', '') as EditorTab;
+    const activeTab = ['script', 'characters', 'storyboard'].includes(hashTab) ? hashTab : 'script';
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
     useDocumentTitle(project?.name ? `${project.name} | ${APP_NAME}` : APP_NAME);
 
@@ -44,10 +49,9 @@ export const EditorPage = () => {
     const isCurrentlyRendering = project.status === 'rendering';
 
     const tabs = [
-        { key: 'scenes' as const, label: t('video_projects:editor.tabs.scenes'), icon: Film },
         { key: 'script' as const, label: t('video_projects:editor.tabs.script'), icon: FileText },
         { key: 'characters' as const, label: t('characters:title'), icon: Users },
-        { key: 'visuals' as const, label: t('video_projects:editor.tabs.visuals'), icon: Palette },
+        { key: 'storyboard' as const, label: t('video_projects:editor.tabs.storyboard', { defaultValue: 'Storyboard' }), icon: Clapperboard },
     ];
 
     // Script tab uses full width layout (has its own split view)
@@ -70,7 +74,7 @@ export const EditorPage = () => {
                 </div>
                 
                 <div className="flex gap-2">
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" onClick={() => { setIsSettingsOpen(true); }}>
                         <Settings size={16} className="mr-2" /> {t('uikit:settings')}
                     </Button>
                     
@@ -122,7 +126,9 @@ export const EditorPage = () => {
                                 return (
                                     <button
                                         key={tab.key}
-                                        onClick={() => { setActiveTab(tab.key); }}
+                                        onClick={() => { 
+                                            void navigate(`#${tab.key}`);
+                                        }}
                                         className={`
                                             flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium
                                             transition-colors border-b-2
@@ -139,20 +145,8 @@ export const EditorPage = () => {
                         </div>
 
                         {/* Tab Content */}
-                        <div className="flex-1 overflow-auto p-4">
+                        <div className="flex-1 overflow-hidden bg-background">
                             <AnimatePresence mode="wait">
-                                {activeTab === 'scenes' && (
-                                    <motion.div
-                                        key="scenes"
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        exit={{ opacity: 0 }}
-                                        className="h-full"
-                                    >
-                                        <SceneList projectId={project.id} />
-                                    </motion.div>
-                                )}
-
                                 {activeTab === 'script' && (
                                     <motion.div
                                         key="script"
@@ -176,24 +170,16 @@ export const EditorPage = () => {
                                         <CharacterStudioPanel projectId={project.id} />
                                     </motion.div>
                                 )}
-                                
-                                {activeTab === 'visuals' && (
+
+                                {activeTab === 'storyboard' && (
                                     <motion.div
-                                        key="visuals"
+                                        key="storyboard"
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
                                         exit={{ opacity: 0 }}
-                                        className="h-full flex flex-col items-center justify-center text-center p-8 space-y-4"
+                                        className="h-full"
                                     >
-                                        <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                                            <Palette size={32} />
-                                        </div>
-                                        <div>
-                                            <h3 className="font-semibold text-lg">{t('video_projects:editor.visuals_guide_title', { defaultValue: 'Scene Visuals' })}</h3>
-                                            <p className="text-sm text-muted-foreground mt-2">
-                                                {t('video_projects:editor.visuals_guide_desc', { defaultValue: 'Select a scene from the "Scenes" tab to generate or edit AI images and motion.' })}
-                                            </p>
-                                        </div>
+                                        <StoryboardPanel projectId={project.id} />
                                     </motion.div>
                                 )}
                             </AnimatePresence>
@@ -232,6 +218,12 @@ export const EditorPage = () => {
                     )}
                 </motion.div>
             </AnimatePresence>
+            
+            <ProjectSettingsDialog 
+                open={isSettingsOpen} 
+                onOpenChange={setIsSettingsOpen} 
+                project={project} 
+            />
         </div>
     );
 };

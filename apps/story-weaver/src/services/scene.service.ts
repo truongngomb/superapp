@@ -1,6 +1,5 @@
-import { BaseService } from '@superapp/core-logic';
+import { BaseService, api } from '@superapp/core-logic';
 import { API_ENDPOINTS } from '@/config';
-import type { PaginatedResponse } from '@superapp/shared-types';
 import { VideoScene } from '@/types';
 
 class VideoSceneService extends BaseService<VideoScene> {
@@ -8,8 +7,9 @@ class VideoSceneService extends BaseService<VideoScene> {
     return API_ENDPOINTS.VIDEO_SCENES;
   }
 
-  async getByProject(projectId: string): Promise<PaginatedResponse<VideoScene>> {
-    return await this.getPage({ projectId });
+  async getByProject(projectId: string): Promise<VideoScene[]> {
+    const response = await api.get<VideoScene[]>(`${this.endpoint}/by-project/${projectId}`);
+    return response;
   }
 }
 

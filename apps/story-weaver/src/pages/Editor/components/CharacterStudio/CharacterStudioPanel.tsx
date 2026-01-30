@@ -182,19 +182,19 @@ export const CharacterStudioPanel = ({ projectId }: CharacterStudioPanelProps) =
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className={`flex mb-4 ${viewMode === 'list' ? 'flex-col gap-4 items-start' : 'items-center justify-between'}`}>
         {viewMode === 'list' ? (
           <>
             <div>
               <h3 className="font-semibold text-lg">{t('characters:panel.title')}</h3>
               <p className="text-sm text-muted-foreground">{t('characters:panel.subtitle')}</p>
             </div>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={handleExtract}>
+            <div className="flex gap-2 w-full">
+              <Button variant="outline" size="sm" onClick={handleExtract} className="flex-1">
                 <Sparkles size={16} className="mr-1" />
                 {t('characters:actions.extract')}
               </Button>
-              <Button size="sm" onClick={handleAddNew}>
+              <Button size="sm" onClick={handleAddNew} className="flex-1">
                 <Plus size={16} className="mr-1" />
                 {t('characters:actions.add')}
               </Button>

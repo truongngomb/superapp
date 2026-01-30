@@ -107,7 +107,14 @@ const aiEnvSchema = z.object({
 // =============================================================================
 
 const parseAIEnv = () => {
-  const result = aiEnvSchema.safeParse(process.env);
+  const envVars = { ...process.env };
+  
+  // Fallback to GEMINI_API_KEY if AI_API_KEY is missing
+  if (!envVars.AI_API_KEY && envVars.GEMINI_API_KEY) {
+    envVars.AI_API_KEY = envVars.GEMINI_API_KEY;
+  }
+
+  const result = aiEnvSchema.safeParse(envVars);
   
   if (!result.success) {
     logger.warn('AI Config', 'Using default AI configuration');
