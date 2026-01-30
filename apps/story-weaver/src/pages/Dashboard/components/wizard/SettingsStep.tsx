@@ -5,9 +5,6 @@
  */
 import { useTranslation } from 'react-i18next';
 import { 
-  FormItem, 
-  FormLabel, 
-  FormDescription,
   Select,
   SelectContent,
   SelectItem,
@@ -66,8 +63,10 @@ export const SettingsStep = ({ data, onUpdate, getPlatformDefaults }: SettingsSt
   return (
     <div className="space-y-6">
       {/* Platform Selection */}
-      <FormItem>
-        <FormLabel>{t('video_projects:wizard.settings.platform_label')}</FormLabel>
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-foreground">
+          {t('video_projects:wizard.settings.platform_label')}
+        </label>
         <Select 
           value={data.targetPlatform} 
           onValueChange={(v) => { handlePlatformChange(v as TargetPlatform); }}
@@ -86,14 +85,16 @@ export const SettingsStep = ({ data, onUpdate, getPlatformDefaults }: SettingsSt
             ))}
           </SelectContent>
         </Select>
-        <FormDescription>
+        <p className="text-sm text-muted-foreground">
           {t('video_projects:wizard.settings.platform_hint')}
-        </FormDescription>
-      </FormItem>
+        </p>
+      </div>
 
       {/* Aspect Ratio */}
-      <FormItem>
-        <FormLabel>{t('video_projects:wizard.settings.aspect_label')}</FormLabel>
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-foreground">
+          {t('video_projects:wizard.settings.aspect_label')}
+        </label>
         <div className="grid grid-cols-3 gap-3">
           {ASPECT_OPTIONS.map((opt) => {
             const Icon = opt.icon;
@@ -116,13 +117,13 @@ export const SettingsStep = ({ data, onUpdate, getPlatformDefaults }: SettingsSt
             );
           })}
         </div>
-      </FormItem>
+      </div>
 
       {/* Duration Slider */}
-      <FormItem>
-        <FormLabel>
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-foreground">
           {t('video_projects:wizard.settings.duration_label')}: {data.targetDuration}s
-        </FormLabel>
+        </label>
         <Slider
           value={[data.targetDuration]}
           onValueChange={(values) => { onUpdate({ targetDuration: values[0] ?? data.targetDuration }); }}
@@ -131,13 +132,13 @@ export const SettingsStep = ({ data, onUpdate, getPlatformDefaults }: SettingsSt
           step={5}
           className="mt-2"
         />
-        <FormDescription>
+        <p className="text-sm text-muted-foreground">
           {t('video_projects:wizard.settings.duration_hint', {
             min: currentPlatformPreset.minDuration,
             max: currentPlatformPreset.maxDuration,
           })}
-        </FormDescription>
-      </FormItem>
+        </p>
+      </div>
 
       {/* Platform Notes */}
       {currentPlatformPreset.notes && (

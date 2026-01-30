@@ -6,10 +6,7 @@
 import { useTranslation } from 'react-i18next';
 import { 
   Input, 
-  Textarea, 
-  FormItem, 
-  FormLabel, 
-  FormDescription 
+  Textarea
 } from '@superapp/ui-kit';
 import type { WizardData } from '@/hooks/useProjectWizard';
 
@@ -25,45 +22,38 @@ export const StoryInputStep = ({ data, onUpdate, error }: StoryInputStepProps) =
   return (
     <div className="space-y-6">
       {/* Project Name */}
-      <FormItem>
-        <FormLabel>{t('video_projects:wizard.story.name_label')} <span className="text-destructive">*</span></FormLabel>
-        <Input
-          placeholder={t('video_projects:wizard.story.name_placeholder')}
-          value={data.name}
-          onChange={(e) => { onUpdate({ name: e.target.value }); }}
-          className={error && !data.name.trim() ? 'border-destructive' : ''}
-        />
-        <FormDescription>
-          {t('video_projects:wizard.story.name_hint')}
-        </FormDescription>
-      </FormItem>
+      <Input
+        label={t('video_projects:wizard.story.name_label')}
+        placeholder={t('video_projects:wizard.story.name_placeholder')}
+        value={data.name}
+        onChange={(e) => { onUpdate({ name: e.target.value }); }}
+        helperText={t('video_projects:wizard.story.name_hint')}
+        error={error && !data.name.trim() ? error : undefined}
+        required
+      />
 
       {/* Description (Optional) */}
-      <FormItem>
-        <FormLabel>{t('video_projects:wizard.story.desc_label')}</FormLabel>
-        <Input
-          placeholder={t('video_projects:wizard.story.desc_placeholder')}
-          value={data.description}
-          onChange={(e) => { onUpdate({ description: e.target.value }); }}
-        />
-      </FormItem>
+      <Input
+        label={t('video_projects:wizard.story.desc_label')}
+        placeholder={t('video_projects:wizard.story.desc_placeholder')}
+        value={data.description}
+        onChange={(e) => { onUpdate({ description: e.target.value }); }}
+      />
 
       {/* Story Content */}
-      <FormItem>
-        <FormLabel>{t('video_projects:wizard.story.content_label')} <span className="text-destructive">*</span></FormLabel>
-        <Textarea
-          placeholder={t('video_projects:wizard.story.content_placeholder')}
-          value={data.storyContent}
-          onChange={(e) => { onUpdate({ storyContent: e.target.value }); }}
-          className={`min-h-[200px] ${error && !data.storyContent.trim() ? 'border-destructive' : ''}`}
-        />
-        <FormDescription>
-          {t('video_projects:wizard.story.content_hint')}
-        </FormDescription>
-      </FormItem>
+      <Textarea
+        label={t('video_projects:wizard.story.content_label')}
+        placeholder={t('video_projects:wizard.story.content_placeholder')}
+        value={data.storyContent}
+        onChange={(e) => { onUpdate({ storyContent: e.target.value }); }}
+        helperText={t('video_projects:wizard.story.content_hint')}
+        error={error && !data.storyContent.trim() ? error : undefined}
+        className="min-h-[200px]"
+        required
+      />
 
-      {/* Error Display */}
-      {error && (
+      {/* Error Display (General) */}
+      {error && !(!data.name.trim() || !data.storyContent.trim()) && (
         <div className="text-sm text-destructive bg-destructive/10 p-3 rounded-md">
           {error}
         </div>

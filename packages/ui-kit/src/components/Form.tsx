@@ -43,21 +43,47 @@ const FormField = <
 const useFormField = () => {
   const fieldContext = React.useContext(FormFieldContext);
   const itemContext = React.useContext(FormItemContext);
-  const { getFieldState, formState } = useFormContext();
+  const formContext = useFormContext();
 
-  if (!fieldContext.name) {
-    throw new Error('useFormField should be used within <FormField>');
-  }
-
-  const fieldState = getFieldState(fieldContext.name, formState);
   const { id } = itemContext;
 
-  return {
+  const defaultValues = {
     id,
     name: fieldContext.name,
     formItemId: `${id}-form-item`,
     formDescriptionId: `${id}-form-item-description`,
     formMessageId: `${id}-form-item-message`,
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (!formContext) {
+    return {
+      ...defaultValues,
+      invalid: false,
+      isDirty: false,
+      isTouched: false,
+      error: undefined,
+    };
+  }
+
+  const { getFieldState, formState } = formContext;
+
+  if (!fieldContext.name) {
+    // If we have form context but no field context name, it means it's not inside a FormField
+    // but we can still return basic IDs if it's within a FormItem
+    return {
+      ...defaultValues,
+      invalid: false,
+      isDirty: false,
+      isTouched: false,
+      error: undefined,
+    };
+  }
+
+  const fieldState = getFieldState(fieldContext.name, formState);
+
+  return {
+    ...defaultValues,
     ...fieldState,
   };
 };

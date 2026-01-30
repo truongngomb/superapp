@@ -8,10 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { 
   Input, 
   Textarea, 
-  Button,
-  FormItem,
-  FormLabel,
-  FormDescription
+  Button
 } from '@superapp/ui-kit';
 import { Save, X } from 'lucide-react';
 import type { Character, CreateCharacterInput, UpdateCharacterInput } from '@/types';
@@ -64,34 +61,27 @@ export const CharacterForm = ({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <FormItem>
-        <FormLabel>
-          {t('characters:form.name_label')} <span className="text-destructive">*</span>
-        </FormLabel>
-        <Input
-          value={name}
-          onChange={(e) => { setName(e.target.value); }}
-          placeholder={t('characters:form.name_placeholder')}
-          className={error ? 'border-destructive' : ''}
-          autoFocus
-        />
-        {error && (
-          <p className="text-sm text-destructive mt-1">{error}</p>
-        )}
-      </FormItem>
+      <Input
+        label={t('characters:form.name_label')}
+        value={name}
+        onChange={(e) => { 
+          setName(e.target.value);
+          if (error) setError(null);
+        }}
+        placeholder={t('characters:form.name_placeholder')}
+        error={error ?? undefined}
+        autoFocus
+        required
+      />
 
-      <FormItem>
-        <FormLabel>{t('characters:form.description_label')}</FormLabel>
-        <Textarea
-          value={description}
-          onChange={(e) => { setDescription(e.target.value); }}
-          placeholder={t('characters:form.description_placeholder')}
-          className="min-h-[120px]"
-        />
-        <FormDescription>
-          {t('characters:form.description_hint')}
-        </FormDescription>
-      </FormItem>
+      <Textarea
+        label={t('characters:form.description_label')}
+        value={description}
+        onChange={(e) => { setDescription(e.target.value); }}
+        placeholder={t('characters:form.description_placeholder')}
+        helperText={t('characters:form.description_hint')}
+        className="min-h-[120px]"
+      />
 
       <div className="flex gap-2 justify-end pt-2">
         <Button 
