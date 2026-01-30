@@ -117,6 +117,10 @@
       "aspect_label": "Tỷ Lệ Khung Hình",
       "duration_label": "Thời Lượng Mục Tiêu",
       "duration_hint": "Phạm vi khuyến nghị: {{min}}s - {{max}}s cho nền tảng này.",
+      "style_label": "Phong Cách Nghệ Thuật AI",
+      "loading_styles": "Đang tải phong cách...",
+      "no_style": "Không phong cách",
+      "no_style_desc": "Tự động / Không có",
       "platform_tip": "Mẹo chuyên nghiệp"
     },
     "confirm": {
@@ -210,5 +214,8 @@
         "name": "Nhập tên dự án",
         "description": "Nhập mô tả dự án"
     }
+  },
+  "errors": {
+    "failed_load_styles": "Không thể tải danh sách phong cách nghệ thuật"
   }
 }

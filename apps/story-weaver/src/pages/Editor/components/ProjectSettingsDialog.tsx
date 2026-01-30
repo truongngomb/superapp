@@ -36,6 +36,7 @@ export function ProjectSettingsDialog({ open, onOpenChange, project }: ProjectSe
         aspectRatio: project.aspectRatio || ASPECT_RATIO.PORTRAIT_9_16,
         targetPlatform: project.targetPlatform || TARGET_PLATFORM.YOUTUBE_SHORTS,
         targetDuration: project.targetDuration || 60,
+        artStyleId: project.artStyleId,
     });
 
     // We need to sync with project when it opens
@@ -48,6 +49,7 @@ export function ProjectSettingsDialog({ open, onOpenChange, project }: ProjectSe
                 aspectRatio: project.aspectRatio || ASPECT_RATIO.PORTRAIT_9_16,
                 targetPlatform: project.targetPlatform || TARGET_PLATFORM.YOUTUBE_SHORTS,
                 targetDuration: project.targetDuration || 60,
+                artStyleId: project.artStyleId,
             });
         }
     }, [open, project]);
@@ -73,6 +75,7 @@ export function ProjectSettingsDialog({ open, onOpenChange, project }: ProjectSe
                 aspectRatio: data.aspectRatio,
                 targetPlatform: data.targetPlatform,
                 targetDuration: data.targetDuration,
+                artStyleId: data.artStyleId,
                 // Note: storyContent is not typically updated here as it drives generation, 
                 // but can be added if backend supports it. For now, it's just metadata editing.
             };

@@ -22,6 +22,8 @@ export * from './video-project.js';
 export * from './video-scene.js';
 export * from './character.js';
 export * from './artifact.js';
+export * from './art-style.js';
+export * from './settings.js';
 
 // =============================================================================
 // User Types (From Shared)

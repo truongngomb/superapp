@@ -117,6 +117,10 @@
       "aspect_label": "화면 비율",
       "duration_label": "목표 길이",
       "duration_hint": "이 플랫폼의 권장 범위: {{min}}초 - {{max}}초.",
+      "style_label": "AI 아트 스타일",
+      "loading_styles": "스타일 불러오는 중...",
+      "no_style": "스타일 없음",
+      "no_style_desc": "자동 / 없음",
       "platform_tip": "프로 팁"
     },
     "confirm": {
@@ -210,5 +214,8 @@
         "name": "프로젝트 이름 입력",
         "description": "프로젝트 설명 입력"
     }
+  },
+  "errors": {
+    "failed_load_styles": "아트 스타일을 불러오지 못했습니다"
   }
 }

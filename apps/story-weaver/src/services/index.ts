@@ -10,5 +10,6 @@ export {
 export { videoProjectService } from './project.service';
 export { videoSceneService } from './scene.service';
 export { characterService } from './character.service';
+export { featureService } from './feature.service';
 
 export type { SettingItem } from '@superapp/shared-types';

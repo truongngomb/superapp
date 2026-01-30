@@ -60,6 +60,9 @@ export const swVideoProjectsCollection: BaseCollectionSchema = {
     // Workflow Phase (NEW - Phase 1)
     selectField('currentPhase', [...WORKFLOW_PHASES], { maxSelect: 1 }),
 
+    // AI Style (NEW - Phase 1.5)
+    textField('artStyleId'),
+
     // Relations
     relationField('userId', 'users', { required: true, cascadeDelete: false, maxSelect: 1, displayFields: ['id', 'email'] }),
 

@@ -23,6 +23,7 @@ import {
   LoadingSpinner 
 } from '@superapp/ui-kit';
 import { useVideoScenes } from '@/hooks/useScenes';
+import { useCharacters } from '@/hooks/useCharacters';
 import { useScriptValidation } from '@/hooks/useScriptValidation';
 import { videoSceneService } from '@/services/scene.service';
 import { queryKeys } from '@/config/queryClient';
@@ -31,6 +32,7 @@ import type { VideoScene } from '@/types';
 import type { VideoProject } from '@/types/video-project';
 import { CAMERA_MOVEMENT, type ExtendedScene } from '@/types/scene-script';
 import { VALIDATION_SEVERITY } from '@/types/scene-script';
+import { useMemo } from 'react';
 
 import { GenerateScriptButton } from './GenerateScriptButton';
 import { ValidationPanel } from './ValidationPanel';
@@ -149,13 +151,20 @@ export const ScriptEditorPanel = ({ project }: ScriptEditorPanelProps) => {
   const { t } = useTranslation(['video_projects', 'uikit']);
   const queryClient = useQueryClient();
   
-  // Fetch scenes
-  const { scenes, isLoading } = useVideoScenes(project.id);
+  // Fetch scenes and characters
+  const { scenes, isLoading: isLoadingScenes } = useVideoScenes(project.id);
+  const { data: characters, isLoading: isLoadingCharacters } = useCharacters(project.id);
   
+  const characterIds = useMemo(() => 
+    (characters || []).map(c => c.id), 
+    [characters]
+  );
+
   // Validation
   const { validation } = useScriptValidation({ 
     scenes, 
-    project 
+    project,
+    characterIds
   });
   
   // Selected scene for editing
@@ -194,7 +203,7 @@ export const ScriptEditorPanel = ({ project }: ScriptEditorPanelProps) => {
   // Check if story content exists
   const hasStoryContent = !!project.storyContent && project.storyContent.trim().length > 0;
 
-  if (isLoading) {
+  if (isLoadingScenes || isLoadingCharacters) {
     return (
       <div className="flex items-center justify-center h-full">
         <LoadingSpinner size="lg" />

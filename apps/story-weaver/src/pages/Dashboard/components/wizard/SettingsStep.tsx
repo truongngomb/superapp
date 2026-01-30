@@ -3,6 +3,7 @@
  * 
  * Second step of wizard: Platform, aspect ratio, and duration settings.
  */
+import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { 
   Select,
@@ -18,6 +19,7 @@ import {
   type WizardData, 
   type UseProjectWizardReturn 
 } from '@/hooks/useProjectWizard';
+import { useArtStyles } from '@/hooks/useArtStyles';
 import { 
   TARGET_PLATFORM, 
   ASPECT_RATIO, 
@@ -25,7 +27,7 @@ import {
   type TargetPlatform,
   type AspectRatio
 } from '@/types';
-import { Monitor, Smartphone, Square } from 'lucide-react';
+import { Monitor, Smartphone, Square, Palette } from 'lucide-react';
 
 interface SettingsStepProps {
   data: WizardData;
@@ -48,6 +50,12 @@ const ASPECT_OPTIONS = [
 
 export const SettingsStep = ({ data, onUpdate, getPlatformDefaults }: SettingsStepProps) => {
   const { t } = useTranslation(['video_projects']);
+  const { styles, isLoading: isLoadingStyles, fetchStyles } = useArtStyles();
+  
+  // Fetch styles on mount
+  React.useEffect(() => {
+    void fetchStyles();
+  }, [fetchStyles]);
   
   const currentPlatformPreset = PLATFORM_PRESETS[data.targetPlatform];
 
@@ -117,6 +125,75 @@ export const SettingsStep = ({ data, onUpdate, getPlatformDefaults }: SettingsSt
             );
           })}
         </div>
+      </div>
+
+      {/* Art Style Selection */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-foreground flex items-center gap-2">
+          <Palette className="w-4 h-4" />
+          {t('video_projects:wizard.settings.style_label')}
+        </label>
+        
+        {isLoadingStyles ? (
+            <div className="h-32 flex items-center justify-center border rounded-lg bg-muted/20">
+                <span className="text-sm text-muted-foreground">{t('video_projects:wizard.settings.loading_styles')}</span>
+            </div>
+        ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                <button
+                    type="button"
+                    onClick={() => {onUpdate({ artStyleId: undefined })}}
+                    className={`
+                        relative group p-3 rounded-lg border-2 transition-all text-left flex flex-col gap-2 h-full
+                        ${!data.artStyleId
+                            ? 'border-primary bg-primary/5' 
+                            : 'border-muted hover:border-primary/50'}
+                    `}
+                >
+                     <div className="w-full aspect-video rounded-md bg-muted flex items-center justify-center text-muted-foreground">
+                        {t('video_projects:wizard.settings.no_style')}
+                    </div>
+                    <span className="text-sm font-medium">{t('video_projects:wizard.settings.no_style_desc')}</span>
+                </button>
+
+                {styles.map((style) => {
+                    const isSelected = data.artStyleId === style.id;
+                    return (
+                        <button
+                            key={style.id}
+                            type="button"
+                            onClick={() => {onUpdate({ artStyleId: style.id })}}
+                            className={`
+                                relative group p-3 rounded-lg border-2 transition-all text-left flex flex-col gap-2 h-full
+                                ${isSelected 
+                                    ? 'border-primary bg-primary/5' 
+                                    : 'border-muted hover:border-primary/50'}
+                            `}
+                        >
+                            <div className="w-full aspect-video rounded-md bg-muted overflow-hidden relative">
+                                {style.previewImage ? (
+                                    <img 
+                                        src={style.previewImage} 
+                                        alt={style.name} 
+                                        className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                                    />
+                                ) : (
+                                    <div className="w-full h-full bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center">
+                                        <Palette className="w-6 h-6 text-primary/40" />
+                                    </div>
+                                )}
+                            </div>
+                            <div>
+                                <p className="text-sm font-medium truncate">{style.name}</p>
+                                {style.description && (
+                                    <p className="text-xs text-muted-foreground line-clamp-2">{style.description}</p>
+                                )}
+                            </div>
+                        </button>
+                    );
+                })}
+            </div>
+        )}
       </div>
 
       {/* Duration Slider */}

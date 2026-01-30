@@ -15,6 +15,9 @@ import type {
 } from '../types/index.js';
 import { logger } from '../utils/logger.js';
 
+import { settingService } from './setting.service.js';
+import { SWSettingKey } from '../types/settings.js';
+
 class ScriptService {
   /**
    * Extract character suggestions from story content
@@ -25,16 +28,7 @@ class ScriptService {
       throw new Error('Project has no story content to extract characters from');
     }
 
-    const systemPrompt = `You are a professional screenwriter. 
-Analyze the following story and extract the main characters.
-For each character, provide:
-- name: Clear, concise name.
-- description: Personality, role in story, and key traits.
-- visualTraits: Detailed physical appearance for an AI image generator (Stable Diffusion/Flux). 
-  Focus on: gender, approximate age, hair style/color, eye color, clothing style, and unique features.
-
-Respond with a JSON array of objects.`;
-
+    const systemPrompt = await settingService.get(SWSettingKey.PROMPT_CHARACTER_EXTRACT);
     const prompt = `Story: ${project.storyContent}`;
 
     try {
@@ -66,28 +60,19 @@ Respond with a JSON array of objects.`;
 
     const characterContext = characters.map(c => `- ${c.name}: ${c.description}. Visuals: ${c.visualTraits}`).join('\n');
 
-    const systemPrompt = `You are a professional film director and screenwriter.
-Transform the following story into a series of detailed scenes for a short video.
-Target Platform: ${project.targetPlatform || 'unknown'}
-Aspect Ratio: ${project.aspectRatio || '9:16'}
-
-For each scene, provide:
-- order: sequence number starting from 1.
-- scriptText: The narration or dialogue for this scene.
-- voiceover: The exact text to be spoken by a narrator or character.
-- textOverlay: Impactful text to be displayed on screen (max 5-7 words).
-- visualPrompt: A detailed image generation prompt. IMPORTANT: Use character names to refer to them. Focus on action, setting, lighting, and cinematic style.
-- cameraMovement: Choose from: static, pan_left, pan_right, zoom_in, zoom_out, ken_burns, tilt_up, tilt_down.
-- estimatedDuration: estimated seconds (3-8s per scene).
-
-The total duration should aim for approximately ${project.targetDuration || 60} seconds.
-Respond with a JSON array of scene objects.`;
+    const systemPrompt = await settingService.get(SWSettingKey.PROMPT_SCRIPT_GEN);
+    
+    // Inject Target Platform and Aspect Ratio if available
+    const configuredPrompt = systemPrompt
+      .replace('${project.targetPlatform}', project.targetPlatform || 'unknown')
+      .replace('${project.aspectRatio}', project.aspectRatio || '9:16')
+      .replace('${project.targetDuration}', String(project.targetDuration || 60));
 
     const prompt = `Story: ${project.storyContent}\n\nExisting Characters:\n${characterContext}`;
 
     try {
       const aiResponse = await aiTextService.generateJSON<{ scenes?: CreateVideoSceneInput[] } | CreateVideoSceneInput[]>(prompt, {
-        systemPrompt,
+        systemPrompt: configuredPrompt,
         temperature: 0.7,
       });
 

@@ -29,6 +29,7 @@ export interface WizardData {
   aspectRatio: AspectRatio;
   targetPlatform: TargetPlatform;
   targetDuration: number;
+  artStyleId?: string;
 }
 
 export interface UseProjectWizardReturn {
@@ -151,6 +152,7 @@ export function useProjectWizard(): UseProjectWizardReturn {
       aspectRatio: data.aspectRatio,
       targetPlatform: data.targetPlatform,
       targetDuration: data.targetDuration,
+      artStyleId: data.artStyleId,
     };
 
     createProject(input, {

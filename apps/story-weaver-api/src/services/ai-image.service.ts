@@ -7,6 +7,10 @@ import crypto from 'crypto';
 // Types
 // =============================================================================
 
+import { getArtStyleById } from '../config/art-styles.config.js';
+import { settingService } from './setting.service.js';
+import { SWSettingKey } from '../types/settings.js';
+
 export interface ImageGenerationOptions {
   /** Model to use */
   model?: AIImageModel | string;
@@ -24,6 +28,8 @@ export interface ImageGenerationOptions {
   guidanceScale?: number;
   /** Number of inference steps */
   steps?: number;
+  /** Art Style ID to apply */
+  styleId?: string;
 }
 
 export interface GeneratedImage {
@@ -65,16 +71,41 @@ class AIImageService {
     const {
       model = aiConfig.defaultImageModel,
       count = 1,
+      styleId,
     } = options;
     
-    logger.info('AIImageService', `Generate request: ${prompt.slice(0, 50)}...`);
+    // 1. Resolve Art Style
+    const styleConfig = styleId ? getArtStyleById(styleId) : undefined;
+    
+    // 2. Resolve Base Prompt from Settings
+    const basePrompt = await settingService.get(SWSettingKey.PROMPT_VISUAL_GEN_BASE, '');
+    
+    // 3. Construct Final Positive Prompt
+    // Format: "Base Quality, Style Prompt, Subject/Action Prompt"
+    const parts = [basePrompt];
+    if (styleConfig) parts.push(styleConfig.prompt);
+    parts.push(prompt);
+    const finalPrompt = parts.filter(Boolean).join(', ');
+    
+    // 4. Construct Negative Prompt
+    const negativeParts = [];
+    if (options.negativePrompt) negativeParts.push(options.negativePrompt);
+    if (styleConfig?.negativePrompt) negativeParts.push(styleConfig.negativePrompt);
+    const finalNegativePrompt = negativeParts.join(', ');
+
+    logger.info('AIImageService', `Generate request (Style: ${styleConfig?.name || 'None'}): ${finalPrompt.slice(0, 50)}...`);
     
     try {      
       // Helper to generate single image
       const generateSingle = async (_: number): Promise<GeneratedImage> => {
+          const contentPrompt = `Generate high-quality image.
+POSITIVE PROMPT: ${finalPrompt}
+${finalNegativePrompt ? `NEGATIVE PROMPT: ${finalNegativePrompt}` : ''}
+Return base64 if possible.`;
+
           const response = await this.client.chat.completions.create({
             model: model,
-            messages: [{ role: "user", content: `Generate high-quality image: ${prompt}. Return base64 if possible.` }],
+            messages: [{ role: "user", content: contentPrompt }],
             max_tokens: 4096,
             temperature: 0.7
           } as never); // Cast to allow extra_body if types are strict

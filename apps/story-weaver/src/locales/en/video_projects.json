@@ -125,6 +125,10 @@
       "aspect_label": "Aspect Ratio",
       "duration_label": "Target Duration",
       "duration_hint": "Recommended range: {{min}}s - {{max}}s for this platform.",
+      "style_label": "AI Art Style",
+      "loading_styles": "Loading styles...",
+      "no_style": "No Style",
+      "no_style_desc": "Auto / None",
       "platform_tip": "Pro tip"
     },
     "confirm": {
@@ -218,5 +222,8 @@
         "name": "Enter project name",
         "description": "Enter project description"
     }
+  },
+  "errors": {
+    "failed_load_styles": "Failed to load art styles"
   }
 }

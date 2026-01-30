@@ -23,6 +23,7 @@ import {
 interface UseScriptValidationParams {
   scenes: VideoScene[];
   project: VideoProject | null | undefined;
+  characterIds?: string[];
 }
 
 /**
@@ -105,7 +106,8 @@ function validateScene(
   // 5. Check character references (if characters exist)
   const sceneCharIds = scene.characterIds ?? [];
   for (const charId of sceneCharIds) {
-    if (!characterIds.includes(charId)) {
+    // If we have characterIds list, validate against it
+    if (characterIds.length > 0 && !characterIds.includes(charId)) {
       issues.push({
         sceneId: scene.id,
         sceneOrder: index + 1,
@@ -129,7 +131,7 @@ function validateScene(
  *   project,
  * });
  */
-export const useScriptValidation = ({ scenes, project }: UseScriptValidationParams) => {
+export const useScriptValidation = ({ scenes, project, characterIds = [] }: UseScriptValidationParams) => {
   const validation = useMemo<ScriptValidationResult>(() => {
     if (!project || scenes.length === 0) {
       return {
@@ -143,10 +145,6 @@ export const useScriptValidation = ({ scenes, project }: UseScriptValidationPara
     const platform = (project.targetPlatform ?? 'generic') as TargetPlatform;
     const constraints = PLATFORM_PRESETS[platform];
     const targetDuration = project.targetDuration ?? constraints.maxDuration;
-
-    // Collect all character IDs for reference validation
-    // Note: In real implementation, this would come from useCharacters hook
-    const characterIds: string[] = [];
 
     // Validate each scene
     const allIssues: ScriptValidationIssue[] = [];
@@ -199,7 +197,7 @@ export const useScriptValidation = ({ scenes, project }: UseScriptValidationPara
       totalDuration,
       targetDuration,
     };
-  }, [scenes, project]);
+  }, [scenes, project, characterIds]);
 
   // Derived states for convenience
   const hasErrors = validation.issues.some(i => i.severity === VALIDATION_SEVERITY.ERROR);

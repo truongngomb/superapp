@@ -12,7 +12,9 @@ import {
   Badge
 } from '@superapp/ui-kit';
 import type { WizardData } from '@/hooks/useProjectWizard';
-import { FileText, Settings, Clock, Monitor, Smartphone, Square } from 'lucide-react';
+import { useArtStyles } from '@/hooks/useArtStyles';
+import { FileText, Settings, Clock, Monitor, Smartphone, Square, Palette } from 'lucide-react';
+import { useEffect } from 'react';
 
 interface ConfirmStepProps {
   data: WizardData;
@@ -28,6 +30,13 @@ const AspectIcon = ({ ratio }: { ratio: string }) => {
 
 export const ConfirmStep = ({ data }: ConfirmStepProps) => {
   const { t } = useTranslation(['video_projects']);
+  const { styles, fetchStyles } = useArtStyles();
+
+  useEffect(() => {
+    void fetchStyles();
+  }, [fetchStyles]);
+
+  const selectedStyle = styles.find(s => s.id === data.artStyleId);
 
   return (
     <div className="space-y-4">
@@ -93,6 +102,16 @@ export const ConfirmStep = ({ data }: ConfirmStepProps) => {
             <span className="flex items-center gap-1 font-medium">
               <Clock className="w-4 h-4" />
               {data.targetDuration}s
+            </span>
+          </div>
+          
+          <div className="flex justify-between items-center pt-2 border-t text-sm">
+            <span className="text-muted-foreground flex items-center gap-1">
+              <Palette className="w-3.5 h-3.5" />
+              {t('video_projects:wizard.settings.style_label')}:
+            </span>
+            <span className="font-medium">
+              {selectedStyle ? selectedStyle.name : t('video_projects:wizard.settings.no_style')}
             </span>
           </div>
         </CardContent>

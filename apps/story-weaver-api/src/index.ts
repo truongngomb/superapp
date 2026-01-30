@@ -26,6 +26,10 @@ async function startServer(): Promise<void> {
   
   if (!dbHealthy) {
     logger.warn('Server', 'PocketBase is not available. Server will start with limited functionality.');
+  } else {
+    // Initialize default settings
+    const { settingService } = await import('./services/setting.service.js');
+    await settingService.initDefaults();
   }
 
   // Start Express server

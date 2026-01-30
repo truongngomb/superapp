@@ -83,6 +83,7 @@ export const videoProjectSchema = z.object({
   aspectRatio: aspectRatioSchema.optional(),
   targetPlatform: targetPlatformSchema.optional(),
   targetDuration: z.number().optional(),
+  artStyleId: z.string().optional(),
   currentPhase: projectPhaseSchema.optional(),
   
   // Output
@@ -111,6 +112,7 @@ export const createVideoProjectSchema = z.object({
   aspectRatio: aspectRatioSchema.optional(),
   targetPlatform: targetPlatformSchema.optional(),
   targetDuration: z.number().min(15).max(180).optional(),
+  artStyleId: z.string().optional(),
 });
 export type CreateVideoProjectInput = z.infer<typeof createVideoProjectSchema>;
 

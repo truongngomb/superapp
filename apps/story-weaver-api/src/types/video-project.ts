@@ -83,6 +83,7 @@ export const videoProjectSchema = z.object({
   targetDuration: z.number().optional(),
   currentPhase: videoWorkflowPhaseSchema.optional(),
   outputUrl: z.string().url().optional(),
+  artStyleId: z.string().optional(), // New field for Art Style
   userId: z.string(),
   // BaseEntity fields
   created: z.string(),
@@ -101,6 +102,7 @@ export const createVideoProjectSchema = z.object({
   targetPlatform: videoTargetPlatformSchema.optional(),
   targetDuration: z.number().optional(),
   settings: videoProjectSettingsSchema.optional(),
+  artStyleId: z.string().optional(),
 });
 export type CreateVideoProjectInput = z.infer<typeof createVideoProjectSchema>;
 
@@ -108,6 +110,7 @@ export const updateVideoProjectSchema = createVideoProjectSchema.partial().exten
   status: videoProjectStatusSchema.optional(),
   currentPhase: videoWorkflowPhaseSchema.optional(),
   outputUrl: z.string().url().optional(),
+  artStyleId: z.string().optional(),
   isActive: z.boolean().optional(),
   isDeleted: z.boolean().optional(),
 });
