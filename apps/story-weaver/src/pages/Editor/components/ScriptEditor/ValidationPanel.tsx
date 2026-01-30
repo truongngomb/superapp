@@ -159,7 +159,7 @@ export const ValidationPanel = ({ validation, className }: ValidationPanelProps)
                     </span>
                   </div>
                   <span className={isDurationOk ? 'text-emerald-500' : 'text-amber-500'}>
-                    {String(validation.totalDuration)}s / {String(validation.targetDuration)}s
+                    {String(validation.totalDuration)}{t('video_projects:script.seconds_short')} / {String(validation.targetDuration)}{t('video_projects:script.seconds_short')}
                   </span>
                 </div>
                 <div className="h-2 bg-muted rounded-full overflow-hidden">

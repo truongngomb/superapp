@@ -80,9 +80,12 @@
     "text_overlay_hint": "간결하게 - 최대 5-7단어",
     "duration": "시간",
     "seconds": "초",
+    "seconds_short": "s",
     "camera_movement": "카메라 움직임",
     "characters_in_scene": "장면의 캐릭터",
-    "characters_count": "캐릭터"
+    "characters_count": "캐릭터",
+    "auto_match": "매직 매치",
+    "no_characters_available": "이 프로젝트에 정의된 캐릭터가 없습니다. 캐릭터 스튜디오에서 추가해 주세요."
   },
   "wizard": {
     "title_story": "스토리 입력",
@@ -121,7 +124,18 @@
       "loading_styles": "스타일 불러오는 중...",
       "no_style": "스타일 없음",
       "no_style_desc": "자동 / 없음",
-      "platform_tip": "프로 팁"
+      "platform_tip": "프로 팁",
+      "platforms": {
+        "tiktok": "TikTok",
+        "youtube_shorts": "YouTube Shorts",
+        "instagram_reels": "Instagram Reels",
+        "generic": "일반 비디오"
+      },
+      "aspects": {
+        "portrait": "9:16 (세로)",
+        "landscape": "16:9 (가로)",
+        "square": "1:1 (정사각형)"
+      }
     },
     "confirm": {
       "review_message": "생성하기 전에 프로젝트 세부 정보를 검토해 주세요.",
@@ -217,5 +231,11 @@
   },
   "errors": {
     "failed_load_styles": "아트 스타일을 불러오지 못했습니다"
+  },
+  "uikit": {
+    "approved": "준비됨",
+    "next": "다음",
+    "back": "뒤로",
+    "save_changes": "변경 사항 저장"
   }
 }

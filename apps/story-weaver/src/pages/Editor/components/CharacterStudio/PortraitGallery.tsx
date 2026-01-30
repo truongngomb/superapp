@@ -87,8 +87,8 @@ export const PortraitGallery = ({
       {/* Portrait Grid - 2x2 */}
       <div className="grid grid-cols-2 gap-3">
         {portraits.map((portrait, index) => {
-          const isSelected = selectedUrl === portrait.url || masterPortraitUrl === portrait.url;
-          const isMaster = masterPortraitUrl === portrait.url;
+          const isSelected = selectedUrl === portrait.url || masterPortraitUrl === portrait.url || portrait.isSelected;
+          const isMaster = masterPortraitUrl === portrait.url || portrait.isSelected;
 
             return (
               <motion.button

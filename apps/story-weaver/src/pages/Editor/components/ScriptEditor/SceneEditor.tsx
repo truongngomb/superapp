@@ -12,7 +12,7 @@
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Type, Users, Eye, Mic, X, Save, Clock, Camera, Image as ImageIcon, FileText, Film } from 'lucide-react';
+import { Type, Users, Eye, Mic, X, Save, Clock, Camera, Image as ImageIcon, FileText, Film, Wand2 } from 'lucide-react';
 import { 
   Button, 
   Input, 
@@ -22,8 +22,11 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
+  Badge,
+  Avatar,
+  Checkbox
 } from '@superapp/ui-kit';
-import type { VideoScene } from '@/types';
+import type { VideoScene, Character } from '@/types';
 import { CAMERA_MOVEMENT, type CameraMovement, type ExtendedScene } from '@/types/scene-script';
 import { ImageGeneratorPanel } from './ImageGeneratorPanel';
 import { MotionPanel } from './MotionPanel';
@@ -31,6 +34,7 @@ import { MotionPanel } from './MotionPanel';
 interface SceneEditorProps {
   scene: VideoScene;
   index: number;
+  availableCharacters?: Character[];
   onSave: (sceneId: string, data: Partial<VideoScene>) => Promise<void>;
   onClose: () => void;
   isSubmitting?: boolean;
@@ -48,6 +52,7 @@ const CAMERA_OPTIONS = Object.entries(CAMERA_MOVEMENT).map(([_, key]) => {
 export const SceneEditor = ({
   scene,
   index,
+  availableCharacters = [],
   onSave,
   onClose,
   isSubmitting = false,
@@ -71,6 +76,7 @@ export const SceneEditor = ({
     extendedScene.cameraMovement ?? CAMERA_MOVEMENT.STATIC
   );
   const [selectedKeyframe, setSelectedKeyframe] = useState(extendedScene.selectedKeyframe ?? extendedScene.imageUrl);
+  const [characterIds, setCharacterIds] = useState<string[]>(scene.characterIds ?? []);
   
   // Initialize active tab based on allowed tabs
   const [activeTab, setActiveTab] = useState<'script' | 'visuals' | 'motion'>(allowedTabs[0] || 'script');
@@ -83,9 +89,10 @@ export const SceneEditor = ({
       textOverlay !== (extendedScene.textOverlay ?? '') ||
       estimatedDuration !== (extendedScene.estimatedDuration ?? extendedScene.duration ?? 5) ||
       cameraMovement !== (extendedScene.cameraMovement ?? CAMERA_MOVEMENT.STATIC) ||
-      selectedKeyframe !== (extendedScene.selectedKeyframe ?? extendedScene.imageUrl)
+      selectedKeyframe !== (extendedScene.selectedKeyframe ?? extendedScene.imageUrl) ||
+      JSON.stringify(characterIds) !== JSON.stringify(scene.characterIds ?? [])
     );
-  }, [visualDescription, voiceover, textOverlay, estimatedDuration, cameraMovement, selectedKeyframe, extendedScene]);
+  }, [visualDescription, voiceover, textOverlay, estimatedDuration, cameraMovement, selectedKeyframe, characterIds, scene.characterIds, extendedScene]);
 
   const handleSave = async () => {
     await onSave(scene.id, {
@@ -94,7 +101,7 @@ export const SceneEditor = ({
       textOverlay,
       estimatedDuration,
       cameraMovement,
-
+      characterIds,
       selectedKeyframe,
       // Also update legacy fields for compatibility
       visualPrompt: visualDescription,
@@ -102,7 +109,52 @@ export const SceneEditor = ({
       duration: estimatedDuration,
       imageUrl: selectedKeyframe,
     } as unknown as Partial<VideoScene>);
-    onClose();
+  };
+
+  const toggleCharacter = (charId: string) => {
+    setCharacterIds(prev => 
+      prev.includes(charId) 
+        ? prev.filter(id => id !== charId) 
+        : [...prev, charId]
+    );
+  };
+
+  const handleAutoMatchCharacters = () => {
+    if (!availableCharacters.length) return;
+
+    const fullText = `${visualDescription} ${voiceover}`.toLowerCase();
+    
+    // List of common titles/generic words to ignore when matching parts of names
+    const titlesToIgnore = [
+      'vua', 'chúa', 'công', 'chúa', 'hoàng', 'tử', 'thần', 
+      'chàng', 'nàng', 'mỵ', 'nương', 'ông', 'bà', 'anh', 'chị', 'em'
+    ];
+
+    const matchedIds = availableCharacters
+      .filter(char => {
+        const name = char.name.toLowerCase();
+        
+        // 1. Try exact full name match first (with word boundaries)
+        const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const fullRegex = new RegExp(`\\b${escapedName}\\b`, 'i');
+        if (fullRegex.test(fullText)) return true;
+
+        // 2. Try matching significant parts (longest and not a title)
+        const nameParts = name.split(/\s+/).filter(part => 
+          part.length > 2 && !titlesToIgnore.includes(part)
+        );
+
+        // If after filtering we have significant parts, check if any exists as a whole word
+        return nameParts.some(part => {
+          const partRegex = new RegExp(`\\b${part}\\b`, 'i');
+          return partRegex.test(fullText);
+        });
+      })
+      .map(char => char.id);
+
+    // Merge with existing but avoid duplicates
+    const finalIds = Array.from(new Set([...characterIds, ...matchedIds]));
+    setCharacterIds(finalIds);
   };
 
   return (
@@ -162,7 +214,7 @@ export const SceneEditor = ({
                 }`}
               >
                 <Film size={14} />
-                {t('video_projects:editor.motion_tab', { defaultValue: 'Motion' })}
+                {t('video_projects:editor.motion_tab')}
               </button>
             )}
           </div>
@@ -269,18 +321,71 @@ export const SceneEditor = ({
               </div>
             </div>
 
-            {/* Characters (Info only for now) */}
-            {extendedScene.characterIds && extendedScene.characterIds.length > 0 && (
-              <div className="space-y-2">
+            {/* Characters Selection */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
                 <label className="text-sm font-medium flex items-center gap-2">
                   <Users size={16} className="text-muted-foreground" />
                   {t('video_projects:script.characters_in_scene')}
                 </label>
-                <div className="text-sm text-muted-foreground">
-                  {String(extendedScene.characterIds.length)} {t('video_projects:script.characters_count')}
-                </div>
+                
+                {availableCharacters.length > 0 && (
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-8 px-2 text-xs text-primary gap-1.5 hover:bg-primary/5"
+                    onClick={handleAutoMatchCharacters}
+                  >
+                    <Wand2 size={12} />
+                    {t('video_projects:script.auto_match')}
+                  </Button>
+                )}
               </div>
-            )}
+              
+              {availableCharacters.length > 0 ? (
+                <div className="grid grid-cols-1 gap-2">
+                  {availableCharacters.map(char => {
+                    const isSelected = characterIds.includes(char.id);
+                    return (
+                      <div 
+                        key={char.id}
+                        onClick={() => { toggleCharacter(char.id); }}
+                        className={`
+                          flex items-center gap-3 p-2 rounded-lg border cursor-pointer transition-all
+                          ${isSelected 
+                            ? 'border-primary bg-primary/5 ring-1 ring-primary' 
+                            : 'border-border hover:bg-muted/50'
+                          }
+                        `}
+                      >
+                        <Checkbox 
+                          checked={isSelected} 
+                          onChange={() => { toggleCharacter(char.id); }}
+                        />
+                        <Avatar 
+                          src={char.masterPortraitUrl} 
+                          name={char.name}
+                          size="sm"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium truncate">{char.name}</p>
+                          <p className="text-xs text-muted-foreground truncate">{char.description}</p>
+                        </div>
+                        {char.status === 'approved' && (
+                          <Badge variant="success" size="sm" className="h-4 text-[10px]">
+                            {t('video_projects:uikit.approved')}
+                          </Badge>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="text-sm text-muted-foreground italic bg-muted/30 p-3 rounded-lg border border-dashed">
+                  {t('video_projects:script.no_characters_available')}
+                </div>
+              )}
+            </div>
           </div>
         )}
 

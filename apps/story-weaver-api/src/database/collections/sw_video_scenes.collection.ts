@@ -3,7 +3,6 @@ import {
   relationField,
   numberField,
   textField,
-  urlField,
   jsonField,
   selectField,
   boolField,
@@ -59,13 +58,13 @@ export const swVideoScenesCollection: BaseCollectionSchema = {
     // Keyframe Options (NEW - Phase 1)
     // Array of 4 AI-generated image options: { url: string, prompt: string }[]
     jsonField('keyframeOptions'),
-    urlField('selectedKeyframe'), // User-selected keyframe URL
+    textField('selectedKeyframe'), // User-selected keyframe URL
 
     // Media URLs
-    urlField('imageUrl'), // Legacy/fallback
-    urlField('audioUrl'), // Voice audio
-    urlField('videoUrl'), // Final scene video
-    urlField('videoClipUrl'), // Generated video clip (image-to-video)
+    textField('imageUrl'), // Legacy/fallback
+    textField('audioUrl'), // Voice audio
+    textField('videoUrl'), // Final scene video
+    textField('videoClipUrl'), // Generated video clip (image-to-video)
     numberField('duration'), // Actual duration after generation
 
     // Status & Metadata

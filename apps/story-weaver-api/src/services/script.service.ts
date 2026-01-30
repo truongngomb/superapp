@@ -17,6 +17,7 @@ import { logger } from '../utils/logger.js';
 
 import { settingService } from './setting.service.js';
 import { SWSettingKey } from '../types/settings.js';
+import { getArtStyleById } from '../config/art-styles.config.js';
 
 class ScriptService {
   /**
@@ -28,8 +29,16 @@ class ScriptService {
       throw new Error('Project has no story content to extract characters from');
     }
 
-    const systemPrompt = await settingService.get(SWSettingKey.PROMPT_CHARACTER_EXTRACT);
-    const prompt = `Story: ${project.storyContent}`;
+    const systemPrompt = await settingService.get<string>(SWSettingKey.PROMPT_CHARACTER_EXTRACT);
+    
+    // Include Art Style context if available
+    const style = project.artStyleId ? getArtStyleById(project.artStyleId) : null;
+    const styleNote = style 
+      ? `\n\nART STYLE CONTEXT: The project style is "${style.name}" (${style.description}). 
+Focus character visual descriptions on traits that complement this style.` 
+      : '';
+      
+    const prompt = `Story: ${project.storyContent}${styleNote}`;
 
     try {
       const response = await aiTextService.generateJSON<{ characters?: CharacterSuggestion[] } | CharacterSuggestion[]>(prompt, {
@@ -60,7 +69,7 @@ class ScriptService {
 
     const characterContext = characters.map(c => `- ${c.name}: ${c.description}. Visuals: ${c.visualTraits}`).join('\n');
 
-    const systemPrompt = await settingService.get(SWSettingKey.PROMPT_SCRIPT_GEN);
+    const systemPrompt = await settingService.get<string>(SWSettingKey.PROMPT_SCRIPT_GEN);
     
     // Inject Target Platform and Aspect Ratio if available
     const configuredPrompt = systemPrompt
@@ -68,7 +77,13 @@ class ScriptService {
       .replace('${project.aspectRatio}', project.aspectRatio || '9:16')
       .replace('${project.targetDuration}', String(project.targetDuration || 60));
 
-    const prompt = `Story: ${project.storyContent}\n\nExisting Characters:\n${characterContext}`;
+    // Include Art Style context for scenes
+    const style = project.artStyleId ? getArtStyleById(project.artStyleId) : null;
+    const styleNote = style 
+      ? `\n\nART STYLE: ${style.name}\nSTYLE DESCRIPTION: ${style.description}\nPlease ensure all "visualPrompt" fields are optimized for this artistic direction.` 
+      : '';
+
+    const prompt = `Story: ${project.storyContent}${styleNote}\n\nExisting Characters:\n${characterContext}`;
 
     try {
       const aiResponse = await aiTextService.generateJSON<{ scenes?: CreateVideoSceneInput[] } | CreateVideoSceneInput[]>(prompt, {

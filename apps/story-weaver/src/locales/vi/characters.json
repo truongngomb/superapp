@@ -16,7 +16,9 @@
     "regenerate": "Tạo Lại",
     "select_master": "Đặt làm Chính",
     "approve": "Duyệt",
-    "save": "Lưu Nhân Vật"
+    "save": "Lưu Nhân Vật",
+    "save_portrait": "Lưu Ảnh Đại Diện",
+    "auto_match_all": "Khớp Nhân Vật & Cảnh"
   },
   
   "form": {
@@ -68,7 +70,10 @@
     "approved": "Nhân vật đã được duyệt và sẵn sàng sử dụng",
     "portrait_set": "Đã đặt chân dung chính thành công",
     "extract_success": "Đã tìm thấy {{count}} nhân vật trong câu chuyện",
-    "extract_empty": "Không tìm thấy nhân vật trong câu chuyện"
+    "extract_empty": "Không tìm thấy nhân vật trong câu chuyện",
+    "auto_match_success": "Đã tự động ghép nhân vật cho {{count}} cảnh quay",
+    "auto_match_error": "Có lỗi xảy ra khi tự động ghép nhân vật",
+    "approve_error": "Lỗi khi duyệt nhân vật: {{message}}"
   },
   
   "confirm": {

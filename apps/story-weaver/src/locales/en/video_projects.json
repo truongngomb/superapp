@@ -88,9 +88,12 @@
     "text_overlay_hint": "Keep it brief - 5-7 words maximum",
     "duration": "Duration",
     "seconds": "seconds",
+    "seconds_short": "s",
     "camera_movement": "Camera Movement",
     "characters_in_scene": "Characters in Scene",
-    "characters_count": "character(s)"
+    "characters_count": "character(s)",
+    "auto_match": "Magic Match",
+    "no_characters_available": "No characters defined for this project. Go to Character Studio to add them."
   },
   "wizard": {
     "title_story": "Tell Your Story",
@@ -129,7 +132,18 @@
       "loading_styles": "Loading styles...",
       "no_style": "No Style",
       "no_style_desc": "Auto / None",
-      "platform_tip": "Pro tip"
+      "platform_tip": "Pro tip",
+      "platforms": {
+        "tiktok": "TikTok",
+        "youtube_shorts": "YouTube Shorts",
+        "instagram_reels": "Instagram Reels",
+        "generic": "Generic Video"
+      },
+      "aspects": {
+        "portrait": "9:16 (Portrait)",
+        "landscape": "16:9 (Landscape)",
+        "square": "1:1 (Square)"
+      }
     },
     "confirm": {
       "review_message": "Please review your project details before creating.",
@@ -225,5 +239,11 @@
   },
   "errors": {
     "failed_load_styles": "Failed to load art styles"
+  },
+  "uikit": {
+    "approved": "Ready",
+    "next": "Next",
+    "back": "Back",
+    "save_changes": "Save Changes"
   }
 }

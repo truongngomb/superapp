@@ -16,7 +16,9 @@
     "regenerate": "Regenerate",
     "select_master": "Set as Master",
     "approve": "Approve",
-    "save": "Save Character"
+    "save": "Save Character",
+    "save_portrait": "Save Portrait",
+    "auto_match_all": "Auto Match All"
   },
   
   "form": {
@@ -68,7 +70,10 @@
     "approved": "Character approved and ready for use",
     "portrait_set": "Master portrait set successfully",
     "extract_success": "Found {{count}} characters in your story",
-    "extract_empty": "No characters were found in the story"
+    "extract_empty": "No characters were found in the story",
+    "auto_match_success": "Successfully auto-matched characters for {{count}} scenes",
+    "auto_match_error": "Failed to auto-match characters",
+    "approve_error": "Failed to approve character: {{message}}"
   },
   
   "confirm": {

@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { videoSceneService } from '@/services/scene.service';
 import { queryKeys } from '@/config/queryClient';
+import type { VideoScene } from '@/types';
 
 export const useVideoScenes = (projectId: string) => {
   const query = useQuery({
@@ -23,9 +24,22 @@ export const useDeleteVideoScene = () => {
     return useMutation({
         mutationFn: (id: string) => videoSceneService.delete(id),
         onSuccess: () => {
-             // Invalidate all scenes queries since we don't know the project ID easily here
-             // Ideally we pass projectId to onSuccess to invalidate specifically
-             void queryClient.invalidateQueries({ queryKey: queryKeys.videoScenes.all });
+          void queryClient.invalidateQueries({ queryKey: queryKeys.videoScenes.all });
         }
     })
 }
+
+export const useUpdateVideoScene = (projectId: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ sceneId, data }: { sceneId: string; data: Partial<VideoScene> }) => {
+      return await videoSceneService.update(sceneId, data);
+    },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ 
+        queryKey: queryKeys.videoScenes.byProject(projectId) 
+      });
+    },
+  });
+};

@@ -102,6 +102,10 @@ class SettingService extends BaseService<SettingEntity> {
             group: config.group
           });
           createdCount++;
+        } else if (config.group === 'ai_prompts' && JSON.stringify(exists.value) !== JSON.stringify(config.value)) {
+          // Force update AI prompts if they differ from defaults
+          await this.update(exists.id, { value: config.value });
+          logger.info('SettingService', `Updated prompt setting: ${key}`);
         }
       } catch (error) {
         logger.error('SettingService', `Failed to init setting ${key}`, error);

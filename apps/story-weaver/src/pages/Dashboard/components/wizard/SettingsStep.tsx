@@ -35,22 +35,35 @@ interface SettingsStepProps {
   getPlatformDefaults: UseProjectWizardReturn['getPlatformDefaults'];
 }
 
-const PLATFORM_OPTIONS = [
-  { value: TARGET_PLATFORM.TIKTOK, label: 'TikTok', icon: '📱' },
-  { value: TARGET_PLATFORM.YOUTUBE_SHORTS, label: 'YouTube Shorts', icon: '▶️' },
-  { value: TARGET_PLATFORM.INSTAGRAM_REELS, label: 'Instagram Reels', icon: '📸' },
-  { value: TARGET_PLATFORM.GENERIC, label: 'Generic Video', icon: '🎬' },
-];
+// Note: Icons are components or emojis
+interface PlatformOption {
+  value: TargetPlatform;
+  labelKey: string;
+  icon: string;
+}
 
-const ASPECT_OPTIONS = [
-  { value: ASPECT_RATIO.PORTRAIT_9_16, label: '9:16 (Portrait)', icon: Smartphone },
-  { value: ASPECT_RATIO.LANDSCAPE_16_9, label: '16:9 (Landscape)', icon: Monitor },
-  { value: ASPECT_RATIO.SQUARE_1_1, label: '1:1 (Square)', icon: Square },
-];
+interface AspectOption {
+  value: AspectRatio;
+  labelKey: string;
+  icon: typeof Smartphone;
+}
 
 export const SettingsStep = ({ data, onUpdate, getPlatformDefaults }: SettingsStepProps) => {
   const { t } = useTranslation(['video_projects']);
   const { styles, isLoading: isLoadingStyles, fetchStyles } = useArtStyles();
+
+  const platformOptions = React.useMemo<PlatformOption[]>(() => [
+    { value: TARGET_PLATFORM.TIKTOK, labelKey: 'video_projects:wizard.settings.platforms.tiktok', icon: '📱' },
+    { value: TARGET_PLATFORM.YOUTUBE_SHORTS, labelKey: 'video_projects:wizard.settings.platforms.youtube_shorts', icon: '▶️' },
+    { value: TARGET_PLATFORM.INSTAGRAM_REELS, labelKey: 'video_projects:wizard.settings.platforms.instagram_reels', icon: '📸' },
+    { value: TARGET_PLATFORM.GENERIC, labelKey: 'video_projects:wizard.settings.platforms.generic', icon: '🎬' },
+  ], []);
+
+  const aspectOptions = React.useMemo<AspectOption[]>(() => [
+    { value: ASPECT_RATIO.PORTRAIT_9_16, labelKey: 'video_projects:wizard.settings.aspects.portrait', icon: Smartphone },
+    { value: ASPECT_RATIO.LANDSCAPE_16_9, labelKey: 'video_projects:wizard.settings.aspects.landscape', icon: Monitor },
+    { value: ASPECT_RATIO.SQUARE_1_1, labelKey: 'video_projects:wizard.settings.aspects.square', icon: Square },
+  ], []);
   
   // Fetch styles on mount
   React.useEffect(() => {
@@ -83,11 +96,11 @@ export const SettingsStep = ({ data, onUpdate, getPlatformDefaults }: SettingsSt
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            {PLATFORM_OPTIONS.map((opt) => (
+            {platformOptions.map((opt) => (
               <SelectItem key={opt.value} value={opt.value}>
                 <span className="flex items-center gap-2">
                   <span>{opt.icon}</span>
-                  <span>{opt.label}</span>
+                  <span>{t(opt.labelKey)}</span>
                 </span>
               </SelectItem>
             ))}
@@ -104,14 +117,14 @@ export const SettingsStep = ({ data, onUpdate, getPlatformDefaults }: SettingsSt
           {t('video_projects:wizard.settings.aspect_label')}
         </label>
         <div className="grid grid-cols-3 gap-3">
-          {ASPECT_OPTIONS.map((opt) => {
+          {aspectOptions.map((opt) => {
             const Icon = opt.icon;
             const isSelected = data.aspectRatio === opt.value;
             return (
               <button
                 key={opt.value}
                 type="button"
-                onClick={() => { onUpdate({ aspectRatio: opt.value as AspectRatio }); }}
+                onClick={() => { onUpdate({ aspectRatio: opt.value }); }}
                 className={`
                   p-4 rounded-lg border-2 transition-all text-center
                   ${isSelected 
@@ -120,7 +133,7 @@ export const SettingsStep = ({ data, onUpdate, getPlatformDefaults }: SettingsSt
                 `}
               >
                 <Icon className="w-6 h-6 mx-auto mb-2" />
-                <span className="text-sm font-medium">{opt.label}</span>
+                <span className="text-sm font-medium">{t(opt.labelKey)}</span>
               </button>
             );
           })}

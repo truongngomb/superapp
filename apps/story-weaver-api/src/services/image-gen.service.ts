@@ -22,6 +22,7 @@ class ImageGenService {
    */
   async generateCharacterPortraits(characterId: string): Promise<PortraitOption[]> {
     const character = await characterService.getById(characterId);
+    const project = await videoProjectService.getById(character.projectId);
     
     // Construct prompt for portrait
     const prompt = `Professional character portrait of ${character.name}. ${character.visualTraits}. 
@@ -33,6 +34,7 @@ Focus on facial features and clear character appearance.`;
         count: 4,
         width: 1024,
         height: 1024,
+        styleId: project.artStyleId,
       });
 
       const options: PortraitOption[] = result.images.map(img => ({
@@ -93,12 +95,14 @@ Focus on facial features and clear character appearance.`;
         // Use reference image if available
         result = await aiImageService.generateWithReference(enrichedPrompt, masterReference, {
           count: 4,
+          styleId: project.artStyleId,
           // Use project's aspect ratio
           ...this.getDimensionsFromAspectRatio(project.aspectRatio || '9:16')
         });
       } else {
         result = await aiImageService.generate(enrichedPrompt, {
           count: 4,
+          styleId: project.artStyleId,
           ...this.getDimensionsFromAspectRatio(project.aspectRatio || '9:16')
         });
       }

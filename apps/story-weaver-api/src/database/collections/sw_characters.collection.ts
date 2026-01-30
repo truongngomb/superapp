@@ -10,7 +10,7 @@ import {
   selectField,
   jsonField,
   relationField,
-  urlField,
+  fileField,
   numberField,
   boolField,
   autodateField,
@@ -48,7 +48,7 @@ export const swCharactersCollection: BaseCollectionSchema = {
     textField('visualTraits', { max: 2000 }), // Physical appearance description for AI
 
     // Portraits
-    urlField('masterPortraitUrl'), // Selected master portrait
+    fileField('masterPortrait', { maxSelect: 1, mimeTypes: ['image/*'] }), // Selected master portrait file
     jsonField('portraitOptions'), // Array of 4 AI-generated options: { url: string, prompt: string }[]
 
     // Metadata

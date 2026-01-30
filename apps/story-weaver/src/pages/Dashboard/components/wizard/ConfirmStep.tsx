@@ -84,24 +84,26 @@ export const ConfirmStep = ({ data }: ConfirmStepProps) => {
           <div className="flex justify-between items-center">
             <span className="text-muted-foreground">{t('video_projects:wizard.settings.platform_label')}:</span>
             <Badge variant="secondary">
-              {data.targetPlatform === 'tiktok' && '📱 TikTok'}
-              {data.targetPlatform === 'youtube_shorts' && '▶️ YouTube Shorts'}
-              {data.targetPlatform === 'instagram_reels' && '📸 Instagram Reels'}
-              {data.targetPlatform === 'generic' && '🎬 Generic'}
+              {data.targetPlatform === 'tiktok' && `📱 ${t('video_projects:wizard.settings.platforms.tiktok')}`}
+              {data.targetPlatform === 'youtube_shorts' && `▶️ ${t('video_projects:wizard.settings.platforms.youtube_shorts')}`}
+              {data.targetPlatform === 'instagram_reels' && `📸 ${t('video_projects:wizard.settings.platforms.instagram_reels')}`}
+              {data.targetPlatform === 'generic' && `🎬 ${t('video_projects:wizard.settings.platforms.generic')}`}
             </Badge>
           </div>
           <div className="flex justify-between items-center">
             <span className="text-muted-foreground">{t('video_projects:wizard.settings.aspect_label')}:</span>
             <span className="flex items-center gap-1 font-medium">
               <AspectIcon ratio={data.aspectRatio} />
-              {data.aspectRatio}
+              {data.aspectRatio === '9:16' && t('video_projects:wizard.settings.aspects.portrait')}
+              {data.aspectRatio === '16:9' && t('video_projects:wizard.settings.aspects.landscape')}
+              {data.aspectRatio === '1:1' && t('video_projects:wizard.settings.aspects.square')}
             </span>
           </div>
           <div className="flex justify-between items-center">
             <span className="text-muted-foreground">{t('video_projects:wizard.settings.duration_label')}:</span>
             <span className="flex items-center gap-1 font-medium">
               <Clock className="w-4 h-4" />
-              {data.targetDuration}s
+              {data.targetDuration}{t('video_projects:script.seconds_short')}
             </span>
           </div>
           

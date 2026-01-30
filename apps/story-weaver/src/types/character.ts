@@ -29,6 +29,7 @@ export const portraitOptionSchema = z.object({
   prompt: z.string().optional(),
   seed: z.number().optional(),
   generatedAt: z.iso.datetime(),
+  isSelected: z.boolean().optional(),
 });
 
 export type PortraitOption = z.infer<typeof portraitOptionSchema>;
@@ -42,6 +43,8 @@ export const characterSchema = z.object({
   projectId: z.string(),
   name: z.string().min(1),
   description: z.string().optional(),
+  /** Detailed visual description for AI generation */
+  visualTraits: z.string().optional(),
   /** Selected master portrait URL for consistency */
   masterPortraitUrl: z.url().optional(),
   /** All generated portrait options (typically 4) */
@@ -67,6 +70,7 @@ export const createCharacterSchema = z.object({
   projectId: z.string(),
   name: z.string().min(1, 'Character name is required'),
   description: z.string().optional(),
+  visualTraits: z.string().optional(),
 });
 
 export type CreateCharacterInput = z.infer<typeof createCharacterSchema>;
@@ -74,7 +78,9 @@ export type CreateCharacterInput = z.infer<typeof createCharacterSchema>;
 export const updateCharacterSchema = z.object({
   name: z.string().min(1).optional(),
   description: z.string().optional(),
-  masterPortraitUrl: z.url().optional(),
+  visualTraits: z.string().optional(),
+  masterPortraitUrl: z.string().optional(), // Relaxed from z.url() to allow relative paths if needed
+  portraitOptions: z.array(portraitOptionSchema).optional(),
   status: characterStatusSchema.optional(),
 });
 
@@ -90,6 +96,7 @@ export type UpdateCharacterInput = z.infer<typeof updateCharacterSchema>;
 export interface CharacterSuggestion {
   name: string;
   description: string;
+  visualTraits: string;
   /** Confidence score from AI (0-1) */
   confidence?: number;
 }

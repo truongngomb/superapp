@@ -17,10 +17,11 @@ import {
   AlertTriangle
 } from 'lucide-react';
 import { 
-  Card, 
+  Card,
   EmptyState,
   Badge,
-  LoadingSpinner 
+  LoadingSpinner,
+  Avatar
 } from '@superapp/ui-kit';
 import { useVideoScenes } from '@/hooks/useScenes';
 import { useCharacters } from '@/hooks/useCharacters';
@@ -28,7 +29,7 @@ import { useScriptValidation } from '@/hooks/useScriptValidation';
 import { videoSceneService } from '@/services/scene.service';
 import { queryKeys } from '@/config/queryClient';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
-import type { VideoScene } from '@/types';
+import type { VideoScene, Character } from '@/types';
 import type { VideoProject } from '@/types/video-project';
 import { CAMERA_MOVEMENT, type ExtendedScene } from '@/types/scene-script';
 import { VALIDATION_SEVERITY } from '@/types/scene-script';
@@ -50,6 +51,7 @@ interface SceneScriptCardProps {
   hasError: boolean;
   hasWarning: boolean;
   onSelect: () => void;
+  allCharacters: Character[];
 }
 
 const SceneScriptCard = ({ 
@@ -58,7 +60,8 @@ const SceneScriptCard = ({
   isSelected,
   hasError,
   hasWarning,
-  onSelect 
+  onSelect,
+  allCharacters
 }: SceneScriptCardProps) => {
   const { t } = useTranslation(['video_projects']);
   const extendedScene = scene as unknown as ExtendedScene;
@@ -124,11 +127,34 @@ const SceneScriptCard = ({
               )}
             </p>
 
+            {/* Characters */}
+            {extendedScene.characterIds && extendedScene.characterIds.length > 0 && (
+              <div className="flex flex-wrap gap-1 mt-1">
+                {extendedScene.characterIds.map((charId) => {
+                  const char = allCharacters.find((c) => c.id === charId);
+                  if (!char) return null;
+                  return (
+                    <div 
+                      key={char.id} 
+                      className="inline-flex items-center gap-1.5 px-1.5 py-0.5 rounded-md bg-primary/5 border border-primary/10 text-[10px] font-medium text-primary/80"
+                    >
+                      <Avatar
+                        src={char.masterPortraitUrl}
+                        name={char.name}
+                        className="w-3.5 h-3.5 border-0 ring-0"
+                      />
+                      <span>{char.name}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
             {/* Meta info */}
-            <div className="flex items-center gap-4 text-xs text-muted-foreground">
+            <div className="flex items-center gap-4 text-xs text-muted-foreground pt-1">
               <span className="flex items-center gap-1">
                 <Clock size={12} />
-                {String(duration)}s
+                {String(duration)}{t('video_projects:script.seconds_short')}
               </span>
               <span className="flex items-center gap-1">
                 <Camera size={12} />
@@ -279,6 +305,7 @@ export const ScriptEditorPanel = ({ project }: ScriptEditorPanelProps) => {
                   hasError={hasSceneError(scene.id)}
                   hasWarning={hasSceneWarning(scene.id)}
                   onSelect={() => { setSelectedSceneId(scene.id); }}
+                  allCharacters={characters || []}
                 />
               ))}
             </AnimatePresence>
@@ -301,6 +328,7 @@ export const ScriptEditorPanel = ({ project }: ScriptEditorPanelProps) => {
               key={selectedScene.id}
               scene={selectedScene}
               index={scenes.findIndex(s => s.id === selectedScene.id)}
+              availableCharacters={characters}
               onSave={handleUpdateScene}
               onClose={() => { setSelectedSceneId(null); }}
               isSubmitting={updateMutation.isPending}

@@ -80,9 +80,12 @@
     "text_overlay_hint": "Giữ ngắn gọn - tối đa 5-7 từ",
     "duration": "Thời Lượng",
     "seconds": "giây",
+    "seconds_short": "s",
     "camera_movement": "Chuyển Động Camera",
     "characters_in_scene": "Nhân Vật Trong Cảnh",
-    "characters_count": "nhân vật"
+    "characters_count": "nhân vật",
+    "auto_match": "Magic Match",
+    "no_characters_available": "Chưa có nhân vật nào được định nghĩa cho dự án này. Hãy vào Xưởng Nhân Vật để thêm."
   },
   "wizard": {
     "title_story": "Kể Câu Chuyện",
@@ -121,7 +124,18 @@
       "loading_styles": "Đang tải phong cách...",
       "no_style": "Không phong cách",
       "no_style_desc": "Tự động / Không có",
-      "platform_tip": "Mẹo chuyên nghiệp"
+      "platform_tip": "Mẹo chuyên nghiệp",
+      "platforms": {
+        "tiktok": "TikTok",
+        "youtube_shorts": "YouTube Shorts",
+        "instagram_reels": "Instagram Reels",
+        "generic": "Video thông thường"
+      },
+      "aspects": {
+        "portrait": "9:16 (Dọc)",
+        "landscape": "16:9 (Ngang)",
+        "square": "1:1 (Vuông)"
+      }
     },
     "confirm": {
       "review_message": "Vui lòng xem lại chi tiết dự án trước khi tạo.",
@@ -217,5 +231,11 @@
   },
   "errors": {
     "failed_load_styles": "Không thể tải danh sách phong cách nghệ thuật"
+  },
+  "uikit": {
+    "approved": "Sẵn sàng",
+    "next": "Tiếp theo",
+    "back": "Quay lại",
+    "save_changes": "Lưu thay đổi"
   }
 }

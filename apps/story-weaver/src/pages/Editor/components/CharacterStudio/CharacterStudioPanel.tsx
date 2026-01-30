@@ -12,7 +12,7 @@ import {
   ConfirmModal,
   useToast
 } from '@superapp/ui-kit';
-import { Plus, Sparkles, ChevronLeft } from 'lucide-react';
+import { Plus, Sparkles, ChevronLeft, Wand2 } from 'lucide-react';
 import { 
   useCharacters, 
   useCreateCharacter, 
@@ -20,7 +20,8 @@ import {
   useDeleteCharacter,
   useExtractCharacters,
   useCreateFromSuggestions,
-  useApproveCharacter
+  useVideoScenes,
+  useUpdateVideoScene
 } from '@/hooks';
 import { useGeneratePortraits, useSetMasterPortrait } from '@/hooks';
 import { CharacterList } from './CharacterList';
@@ -31,8 +32,9 @@ import type {
   Character, 
   CreateCharacterInput, 
   UpdateCharacterInput,
-  CharacterSuggestion 
+  CharacterSuggestion
 } from '@/types';
+import { type ExtendedScene } from '@/types/scene-script';
 
 interface CharacterStudioPanelProps {
   projectId: string;
@@ -59,9 +61,13 @@ export const CharacterStudioPanel = ({ projectId }: CharacterStudioPanelProps) =
   const deleteCharacter = useDeleteCharacter();
   const extractCharacters = useExtractCharacters();
   const createFromSuggestions = useCreateFromSuggestions();
-  const approveCharacter = useApproveCharacter();
   const generatePortraits = useGeneratePortraits();
   const setMasterPortrait = useSetMasterPortrait();
+  
+  // Scenes for auto-matching
+  const { scenes } = useVideoScenes(projectId);
+  const updateScene = useUpdateVideoScene(projectId);
+  const [isAutoMatching, setIsAutoMatching] = useState(false);
 
   // Handlers
   const handleAddNew = () => {
@@ -105,6 +111,69 @@ export const CharacterStudioPanel = ({ projectId }: CharacterStudioPanelProps) =
       });
     }
   }, [editingCharacter, updateCharacter, createCharacter, toast, t]);
+
+  const handleAutoMatchAll = useCallback(async () => {
+    if (scenes.length === 0 || characters.length === 0) return;
+    
+    setIsAutoMatching(true);
+    let matchedCount = 0;
+
+    try {
+      const titlesToIgnore = [
+        'vua', 'chúa', 'công', 'chúa', 'hoàng', 'tử', 'thần', 
+        'chàng', 'nàng', 'mỵ', 'nương', 'ông', 'bà', 'anh', 'chị', 'em'
+      ];
+
+      for (const scene of (scenes as ExtendedScene[])) {
+        const visualDescription = scene.visualDescription ?? scene.visualPrompt ?? '';
+        const voiceover = scene.voiceover ?? scene.scriptText ?? '';
+        const fullText = `${visualDescription} ${voiceover}`.toLowerCase();
+        
+        const matchedIds = characters
+          .filter(char => {
+            const name = char.name.toLowerCase();
+            
+            // 1. Exact full name match
+            const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const fullRegex = new RegExp(`\\b${escapedName}\\b`, 'i');
+            if (fullRegex.test(fullText)) return true;
+
+            // 2. Significant parts match
+            const nameParts = name.split(/\s+/).filter(part => 
+              part.length > 2 && !titlesToIgnore.includes(part)
+            );
+
+            return nameParts.some(part => {
+              const partRegex = new RegExp(`\\b${part}\\b`, 'i');
+              return partRegex.test(fullText);
+            });
+          })
+          .map(char => char.id);
+
+        const currentIds = scene.characterIds || [];
+        // Use a Set to merge and avoid duplicates
+        const finalIds = Array.from(new Set([...currentIds, ...matchedIds]));
+
+        // Only update if characterIds actually changed (checking content regardless of order)
+        const isChanged = JSON.stringify([...finalIds].sort()) !== JSON.stringify([...currentIds].sort());
+
+        if (isChanged) {
+          await updateScene.mutateAsync({
+            sceneId: scene.id,
+            data: { characterIds: finalIds }
+          });
+          matchedCount++;
+        }
+      }
+
+      toast.success(t('characters:messages.auto_match_success', { count: matchedCount }));
+    } catch (error) {
+      console.error('Auto-match failed:', error);
+      toast.error(t('characters:messages.auto_match_error'));
+    } finally {
+      setIsAutoMatching(false);
+    }
+  }, [scenes, characters, updateScene, toast, t]);
 
   const handleDelete = (character: Character) => {
     setDeleteTarget(character);
@@ -154,33 +223,76 @@ export const CharacterStudioPanel = ({ projectId }: CharacterStudioPanelProps) =
   const handleGeneratePortrait = (character: Character) => {
     setSelectedCharacter(character);
     setViewMode('detail');
-    generatePortraits.mutate(character.id);
-  };
-
-  const handleSelectMaster = (portraitUrl: string) => {
-    if (selectedCharacter) {
-      setMasterPortrait.mutate(
-        { characterId: selectedCharacter.id, portraitUrl },
-        {
-          onSuccess: (updated) => {
-            setSelectedCharacter(updated);
-            toast.success(t('characters:messages.portrait_set'));
-          },
-        }
-      );
-    }
-  };
-
-  const handleApprove = (character: Character) => {
-    approveCharacter.mutate(character.id, {
-      onSuccess: () => {
-        toast.success(t('characters:messages.approved'));
-      },
+    generatePortraits.mutate(character.id, {
+      onSuccess: (newOptions) => {
+        setSelectedCharacter((prev) => 
+          prev && prev.id === character.id 
+            ? { ...prev, portraitOptions: newOptions } 
+            : prev
+        );
+      }
     });
   };
 
+  const [tempMasterPortraitUrl, setTempMasterPortraitUrl] = useState<string | null>(null);
+
+  const handleSelectMaster = (portraitUrl: string) => {
+    setTempMasterPortraitUrl(portraitUrl);
+  };
+
+  const [isApproving, setIsApproving] = useState(false);
+
+  const handleApprove = async (character: Character) => {
+    setIsApproving(true);
+    try {
+      let currentMasterUrl = character.masterPortraitUrl;
+
+      // 1. Upload Master Portrait (if changed)
+      if (tempMasterPortraitUrl) {
+        const updated = await setMasterPortrait.mutateAsync({
+          characterId: character.id,
+          portraitUrl: tempMasterPortraitUrl
+        });
+        // We use the temp url for matching options, but keep in mind the real master url changed
+        currentMasterUrl = updated.masterPortraitUrl;
+      }
+
+      // 2. Update Options Selection State
+      const targetUrl = tempMasterPortraitUrl || currentMasterUrl;
+      const updatedOptions = character.portraitOptions?.map(opt => ({
+        ...opt,
+        isSelected: opt.url === targetUrl
+      }));
+
+      // 3. Approve & Save Options
+      updateCharacter.mutate({
+        id: character.id,
+        data: {
+          status: 'approved',
+          portraitOptions: updatedOptions
+        }
+      }, {
+        onSuccess: (updated) => {
+          setSelectedCharacter(updated);
+          setTempMasterPortraitUrl(null);
+          toast.success(t('characters:messages.approved'));
+          setIsApproving(false);
+        },
+        onError: (error) => {
+          console.error('Approve failed:', error);
+          toast.error(t('characters:messages.approve_error', { message: error.message }));
+          setIsApproving(false);
+        }
+      });
+    } catch (error) {
+      console.error('Failed to approve character:', error);
+      toast.error(t('characters:messages.approve_error', { message: 'Failed to process request' }));
+      setIsApproving(false);
+    }
+  };
+
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col p-4">
       {/* Header */}
       <div className={`flex mb-4 ${viewMode === 'list' ? 'flex-col gap-4 items-start' : 'items-center justify-between'}`}>
         {viewMode === 'list' ? (
@@ -189,10 +301,21 @@ export const CharacterStudioPanel = ({ projectId }: CharacterStudioPanelProps) =
               <h3 className="font-semibold text-lg">{t('characters:panel.title')}</h3>
               <p className="text-sm text-muted-foreground">{t('characters:panel.subtitle')}</p>
             </div>
-            <div className="flex gap-2 w-full">
+            <div className="flex flex-wrap gap-2 w-full">
               <Button variant="outline" size="sm" onClick={handleExtract} className="flex-1">
                 <Sparkles size={16} className="mr-1" />
                 {t('characters:actions.extract')}
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => { void handleAutoMatchAll(); }} 
+                className="flex-1"
+                loading={isAutoMatching}
+                disabled={isAutoMatching || scenes.length === 0 || characters.length === 0}
+              >
+                <Wand2 size={16} className="mr-1" />
+                {t('characters:actions.auto_match_all')}
               </Button>
               <Button size="sm" onClick={handleAddNew} className="flex-1">
                 <Plus size={16} className="mr-1" />
@@ -226,7 +349,7 @@ export const CharacterStudioPanel = ({ projectId }: CharacterStudioPanelProps) =
                 onEdit={handleEdit}
                 onDelete={handleDelete}
                 onGeneratePortrait={handleGeneratePortrait}
-                onApprove={handleApprove}
+                onApprove={void handleApprove}
                 onExtract={handleExtract}
               />
             </motion.div>
@@ -269,11 +392,19 @@ export const CharacterStudioPanel = ({ projectId }: CharacterStudioPanelProps) =
               {/* Portrait Gallery */}
               <PortraitGallery
                 portraits={selectedCharacter.portraitOptions ?? []}
-                masterPortraitUrl={selectedCharacter.masterPortraitUrl}
+                masterPortraitUrl={tempMasterPortraitUrl || selectedCharacter.masterPortraitUrl}
                 onSelectMaster={handleSelectMaster}
-                onRegenerate={() => { generatePortraits.mutate(selectedCharacter.id); }}
+                onRegenerate={() => { 
+                  generatePortraits.mutate(selectedCharacter.id, {
+                    onSuccess: (newOptions) => {
+                      setSelectedCharacter((prev) => 
+                        prev ? { ...prev, portraitOptions: newOptions } : null
+                      );
+                    }
+                  }); 
+                }}
                 isGenerating={generatePortraits.isPending}
-                isSelectingMaster={setMasterPortrait.isPending}
+                isSelectingMaster={false} 
               />
 
               {/* Actions */}
@@ -281,12 +412,18 @@ export const CharacterStudioPanel = ({ projectId }: CharacterStudioPanelProps) =
                 <Button 
                   variant="outline" 
                   onClick={() => { handleEdit(selectedCharacter); }}
+                  disabled={isApproving}
                 >
                   {t('characters:actions.edit')}
                 </Button>
-                {selectedCharacter.status === 'draft' && selectedCharacter.masterPortraitUrl && (
-                  <Button onClick={() => { handleApprove(selectedCharacter); }}>
-                    {t('characters:actions.approve')}
+                {(selectedCharacter.status === 'draft' || tempMasterPortraitUrl) && (
+                  <Button 
+                    onClick={() => { void handleApprove(selectedCharacter); }}
+                    loading={isApproving}
+                  >
+                    {selectedCharacter.status === 'approved' 
+                      ? t('characters:actions.save_portrait') 
+                      : t('characters:actions.approve')}
                   </Button>
                 )}
               </div>
