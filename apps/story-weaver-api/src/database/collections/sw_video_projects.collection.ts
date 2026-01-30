@@ -50,18 +50,18 @@ export const swVideoProjectsCollection: BaseCollectionSchema = {
     jsonField('settings'),
 
     // Story Content (NEW - Phase 1)
-    editorField('story_content', { maxSize: 50000 }), // Rich text story input
+    editorField('storyContent', { maxSize: 50000 }), // Rich text story input
 
     // Video Settings (NEW - Phase 1)
-    selectField('aspect_ratio', [...ASPECT_RATIOS], { maxSelect: 1 }),
-    selectField('target_platform', [...TARGET_PLATFORMS], { maxSelect: 1 }),
-    numberField('target_duration', { min: 5, max: 600 }), // Target video duration in seconds
+    selectField('aspectRatio', [...ASPECT_RATIOS], { maxSelect: 1 }),
+    selectField('targetPlatform', [...TARGET_PLATFORMS], { maxSelect: 1 }),
+    numberField('targetDuration', { min: 5, max: 600 }), // Target video duration in seconds
 
     // Workflow Phase (NEW - Phase 1)
-    selectField('current_phase', [...WORKFLOW_PHASES], { maxSelect: 1 }),
+    selectField('currentPhase', [...WORKFLOW_PHASES], { maxSelect: 1 }),
 
     // Relations
-    relationField('user_id', 'users', { required: true, cascadeDelete: false, maxSelect: 1, displayFields: ['id', 'email'] }),
+    relationField('userId', 'users', { required: true, cascadeDelete: false, maxSelect: 1, displayFields: ['id', 'email'] }),
 
     // Flags
     boolField('isActive'), 
@@ -72,13 +72,13 @@ export const swVideoProjectsCollection: BaseCollectionSchema = {
     autodateField('updated', { onCreate: true, onUpdate: true }),
   ],
   indexes: [
-    index('sw_video_projects', 'user_id'),
+    index('sw_video_projects', 'userId'),
     index('sw_video_projects', 'status'),
-    index('sw_video_projects', 'current_phase'),
+    index('sw_video_projects', 'currentPhase'),
   ],
-  listRule: '@request.auth.id != "" && (isDeleted = false || user_id = @request.auth.id)',
-  viewRule: '@request.auth.id != "" && (isDeleted = false || user_id = @request.auth.id)',
+  listRule: '@request.auth.id != "" && (isDeleted = false || userId = @request.auth.id)',
+  viewRule: '@request.auth.id != "" && (isDeleted = false || userId = @request.auth.id)',
   createRule: '@request.auth.id != ""',
-  updateRule: 'user_id = @request.auth.id',
-  deleteRule: 'user_id = @request.auth.id',
+  updateRule: 'userId = @request.auth.id',
+  deleteRule: 'userId = @request.auth.id',
 };

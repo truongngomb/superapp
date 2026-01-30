@@ -196,7 +196,12 @@ export function errorHandler(
     message,
   };
 
-  // Include validation errors if present
+  // Include validation errors if present (PocketBase format: err.data)
+  if ('data' in err && err.data) {
+    response['details'] = err.data;
+  }
+
+  // Include legacy validation errors if present
   if ('errors' in err && err.errors) {
     response['errors'] = err.errors;
   }

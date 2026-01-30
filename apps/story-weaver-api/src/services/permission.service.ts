@@ -37,13 +37,13 @@ export async function getUserPermissions(token: string): Promise<UserWithPermiss
         throw new Error(`API Server responded with ${response.status} ${response.statusText}: ${text}`);
     }
 
-    const json = await response.json() as ApiResponse<UserWithPermissions>;
+    const json = await response.json() as ApiResponse<{ user: UserWithPermissions; isAuthenticated: boolean }>;
     
-    if (!json.success || !json.data) {
+    if (!json.success || !json.data || !json.data.user) {
         throw new Error(`Invalid response format from API Server: ${JSON.stringify(json)}`);
     }
 
-    return json.data;
+    return json.data.user;
   } catch (error) {
     logger.error('PermissionService', `Error fetching user from API Server (${url}):`, error);
     throw error;

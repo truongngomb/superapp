@@ -86,6 +86,14 @@ export abstract class BaseService<T extends MinimalEntity> {
    */
   protected abstract mapRecord(record: Record<string, unknown>): T;
 
+  /**
+   * Map domain entity (or partial) to PocketBase record
+   * Can be overridden by subclasses to handle field mapping (e.g. camelCase to snake_case)
+   */
+  protected mapToRecord(input: Partial<Omit<T, keyof MinimalEntity>>): Record<string, unknown> {
+    return input as Record<string, unknown>;
+  }
+
   // ===========================================================================
   // Read Operations
   // ===========================================================================
@@ -225,7 +233,8 @@ export abstract class BaseService<T extends MinimalEntity> {
    */
   async create(input: Partial<Omit<T, keyof MinimalEntity>>, _actorId?: string, _skipLog = false): Promise<T> {
     await this.ensureDbAvailable();
-    const record = await this.collection.create(input);
+    const data = this.mapToRecord(input);
+    const record = await this.collection.create(data);
     this.invalidateCache();
     this.log.info('Created record', { id: record.id });
     // TODO: Connect ActivityLog service
@@ -239,7 +248,8 @@ export abstract class BaseService<T extends MinimalEntity> {
     await this.ensureDbAvailable();
     
     try {
-      const record = await this.collection.update(id, input);
+      const data = this.mapToRecord(input);
+      const record = await this.collection.update(id, data);
       this.invalidateCache();
       this.log.info('Updated record', { id });
       return this.mapRecord(record);
@@ -257,8 +267,9 @@ export abstract class BaseService<T extends MinimalEntity> {
    */
   async updateMany(ids: string[], input: Partial<Omit<T, keyof MinimalEntity>>, _actorId?: string): Promise<void> {
     await this.ensureDbAvailable();
+    const data = this.mapToRecord(input);
     await Promise.all(ids.map(async (id) => {
-      await this.collection.update(id, input);
+      await this.collection.update(id, data);
     }));
     this.invalidateCache();
     this.log.info('Batch updated records', { count: ids.length, ids });

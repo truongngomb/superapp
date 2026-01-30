@@ -17,20 +17,38 @@ class CharacterService extends BaseService<Character> {
   protected mapRecord(record: Record<string, unknown>): Character {
     return {
       id: record['id'] as string,
-      projectId: record['project_id'] as string,
-      userId: record['user_id'] as string,
-      name: record['name'] as string,
+      projectId: record['projectId'] as string,
+      userId: record['userId'] as string,
+      name: (record['name'] as string) || '',
       description: (record['description'] as string) || '',
-      visualTraits: (record['visual_traits'] as string) || '',
-      masterPortraitUrl: (record['master_portrait_url'] as string) || undefined,
-      portraitOptions: (record['portrait_options'] as Character['portraitOptions']) || [],
-      status: record['status'] as Character['status'],
+      visualTraits: (record['visualTraits'] as string) || '',
+      masterPortraitUrl: (record['masterPortraitUrl'] as string) || '',
+      portraitOptions: (record['portraitOptions'] as Character['portraitOptions']) || [],
+      status: (record['status'] as Character['status']) || 'draft',
       version: (record['version'] as number) || 1,
       isActive: (record['isActive'] as boolean) ?? true,
       isDeleted: (record['isDeleted'] as boolean) || false,
       created: record['created'] as string,
       updated: record['updated'] as string,
     };
+  }
+
+  protected override mapToRecord(input: Partial<Character>): Record<string, unknown> {
+    const record: Record<string, unknown> = {};
+
+    if (input.projectId !== undefined) record['projectId'] = input.projectId;
+    if (input.userId !== undefined) record['userId'] = input.userId;
+    if (input.name !== undefined) record['name'] = input.name;
+    if (input.description !== undefined) record['description'] = input.description;
+    if (input.visualTraits !== undefined) record['visualTraits'] = input.visualTraits;
+    if (input.masterPortraitUrl !== undefined) record['masterPortraitUrl'] = input.masterPortraitUrl;
+    if (input.portraitOptions !== undefined) record['portraitOptions'] = input.portraitOptions;
+    if (input.status !== undefined) record['status'] = input.status;
+    if (input.version !== undefined) record['version'] = input.version;
+    if (input.isActive !== undefined) record['isActive'] = input.isActive;
+    if (input.isDeleted !== undefined) record['isDeleted'] = input.isDeleted;
+
+    return record;
   }
   /**
    * Extract characters from story content using AI

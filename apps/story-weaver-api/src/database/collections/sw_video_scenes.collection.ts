@@ -40,32 +40,32 @@ export const swVideoScenesCollection: BaseCollectionSchema = {
   type: 'base',
   fields: [
     // Relations
-    relationField('project_id', 'sw_video_projects', { required: true, cascadeDelete: true, maxSelect: 1 }),
-    relationField('character_ids', 'sw_characters', { cascadeDelete: false, maxSelect: 10 }), // Characters in this scene
+    relationField('projectId', 'sw_video_projects', { required: true, cascadeDelete: true, maxSelect: 1 }),
+    relationField('characterIds', 'sw_characters', { cascadeDelete: false, maxSelect: 10 }), // Characters in this scene
 
     // Scene Order & Duration
     numberField('order', { required: true }),
-    numberField('estimated_duration', { min: 1, max: 60 }), // Duration in seconds
+    numberField('estimatedDuration', { min: 1, max: 60 }), // Duration in seconds
 
     // Script Content
-    textField('script_text', { max: 2000 }), // Scene narration/script
+    textField('scriptText', { max: 2000 }), // Scene narration/script
     textField('voiceover', { max: 2000 }), // Voiceover text (may differ from script)
-    textField('text_overlay', { max: 500 }), // On-screen text overlay
+    textField('textOverlay', { max: 500 }), // On-screen text overlay
 
     // Visual Generation
-    textField('visual_prompt', { max: 2000 }), // AI prompt for image generation
-    selectField('camera_movement', [...CAMERA_MOVEMENTS], { maxSelect: 1 }),
+    textField('visualPrompt', { max: 2000 }), // AI prompt for image generation
+    selectField('cameraMovement', [...CAMERA_MOVEMENTS], { maxSelect: 1 }),
 
     // Keyframe Options (NEW - Phase 1)
     // Array of 4 AI-generated image options: { url: string, prompt: string }[]
-    jsonField('keyframe_options'),
-    urlField('selected_keyframe'), // User-selected keyframe URL
+    jsonField('keyframeOptions'),
+    urlField('selectedKeyframe'), // User-selected keyframe URL
 
     // Media URLs
-    urlField('image_url'), // Legacy/fallback
-    urlField('audio_url'), // Voice audio
-    urlField('video_url'), // Final scene video
-    urlField('video_clip_url'), // Generated video clip (image-to-video)
+    urlField('imageUrl'), // Legacy/fallback
+    urlField('audioUrl'), // Voice audio
+    urlField('videoUrl'), // Final scene video
+    urlField('videoClipUrl'), // Generated video clip (image-to-video)
     numberField('duration'), // Actual duration after generation
 
     // Status & Metadata
@@ -78,9 +78,9 @@ export const swVideoScenesCollection: BaseCollectionSchema = {
     autodateField('updated', { onCreate: true, onUpdate: true }),
   ],
   indexes: [
-    index('sw_video_scenes', 'project_id'),
+    index('sw_video_scenes', 'projectId'),
     index('sw_video_scenes', 'status'),
-    compositeIndex('sw_video_scenes', ['project_id', 'order']),
+    compositeIndex('sw_video_scenes', ['projectId', 'order']),
   ],
   listRule: '@request.auth.id != ""',
   viewRule: '@request.auth.id != ""',

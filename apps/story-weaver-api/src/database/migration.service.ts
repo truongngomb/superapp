@@ -382,8 +382,11 @@ export class MigrationService {
         }
       } catch (error) {
         const errorMessage = (error as Error).message;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const errorData = (error as any).data;
         failed.push({ collection: collectionDiff.name, error: errorMessage });
-        log.error(`Failed to ${collectionDiff.action} collection ${collectionDiff.name}:`, error);
+        log.error(`Failed to ${collectionDiff.action} collection ${collectionDiff.name}: ${errorMessage}`, 
+          errorData ? JSON.stringify(errorData, null, 2) : {});
       }
     }
 
@@ -398,14 +401,13 @@ export class MigrationService {
   /**
    * Create a new collection in PocketBase
    */
-  private async createCollection(schema: CollectionSchema, verbose: boolean): Promise<void> {
-    const createData = this.schemaToCreateData(schema);
-    
+  private async createCollection(schema: CollectionSchema, verbose = false): Promise<Record<string, unknown>> {
+    const data = this.schemaToCreateData(schema);
     if (verbose) {
-      log.debug('Creating collection:', JSON.stringify(createData, null, 2));
+      log.info(`Creating collection ${schema.name} with data:`, JSON.stringify(data, null, 2));
     }
-
-    await this.pb.collections.create(createData);
+    const record = await this.pb.collections.create(data);
+    return record as unknown as Record<string, unknown>;
   }
 
   /**

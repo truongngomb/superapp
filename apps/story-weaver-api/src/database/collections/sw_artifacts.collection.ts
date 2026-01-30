@@ -51,12 +51,12 @@ export const swArtifactsCollection: BaseCollectionSchema = {
   type: 'base',
   fields: [
     // Relations
-    relationField('project_id', 'sw_video_projects', {
+    relationField('projectId', 'sw_video_projects', {
       required: true,
       cascadeDelete: true,
       maxSelect: 1,
     }),
-    relationField('user_id', 'users', {
+    relationField('userId', 'users', {
       required: true,
       cascadeDelete: false,
       maxSelect: 1,
@@ -67,13 +67,13 @@ export const swArtifactsCollection: BaseCollectionSchema = {
     selectField('type', [...ARTIFACT_TYPES], { required: true, maxSelect: 1 }),
 
     // Entity Reference (e.g., character_id, scene_id)
-    textField('entity_id'),
-    textField('entity_type'), // 'character' | 'scene' | 'project'
+    textField('entityId'),
+    textField('entityType'), // 'character' | 'scene' | 'project'
 
     // Versioning
     numberField('version', { required: true, min: 1, noDecimal: true }),
     selectField('status', [...ARTIFACT_STATUSES], { required: true, maxSelect: 1 }),
-    relationField('parent_artifact_id', 'sw_artifacts', {
+    relationField('parentArtifactId', 'sw_artifacts', {
       cascadeDelete: false,
       maxSelect: 1,
     }),
@@ -97,17 +97,17 @@ export const swArtifactsCollection: BaseCollectionSchema = {
     autodateField('updated', { onCreate: true, onUpdate: true }),
   ],
   indexes: [
-    index('sw_artifacts', 'project_id'),
-    index('sw_artifacts', 'user_id'),
+    index('sw_artifacts', 'projectId'),
+    index('sw_artifacts', 'userId'),
     index('sw_artifacts', 'type'),
-    index('sw_artifacts', 'entity_id'),
-    compositeIndex('sw_artifacts', ['project_id', 'type']),
-    compositeIndex('sw_artifacts', ['entity_id', 'entity_type', 'type']),
+    index('sw_artifacts', 'entityId'),
+    compositeIndex('sw_artifacts', ['projectId', 'type']),
+    compositeIndex('sw_artifacts', ['entityId', 'entityType', 'type']),
   ],
   // Rules: User can only access their own artifacts
-  listRule: '@request.auth.id != "" && user_id = @request.auth.id',
-  viewRule: '@request.auth.id != "" && user_id = @request.auth.id',
+  listRule: '@request.auth.id != "" && userId = @request.auth.id',
+  viewRule: '@request.auth.id != "" && userId = @request.auth.id',
   createRule: '@request.auth.id != ""',
-  updateRule: 'user_id = @request.auth.id && status != "locked"',
-  deleteRule: 'user_id = @request.auth.id && status != "locked"',
+  updateRule: 'userId = @request.auth.id && status != "locked"',
+  deleteRule: 'userId = @request.auth.id && status != "locked"',
 };

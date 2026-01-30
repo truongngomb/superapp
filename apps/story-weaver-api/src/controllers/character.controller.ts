@@ -27,7 +27,7 @@ export const getByProject = async (req: Request, res: Response) => {
 
   await verifyProjectOwnership(projectId, req.user?.id);
 
-  const filters: string[] = [`project_id = "${projectId}"`];
+  const filters: string[] = [`projectId = "${projectId}"`];
   if (typeof status === 'string' && status.trim()) {
     filters.push(`status = "${status}"`);
   }

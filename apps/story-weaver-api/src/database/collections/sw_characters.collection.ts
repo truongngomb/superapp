@@ -30,12 +30,12 @@ export const swCharactersCollection: BaseCollectionSchema = {
   type: 'base',
   fields: [
     // Relations
-    relationField('project_id', 'sw_video_projects', {
+    relationField('projectId', 'sw_video_projects', {
       required: true,
       cascadeDelete: true,
       maxSelect: 1,
     }),
-    relationField('user_id', 'users', {
+    relationField('userId', 'users', {
       required: true,
       cascadeDelete: false,
       maxSelect: 1,
@@ -45,15 +45,16 @@ export const swCharactersCollection: BaseCollectionSchema = {
     // Character Info
     textField('name', { required: true, max: 200 }),
     textField('description', { max: 2000 }),
-    textField('visual_traits', { max: 2000 }), // Physical appearance description for AI
+    textField('visualTraits', { max: 2000 }), // Physical appearance description for AI
 
     // Portraits
-    urlField('master_portrait_url'), // Selected master portrait
-    jsonField('portrait_options'), // Array of 4 AI-generated options: { url: string, prompt: string }[]
+    urlField('masterPortraitUrl'), // Selected master portrait
+    jsonField('portraitOptions'), // Array of 4 AI-generated options: { url: string, prompt: string }[]
 
     // Metadata
     selectField('status', [...CHARACTER_STATUSES], { required: true, maxSelect: 1 }),
     numberField('version', { min: 1, noDecimal: true }),
+    boolField('isActive'),
     boolField('isDeleted'),
 
     // Timestamps
@@ -61,14 +62,14 @@ export const swCharactersCollection: BaseCollectionSchema = {
     autodateField('updated', { onCreate: true, onUpdate: true }),
   ],
   indexes: [
-    index('sw_characters', 'project_id'),
-    index('sw_characters', 'user_id'),
-    compositeIndex('sw_characters', ['project_id', 'status']),
+    index('sw_characters', 'projectId'),
+    index('sw_characters', 'userId'),
+    compositeIndex('sw_characters', ['projectId', 'status']),
   ],
   // Rules: User can only access their own characters
-  listRule: '@request.auth.id != "" && user_id = @request.auth.id',
-  viewRule: '@request.auth.id != "" && user_id = @request.auth.id',
+  listRule: '@request.auth.id != "" && userId = @request.auth.id',
+  viewRule: '@request.auth.id != "" && userId = @request.auth.id',
   createRule: '@request.auth.id != ""',
-  updateRule: 'user_id = @request.auth.id',
-  deleteRule: 'user_id = @request.auth.id',
+  updateRule: 'userId = @request.auth.id',
+  deleteRule: 'userId = @request.auth.id',
 };
