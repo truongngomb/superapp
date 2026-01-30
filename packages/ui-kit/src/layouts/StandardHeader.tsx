@@ -1,7 +1,7 @@
 import { useCallback, useState, useLayoutEffect, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LogOut, Menu, Moon, Sun, X, ChevronDown, MoreVertical } from 'lucide-react';
+import { LogOut, Menu, Moon, Sun, X, ChevronDown, MoreVertical, Maximize, Minimize } from 'lucide-react';
 import { Avatar } from '../components/Avatar';
 import { cn } from '../utils';
 import { GradientText } from '../components/GradientText';
@@ -331,6 +331,17 @@ export function StandardHeader({
   
   // Use location for active state
   const location = useLocation();
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      void document.documentElement.requestFullscreen().catch(() => {});
+      setIsFullscreen(true);
+    } else {
+      void document.exitFullscreen();
+      setIsFullscreen(false);
+    }
+  };
 
   const isLinkActive = useCallback((link: IMenuItem): boolean => {
     const checkActive = (item: IMenuItem): boolean => {
@@ -397,6 +408,18 @@ export function StandardHeader({
               {isDark ? <Sun className={ICON_CLASS} /> : <Moon className={ICON_CLASS} />}
             </motion.button>
           )}
+          
+          {/* Fullscreen toggle */}
+          <motion.button
+              type="button"
+              whileTap={{ scale: 0.95 }}
+              onClick={toggleFullscreen}
+              className={`${ICON_BUTTON_CLASS} hidden sm:flex`}
+              aria-label={isFullscreen ? t('uikit:exit_fullscreen', { defaultValue: 'Exit Fullscreen' }) : t('uikit:fullscreen', { defaultValue: 'Fullscreen' })}
+              title={isFullscreen ? t('uikit:exit_fullscreen', { defaultValue: 'Exit Fullscreen' }) : t('uikit:fullscreen', { defaultValue: 'Fullscreen' })}
+            >
+              {isFullscreen ? <Minimize className={ICON_CLASS} /> : <Maximize className={ICON_CLASS} />}
+          </motion.button>
 
           {/* Slot: Notifications */}
           {isAuthenticated && renderNotifications && renderNotifications()}
