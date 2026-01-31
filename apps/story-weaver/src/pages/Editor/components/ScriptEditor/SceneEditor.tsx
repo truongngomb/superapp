@@ -165,7 +165,7 @@ export const SceneEditor = ({
       className="h-full flex flex-col"
     >
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-border">
+      <div className="flex items-center justify-between mb-4 border-b border-border">
         <h3 className="font-semibold text-lg">
           {t('video_projects:editor.scene_label', { index: index + 1 })}
         </h3>
@@ -415,7 +415,7 @@ export const SceneEditor = ({
       </div>
 
       {/* Footer */}
-      <div className="flex items-center justify-end gap-2 p-4 border-t border-border">
+      <div className="flex items-center justify-end gap-2 p-4 pb-0 border-t border-border">
         <Button variant="outline" onClick={onClose} disabled={isSubmitting}>
           {t('uikit:cancel')}
         </Button>

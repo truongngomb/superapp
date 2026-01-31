@@ -70,7 +70,9 @@
     "slideshow_off": "Tự động TẮT",
     "download": "Tải về",
     "download_clip": "Clip",
-    "download_image": "Ảnh"
+    "download_image": "Ảnh",
+    "scene_details": "Chi tiết cảnh",
+    "select_scene_for_details": "Chọn một cảnh để xem chi tiết"
   },
   "script": {
     "title": "Trình Soạn Kịch Bản",
@@ -109,7 +111,8 @@
     "characters_in_scene": "Nhân Vật Trong Cảnh",
     "characters_count": "nhân vật",
     "auto_match": "Magic Match",
-    "no_characters_available": "Chưa có nhân vật nào được định nghĩa cho dự án này. Hãy vào Xưởng Nhân Vật để thêm."
+    "no_characters_available": "Chưa có nhân vật nào được định nghĩa cho dự án này. Hãy vào Xưởng Nhân Vật để thêm.",
+    "text_label": "Nội dung Kịch bản"
   },
   "wizard": {
     "title_story": "Kể Câu Chuyện",
@@ -202,7 +205,10 @@
     "video_ready": "Clip sẵn sàng",
     "generating": "Đang tạo",
     "rendering": "Đang xuất video",
-    "completed": "Hoàn thành"
+    "completed": "Hoàn thành",
+    "todo": "Thiếu ảnh",
+    "has_image": "Có ảnh",
+    "has_video": "Có video"
   },
   "visuals": {
     "generated_keyframes": "Hình ảnh đã tạo",

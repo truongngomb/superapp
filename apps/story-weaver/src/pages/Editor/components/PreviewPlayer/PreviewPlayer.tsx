@@ -104,14 +104,11 @@ export const PreviewPlayer = ({ project }: PreviewPlayerProps) => {
     // 4. Scene with image
     if (hasSceneImage && sceneImageUrl) {
       return (
-        <motion.img
+        <img
           key={sceneImageUrl}
           src={sceneImageUrl}
-          alt={`Scene ${String(currentSceneIndex + 1)}`}
+          alt={t('video_projects:editor.scene_label', { index: currentSceneIndex + 1 })}
           className="w-full h-full object-contain"
-          initial={{ opacity: 0, scale: 1.02 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.3 }}
         />
       );
     }
@@ -143,76 +140,104 @@ export const PreviewPlayer = ({ project }: PreviewPlayerProps) => {
   };
 
   return (
-    <div className="h-full flex flex-col p-4 md:p-6">
-      {/* Top: Scene Info */}
-      <div className="shrink-0 mb-4">
-        {currentScene ? (
-          <SceneInfo
-            scene={currentScene}
-            sceneIndex={currentSceneIndex}
-            totalScenes={scenes.length}
-          />
-        ) : (
-          <div className="h-[72px]" /> // Placeholder để giữ layout
-        )}
-      </div>
+    <div className="flex h-full overflow-hidden">
+      {/* LEFT COLUMN: Preview Area & Controls */}
+      <div className="flex-1 flex flex-col relative bg-black/95">
+        {/* Main Preview */}
+        <div className="flex-1 flex items-center justify-center p-4 overflow-hidden min-h-0">
+            <div className="relative h-full max-h-full aspect-[9/16] bg-black rounded-xl shadow-2xl overflow-hidden border border-white/10">
+            {/* Media Area - fills entire container */}
+            <div className="absolute inset-0 flex items-center justify-center overflow-hidden bg-gradient-to-b from-neutral-900 to-black">
+                <AnimatePresence mode="wait">
+                <motion.div
+                    key={currentScene?.id || 'empty'}
+                    initial={{ opacity: 0, scale: 0.96, filter: 'blur(4px)' }}
+                    animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                    exit={{ opacity: 0, scale: 1.04, filter: 'blur(2px)' }}
+                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                    className="absolute inset-0 flex items-center justify-center bg-black"
+                >
+                    {renderContent()}
+                </motion.div>
+                </AnimatePresence>
 
-      {/* Center: Preview Container - 9:16 aspect ratio */}
-      <div className="flex-1 flex items-center justify-center min-h-0">
-        <div className="relative h-full max-h-full aspect-[9/16] bg-black rounded-xl shadow-2xl overflow-hidden border border-border/50">
-          {/* Media Area - fills entire container */}
-          <div className="absolute inset-0 flex items-center justify-center overflow-hidden bg-gradient-to-b from-neutral-900 to-black">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentScene?.id || 'empty'}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                className="absolute inset-0 flex items-center justify-center"
-              >
-                {renderContent()}
-              </motion.div>
-            </AnimatePresence>
-
-            {/* Media type indicator */}
-            {hasSceneMedia && !hasFinalVideo && (
-              <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2 py-1 bg-black/60 backdrop-blur-sm rounded-full text-xs text-white/80 z-10">
-                {hasSceneVideo ? (
-                  <>
-                    <span>{t('video_projects:preview.download_clip')}</span>
-                  </>
-                ) : (
-                  <>
-                    <span>{t('video_projects:preview.download_image')}</span>
-                  </>
+                {/* Media type indicator */}
+                {hasSceneMedia && !hasFinalVideo && (
+                <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2 py-1 bg-black/60 backdrop-blur-sm rounded-full text-xs text-white/80 z-10">
+                    {hasSceneVideo ? (
+                    <>
+                        <span>{t('video_projects:preview.download_clip')}</span>
+                    </>
+                    ) : (
+                    <>
+                        <span>{t('video_projects:preview.download_image')}</span>
+                    </>
+                    )}
+                </div>
                 )}
-              </div>
-            )}
 
-            {/* Slideshow indicator */}
-            {isSlideshowActive && (
-              <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2 py-1 bg-primary/80 backdrop-blur-sm rounded-full text-xs text-primary-foreground z-10">
-                <Play size={10} className="animate-pulse" />
-                <span>{t('video_projects:preview.auto')}</span>
-              </div>
-            )}
-          </div>
+                {/* Slideshow indicator */}
+                {isSlideshowActive && (
+                <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2 py-1 bg-primary/80 backdrop-blur-sm rounded-full text-xs text-primary-foreground z-10">
+                    <Play size={10} className="animate-pulse" />
+                    <span>{t('video_projects:preview.auto')}</span>
+                </div>
+                )}
+            </div>
+            </div>
+        </div>
+
+        {/* Bottom Controls */}
+        <div className="shrink-0 p-4 border-t border-white/10 bg-black/40 backdrop-blur-sm">
+             <div className="max-w-md mx-auto">
+                <PlaybackControls
+                onPrev={goToPrevScene}
+                onNext={goToNextScene}
+                hasPrev={hasPrev}
+                hasNext={hasNext}
+                currentIndex={currentSceneIndex}
+                total={scenes.length}
+                isSlideshowActive={isSlideshowActive}
+                onToggleSlideshow={toggleSlideshow}
+                />
+            </div>
         </div>
       </div>
 
-      {/* Bottom: Playback Controls */}
-      <div className="shrink-0 mt-4">
-        <PlaybackControls
-          onPrev={goToPrevScene}
-          onNext={goToNextScene}
-          hasPrev={hasPrev}
-          hasNext={hasNext}
-          currentIndex={currentSceneIndex}
-          total={scenes.length}
-          isSlideshowActive={isSlideshowActive}
-          onToggleSlideshow={toggleSlideshow}
-        />
+      {/* RIGHT COLUMN: Scene Info Sidebar */}
+      <div className="w-[350px] shrink-0 border-l border-border bg-background flex flex-col overflow-hidden">
+          {currentScene ? (
+            <div className="h-full overflow-y-auto p-5 space-y-4">
+               <div>
+                  <h3 className="font-semibold text-lg px-1 hidden">{t('video_projects:preview.scene_details')}</h3>
+                  
+                  {/* Scene Header Card */}
+                  <div className="bg-card/50 border border-border/50 rounded-xl p-4 shadow-sm">
+                      <SceneInfo
+                            scene={currentScene}
+                            sceneIndex={currentSceneIndex}
+                            totalScenes={scenes.length}
+                        />
+                  </div>
+                </div>
+                
+                {/* Script Content Card */}
+                {currentScene.scriptText && (
+                    <div className="bg-muted/30 border border-border/50 rounded-xl p-4">
+                        <h4 className="text-[10px] tracking-wider font-bold text-muted-foreground/70 uppercase mb-3">
+                            {t('video_projects:script.text_label')}
+                        </h4>
+                        <p className="text-base leading-relaxed text-foreground/90 font-medium">
+                            {currentScene.scriptText}
+                        </p>
+                    </div>
+                )}
+            </div>
+          ) : (
+             <div className="h-full flex items-center justify-center text-muted-foreground text-sm p-4 text-center">
+                 {t('video_projects:preview.select_scene_for_details')}
+             </div>
+          )}
       </div>
     </div>
   );

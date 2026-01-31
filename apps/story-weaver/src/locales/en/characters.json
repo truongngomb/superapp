@@ -25,6 +25,8 @@
   },
   
   "form": {
+    "title_create": "Create Character",
+    "title_edit": "Edit Character",
     "name_label": "Character Name",
     "name_placeholder": "e.g. Luna, a brave astronaut",
     "name_required": "Character name is required",

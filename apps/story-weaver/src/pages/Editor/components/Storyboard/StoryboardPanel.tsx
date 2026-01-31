@@ -22,8 +22,8 @@ import {
   Card, 
   EmptyState, 
   Badge,
-  LoadingSpinner,
-  ConfirmModal
+  ConfirmModal,
+  Skeleton
 } from '@superapp/ui-kit';
 import { useVideoScenes, useDeleteVideoScene } from '@/hooks';
 import { SceneEditor } from '../ScriptEditor/SceneEditor';
@@ -75,31 +75,65 @@ export const StoryboardPanel = ({ projectId }: StoryboardPanelProps) => {
   };
 
   if (isLoading) {
-    return <div className="flex h-full items-center justify-center"><LoadingSpinner size="lg" /></div>;
+    return (
+        <div className="h-full flex flex-col overflow-hidden bg-muted/10">
+            {/* Header Skeleton */}
+            <div className="flex flex-col items-center justify-between p-4 shrink-0">
+                <div className="w-full">
+                     <Skeleton className="h-6 w-32 mb-2" />
+                     <Skeleton className="h-4 w-48" />
+                </div>
+            </div>
+            
+            {/* Grid Skeleton */}
+            <div className="flex-1 overflow-y-auto p-4 pt-0">
+                 <div className="grid grid-cols-1 gap-4">
+                     {Array.from({ length: 3 }).map((_, i) => (
+                         <div key={i} className="rounded-xl border bg-card overflow-hidden flex flex-col">
+                             {/* Thumbnail Area */}
+                             <div className="aspect-video w-full bg-muted">
+                                 <Skeleton className="w-full h-full rounded-none" />
+                             </div>
+                             
+                             {/* Content Area */}
+                             <div className="p-3 space-y-3">
+                                 {/* Script text lines */}
+                                 <div className="space-y-1.5">
+                                     <Skeleton className="h-3 w-full" />
+                                     <Skeleton className="h-3 w-5/6" />
+                                 </div>
+                                 
+                                 {/* Footer */}
+                                 <div className="flex justify-between items-center pt-2 mt-2 border-t border-border/50">
+                                     <Skeleton className="h-3 w-12" />
+                                     <Skeleton className="h-3 w-16" />
+                                 </div>
+                             </div>
+                         </div>
+                     ))}
+                 </div>
+            </div>
+        </div>
+    );
   }
 
   return (
     <div className="h-full flex flex-col overflow-hidden bg-muted/10">
       {/* Header */}
-      <div className="flex items-center justify-between pb-2 shrink-0">
-        <div>
-          <h3 className="font-semibold text-2xl flex items-center gap-2">
+      <div className="flex flex-col items-center justify-between p-4 shrink-0">
+        <div className="w-full">
+          <h3 className="font-semibold text-md flex items-center gap-2">
             <Clapperboard className="text-primary" />
             {t('video_projects:editor.storyboard.title')}
           </h3>
-          <p className="text-muted-foreground mt-1">
+          <p className="text-muted-foreground text-sm mt-1">
             {t('video_projects:editor.storyboard.subtitle')}
           </p>
-        </div>
-        <div className="flex gap-2">
-           <Badge variant="secondary" className="px-3 py-1 text-sm">
-              {scenes.length} {t('video_projects:editor.storyboard.scenes_count')}
-           </Badge>
         </div>
       </div>
 
       {/* Grid Content */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto p-4 pt-0">
         {scenes.length === 0 ? (
           <EmptyState
             icon={ImageIcon}
@@ -215,17 +249,17 @@ const StoryboardCard = ({ scene, index, isSelected, onSelect, onEdit, onDelete }
         <div className="absolute top-2 right-2 flex gap-1">
           {hasVideo && (
             <Badge variant="success" className="h-6 px-1.5 shadow-sm">
-              <Film size={12} className="mr-1" /> OK
+              <Film size={12} className="mr-1" /> {t('video_projects:status.has_video')}
             </Badge>
           )}
           {!hasVideo && hasImage && (
              <Badge variant="secondary" className="h-6 px-1.5 shadow-sm bg-background/80 backdrop-blur-md">
-               <ImageIcon size={12} className="mr-1" /> IMG
+               <ImageIcon size={12} className="mr-1" /> {t('video_projects:status.has_image')}
              </Badge>
           )}
           {!hasImage && (
              <Badge variant="warning" className="h-6 px-1.5 shadow-sm">
-               <AlertCircle size={12} className="mr-1" /> TODO
+               <AlertCircle size={12} className="mr-1" /> {t('video_projects:status.todo')}
              </Badge>
           )}
         </div>

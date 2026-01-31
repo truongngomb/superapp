@@ -10,9 +10,10 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { 
   ConfirmModal,
   useToast,
-  Button
+  Button,
+  Avatar
 } from '@superapp/ui-kit';
-import { Pencil, Trash2, Check } from 'lucide-react';
+import { Pencil, Trash2, Check, User } from 'lucide-react';
 import { 
   useCharacters,
   useCharacter,
@@ -57,7 +58,7 @@ export const CharacterStudioPanel = ({ projectId }: CharacterStudioPanelProps) =
   const [suggestions, setSuggestions] = useState<CharacterSuggestion[]>([]);
 
   // Queries & Mutations
-  const { data: characters = [] } = useCharacters(projectId);
+  const { data: characters = [], isLoading: isLoadingCharacters } = useCharacters(projectId);
   // Fetch full details when a character is selected
   const { data: selectedCharacter, isLoading: isLoadingDetail } = useCharacter(selectedCharacterId ?? '');
 
@@ -217,6 +218,7 @@ export const CharacterStudioPanel = ({ projectId }: CharacterStudioPanelProps) =
         onExtract={handleExtract}
         onAutoMatch={() => { handleAutoMatchAll(); }}
         isAutoMatching={isAutoMatching}
+        isLoading={isLoadingCharacters}
       />
 
       {/* RIGHT MAIN CONTENT */}
@@ -255,7 +257,7 @@ export const CharacterStudioPanel = ({ projectId }: CharacterStudioPanelProps) =
                 >
                     <div className="max-w-2xl mx-auto">
                         <h2 className="text-2xl font-bold mb-6">
-                            {isCreating ? t('characters:title.create') : t('characters:title.edit')}
+                            {isCreating ? t('characters:form.title_create') : t('characters:form.title_edit')}
                         </h2>
                         <CharacterForm
                             character={isCreating ? undefined : displayCharacter}
@@ -275,12 +277,26 @@ export const CharacterStudioPanel = ({ projectId }: CharacterStudioPanelProps) =
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="flex-1 flex flex-col h-full overflow-hidden"
+                    className="flex-1 overflow-y-auto h-full"
                 >
                     {/* Header Info */}
-                    <div className="p-6 border-b flex-shrink-0 bg-background z-10">
+                    <div className="p-4 border-b bg-background">
                         <div className="flex justify-between items-start">
-                             <div>
+                             <div className="flex gap-4">
+                               <div className="shrink-0">
+                                 {displayCharacter.masterPortraitUrl ? (
+                                   <Avatar
+                                     src={displayCharacter.masterPortraitUrl}
+                                     alt={displayCharacter.name}
+                                     className="w-20 h-20 rounded-lg border shadow-sm"
+                                   />
+                                 ) : (
+                                   <div className="w-20 h-20 rounded-lg bg-muted flex items-center justify-center border shadow-sm">
+                                     <User className="w-8 h-8 text-muted-foreground" />
+                                   </div>
+                                 )}
+                               </div>
+                               <div>
                                 <div className="flex items-center gap-3">
                                     <h2 className="text-2xl font-bold text-foreground">
                                         {displayCharacter.name}
@@ -294,6 +310,7 @@ export const CharacterStudioPanel = ({ projectId }: CharacterStudioPanelProps) =
                                 <p className="text-muted-foreground mt-1 line-clamp-2 max-w-3xl">
                                     {displayCharacter.description}
                                 </p>
+                                </div>
                              </div>
                              
                              <div className="flex gap-2">
@@ -314,7 +331,7 @@ export const CharacterStudioPanel = ({ projectId }: CharacterStudioPanelProps) =
                     </div>
 
                     {/* Gallery Area */}
-                    <div className="flex-1 overflow-hidden flex flex-col p-6 bg-muted/5">
+                    <div className="p-6 bg-muted/5">
                         <PortraitGallery
                             portraits={displayCharacter.portraitOptions ?? []}
                             masterPortraitUrl={displayCharacter.masterPortraitUrl}

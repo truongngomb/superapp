@@ -117,7 +117,7 @@ export const CharacterCard = ({
           {onEdit && (
             <Button 
               variant="ghost" 
-              size="icon-sm" 
+              size="sm" 
               onClick={() => { onEdit(character); }}
             >
               <Pencil size={14} />
@@ -127,7 +127,7 @@ export const CharacterCard = ({
           {onDelete && (
             <Button 
               variant="ghost" 
-              size="icon-sm" 
+              size="sm" 
               onClick={() => { onDelete(character); }}
               className="text-destructive hover:text-destructive"
             >

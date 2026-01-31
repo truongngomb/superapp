@@ -79,7 +79,7 @@ const IssueItem = ({ issue }: { issue: ScriptValidationIssue }) => {
 
 export const ValidationPanel = ({ validation, className }: ValidationPanelProps) => {
   const { t } = useTranslation(['video_projects', 'uikit']);
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const errorCount = validation.issues.filter(i => i.severity === VALIDATION_SEVERITY.ERROR).length;
   const warningCount = validation.issues.filter(i => i.severity === VALIDATION_SEVERITY.WARNING).length;
@@ -99,7 +99,7 @@ export const ValidationPanel = ({ validation, className }: ValidationPanelProps)
       {/* Header */}
       <button
         onClick={() => { setIsExpanded(!isExpanded); }}
-        className="w-full flex items-center justify-between p-4 hover:bg-muted/50 transition-colors"
+        className="w-full flex items-center justify-between px-4 py-2 hover:bg-muted/50 transition-colors"
       >
         <div className="flex items-center gap-3">
           {validation.isValid ? (

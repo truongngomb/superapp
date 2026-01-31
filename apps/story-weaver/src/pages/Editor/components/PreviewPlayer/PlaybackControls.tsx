@@ -38,7 +38,7 @@ export const PlaybackControls = ({
   const canNavigate = total > 0;
 
   return (
-    <div className="flex items-center justify-center gap-4 px-4 py-3 bg-card/80 backdrop-blur-sm border border-border rounded-lg">
+    <div className="flex items-center justify-center gap-4 px-4 py-2 bg-card/80 backdrop-blur-sm border border-border rounded-lg">
       {/* Previous Button */}
       <Button
         variant="ghost"

@@ -17,11 +17,11 @@ import {
   AlertTriangle
 } from 'lucide-react';
 import { 
-  Card,
   EmptyState,
   Badge,
-  LoadingSpinner,
-  Avatar
+  Avatar,
+  Skeleton,
+  Card
 } from '@superapp/ui-kit';
 import { useVideoScenes } from '@/hooks/useScenes';
 import { useCharacters } from '@/hooks/useCharacters';
@@ -82,10 +82,10 @@ const SceneScriptCard = ({
         className={`
           p-3 cursor-pointer transition-all group
           ${isSelected 
-            ? 'ring-2 ring-primary bg-primary/5' 
+            ? '!border-primary bg-primary/5 shadow-sm' 
             : 'hover:bg-muted/50'
           }
-          ${hasError ? 'border-red-500/50' : hasWarning ? 'border-amber-500/50' : ''}
+          ${hasError ? '!border-red-500/50' : hasWarning ? '!border-amber-500/50' : ''}
         `}
         onClick={onSelect}
       >
@@ -231,18 +231,38 @@ export const ScriptEditorPanel = ({ project }: ScriptEditorPanelProps) => {
 
   if (isLoadingScenes || isLoadingCharacters) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <LoadingSpinner size="lg" />
+      <div className="flex h-full">
+         <div className="w-1/3 flex flex-col p-2 space-y-4">
+            <div className="flex justify-between items-center">
+                 <Skeleton className="h-6 w-32" />
+                 <Skeleton className="h-9 w-32" />
+            </div>
+            {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="flex gap-3 p-3 border rounded-lg">
+                    <Skeleton className="w-8 h-8 rounded-full shrink-0" />
+                    <div className="flex-1 space-y-2">
+                        <Skeleton className="h-4 w-1/3" />
+                        <Skeleton className="h-3 w-full" />
+                        <Skeleton className="h-3 w-2/3" />
+                    </div>
+                </div>
+            ))}
+         </div>
+         <div className="w-2/3 border-l pl-4 p-4 flex flex-col items-center justify-center">
+             <Skeleton className="w-12 h-12 rounded mb-4" />
+             <Skeleton className="h-4 w-48 mb-2" />
+             <Skeleton className="h-3 w-64" />
+         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex h-full gap-4">
+    <div className="flex h-full">
       {/* Left: Scene List */}
-      <div className="w-1/2 flex flex-col overflow-hidden">
+      <div className="w-1/3 flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between p-4">
           <h3 className="font-semibold flex items-center gap-2">
             <FileText size={18} />
             {t('video_projects:script.title')}
@@ -272,7 +292,7 @@ export const ScriptEditorPanel = ({ project }: ScriptEditorPanelProps) => {
         )}
 
         {/* Scene List */}
-        <div className="flex-1 overflow-y-auto pr-2 space-y-2">
+        <div className="flex-1 overflow-y-auto px-4 flex gap-4 flex-col">
           {scenes.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-10">
               <EmptyState
@@ -314,14 +334,14 @@ export const ScriptEditorPanel = ({ project }: ScriptEditorPanelProps) => {
 
         {/* Validation Panel */}
         {scenes.length > 0 && (
-          <div className="mt-4">
+          <div className="p-4">
             <ValidationPanel validation={validation} />
           </div>
         )}
       </div>
 
       {/* Right: Scene Editor */}
-      <div className="w-1/2 border-l border-border pl-4">
+      <div className="w-2/3 border-l border-border pl-4">
         <AnimatePresence mode="wait">
           {selectedScene ? (
             <SceneEditor

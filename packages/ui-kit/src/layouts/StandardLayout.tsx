@@ -50,9 +50,7 @@ export function StandardLayout({
       />
 
       <main className="max-w-7xl mx-auto px-4 py-6 safe-area-bottom">
-        <div className="pb-6">
-          {children || <Outlet />}
-        </div>
+        {children || <Outlet />}
       </main>
     </div>
   );

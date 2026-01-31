@@ -70,7 +70,9 @@
     "slideshow_off": "자동 꺼짐",
     "download": "다운로드",
     "download_clip": "클립",
-    "download_image": "이미지"
+    "download_image": "이미지",
+    "scene_details": "장면 세부 정보",
+    "select_scene_for_details": "세부 정보를 보려면 장면을 선택하세요"
   },
   "script": {
     "title": "스크립트 에디터",
@@ -109,7 +111,8 @@
     "characters_in_scene": "장면의 캐릭터",
     "characters_count": "캐릭터",
     "auto_match": "매직 매치",
-    "no_characters_available": "이 프로젝트에 정의된 캐릭터가 없습니다. 캐릭터 스튜디오에서 추가해 주세요."
+    "no_characters_available": "이 프로젝트에 정의된 캐릭터가 없습니다. 캐릭터 스튜디오에서 추가해 주세요.",
+    "text_label": "스크립트 내용"
   },
   "wizard": {
     "title_story": "스토리 입력",
@@ -202,7 +205,10 @@
     "video_ready": "클립 준비됨",
     "generating": "생성 중",
     "rendering": "렌더링 중",
-    "completed": "완료됨"
+    "completed": "완료됨",
+    "todo": "이미지 없음",
+    "has_image": "이미지 있음",
+    "has_video": "비디오 있음"
   },
   "visuals": {
     "generated_keyframes": "생성된 이미지",

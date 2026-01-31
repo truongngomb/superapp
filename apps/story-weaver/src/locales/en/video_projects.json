@@ -70,7 +70,9 @@
     "slideshow_off": "Auto OFF",
     "download": "Download",
     "download_clip": "Clip",
-    "download_image": "Image"
+    "download_image": "Image",
+    "scene_details": "Scene Details",
+    "select_scene_for_details": "Select a scene to view details"
   },
   "script": {
     "title": "Script Editor",
@@ -109,7 +111,8 @@
     "characters_in_scene": "Characters in Scene",
     "characters_count": "character(s)",
     "auto_match": "Magic Match",
-    "no_characters_available": "No characters defined for this project. Go to Character Studio to add them."
+    "no_characters_available": "No characters defined for this project. Go to Character Studio to add them.",
+    "text_label": "Script Content"
   },
   "wizard": {
     "title_story": "Tell Your Story",
@@ -202,7 +205,10 @@
     "video_ready": "Clips Ready",
     "generating": "Generating",
     "rendering": "Rendering",
-    "completed": "Completed"
+    "completed": "Completed",
+    "todo": "No Img",
+    "has_image": "Has Img",
+    "has_video": "Has Vid"
   },
   "visuals": {
     "generated_keyframes": "Generated Images",

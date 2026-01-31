@@ -25,6 +25,8 @@
   },
   
   "form": {
+    "title_create": "Tạo Nhân Vật",
+    "title_edit": "Sửa Nhân Vật",
     "name_label": "Tên Nhân Vật",
     "name_placeholder": "VD: Luna, nữ phi hành gia dũng cảm",
     "name_required": "Tên nhân vật là bắt buộc",

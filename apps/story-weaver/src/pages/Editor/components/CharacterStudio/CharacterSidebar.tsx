@@ -6,12 +6,12 @@
  */
 import { useTranslation } from 'react-i18next';
 import { 
-  Input, 
   Button,
   Badge,
-  Avatar
+  Avatar,
+  Skeleton
 } from '@superapp/ui-kit';
-import { Search, Plus, Sparkles, Wand2 } from 'lucide-react';
+import { Plus, Sparkles, Wand2 } from 'lucide-react';
 import type { Character } from '@/types';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -23,6 +23,7 @@ interface CharacterSidebarProps {
   onExtract?: () => void;
   onAutoMatch?: () => void;
   isAutoMatching?: boolean;
+  isLoading?: boolean;
 }
 
 export const CharacterSidebar = ({
@@ -33,6 +34,7 @@ export const CharacterSidebar = ({
   onExtract,
   onAutoMatch,
   isAutoMatching = false,
+  isLoading = false,
 }: CharacterSidebarProps) => {
   const { t } = useTranslation(['characters', 'uikit']);
 
@@ -50,13 +52,7 @@ export const CharacterSidebar = ({
           </Button>
         </div>
 
-        <div className="relative">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-          <Input 
-            placeholder={t('uikit:search')} 
-            className="pl-9 h-9"
-          />
-        </div>
+
 
         <div className="flex gap-1">
              <Button 
@@ -83,6 +79,18 @@ export const CharacterSidebar = ({
 
       {/* List */}
       <div className="flex-1 overflow-y-auto p-2 space-y-1">
+        {isLoading ? (
+            Array.from({ length: 5 }).map((_, i) => (
+                <div key={i} className="flex items-center gap-3 p-2">
+                    <Skeleton className="w-12 h-12 rounded-md shrink-0" />
+                    <div className="flex-1 space-y-2">
+                        <Skeleton className="h-4 w-3/4" />
+                        <Skeleton className="h-3 w-1/2" />
+                    </div>
+                </div>
+            ))
+        ) : (
+        <>
         <AnimatePresence>
             {characters.map((char) => (
             <motion.div
@@ -104,7 +112,7 @@ export const CharacterSidebar = ({
                     src={char.masterPortraitUrl} 
                     alt={char.name}
                     name={char.name}
-                    className="w-10 h-10 rounded-md border"
+                    className="w-12 h-12 rounded-md border"
                 />
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
@@ -128,6 +136,8 @@ export const CharacterSidebar = ({
             <div className="text-center py-8 text-muted-foreground text-sm">
                 {t('characters:empty.no_characters')}
             </div>
+        )}
+        </>
         )}
       </div>
     </div>

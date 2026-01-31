@@ -3,14 +3,14 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useVideoProject, useVideoRendering, useVideoScenes } from '@/hooks';
-import { useDocumentTitle } from '@superapp/core-logic';
+import { cn, useDocumentTitle } from '@superapp/core-logic';
 
 import { CharacterStudioPanel } from './components/CharacterStudio';
 import { ScriptEditorPanel } from './components/ScriptEditor';
 import { ProjectSettingsDialog } from './components/ProjectSettingsDialog';
 import { PreviewPlayer } from './components/PreviewPlayer';
 import { PreviewProvider, usePreviewContext } from './context';
-import { Button, Badge, LoadingSpinner, fadeSlideUp, defaultTransition } from '@superapp/ui-kit';
+import { Button, Badge, fadeSlideUp, defaultTransition } from '@superapp/ui-kit';
 import { ChevronLeft, Rocket, Settings, Users, FileText, Download, Clapperboard } from 'lucide-react';
 import { StoryboardPanel } from './components/Storyboard/StoryboardPanel';
 import { APP_NAME } from '@/config/constants';
@@ -41,8 +41,38 @@ const EditorPageContent = () => {
 
     useDocumentTitle(project?.name ? `${project.name} | ${APP_NAME}` : APP_NAME);
 
-    if (isLoading) return <div className="p-8 flex items-center justify-center h-screen"><LoadingSpinner size="lg" /></div>;
-    if (!project) return (
+  if (isLoading) {
+    return (
+      <div className="h-[calc(100vh-120px)] min-h-[500px] flex flex-col overflow-hidden rounded-xl bg-card shadow-sm border border-border/100">
+        {/* Header Skeleton */}
+        <div className="h-14 border-b border-border bg-card flex items-center justify-between px-4 shrink-0 gap-4">
+             {/* Left: Project Info */}
+             <div className="flex items-center gap-3 w-[250px]">
+                 <div className="w-8 h-8 rounded bg-muted animate-pulse" />
+                 <div className="flex items-center gap-2">
+                     <div className="h-5 w-32 bg-muted animate-pulse rounded" />
+                     <div className="h-4 w-12 bg-muted animate-pulse rounded" />
+                 </div>
+             </div>
+             
+             {/* Center: Tabs Placeholder */}
+             <div className="flex-1 flex justify-center h-full items-center gap-6 opacity-50">
+                 <div className="h-4 w-16 bg-muted animate-pulse rounded" />
+                 <div className="h-4 w-20 bg-muted animate-pulse rounded" />
+                 <div className="h-4 w-24 bg-muted animate-pulse rounded" />
+             </div>
+
+             {/* Right: Actions */}
+             <div className="flex items-center gap-2 w-[250px] justify-end">
+                 <div className="h-8 w-8 bg-muted animate-pulse rounded" />
+                 <div className="h-8 w-32 bg-muted animate-pulse rounded" />
+             </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!project) return (
         <div className="p-8 text-center">
             <h2 className="text-2xl font-bold">{t('video_projects:editor.project_not_found')}</h2>
             <Button onClick={() => { void navigate('/dashboard'); }} className="mt-4">
@@ -66,56 +96,88 @@ const EditorPageContent = () => {
         { key: 'storyboard' as const, label: t('video_projects:editor.tabs.storyboard'), icon: Clapperboard },
     ];
 
-    // Script and Characters tabs use full width layout (has their own split view)
-    const isFullWidthTab = activeTab === 'script' || activeTab === 'characters';
-
     return (
-        <div className="h-screen flex flex-col overflow-hidden rounded-xl bg-card text-card-foreground shadow-sm border border-border/100">
-            {/* Header */}
-            <header className="h-16 border-b border-border bg-card flex items-center justify-between px-6 shrink-0">
-                <div className="flex items-center gap-4">
-                    <Button variant="outline" size="icon" onClick={() => { void navigate('/dashboard'); }}>
-                        <ChevronLeft />
+        <div className="h-[calc(100vh-120px)] min-h-[500px] flex flex-col overflow-hidden rounded-xl bg-card text-card-foreground shadow-sm border border-border/100">
+            {/* Compact Header with Tabs */}
+            <div className="h-14 border-b border-border bg-card flex items-center justify-between px-4 shrink-0 z-20 relative gap-4">
+                {/* Left: Project Info */}
+                <div className="flex items-center gap-3 w-[250px]">
+                    <Button variant="ghost" size="icon" className="h-8 w-8 -ml-1" onClick={() => { void navigate('/dashboard'); }}>
+                        <ChevronLeft size={18} />
                     </Button>
-                    <div>
-                        <h1 className="font-bold text-lg">{project.name}</h1>
-                        <Badge variant={project.status === 'completed' ? 'success' : project.status === 'rendering' ? 'primary' : 'secondary'} size="sm" className="mt-0.5">
-                            {t(`video_projects:status.${project.status}`)}
-                        </Badge>
+                    <div className="min-w-0">
+                        <div className="flex items-center gap-2">
+                             <h1 className="font-semibold text-sm truncate max-w-[150px]" title={project.name}>
+                                {project.name}
+                            </h1>
+                            <Badge variant={project.status === 'completed' ? 'success' : project.status === 'rendering' ? 'primary' : 'secondary'} className="text-[10px] h-4 px-1 pb-0">
+                                {t(`video_projects:status.${project.status}`)}
+                            </Badge>
+                        </div>
                     </div>
                 </div>
-                
-                <div className="flex gap-2">
-                    <Button variant="outline" size="sm" onClick={() => { setIsSettingsOpen(true); }}>
-                        <Settings size={16} className="mr-2" /> {t('uikit:settings')}
+
+                {/* Center: Tabs */}
+                <div className="flex-1 flex justify-center h-full">
+                    <div className="flex h-full">
+                        {tabs.map((tab) => {
+                            const Icon = tab.icon;
+                            const isActive = activeTab === tab.key;
+                            return (
+                                <button
+                                    key={tab.key}
+                                    onClick={() => { 
+                                        void navigate(`#${tab.key}`);
+                                    }}
+                                    className={cn(
+                                        "flex items-center gap-2 px-6 text-sm font-medium transition-colors relative h-full border-b-2",
+                                         isActive 
+                                            ? 'border-primary text-primary' 
+                                            : 'border-transparent text-muted-foreground hover:text-foreground'
+                                    )}
+                                >
+                                    <Icon size={16} />
+                                    <span className="hidden lg:inline">{tab.label}</span>
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+
+                {/* Right: Actions */}
+                <div className="flex items-center gap-2 w-[250px] justify-end">
+                    <Button variant="ghost" size="sm" className="h-8 gap-2" onClick={() => { setIsSettingsOpen(true); }}>
+                        <Settings size={16} />
+                        <span className="hidden sm:inline">{t('uikit:settings')}</span>
                     </Button>
                     
                     {project.status === 'completed' && project.outputUrl && (
                         <Button 
-                            variant="secondary" 
-                            size="sm"
-                            onClick={() => {
-                                if (project.outputUrl) {
-                                    window.open(project.outputUrl, '_blank');
-                                }
-                            }}
+                             variant="secondary" 
+                             size="sm"
+                             className="h-8 gap-2"
+                             onClick={() => {
+                                 if (project.outputUrl) window.open(project.outputUrl, '_blank');
+                             }}
                         >
-                            <Download size={16} className="mr-2" />
-                            {t('uikit:download')}
+                            <Download size={16} />
                         </Button>
                     )}
 
                     <Button 
                         size="sm" 
+                        className="h-8 gap-2 bg-blue-600 hover:bg-blue-700 text-white shadow-sm hover:shadow"
                         onClick={handleRender} 
                         disabled={!canRender || isRendering}
                         loading={isRendering || isCurrentlyRendering}
                     >
-                        <Rocket size={16} className="mr-2" /> 
-                        {isCurrentlyRendering ? t('video_projects:editor.rendering') : t('video_projects:editor.generate_video')}
+                        <Rocket size={16} />
+                        <span className="hidden lg:inline">
+                             {isCurrentlyRendering ? t('video_projects:editor.rendering') : t('video_projects:editor.generate_video')}
+                        </span>
                     </Button>
                 </div>
-            </header>
+            </div>
 
             {/* Main Content */}
             <AnimatePresence mode="wait">
@@ -129,32 +191,7 @@ const EditorPageContent = () => {
                     className="flex flex-1 overflow-hidden"
                 >
                     {/* Left Panel with Tabs (or Full Width for Script) */}
-                    <div className={`${isFullWidthTab ? 'flex-1' : 'w-1/3'} border-r border-border bg-surface flex flex-col overflow-hidden`}>
-                        {/* Tab Navigation */}
-                        <div className="flex border-b border-border shrink-0">
-                            {tabs.map((tab) => {
-                                const Icon = tab.icon;
-                                const isActive = activeTab === tab.key;
-                                return (
-                                    <button
-                                        key={tab.key}
-                                        onClick={() => { 
-                                            void navigate(`#${tab.key}`);
-                                        }}
-                                        className={`
-                                            flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium
-                                            transition-colors border-b-2
-                                            ${isActive 
-                                                ? 'border-primary text-primary' 
-                                                : 'border-transparent text-muted-foreground hover:text-foreground'}
-                                        `}
-                                    >
-                                        <Icon size={16} />
-                                        <span className="hidden lg:inline">{tab.label}</span>
-                                    </button>
-                                );
-                            })}
-                        </div>
+                    <div className="flex-1 bg-surface flex flex-col overflow-hidden">
 
                         {/* Tab Content */}
                         <div className="flex-1 p-4 overflow-hidden bg-background">
@@ -165,7 +202,7 @@ const EditorPageContent = () => {
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
                                         exit={{ opacity: 0 }}
-                                        className="h-full"
+                                        className="h-full overflow-hidden bg-background rounded-lg border shadow-sm"
                                     >
                                         <ScriptEditorPanel project={project} />
                                     </motion.div>
@@ -191,19 +228,19 @@ const EditorPageContent = () => {
                                         exit={{ opacity: 0 }}
                                         className="h-full"
                                     >
-                                        <StoryboardPanel projectId={project.id} />
+                                        <div className="flex h-full overflow-hidden bg-background rounded-lg border shadow-sm">
+                                            <div className="w-1/4 border-r border-border overflow-hidden">
+                                                <StoryboardPanel projectId={project.id} />
+                                            </div>
+                                            <div className="flex-1 bg-background overflow-hidden">
+                                                <PreviewPlayer project={project} />
+                                            </div>
+                                        </div>
                                     </motion.div>
                                 )}
                             </AnimatePresence>
                         </div>
                     </div>
-
-                    {/* Right: Preview Player (hidden for full-width tabs) */}
-                    {!isFullWidthTab && (
-                        <div className="flex-1 bg-background">
-                            <PreviewPlayer project={project} />
-                        </div>
-                    )}
                 </motion.div>
             </AnimatePresence>
             
