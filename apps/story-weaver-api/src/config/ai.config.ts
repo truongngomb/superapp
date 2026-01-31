@@ -15,14 +15,7 @@ import { logger } from '../utils/logger.js';
  * Available AI models for text generation
  * Add new models here as they become available
  */
-// =============================================================================
-// AI Model Definitions
-// =============================================================================
 
-/**
- * Available AI models for text generation
- * Updated based on Antigravity provider list
- */
 export const AI_TEXT_MODELS = {
   // Fast / Efficiency Models
   GEMINI_3_FLASH_PREVIEW: 'gemini-3-flash-preview',
@@ -67,12 +60,13 @@ const aiEnvSchema = z.object({
   
   AI_API_KEY: z
     .string()
-    .default('sk-dummy'), 
+    // Don't default to dummy immediately here, handle in parse logic or let it fail if STRICT
+    .default(''), 
   
   // Default Models
   AI_DEFAULT_TEXT_MODEL: z
     .string()
-    .default(AI_TEXT_MODELS.GEMINI_3_FLASH_PREVIEW),
+    .default(AI_TEXT_MODELS.GEMINI_2_5_FLASH),
   
   AI_DEFAULT_IMAGE_MODEL: z
     .string()
@@ -109,16 +103,24 @@ const aiEnvSchema = z.object({
 const parseAIEnv = () => {
   const envVars = { ...process.env };
   
-  // Fallback to GEMINI_API_KEY if AI_API_KEY is missing
-  if (!envVars.AI_API_KEY && envVars.GEMINI_API_KEY) {
-    envVars.AI_API_KEY = envVars.GEMINI_API_KEY;
+  // Explicitly check for AI_API_KEY first, then fallback to GEMINI_API_KEY
+  // Note: Standardize on 'AI_API_KEY' for internal usage
+  const apiKey = envVars.AI_API_KEY || envVars.GEMINI_API_KEY || 'sk-dummy';
+  envVars.AI_API_KEY = apiKey;  
+
+  // Use a sensible default if model is not set
+  if (!envVars.AI_DEFAULT_TEXT_MODEL) {
+    envVars.AI_DEFAULT_TEXT_MODEL = AI_TEXT_MODELS.GEMINI_2_5_FLASH; // More stable than preview
   }
 
   const result = aiEnvSchema.safeParse(envVars);
   
   if (!result.success) {
-    logger.warn('AI Config', 'Using default AI configuration');
-    return aiEnvSchema.parse({});
+    logger.warn('AI Config', 'Invalid env vars, using defaults', result.error.format());
+    // Ensure we return valid default object even on failure
+    return aiEnvSchema.parse({
+       AI_API_KEY: apiKey, // Keep the key we found
+    });
   }
   
   return result.data;

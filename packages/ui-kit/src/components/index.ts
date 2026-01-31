@@ -45,4 +45,5 @@ export * from './notifications/ActivityLogItem';
 
 // Media components
 export * from './MediaManager/MediaManagerModal';
+export * from './MediaLightbox';
 export * from './ScrollArea';

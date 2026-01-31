@@ -24,16 +24,17 @@ class ImageGenService {
     const character = await characterService.getById(characterId);
     const project = await videoProjectService.getById(character.projectId);
     
-    // Construct prompt for portrait
-    const prompt = `Professional character portrait of ${character.name}. ${character.visualTraits}. 
-Cinematic lighting, high detail, masterpiece, 4k. Studio background or appropriate setting. 
-Focus on facial features and clear character appearance.`;
+    // Construct prompt for full body character design
+    const prompt = `Full body character design of ${character.name}. ${character.visualTraits}. 
+View from head to toe, standing pose, neutral background.
+High resolution, detailed clothing and footwear.`;
 
     try {
+      // Use 9:16 aspect ratio for full body shots
+      const dimensions = this.getDimensionsFromAspectRatio('9:16');
       const result = await aiImageService.generate(prompt, {
         count: 4,
-        width: 1024,
-        height: 1024,
+        ...dimensions,
         styleId: project.artStyleId,
       });
 

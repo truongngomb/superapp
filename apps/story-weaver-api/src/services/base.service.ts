@@ -4,8 +4,8 @@
  * Abstract base class for PocketBase collection services.
  * Provides CRUD operations with caching, soft delete support, and batch operations.
  */
-import { adminPb, getOrSet, invalidate, checkPocketBaseHealth, ensureAdminAuth, config } from '../config/index.js';
-import { NotFoundError, ServiceUnavailableError, InternalServerError } from '../middleware/index.js';
+import { adminPb, getOrSet, invalidate, ensureAdminAuth, config } from '../config/index.js';
+import { NotFoundError, InternalServerError } from '../middleware/index.js';
 import { createLogger } from '../utils/logger.js';
 import type { MinimalEntity } from '../types/index.js';
 
@@ -341,10 +341,12 @@ export abstract class BaseService<T extends MinimalEntity> {
       this.log.warn('Missing Admin Credentials - proceeding without fresh auth');
     }
 
-    const available = await checkPocketBaseHealth();
-    if (!available) {
-      throw new ServiceUnavailableError('Database is currently unavailable');
-    }
+    // Optimization: Skip explicit health check on every request to improve performance.
+    // The actual DB operation or ensureAdminAuth will fail if PB is down.
+    // const available = await checkPocketBaseHealth();
+    // if (!available) {
+    //   throw new ServiceUnavailableError('Database is currently unavailable');
+    // }
     
     try {
       await ensureAdminAuth();

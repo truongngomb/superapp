@@ -10,11 +10,13 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { 
   Button, 
   ConfirmModal,
-  useToast
+  useToast,
+  LoadingSpinner
 } from '@superapp/ui-kit';
 import { Plus, Sparkles, ChevronLeft, Wand2 } from 'lucide-react';
 import { 
-  useCharacters, 
+  useCharacters,
+  useCharacter,
   useCreateCharacter, 
   useUpdateCharacter,
   useDeleteCharacter,
@@ -48,7 +50,7 @@ export const CharacterStudioPanel = ({ projectId }: CharacterStudioPanelProps) =
   
   // State
   const [viewMode, setViewMode] = useState<ViewMode>('list');
-  const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
+  const [selectedCharacterId, setSelectedCharacterId] = useState<string | null>(null);
   const [editingCharacter, setEditingCharacter] = useState<Character | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Character | null>(null);
   const [extractModalOpen, setExtractModalOpen] = useState(false);
@@ -56,6 +58,9 @@ export const CharacterStudioPanel = ({ projectId }: CharacterStudioPanelProps) =
 
   // Queries & Mutations
   const { data: characters = [], isLoading } = useCharacters(projectId);
+  // Fetch full details when a character is selected
+  const { data: selectedCharacter, isLoading: isLoadingDetail } = useCharacter(selectedCharacterId ?? '');
+
   const createCharacter = useCreateCharacter();
   const updateCharacter = useUpdateCharacter();
   const deleteCharacter = useDeleteCharacter();
@@ -81,13 +86,13 @@ export const CharacterStudioPanel = ({ projectId }: CharacterStudioPanelProps) =
   };
 
   const handleSelect = (character: Character) => {
-    setSelectedCharacter(character);
+    setSelectedCharacterId(character.id);
     setViewMode('detail');
   };
 
   const handleBack = () => {
     setViewMode('list');
-    setSelectedCharacter(null);
+    setSelectedCharacterId(null);
     setEditingCharacter(null);
   };
 
@@ -185,7 +190,7 @@ export const CharacterStudioPanel = ({ projectId }: CharacterStudioPanelProps) =
         onSuccess: () => {
           toast.success(t('characters:messages.deleted'));
           setDeleteTarget(null);
-          if (selectedCharacter?.id === deleteTarget.id) {
+          if (selectedCharacterId === deleteTarget.id) {
             handleBack();
           }
         },
@@ -221,17 +226,9 @@ export const CharacterStudioPanel = ({ projectId }: CharacterStudioPanelProps) =
   };
 
   const handleGeneratePortrait = (character: Character) => {
-    setSelectedCharacter(character);
+    setSelectedCharacterId(character.id);
     setViewMode('detail');
-    generatePortraits.mutate(character.id, {
-      onSuccess: (newOptions) => {
-        setSelectedCharacter((prev) => 
-          prev && prev.id === character.id 
-            ? { ...prev, portraitOptions: newOptions } 
-            : prev
-        );
-      }
-    });
+    generatePortraits.mutate(character.id); // No manual state update needed, Query will refresh
   };
 
   const [tempMasterPortraitUrl, setTempMasterPortraitUrl] = useState<string | null>(null);
@@ -259,6 +256,7 @@ export const CharacterStudioPanel = ({ projectId }: CharacterStudioPanelProps) =
 
       // 2. Update Options Selection State
       const targetUrl = tempMasterPortraitUrl || currentMasterUrl;
+      // Note: portraitOptions might be partial if we didn't fetch full details, but in this function 'character' is 'selectedCharacter' which is full details
       const updatedOptions = character.portraitOptions?.map(opt => ({
         ...opt,
         isSelected: opt.url === targetUrl
@@ -272,8 +270,8 @@ export const CharacterStudioPanel = ({ projectId }: CharacterStudioPanelProps) =
           portraitOptions: updatedOptions
         }
       }, {
-        onSuccess: (updated) => {
-          setSelectedCharacter(updated);
+        onSuccess: () => {
+          // Query invalidation handles update
           setTempMasterPortraitUrl(null);
           toast.success(t('characters:messages.approved'));
           setIsApproving(false);
@@ -290,6 +288,10 @@ export const CharacterStudioPanel = ({ projectId }: CharacterStudioPanelProps) =
       setIsApproving(false);
     }
   };
+
+  // Resolve character to display (Basic info vs Full Detail)
+  const selectedCharacterBasic = characters.find(c => c.id === selectedCharacterId);
+  const displayCharacter = selectedCharacter || selectedCharacterBasic;
 
   return (
     <div className="h-full flex flex-col p-4">
@@ -344,7 +346,7 @@ export const CharacterStudioPanel = ({ projectId }: CharacterStudioPanelProps) =
               <CharacterList
                 characters={characters}
                 isLoading={isLoading}
-                selectedId={selectedCharacter?.id}
+                selectedId={selectedCharacterId ?? undefined}
                 onSelect={handleSelect}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
@@ -373,7 +375,7 @@ export const CharacterStudioPanel = ({ projectId }: CharacterStudioPanelProps) =
             </motion.div>
           )}
 
-          {viewMode === 'detail' && selectedCharacter && (
+          {viewMode === 'detail' && (
             <motion.div
               key="detail"
               initial={{ opacity: 0, x: 20 }}
@@ -381,52 +383,55 @@ export const CharacterStudioPanel = ({ projectId }: CharacterStudioPanelProps) =
               exit={{ opacity: 0, x: -20 }}
               className="space-y-6"
             >
-              {/* Character Info */}
-              <div>
-                <h4 className="font-semibold text-lg">{selectedCharacter.name}</h4>
-                {selectedCharacter.description && (
-                  <p className="text-muted-foreground mt-1">{selectedCharacter.description}</p>
-                )}
-              </div>
+              {!displayCharacter ? (
+                 <div className="flex items-center justify-center py-20">
+                    <LoadingSpinner size="lg" />
+                 </div>
+              ) : (
+                <>
+                  {/* Character Info */}
+                  <div>
+                    <h4 className="font-semibold text-lg">{displayCharacter.name}</h4>
+                    {displayCharacter.description && (
+                      <p className="text-muted-foreground mt-1">{displayCharacter.description}</p>
+                    )}
+                  </div>
 
-              {/* Portrait Gallery */}
-              <PortraitGallery
-                portraits={selectedCharacter.portraitOptions ?? []}
-                masterPortraitUrl={tempMasterPortraitUrl || selectedCharacter.masterPortraitUrl}
-                onSelectMaster={handleSelectMaster}
-                onRegenerate={() => { 
-                  generatePortraits.mutate(selectedCharacter.id, {
-                    onSuccess: (newOptions) => {
-                      setSelectedCharacter((prev) => 
-                        prev ? { ...prev, portraitOptions: newOptions } : null
-                      );
-                    }
-                  }); 
-                }}
-                isGenerating={generatePortraits.isPending}
-                isSelectingMaster={false} 
-              />
+                  {/* Portrait Gallery */}
+                  <PortraitGallery
+                    portraits={displayCharacter.portraitOptions ?? []}
+                    masterPortraitUrl={tempMasterPortraitUrl || displayCharacter.masterPortraitUrl}
+                    onSelectMaster={handleSelectMaster}
+                    onRegenerate={() => { 
+                      generatePortraits.mutate(displayCharacter.id); 
+                    }}
+                    isGenerating={generatePortraits.isPending}
+                    isSelectingMaster={false} 
+                    isLoading={isLoadingDetail && !selectedCharacter}
+                  />
 
-              {/* Actions */}
-              <div className="flex gap-2 pt-4 border-t">
-                <Button 
-                  variant="outline" 
-                  onClick={() => { handleEdit(selectedCharacter); }}
-                  disabled={isApproving}
-                >
-                  {t('characters:actions.edit')}
-                </Button>
-                {(selectedCharacter.status === 'draft' || tempMasterPortraitUrl) && (
-                  <Button 
-                    onClick={() => { void handleApprove(selectedCharacter); }}
-                    loading={isApproving}
-                  >
-                    {selectedCharacter.status === 'approved' 
-                      ? t('characters:actions.save_portrait') 
-                      : t('characters:actions.approve')}
-                  </Button>
-                )}
-              </div>
+                  {/* Actions */}
+                  <div className="flex gap-2 pt-4 border-t">
+                    <Button 
+                      variant="outline" 
+                      onClick={() => { handleEdit(displayCharacter); }}
+                      disabled={isApproving}
+                    >
+                      {t('characters:actions.edit')}
+                    </Button>
+                    {(displayCharacter.status === 'draft' || tempMasterPortraitUrl) && (
+                      <Button 
+                        onClick={() => { void handleApprove(displayCharacter); }}
+                        loading={isApproving}
+                      >
+                        {displayCharacter.status === 'approved' 
+                          ? t('characters:actions.save_portrait') 
+                          : t('characters:actions.approve')}
+                      </Button>
+                    )}
+                  </div>
+                </>
+              )}
             </motion.div>
           )}
         </AnimatePresence>

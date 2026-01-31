@@ -3,7 +3,7 @@
  * 
  * Handles CRUD operations for characters using BaseService.
  */
-import { BaseService } from './base.service.js';
+import { BaseService, type ListOptions, type PaginatedResult } from './base.service.js';
 import { config } from '../config/index.js';
 import type { Character } from '../types/character.js';
 
@@ -13,6 +13,37 @@ class CharacterService extends BaseService<Character> {
   
   // Default filter: only not deleted
   protected readonly defaultFilter = 'isDeleted = false';
+
+  /**
+   * Override getPage to strip portraitOptions for list views
+   * drastically reducing payload size (removing Base64 strings)
+   */
+  async getPage(options: ListOptions = {}): Promise<PaginatedResult<Character>> {
+    const { page = 1, limit = config.itemsPerPage, sort, order = 'asc', filter, expand } = options;
+    
+    await this.ensureDbAvailable();
+    
+    const sortStr = sort ? `${order === 'desc' ? '-' : ''}${sort}` : '-created';
+    
+    // Opt-in to specific fields to exclude 'portraitOptions' (which contains heavy base64)
+    // Note: We include everything BUT portraitOptions.
+    const fields = 'id,projectId,userId,name,description,visualTraits,masterPortrait,status,version,isActive,isDeleted,created,updated';
+
+    const result = await this.collection.getList(page, limit, {
+      sort: sortStr,
+      filter: this.combineFilters(filter),
+      expand: expand || this.defaultExpand || '',
+      fields: fields, // ONLY fetch these columns from SQLite
+    });
+
+    return {
+      items: result.items.map((r) => this.mapRecord(r)),
+      page: result.page,
+      limit: result.perPage,
+      total: result.totalItems,
+      totalPages: result.totalPages,
+    };
+  }
 
   protected mapRecord(record: Record<string, unknown>): Character {
     return {
