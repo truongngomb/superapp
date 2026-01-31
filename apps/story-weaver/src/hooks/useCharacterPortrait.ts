@@ -27,11 +27,11 @@ export function useGeneratePortraits() {
       void queryClient.invalidateQueries({ 
           queryKey: characterKeys.all
       });
-      toast.success(t('characters:messages.portraits_generated', { defaultValue: 'Portraits generated successfully' }));
+      toast.success(t('characters:messages.portraits_generated'));
     },
     onError: (error) => {
       console.error('Portrait generation failed:', error);
-      toast.error(t('characters:messages.generation_failed', { defaultValue: 'Failed to generate portraits. Please check AI settings.' }));
+      toast.error(t('characters:messages.generation_failed'));
     },
   });
 }

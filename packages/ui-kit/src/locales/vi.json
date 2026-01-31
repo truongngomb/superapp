@@ -154,6 +154,7 @@
   "upload_success": "Tải lên thành công!",
   "upload_error": "Tải lên thất bại",
   "copy": "Sao chép",
+  "download": "Tải về",
   "trash": "Thùng rác",
   "empty_trash": "Thùng rác trống",
   "selected_items": "Đã chọn {{count}} mục",

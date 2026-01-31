@@ -56,6 +56,22 @@
     "visuals_guide_desc": "Select a scene from the 'Scenes' tab to generate or edit AI images and motion.",
     "coming_soon": "Coming soon..."
   },
+  "preview": {
+    "title": "Preview",
+    "select_scene": "Select a scene to preview",
+    "no_visual": "No visual generated for this scene",
+    "generate_hint": "Go to Storyboard to generate visuals",
+    "auto": "Auto",
+    "scene_of": "Scene {{current}} of {{total}}",
+    "prev": "Previous",
+    "next": "Next",
+    "slideshow": "Slideshow",
+    "slideshow_on": "Auto ON",
+    "slideshow_off": "Auto OFF",
+    "download": "Download",
+    "download_clip": "Clip",
+    "download_image": "Image"
+  },
   "script": {
     "title": "Script Editor",
     "generate": "Generate Script",

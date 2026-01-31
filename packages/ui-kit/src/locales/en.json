@@ -154,6 +154,7 @@
   "upload_success": "File uploaded successfully!",
   "upload_error": "Upload failed",
   "copy": "Copy",
+  "download": "Download",
   "trash": "Trash",
   "empty_trash": "Trash is empty",
   "selected_items": "{{count}} selected",

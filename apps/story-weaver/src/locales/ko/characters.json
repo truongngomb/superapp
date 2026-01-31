@@ -4,6 +4,7 @@
   
   "panel": {
     "title": "캐릭터 스튜디오",
+    "sidebar_title": "캐릭터",
     "subtitle": "장면 전반에 걸쳐 일관된 외모를 위한 캐릭터 정의"
   },
   
@@ -17,16 +18,19 @@
     "select_master": "마스터로 설정",
     "approve": "승인",
     "save": "캐릭터 저장",
-    "auto_match_all": "일괄 자동 매칭"
+    "save_portrait": "초상화 저장",
+    "save_master": "마스터로 설정",
+    "auto_match_all": "전체 자동 매칭",
+    "match": "매칭"
   },
   
   "form": {
     "name_label": "캐릭터 이름",
-    "name_placeholder": "예: 용감한 우주비행사 루나",
+    "name_placeholder": "예: Luna, 용감한 우주 비행사",
     "name_required": "캐릭터 이름은 필수입니다",
     "description_label": "설명",
-    "description_placeholder": "외모, 성격, 주요 특징 설명...",
-    "description_hint": "상세한 설명이 AI가 일관된 초상화를 생성하는 데 도움이 됩니다"
+    "description_placeholder": "외모, 성격, 특징 설명...",
+    "description_hint": "상세한 설명은 AI가 일관된 초상화를 생성하는 데 도움이 됩니다"
   },
   
   "status": {
@@ -37,29 +41,42 @@
   "portrait": {
     "title": "캐릭터 초상화",
     "master_label": "마스터 초상화",
+    "master_badge": "마스터",
     "options_title": "초상화 옵션",
-    "select_hint": "일관성을 위해 마스터 초상화로 선택하세요",
+    "select_hint": "마스터로 설정할 이미지를 선택하세요",
+    "option_alt": "초상화 옵션 {{index}}",
     "generating": "초상화 생성 중...",
-    "no_portraits": "아직 생성된 초상화가 없습니다",
-    "upload_manual": "또는 수동으로 업로드"
+    "no_portraits": "생성된 초상화가 없습니다",
+    "upload_manual": "또는 직접 업로드"
+  },
+  
+  "chat": {
+    "placeholder": "변경 사항 설명...",
+    "context_indicator": "선택한 이미지 편집 중",
+    "select_image_hint": "AI로 편집할 이미지를 선택하세요",
+    "welcome_message": "안녕하세요! 이 이미지를 수정하는 데 도움을 드릴 수 있습니다.",
+    "example_prompts": "\"머리카락을 빨간색으로 바꿔줘\" 또는 \"배경을 도서관으로 바꿔줘\"라고 해보세요."
   },
   
   "extract": {
     "title": "캐릭터 추출",
     "description": "AI가 스토리를 분석하고 캐릭터를 제안합니다",
     "extracting": "스토리 분석 중...",
-    "found_title": "발견된 캐릭터",
+    "found_title": "찾은 캐릭터",
     "found_description": "제안된 캐릭터를 검토하고 추가하세요",
     "confidence": "신뢰도",
     "add_selected": "선택 항목 추가",
-    "add_all": "모두 추가",
+    "add_all": "전체 추가",
     "no_characters": "스토리에서 캐릭터를 찾을 수 없습니다"
   },
   
   "empty": {
     "title": "캐릭터 없음",
-    "description": "수동으로 캐릭터를 추가하거나 스토리에서 추출하세요",
-    "cta": "스토리에서 추출"
+    "description": "수동으로 추가하거나 스토리에서 캐릭터를 추출하세요",
+    "cta": "스토리에서 추출",
+    "no_characters": "캐릭터를 찾을 수 없습니다.",
+    "select_character": "캐릭터 선택",
+    "select_character_desc": "사이드바에서 캐릭터를 선택하여 상세 정보를 확인하거나 새로 생성하여 시작하세요."
   },
   
   "messages": {
@@ -70,19 +87,23 @@
     "portrait_set": "마스터 초상화가 성공적으로 설정되었습니다",
     "extract_success": "스토리에서 {{count}}명의 캐릭터를 찾았습니다",
     "extract_empty": "스토리에서 캐릭터를 찾을 수 없습니다",
-    "auto_match_success": "{{count}}개 장면에 대해 캐릭터 자동 매칭 완료",
-    "auto_match_error": "자동 매칭 중 오류가 발생했습니다"
+    "auto_match_success": "캐릭터 자동 매칭 성공",
+    "auto_match_error": "자동 매칭 중 오류 발생",
+    "approve_error": "캐릭터 승인 오류: {{message}}",
+    "master_updated": "마스터 초상화가 업데이트되었습니다",
+    "portraits_generated": "초상화가 성공적으로 생성되었습니다",
+    "generation_failed": "초상화 생성에 실패했습니다. AI 설정을 확인해 주세요."
   },
   
   "confirm": {
     "delete_title": "캐릭터 삭제",
-    "delete_message": "\"{{name}}\"을(를) 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
+    "delete_message": "\"{{name}}\"을(를) 삭제하시겠습니까? 이 작업은 취소할 수 없습니다."
   },
-
+  
   "tips": {
     "title": "더 나은 캐릭터를 위한 팁",
     "tip1": "외모를 구체적으로 설명하세요",
-    "tip2": "고유한 식별 특징을 포함하세요",
-    "tip3": "관련이 있다면 의상 스타일을 설명하세요"
+    "tip2": "독특한 식별 기능을 포함하세요",
+    "tip3": "관련이 있는 경우 의상 스타일을 설명하세요"
   }
 }

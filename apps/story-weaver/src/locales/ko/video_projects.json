@@ -39,14 +39,38 @@
       "scenes": "장면",
       "script": "스크립트",
       "visuals": "이미지",
-      "motion": "모션"
+      "motion": "모션",
+      "storyboard": "Storyboard"
     },
     "script_tab": "스크립트",
     "visuals_tab": "이미지",
     "motion_tab": "모션",
     "visuals_guide_title": "장면 이미지",
     "visuals_guide_desc": "'장면' 탭에서 장면을 선택하여 AI 이미지 및 모션을 생성하거나 편집하세요.",
+    "storyboard": {
+      "title": "스토리보드 \u0026 제작",
+      "subtitle": "각 장면에 대한 이미지와 모션을 생성합니다.",
+      "scenes_count": "장면",
+      "empty_title": "아직 장면이 없습니다",
+      "empty_desc": "먼저 스크립트 탭으로 돌아가 스토리 장면을 생성하세요."
+    },
     "coming_soon": "곧 출시 예정..."
+  },
+  "preview": {
+    "title": "미리보기",
+    "select_scene": "장면을 선택하여 미리보기",
+    "no_visual": "이 장면에 이미지가 없습니다",
+    "generate_hint": "스토리보드에서 이미지 생성",
+    "auto": "자동",
+    "scene_of": "장면 {{current}} / {{total}}",
+    "prev": "이전",
+    "next": "다음",
+    "slideshow": "슬라이드쇼",
+    "slideshow_on": "자동 켜짐",
+    "slideshow_off": "자동 꺼짐",
+    "download": "다운로드",
+    "download_clip": "클립",
+    "download_image": "이미지"
   },
   "script": {
     "title": "스크립트 에디터",

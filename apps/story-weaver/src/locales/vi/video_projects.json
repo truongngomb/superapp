@@ -39,14 +39,38 @@
       "scenes": "Cảnh",
       "script": "Kịch bản",
       "visuals": "Hình ảnh",
-      "motion": "Chuyển động"
+      "motion": "Chuyển động",
+      "storyboard": "Storyboard"
     },
     "script_tab": "Kịch bản",
     "visuals_tab": "Hình ảnh",
     "motion_tab": "Chuyển động",
     "visuals_guide_title": "Hình ảnh cảnh quay",
     "visuals_guide_desc": "Chọn một cảnh từ tab 'Cảnh' để tạo hoặc chỉnh sửa hình ảnh AI và chuyển động.",
+    "storyboard": {
+      "title": "Storyboard & Sản xuất",
+      "subtitle": "Tạo hình ảnh và chuyển động cho từng cảnh quay.",
+      "scenes_count": "Cảnh quay",
+      "empty_title": "Chưa có cảnh nào",
+      "empty_desc": "Quay lại tab Kịch bản để tạo các cảnh quay cho câu chuyện của bạn trước."
+    },
     "coming_soon": "Sắp ra mắt..."
+  },
+  "preview": {
+    "title": "Xem trước",
+    "select_scene": "Chọn một cảnh để xem trước",
+    "no_visual": "Cảnh này chưa có hình ảnh",
+    "generate_hint": "Vào Storyboard để tạo hình ảnh",
+    "auto": "Tự động",
+    "scene_of": "Cảnh {{current}} / {{total}}",
+    "prev": "Trước",
+    "next": "Sau",
+    "slideshow": "Trình chiếu",
+    "slideshow_on": "Tự động BẬT",
+    "slideshow_off": "Tự động TẮT",
+    "download": "Tải về",
+    "download_clip": "Clip",
+    "download_image": "Ảnh"
   },
   "script": {
     "title": "Trình Soạn Kịch Bản",

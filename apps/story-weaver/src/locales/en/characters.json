@@ -4,7 +4,8 @@
   
   "panel": {
     "title": "Character Studio",
-    "subtitle": "Define characters for consistent appearances across scenes"
+    "sidebar_title": "Characters",
+    "subtitle": "Define characters for consistent appearance across scenes"
   },
   
   "actions": {
@@ -18,16 +19,18 @@
     "approve": "Approve",
     "save": "Save Character",
     "save_portrait": "Save Portrait",
-    "auto_match_all": "Auto Match All"
+    "save_master": "Set as Master",
+    "auto_match_all": "Magic Match All",
+    "match": "Match"
   },
   
   "form": {
     "name_label": "Character Name",
-    "name_placeholder": "e.g., Luna, the brave astronaut",
+    "name_placeholder": "e.g. Luna, a brave astronaut",
     "name_required": "Character name is required",
     "description_label": "Description",
-    "description_placeholder": "Describe appearance, personality, key traits...",
-    "description_hint": "Detailed description helps AI generate consistent portraits"
+    "description_placeholder": "Describe appearance, personality, key features...",
+    "description_hint": "Detailed descriptions help AI generate consistent portraits"
   },
   
   "status": {
@@ -36,20 +39,30 @@
   },
   
   "portrait": {
-    "title": "Character Portrait",
+    "title": "Character Portraits",
     "master_label": "Master Portrait",
+    "master_badge": "MASTER",
     "options_title": "Portrait Options",
-    "select_hint": "Select one as the master portrait for consistency",
+    "select_hint": "Select an image to set as Master",
+    "option_alt": "Portrait option {{index}}",
     "generating": "Generating portraits...",
     "no_portraits": "No portraits generated yet",
     "upload_manual": "Or upload manually"
   },
   
+  "chat": {
+    "placeholder": "Describe changes...",
+    "context_indicator": "Editing selected image",
+    "select_image_hint": "Select an image to edit with AI",
+    "welcome_message": "Hello! I can help you modify this image.",
+    "example_prompts": "Try \"Make the hair red\" or \"Change background to a library\"."
+  },
+  
   "extract": {
     "title": "Extract Characters",
-    "description": "AI will analyze your story and suggest characters",
+    "description": "AI will analyze the story and suggest characters",
     "extracting": "Analyzing story...",
-    "found_title": "Characters Found",
+    "found_title": "Found Characters",
     "found_description": "Review and add suggested characters",
     "confidence": "Confidence",
     "add_selected": "Add Selected",
@@ -58,9 +71,12 @@
   },
   
   "empty": {
-    "title": "No Characters Yet",
+    "title": "No Characters",
     "description": "Add characters manually or extract them from your story",
-    "cta": "Extract from Story"
+    "cta": "Extract from Story",
+    "no_characters": "No characters found.",
+    "select_character": "Select a character",
+    "select_character_desc": "Select a character from the sidebar to view details, or create a new one to get started."
   },
   
   "messages": {
@@ -69,21 +85,24 @@
     "deleted": "Character deleted successfully",
     "approved": "Character approved and ready for use",
     "portrait_set": "Master portrait set successfully",
-    "extract_success": "Found {{count}} characters in your story",
-    "extract_empty": "No characters were found in the story",
-    "auto_match_success": "Successfully auto-matched characters for {{count}} scenes",
-    "auto_match_error": "Failed to auto-match characters",
-    "approve_error": "Failed to approve character: {{message}}"
+    "extract_success": "Found {{count}} characters in the story",
+    "extract_empty": "No characters found in the story",
+    "auto_match_success": "Character auto-matching successful",
+    "auto_match_error": "Error during auto-matching characters",
+    "approve_error": "Error approving character: {{message}}",
+    "master_updated": "Master portrait updated successfully",
+    "portraits_generated": "Portraits generated successfully",
+    "generation_failed": "Failed to generate portraits. Please check AI settings."
   },
   
   "confirm": {
     "delete_title": "Delete Character",
     "delete_message": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone."
   },
-
+  
   "tips": {
     "title": "Tips for Better Characters",
-    "tip1": "Be specific about physical appearance",
+    "tip1": "Be specific about appearance",
     "tip2": "Include unique identifying features",
     "tip3": "Describe clothing style if relevant"
   }

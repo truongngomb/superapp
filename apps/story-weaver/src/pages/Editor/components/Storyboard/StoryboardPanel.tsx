@@ -30,6 +30,7 @@ import { SceneEditor } from '../ScriptEditor/SceneEditor';
 import { videoSceneService } from '@/services/scene.service';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '@/config/queryClient';
+import { usePreviewContextOptional } from '../../context';
 import type { VideoScene } from '@/types';
 import type { ExtendedScene } from '@/types/scene-script';
 
@@ -40,6 +41,11 @@ interface StoryboardPanelProps {
 export const StoryboardPanel = ({ projectId }: StoryboardPanelProps) => {
   const { t } = useTranslation(['video_projects', 'uikit']);
   const queryClient = useQueryClient();
+  
+  // Preview context for scene selection sync
+  const previewContext = usePreviewContextOptional();
+  const selectedSceneId = previewContext?.selectedSceneId ?? null;
+  const setSelectedSceneId = previewContext?.setSelectedSceneId;
   
   // Data
   const { scenes, isLoading } = useVideoScenes(projectId);
@@ -75,38 +81,40 @@ export const StoryboardPanel = ({ projectId }: StoryboardPanelProps) => {
   return (
     <div className="h-full flex flex-col overflow-hidden bg-muted/10">
       {/* Header */}
-      <div className="flex items-center justify-between p-6 pb-2 shrink-0">
+      <div className="flex items-center justify-between pb-2 shrink-0">
         <div>
           <h3 className="font-semibold text-2xl flex items-center gap-2">
             <Clapperboard className="text-primary" />
-            {t('video_projects:storyboard.title', { defaultValue: 'Storyboard & Production' })}
+            {t('video_projects:editor.storyboard.title')}
           </h3>
           <p className="text-muted-foreground mt-1">
-            {t('video_projects:storyboard.subtitle', { defaultValue: 'Generate visuals and motion for each scene.' })}
+            {t('video_projects:editor.storyboard.subtitle')}
           </p>
         </div>
         <div className="flex gap-2">
            <Badge variant="secondary" className="px-3 py-1 text-sm">
-              {scenes.length} {t('video_projects:storyboard.scenes_count', { defaultValue: 'Scenes' })}
+              {scenes.length} {t('video_projects:editor.storyboard.scenes_count')}
            </Badge>
         </div>
       </div>
 
       {/* Grid Content */}
-      <div className="flex-1 overflow-y-auto p-6">
+      <div className="flex-1 overflow-y-auto">
         {scenes.length === 0 ? (
           <EmptyState
             icon={ImageIcon}
-            title={t('video_projects:storyboard.empty_title', { defaultValue: 'No scenes yet' })}
-            description={t('video_projects:storyboard.empty_desc', { defaultValue: 'Go back to the Script tab to generate your story scenes first.' })}
+            title={t('video_projects:editor.storyboard.empty_title')}
+            description={t('video_projects:editor.storyboard.empty_desc')}
           />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-10">
+          <div className="grid grid-cols-1 gap-4">
             {scenes.map((scene, index) => (
               <StoryboardCard 
                 key={scene.id}
                 scene={scene}
                 index={index}
+                isSelected={scene.id === selectedSceneId}
+                onSelect={() => { setSelectedSceneId?.(scene.id); }}
                 onEdit={() => { setEditingSceneId(scene.id); }}
                 onDelete={() => { setDeleteTargetId(scene.id); }}
               />
@@ -162,11 +170,13 @@ export const StoryboardPanel = ({ projectId }: StoryboardPanelProps) => {
 interface StoryboardCardProps {
   scene: VideoScene;
   index: number;
+  isSelected?: boolean;
+  onSelect: () => void;
   onEdit: () => void;
   onDelete: () => void;
 }
 
-const StoryboardCard = ({ scene, index, onEdit, onDelete }: StoryboardCardProps) => {
+const StoryboardCard = ({ scene, index, isSelected, onSelect, onEdit, onDelete }: StoryboardCardProps) => {
   const { t } = useTranslation(['video_projects', 'uikit']);
   const extendedScene = scene as unknown as ExtendedScene;
   
@@ -175,7 +185,14 @@ const StoryboardCard = ({ scene, index, onEdit, onDelete }: StoryboardCardProps)
   const hasVideo = !!extendedScene.videoClipUrl;
   
   return (
-    <Card className="overflow-hidden group flex flex-col h-full border-border/50 hover:border-primary/50 transition-colors">
+    <Card 
+      className={`overflow-hidden group flex flex-col h-full transition-all cursor-pointer ${
+        isSelected 
+          ? 'border-primary ring-2 ring-primary/20' 
+          : 'border-border/50 hover:border-primary/50'
+      }`}
+      onClick={onSelect}
+    >
       {/* Thumbnail Area */}
       <div 
         className="aspect-video bg-muted relative cursor-pointer"
@@ -190,7 +207,7 @@ const StoryboardCard = ({ scene, index, onEdit, onDelete }: StoryboardCardProps)
         ) : (
           <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground bg-muted/50">
             <ImageIcon size={32} className="mb-2 opacity-50" />
-            <span className="text-xs font-medium">{t('video_projects:visuals.no_image', { defaultValue: 'No Image' })}</span>
+            <span className="text-xs font-medium">{t('video_projects:editor.no_image')}</span>
           </div>
         )}
 
@@ -221,7 +238,7 @@ const StoryboardCard = ({ scene, index, onEdit, onDelete }: StoryboardCardProps)
         {/* Hover Action Overlay */}
         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
              <Button variant="secondary" size="sm" className="shadow-lg">
-                {hasImage ? t('uikit:edit') : t('video_projects:visuals.generate_now', { defaultValue: 'Generate' })}
+                {hasImage ? t('uikit:edit') : t('video_projects:visuals.generate_now')}
              </Button>
         </div>
       </div>

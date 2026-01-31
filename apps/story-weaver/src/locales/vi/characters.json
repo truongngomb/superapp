@@ -4,6 +4,7 @@
   
   "panel": {
     "title": "Xưởng Nhân Vật",
+    "sidebar_title": "Nhân Vật",
     "subtitle": "Định nghĩa nhân vật để đảm bảo tính nhất quán xuyên suốt các cảnh"
   },
   
@@ -18,7 +19,9 @@
     "approve": "Duyệt",
     "save": "Lưu Nhân Vật",
     "save_portrait": "Lưu Ảnh Đại Diện",
-    "auto_match_all": "Khớp Nhân Vật & Cảnh"
+    "save_master": "Đặt làm Chân Dung Chính",
+    "auto_match_all": "Khớp Nhân Vật & Cảnh",
+    "match": "Khớp"
   },
   
   "form": {
@@ -38,11 +41,21 @@
   "portrait": {
     "title": "Chân Dung Nhân Vật",
     "master_label": "Chân Dung Chính",
+    "master_badge": "CHÍNH",
     "options_title": "Tùy Chọn Chân Dung",
-    "select_hint": "Chọn một ảnh làm chân dung chính để đảm bảo tính nhất quán",
+    "select_hint": "Chọn một ảnh để đặt làm chân dung chính",
+    "option_alt": "Tùy chọn chân dung {{index}}",
     "generating": "Đang tạo chân dung...",
     "no_portraits": "Chưa có chân dung nào",
     "upload_manual": "Hoặc tải lên thủ công"
+  },
+  
+  "chat": {
+    "placeholder": "Mô tả thay đổi...",
+    "context_indicator": "Đang sửa ảnh đã chọn",
+    "select_image_hint": "Chọn một ảnh để sửa bằng AI",
+    "welcome_message": "Xin chào! Tôi có thể giúp bạn chỉnh sửa ảnh này.",
+    "example_prompts": "Thử \"Lấy màu tóc đỏ\" hoặc \"Thay đổi bối cảnh thành thư viện\"."
   },
   
   "extract": {
@@ -60,7 +73,10 @@
   "empty": {
     "title": "Chưa Có Nhân Vật",
     "description": "Thêm nhân vật thủ công hoặc trích xuất từ câu chuyện của bạn",
-    "cta": "Trích Xuất từ Câu Chuyện"
+    "cta": "Trích Xuất từ Câu Chuyện",
+    "no_characters": "Không tìm thấy nhân vật nào.",
+    "select_character": "Chọn một nhân vật",
+    "select_character_desc": "Chọn một nhân vật từ thanh bên để xem chi tiết, hoặc tạo mới để bắt đầu."
   },
   
   "messages": {
@@ -71,16 +87,19 @@
     "portrait_set": "Đã đặt chân dung chính thành công",
     "extract_success": "Đã tìm thấy {{count}} nhân vật trong câu chuyện",
     "extract_empty": "Không tìm thấy nhân vật trong câu chuyện",
-    "auto_match_success": "Đã tự động ghép nhân vật cho {{count}} cảnh quay",
+    "auto_match_success": "Đã tự động ghép nhân vật thành công",
     "auto_match_error": "Có lỗi xảy ra khi tự động ghép nhân vật",
-    "approve_error": "Lỗi khi duyệt nhân vật: {{message}}"
+    "approve_error": "Lỗi khi duyệt nhân vật: {{message}}",
+    "master_updated": "Đã cập nhật chân dung chính thành công",
+    "portraits_generated": "Đã tạo chân dung thành công",
+    "generation_failed": "Lỗi khi tạo chân dung. Vui lòng kiểm tra cài đặt AI."
   },
   
   "confirm": {
     "delete_title": "Xóa Nhân Vật",
     "delete_message": "Bạn có chắc muốn xóa \"{{name}}\"? Hành động này không thể hoàn tác."
   },
-
+  
   "tips": {
     "title": "Mẹo Tạo Nhân Vật Tốt Hơn",
     "tip1": "Mô tả cụ thể về ngoại hình",

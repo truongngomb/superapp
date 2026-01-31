@@ -151,6 +151,7 @@
   "upload_success": "파일이 성공적으로 업로드되었습니다!",
   "upload_error": "업로드 실패",
   "copy": "복사",
+  "download": "다운로드",
   "trash": "휴지통",
   "empty_trash": "휴지통이 비었습니다",
   "selected_items": "{{count}}개 선택됨",
