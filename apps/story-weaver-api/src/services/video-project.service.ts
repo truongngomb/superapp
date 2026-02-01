@@ -28,6 +28,8 @@ class VideoProjectService extends BaseService<VideoProject> {
       targetDuration: (record['targetDuration'] as number) || 0,
       currentPhase: record['currentPhase'] as VideoProject['currentPhase'],
       artStyleId: (record['artStyleId'] as string) || undefined,
+      scriptLanguage: (record['scriptLanguage'] as VideoProject['scriptLanguage']) || undefined,
+
       userId: record['userId'] as string,
       isActive: (record['isActive'] as boolean) ?? true,
       isDeleted: (record['isDeleted'] as boolean) || false,
@@ -55,6 +57,8 @@ class VideoProjectService extends BaseService<VideoProject> {
     if (input.targetDuration !== undefined) record['targetDuration'] = input.targetDuration;
     if (input.currentPhase !== undefined) record['currentPhase'] = input.currentPhase;
     if (input.artStyleId !== undefined) record['artStyleId'] = input.artStyleId;
+    if (input.scriptLanguage !== undefined) record['scriptLanguage'] = input.scriptLanguage;
+
 
     return record;
   }

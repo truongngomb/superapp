@@ -18,7 +18,16 @@ import { useResource } from '@superapp/core-logic';
 import { VideoProject, VideoProjectListParams, CreateVideoProjectInput, UpdateVideoProjectInput } from '@/types';
 import { videoProjectService } from '@/services';
 import { CreateProjectModal } from './components/CreateProjectModal';
-import { Video } from 'lucide-react';
+import { Video, Globe, Monitor } from 'lucide-react';
+
+const getLanguageIcon = (lang?: string) => {
+    switch (lang?.toLowerCase()) {
+        case 'vi': return <span className="fi fi-vn shadow-sm" />;
+        case 'en': return <span className="fi fi-us shadow-sm" />;
+        case 'ko': return <span className="fi fi-kr shadow-sm" />;
+        default: return <Globe className="h-3.5 w-3.5" />;
+    }
+};
 
 export const DashboardPage = () => {
     const { t } = useTranslation(['video_projects', 'uikit']);
@@ -98,15 +107,31 @@ export const DashboardPage = () => {
                                 <CardDescription className="line-clamp-2">
                                     {project.description || t('video_projects:dashboard.no_description')}
                                 </CardDescription>
-                                <div className="mt-4 flex justify-between items-center text-xs text-muted-foreground">
-                                    <span>{new Date(project.created).toLocaleDateString()}</span>
-                                    <Badge variant={
-                                        project.status === 'completed' ? 'success' : 
-                                        project.status === 'rendering' ? 'primary' :
-                                        'secondary'
-                                    } size="sm">
-                                        {t(`video_projects:status.${project.status}`)}
-                                    </Badge>
+                                <div className="flex flex-col gap-3 mt-4">
+                                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                                            <div className="flex items-center gap-1.5" title={t('video_projects:wizard.story.language_label')}>
+                                                {getLanguageIcon(project.scriptLanguage)}
+                                                <span>{t(`video_projects:languages.${String(project.scriptLanguage)}`)}</span>
+                                            </div>
+                                        
+                                        {(project.aspectRatio || project.settings?.aspectRatio) && (
+                                            <div className="flex items-center gap-1.5" title={t('video_projects:wizard.settings.aspect_label')}>
+                                                <Monitor className="h-3.5 w-3.5" />
+                                                <span>{project.aspectRatio || project.settings?.aspectRatio}</span>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className="flex justify-between items-center text-xs text-muted-foreground pt-3 border-t">
+                                        <span>{new Date(project.created).toLocaleDateString()}</span>
+                                        <Badge variant={
+                                            project.status === 'completed' ? 'success' : 
+                                            project.status === 'rendering' ? 'primary' :
+                                            'secondary'
+                                        } size="sm">
+                                            {t(`video_projects:status.${project.status}`)}
+                                        </Badge>
+                                    </div>
                                 </div>
                             </CardContent>
                         </Card>

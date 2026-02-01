@@ -2,7 +2,7 @@ import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ProtectedRoute, NotFoundPage, EmptyState } from '@superapp/ui-kit';
-import { Settings } from 'lucide-react';
+import { Settings, Video } from 'lucide-react';
 import { MainLayout } from './components/layout';
 import { APP_NAME } from './config/constants';
 
@@ -22,6 +22,19 @@ const SettingsPlaceholder = () => {
             <EmptyState 
                 icon={Settings}
                 title={t('uikit:settings')}
+                description={t('uikit:coming_soon')}
+            />
+        </div>
+    );
+};
+
+const LibraryPlaceholder = () => {
+    const { t } = useTranslation(['video_projects', 'uikit']);
+    return (
+        <div className="p-8">
+            <EmptyState 
+                icon={Video}
+                title={t('video_projects:navigation.library')}
                 description={t('uikit:coming_soon')}
             />
         </div>
@@ -54,7 +67,7 @@ export function AppRoutes() {
         <Route path="library" element={
             <ProtectedRoute>
               <LazyPage>
-                <DashboardPage />
+                <LibraryPlaceholder />
               </LazyPage>
             </ProtectedRoute>
           } 

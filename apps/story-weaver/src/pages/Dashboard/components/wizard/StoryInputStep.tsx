@@ -6,8 +6,16 @@
 import { useTranslation } from 'react-i18next';
 import { 
   Input, 
-  Textarea
+  Textarea,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
 } from '@superapp/ui-kit';
+import { Languages } from 'lucide-react';
+import { PROJECT_LANGUAGE, type ProjectLanguage } from '@superapp/shared-types';
+
 import type { WizardData } from '@/hooks/useProjectWizard';
 
 interface StoryInputStepProps {
@@ -32,7 +40,29 @@ export const StoryInputStep = ({ data, onUpdate, error }: StoryInputStepProps) =
         required
       />
 
+      {/* Script Language */}
+      <div className="space-y-1.5">
+        <label className="text-sm font-medium text-foreground flex items-center gap-2">
+           <Languages className="w-4 h-4" />
+           {t('video_projects:wizard.story.language_label')}
+        </label>
+        <Select 
+          value={data.scriptLanguage} 
+          onValueChange={(v) => { onUpdate({ scriptLanguage: v as ProjectLanguage }); }}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value={PROJECT_LANGUAGE.VI}>{t('video_projects:languages.vi')}</SelectItem>
+            <SelectItem value={PROJECT_LANGUAGE.EN}>{t('video_projects:languages.en')}</SelectItem>
+            <SelectItem value={PROJECT_LANGUAGE.KO}>{t('video_projects:languages.ko')}</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
       {/* Description (Optional) */}
+
       <Input
         label={t('video_projects:wizard.story.desc_label')}
         placeholder={t('video_projects:wizard.story.desc_placeholder')}

@@ -72,10 +72,21 @@ Focus character visual descriptions on traits that complement this style.`
     const systemPrompt = await settingService.get<string>(SWSettingKey.PROMPT_SCRIPT_GEN);
     
     // Inject Target Platform and Aspect Ratio if available
-    const configuredPrompt = systemPrompt
+    let configuredPrompt = systemPrompt
       .replace('${project.targetPlatform}', project.targetPlatform || 'unknown')
       .replace('${project.aspectRatio}', project.aspectRatio || '9:16')
       .replace('${project.targetDuration}', String(project.targetDuration || 60));
+
+    // Inject Language Instruction
+    if (project.scriptLanguage) {
+      const langMap: Record<string, string> = {
+        'vi': 'Vietnamese',
+        'en': 'English',
+        'ko': 'Korean'
+      };
+      const langName = langMap[project.scriptLanguage] || 'English';
+      configuredPrompt += `\n\nIMPORTANT: Write the script logic and dialogue in ${langName}.`;
+    }
 
     // Include Art Style context for scenes
     const style = project.artStyleId ? getArtStyleById(project.artStyleId) : null;
@@ -89,6 +100,7 @@ Focus character visual descriptions on traits that complement this style.`
       const aiResponse = await aiTextService.generateJSON<{ scenes?: CreateVideoSceneInput[] } | CreateVideoSceneInput[]>(prompt, {
         systemPrompt: configuredPrompt,
         temperature: 0.7,
+
       });
 
       let scenes: CreateVideoSceneInput[] = [];

@@ -15,6 +15,8 @@ import {
   TARGET_PLATFORM,
   PLATFORM_PRESETS
 } from '@/types';
+import { type ProjectLanguage, PROJECT_LANGUAGE } from '@superapp/shared-types';
+
 
 // =============================================================================
 // Types
@@ -30,6 +32,8 @@ export interface WizardData {
   targetPlatform: TargetPlatform;
   targetDuration: number;
   artStyleId?: string;
+  scriptLanguage: ProjectLanguage;
+
 }
 
 export interface UseProjectWizardReturn {
@@ -70,6 +74,8 @@ const DEFAULT_DATA: WizardData = {
   aspectRatio: ASPECT_RATIO.PORTRAIT_9_16,
   targetPlatform: TARGET_PLATFORM.YOUTUBE_SHORTS,
   targetDuration: 60,
+  scriptLanguage: PROJECT_LANGUAGE.VI, // Default to Vietnamese
+
 };
 
 // =============================================================================
@@ -153,6 +159,8 @@ export function useProjectWizard(): UseProjectWizardReturn {
       targetPlatform: data.targetPlatform,
       targetDuration: data.targetDuration,
       artStyleId: data.artStyleId,
+      scriptLanguage: data.scriptLanguage,
+
     };
 
     createProject(input, {

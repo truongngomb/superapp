@@ -12,7 +12,9 @@ import {
 import { VideoProject, UpdateVideoProjectInput, TARGET_PLATFORM, ASPECT_RATIO, PLATFORM_PRESETS, TargetPlatform } from '@/types';
 import { videoProjectService } from '@/services';
 import { useQueryClient } from '@tanstack/react-query';
+import { PROJECT_LANGUAGE } from '@superapp/shared-types';
 import { StoryInputStep } from '@/pages/Dashboard/components/wizard/StoryInputStep';
+
 import { SettingsStep } from '@/pages/Dashboard/components/wizard/SettingsStep';
 import type { WizardData } from '@/hooks/useProjectWizard';
 
@@ -37,7 +39,9 @@ export function ProjectSettingsDialog({ open, onOpenChange, project }: ProjectSe
         targetPlatform: project.targetPlatform || TARGET_PLATFORM.YOUTUBE_SHORTS,
         targetDuration: project.targetDuration || 60,
         artStyleId: project.artStyleId,
+        scriptLanguage: project.scriptLanguage || PROJECT_LANGUAGE.VI,
     });
+
 
     // We need to sync with project when it opens
     useEffect(() => {
@@ -50,7 +54,9 @@ export function ProjectSettingsDialog({ open, onOpenChange, project }: ProjectSe
                 targetPlatform: project.targetPlatform || TARGET_PLATFORM.YOUTUBE_SHORTS,
                 targetDuration: project.targetDuration || 60,
                 artStyleId: project.artStyleId,
+                scriptLanguage: project.scriptLanguage || PROJECT_LANGUAGE.VI,
             });
+
         }
     }, [open, project]);
 
@@ -76,7 +82,9 @@ export function ProjectSettingsDialog({ open, onOpenChange, project }: ProjectSe
                 targetPlatform: data.targetPlatform,
                 targetDuration: data.targetDuration,
                 artStyleId: data.artStyleId,
+                scriptLanguage: data.scriptLanguage,
                 // Note: storyContent is not typically updated here as it drives generation, 
+
                 // but can be added if backend supports it. For now, it's just metadata editing.
             };
 
@@ -103,9 +111,9 @@ export function ProjectSettingsDialog({ open, onOpenChange, project }: ProjectSe
             onClose={() => { onOpenChange(false); }}
             title={t('video_projects:settings.title')}
             description={t('video_projects:settings.description')}
-            size="lg"
+            size="xl"
             footer={
-                <div className="flex justify-end gap-2 w-full">
+                <div className="flex justify-end gap-2 w-full zzz">
                     <Button variant="outline" type="button" onClick={() => { onOpenChange(false); }}>
                         {t('uikit:cancel')}
                     </Button>

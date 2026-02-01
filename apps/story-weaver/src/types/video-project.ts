@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { type BaseListParams, type BaseEntity } from '@superapp/shared-types';
+import { type BaseListParams, type BaseEntity, PROJECT_LANGUAGE } from '@superapp/shared-types';
 import { targetPlatformSchema, aspectRatioSchema } from './platform.js';
 
 // =============================================================================
@@ -84,6 +84,8 @@ export const videoProjectSchema = z.object({
   targetPlatform: targetPlatformSchema.optional(),
   targetDuration: z.number().optional(),
   artStyleId: z.string().optional(),
+  scriptLanguage: z.enum([PROJECT_LANGUAGE.VI, PROJECT_LANGUAGE.EN, PROJECT_LANGUAGE.KO]).optional(),
+
   currentPhase: projectPhaseSchema.optional(),
   
   // Output
@@ -113,6 +115,8 @@ export const createVideoProjectSchema = z.object({
   targetPlatform: targetPlatformSchema.optional(),
   targetDuration: z.number().min(15).max(180).optional(),
   artStyleId: z.string().optional(),
+  scriptLanguage: z.enum([PROJECT_LANGUAGE.VI, PROJECT_LANGUAGE.EN, PROJECT_LANGUAGE.KO]).optional(),
+
 });
 export type CreateVideoProjectInput = z.infer<typeof createVideoProjectSchema>;
 

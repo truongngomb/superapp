@@ -5,6 +5,11 @@
     "library": "Library",
     "editor": "Editor"
   },
+  "languages": {
+    "vi": "Vietnamese",
+    "en": "English",
+    "ko": "Korean"
+  },
   "dashboard": {
     "title": "My Projects",
     "subtitle": "Create and manage your AI video stories",
@@ -128,7 +133,9 @@
       "confirm": "Confirm"
     },
     "story": {
+      "language_label": "Script Language",
       "name_label": "Project Name",
+
       "name_placeholder": "My Amazing Video Story",
       "name_hint": "Give your project a memorable name.",
       "desc_label": "Description (Optional)",

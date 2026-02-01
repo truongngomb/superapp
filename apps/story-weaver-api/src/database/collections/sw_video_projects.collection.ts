@@ -62,6 +62,8 @@ export const swVideoProjectsCollection: BaseCollectionSchema = {
 
     // AI Style (NEW - Phase 1.5)
     textField('artStyleId'),
+    textField('scriptLanguage'), // 'vi' | 'en' | 'ko'
+
 
     // Relations
     relationField('userId', 'users', { required: true, cascadeDelete: false, maxSelect: 1, displayFields: ['id', 'email'] }),

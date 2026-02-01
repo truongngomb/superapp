@@ -78,7 +78,7 @@ export const CreateProjectModal = ({ open, onOpenChange }: CreateProjectModalPro
         </span>
       }
       description={getStepDescription()}
-      size="lg"
+      size="xl"
       footer={
         <div className="flex justify-between w-full items-center">
           <div>

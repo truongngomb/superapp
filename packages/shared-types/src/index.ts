@@ -16,6 +16,8 @@ export * from './user.js';
 
 // System types
 export * from './system.js';
+export * from './i18n.js';
+
 
 // Markdown types
 export * from './markdown.js';

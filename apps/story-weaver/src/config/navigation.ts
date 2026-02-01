@@ -1,4 +1,4 @@
-import { Home, Settings, PlusCircle, Video } from 'lucide-react';
+import { Home, Settings, Video } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 import type { ParseKeys } from 'i18next';
@@ -19,11 +19,6 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
     path: '/dashboard', 
     labelKey: 'video_projects:navigation.dashboard', 
     icon: Home 
-  },
-  { 
-    path: '/create', 
-    labelKey: 'video_projects:navigation.create', 
-    icon: PlusCircle 
   },
   { 
     path: '/library', 

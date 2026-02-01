@@ -5,6 +5,11 @@
     "library": "Thư viện",
     "editor": "Trình chỉnh sửa"
   },
+  "languages": {
+    "vi": "Tiếng Việt",
+    "en": "Tiếng Anh",
+    "ko": "Tiếng Hàn"
+  },
   "dashboard": {
     "title": "Dự án của tôi",
     "subtitle": "Tạo và quản lý các câu chuyện video AI của bạn",
@@ -128,7 +133,9 @@
       "confirm": "Xác nhận"
     },
     "story": {
+      "language_label": "Ngôn ngữ kịch bản",
       "name_label": "Tên Dự Án",
+
       "name_placeholder": "Câu Chuyện Video Tuyệt Vời",
       "name_hint": "Đặt tên dễ nhớ cho dự án của bạn.",
       "desc_label": "Mô Tả (Tùy chọn)",

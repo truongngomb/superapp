@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { type BaseListParams, type BaseEntity } from '@superapp/shared-types';
+import { type BaseListParams, type BaseEntity, PROJECT_LANGUAGE } from '@superapp/shared-types';
 
 // Enums
 export const VIDEO_PROJECT_STATUS = {
@@ -84,6 +84,8 @@ export const videoProjectSchema = z.object({
   currentPhase: videoWorkflowPhaseSchema.optional(),
   outputUrl: z.string().url().optional(),
   artStyleId: z.string().optional(), // New field for Art Style
+  scriptLanguage: z.enum([PROJECT_LANGUAGE.VI, PROJECT_LANGUAGE.EN, PROJECT_LANGUAGE.KO]).optional(),
+
   userId: z.string(),
   // BaseEntity fields
   created: z.string(),
@@ -103,6 +105,8 @@ export const createVideoProjectSchema = z.object({
   targetDuration: z.number().optional(),
   settings: videoProjectSettingsSchema.optional(),
   artStyleId: z.string().optional(),
+  scriptLanguage: z.enum([PROJECT_LANGUAGE.VI, PROJECT_LANGUAGE.EN, PROJECT_LANGUAGE.KO]).optional(),
+
 });
 export type CreateVideoProjectInput = z.infer<typeof createVideoProjectSchema>;
 
@@ -111,6 +115,8 @@ export const updateVideoProjectSchema = createVideoProjectSchema.partial().exten
   currentPhase: videoWorkflowPhaseSchema.optional(),
   outputUrl: z.string().url().optional(),
   artStyleId: z.string().optional(),
+  scriptLanguage: z.enum([PROJECT_LANGUAGE.VI, PROJECT_LANGUAGE.EN, PROJECT_LANGUAGE.KO]).optional(),
+
   isActive: z.boolean().optional(),
   isDeleted: z.boolean().optional(),
 });
