@@ -115,7 +115,8 @@
     "camera_movement": "Camera Movement",
     "characters_in_scene": "Characters in Scene",
     "characters_count": "character(s)",
-    "auto_match": "Magic Match",
+    "auto_match": "Auto Match Characters",
+    "auto_match_success": "Auto-match characters successful",
     "no_characters_available": "No characters defined for this project. Go to Character Studio to add them.",
     "text_label": "Script Content"
   },

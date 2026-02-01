@@ -11,7 +11,7 @@ import {
   Avatar,
   Skeleton
 } from '@superapp/ui-kit';
-import { Plus, Sparkles, Wand2 } from 'lucide-react';
+import { Plus, Sparkles } from 'lucide-react';
 import type { Character } from '@/types';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -21,8 +21,6 @@ interface CharacterSidebarProps {
   onSelect: (character: Character) => void;
   onAdd: () => void;
   onExtract?: () => void;
-  onAutoMatch?: () => void;
-  isAutoMatching?: boolean;
   isLoading?: boolean;
 }
 
@@ -32,8 +30,6 @@ export const CharacterSidebar = ({
   onSelect,
   onAdd,
   onExtract,
-  onAutoMatch,
-  isAutoMatching = false,
   isLoading = false,
 }: CharacterSidebarProps) => {
   const { t } = useTranslation(['characters', 'uikit']);
@@ -44,7 +40,7 @@ export const CharacterSidebar = ({
   return (
     <div className="flex flex-col h-full border-r bg-muted/10 w-[300px] shrink-0">
       {/* Header */}
-      <div className="p-4 border-b space-y-3">
+      <div className="p-4 border-b">
         <div className="flex items-center justify-between">
           <h3 className="font-semibold">{t('characters:panel.sidebar_title')}</h3>
           <Button size="icon" variant="ghost" onClick={onAdd}>
@@ -63,16 +59,6 @@ export const CharacterSidebar = ({
              >
                 <Sparkles size={12} className="mr-1" />
                 {t('characters:actions.extract')}
-             </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="flex-1 text-xs"
-                onClick={onAutoMatch}
-                loading={isAutoMatching}
-             >
-                <Wand2 size={12} className="mr-1" />
-                {t('characters:actions.match')}
              </Button>
         </div>
       </div>

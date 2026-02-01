@@ -29,7 +29,7 @@ const EditorPageContent = () => {
     const { setScenes } = usePreviewContext();
     
     const hashTab = location.hash.replace('#', '') as EditorTab;
-    const activeTab = ['script', 'characters', 'storyboard'].includes(hashTab) ? hashTab : 'script';
+    const activeTab = ['characters', 'script', 'storyboard'].includes(hashTab) ? hashTab : 'characters';
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
     // Sync scenes with PreviewContext
@@ -91,8 +91,8 @@ const EditorPageContent = () => {
     const isCurrentlyRendering = project.status === 'rendering';
 
     const tabs = [
-        { key: 'script' as const, label: t('video_projects:editor.tabs.script'), icon: FileText },
         { key: 'characters' as const, label: t('characters:title'), icon: Users },
+        { key: 'script' as const, label: t('video_projects:editor.tabs.script'), icon: FileText },
         { key: 'storyboard' as const, label: t('video_projects:editor.tabs.storyboard'), icon: Clapperboard },
     ];
 

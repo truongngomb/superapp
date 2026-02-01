@@ -11,6 +11,7 @@
   "actions": {
     "add": "Add Character",
     "edit": "Edit Character",
+    "edit_info": "Edit Info",
     "delete": "Delete Character",
     "extract": "Extract from Story",
     "generate_portrait": "Generate Portrait",

@@ -11,6 +11,7 @@
   "actions": {
     "add": "Thêm Nhân Vật",
     "edit": "Sửa Nhân Vật",
+    "edit_info": "Chỉnh Sửa Thông Tin",
     "delete": "Xóa Nhân Vật",
     "extract": "Trích Xuất từ Câu Chuyện",
     "generate_portrait": "Tạo Chân Dung",

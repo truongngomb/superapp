@@ -115,7 +115,8 @@
     "camera_movement": "Chuyển Động Camera",
     "characters_in_scene": "Nhân Vật Trong Cảnh",
     "characters_count": "nhân vật",
-    "auto_match": "Magic Match",
+    "auto_match": "Tự Động Ghép Nhân Vật",
+    "auto_match_success": "Tự động ghép nhân vật thành công",
     "no_characters_available": "Chưa có nhân vật nào được định nghĩa cho dự án này. Hãy vào Xưởng Nhân Vật để thêm.",
     "text_label": "Nội dung Kịch bản"
   },

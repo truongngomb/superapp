@@ -115,7 +115,8 @@
     "camera_movement": "카메라 움직임",
     "characters_in_scene": "장면의 캐릭터",
     "characters_count": "캐릭터",
-    "auto_match": "매직 매치",
+    "auto_match": "캐릭터 자동 매칭",
+    "auto_match_success": "캐릭터 자동 매칭 성공",
     "no_characters_available": "이 프로젝트에 정의된 캐릭터가 없습니다. 캐릭터 스튜디오에서 추가해 주세요.",
     "text_label": "스크립트 내용"
   },

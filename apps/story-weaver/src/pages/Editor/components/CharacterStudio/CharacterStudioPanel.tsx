@@ -22,7 +22,6 @@ import {
   useDeleteCharacter,
   useExtractCharacters,
   useCreateFromSuggestions,
-  useVideoScenes,
   useGeneratePortraits, 
   useSetMasterPortrait 
 } from '@/hooks';
@@ -30,7 +29,7 @@ import {
 import { CharacterSidebar } from './CharacterSidebar';
 import { CharacterForm } from './CharacterForm';
 import { PortraitGallery } from './PortraitGallery';
-import { AIChatPanel } from './AIChatPanel';
+import { AIChatHistory, AIChatInput } from './AIChatPanel';
 import { ExtractCharactersModal } from './ExtractCharactersModal';
 import type { 
   Character, 
@@ -70,10 +69,6 @@ export const CharacterStudioPanel = ({ projectId }: CharacterStudioPanelProps) =
   const generatePortraits = useGeneratePortraits();
   const setMasterPortrait = useSetMasterPortrait();
   
-  // Scenes for auto-matching
-  const { scenes } = useVideoScenes(projectId);
-  const [isAutoMatching, setIsAutoMatching] = useState(false);
-
   // Computed
   // If we are creating, we don't have a selected character yet.
   // If editing existing, we use selectedCharacter (detailed) or find in list (basic).
@@ -169,20 +164,6 @@ export const CharacterStudioPanel = ({ projectId }: CharacterStudioPanelProps) =
       });
   };
 
-  // --- Auto Match Logic ---
-  const handleAutoMatchAll = useCallback(() => {
-      if (scenes.length === 0 || characters.length === 0) return;
-      
-      setIsAutoMatching(true);
-      // Mock implementation of logic for brevity as it was already present
-      // Real implementation would go here
-      setTimeout(() => {
-          setIsAutoMatching(false);
-          toast.success(t('characters:messages.auto_match_success', { count: 0 }));
-      }, 1000);
-      
-  }, [scenes, characters, toast, t]);
-
   // --- Extract Logic ---
   const handleExtract = () => {
     setExtractModalOpen(true);
@@ -216,8 +197,6 @@ export const CharacterStudioPanel = ({ projectId }: CharacterStudioPanelProps) =
         onSelect={handleSelect}
         onAdd={handleAddNew}
         onExtract={handleExtract}
-        onAutoMatch={() => { handleAutoMatchAll(); }}
-        isAutoMatching={isAutoMatching}
         isLoading={isLoadingCharacters}
       />
 
@@ -270,84 +249,88 @@ export const CharacterStudioPanel = ({ projectId }: CharacterStudioPanelProps) =
                 </motion.div>
             )}
 
-            {/* CASE 3: DETAIL VIEW (Master-Detail) */}
             {displayCharacter && !isEditing && !isCreating && (
                 <motion.div
                     key="detail"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="flex-1 overflow-y-auto h-full"
+                    className="flex-1 flex flex-col overflow-hidden h-full"
                 >
-                    {/* Header Info */}
-                    <div className="p-4 border-b bg-background">
-                        <div className="flex justify-between items-start">
-                             <div className="flex gap-4">
-                               <div className="shrink-0">
-                                 {displayCharacter.masterPortraitUrl ? (
-                                   <Avatar
-                                     src={displayCharacter.masterPortraitUrl}
-                                     alt={displayCharacter.name}
-                                     className="w-20 h-20 rounded-lg border shadow-sm"
-                                   />
-                                 ) : (
-                                   <div className="w-20 h-20 rounded-lg bg-muted flex items-center justify-center border shadow-sm">
-                                     <User className="w-8 h-8 text-muted-foreground" />
+                    <div className="flex-1 overflow-y-auto">
+                        {/* Header Info */}
+                        <div className="p-4 border-b bg-background">
+                            <div className="flex justify-between items-start">
+                                 <div className="flex gap-4">
+                                   <div className="shrink-0">
+                                     {displayCharacter.masterPortraitUrl ? (
+                                       <Avatar
+                                         src={displayCharacter.masterPortraitUrl}
+                                         alt={displayCharacter.name}
+                                         className="w-20 h-20 rounded-lg border shadow-sm"
+                                       />
+                                     ) : (
+                                       <div className="w-20 h-20 rounded-lg bg-muted flex items-center justify-center border shadow-sm">
+                                         <User className="w-8 h-8 text-muted-foreground" />
+                                       </div>
+                                     )}
                                    </div>
-                                 )}
-                               </div>
-                               <div>
-                                <div className="flex items-center gap-3">
-                                    <h2 className="text-2xl font-bold text-foreground">
-                                        {displayCharacter.name}
-                                    </h2>
-                                    {displayCharacter.status === 'approved' && (
-                                        <div className="bg-green-100 text-green-700 px-2 py-0.5 rounded text-xs font-bold border border-green-200 flex items-center gap-1">
-                                            <Check size={12} /> {t('characters:status.approved')}
-                                        </div>
-                                    )}
-                                </div>
-                                <p className="text-muted-foreground mt-1 line-clamp-2 max-w-3xl">
-                                    {displayCharacter.description}
-                                </p>
-                                </div>
-                             </div>
-                             
-                             <div className="flex gap-2">
-                                <Button variant="outline" size="sm" onClick={handleEdit}>
-                                    <Pencil size={14} className="mr-1" />
-                                    Edit Info
-                                </Button>
-                                <Button 
-                                    variant="ghost" 
-                                    size="icon" 
-                                    className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                                    onClick={() => { handleDelete(displayCharacter); }}
-                                >
-                                    <Trash2 size={16} />
-                                </Button>
-                             </div>
+                                   <div>
+                                    <div className="flex items-center gap-3">
+                                        <h2 className="text-2xl font-bold text-foreground">
+                                            {displayCharacter.name}
+                                        </h2>
+                                        {displayCharacter.status === 'approved' && (
+                                            <div className="bg-green-100 text-green-700 px-2 py-0.5 rounded text-xs font-bold border border-green-200 flex items-center gap-1">
+                                                <Check size={12} /> {t('characters:status.approved')}
+                                            </div>
+                                        )}
+                                    </div>
+                                    <p className="text-muted-foreground mt-1 line-clamp-2 max-w-3xl">
+                                        {displayCharacter.description}
+                                    </p>
+                                    </div>
+                                 </div>
+                                 
+                                 <div className="flex gap-2">
+                                    <Button variant="outline" size="sm" onClick={handleEdit}>
+                                        <Pencil size={14} className="mr-1" />
+                                        {t('characters:actions.edit_info')}
+                                    </Button>
+                                    <Button 
+                                        variant="ghost" 
+                                        size="icon" 
+                                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                                        onClick={() => { handleDelete(displayCharacter); }}
+                                    >
+                                        <Trash2 size={16} />
+                                    </Button>
+                                 </div>
+                            </div>
+                        </div>
+
+                        {/* Gallery Area */}
+                        <div className="p-6 bg-muted/5">
+                            <PortraitGallery
+                                portraits={displayCharacter.portraitOptions ?? []}
+                                masterPortraitUrl={displayCharacter.masterPortraitUrl}
+                                selectedCandidateUrl={selectedCandidateUrl ?? displayCharacter.masterPortraitUrl}
+                                onSelectMaster={handleSetMasterPortrait}
+                                onSelectCandidate={setSelectedCandidateUrl}
+                                onRegenerate={() => { generatePortraits.mutate(displayCharacter.id); }}
+                                isGenerating={generatePortraits.isPending}
+                                isSelectingMaster={setMasterPortrait.isPending}
+                                isLoading={isLoadingDetail && !selectedCharacter}
+                            />
+
+                             {/* AI Chat History */}
+                             <AIChatHistory contextImageUrl={selectedCandidateUrl ?? displayCharacter.masterPortraitUrl} />
                         </div>
                     </div>
 
-                    {/* Gallery Area */}
-                    <div className="p-6 bg-muted/5">
-                        <PortraitGallery
-                            portraits={displayCharacter.portraitOptions ?? []}
-                            masterPortraitUrl={displayCharacter.masterPortraitUrl}
-                            selectedCandidateUrl={selectedCandidateUrl ?? displayCharacter.masterPortraitUrl}
-                            onSelectMaster={handleSetMasterPortrait}
-                            onSelectCandidate={setSelectedCandidateUrl}
-                            onRegenerate={() => { generatePortraits.mutate(displayCharacter.id); }}
-                            isGenerating={generatePortraits.isPending}
-                            isSelectingMaster={setMasterPortrait.isPending}
-                            isLoading={isLoadingDetail && !selectedCharacter}
-                        />
-                    </div>
-
-                    {/* AI Chat Area */}
-                    <AIChatPanel
-                        contextImageUrl={selectedCandidateUrl ?? displayCharacter.masterPortraitUrl} 
+                    {/* AI Chat Input - Fixed Bottom */}
+                    <AIChatInput
+                        disabled={!selectedCandidateUrl && !displayCharacter.masterPortraitUrl}
                         onSendMessage={(msg) => {
                             toast.info(t('uikit:coming_soon') + ": " + msg);
                         }}

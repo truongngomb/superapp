@@ -14,14 +14,17 @@ import {
   GripVertical,
   Clock,
   Camera,
-  AlertTriangle
+  AlertTriangle,
+  Wand2
 } from 'lucide-react';
 import { 
   EmptyState,
   Badge,
   Avatar,
   Skeleton,
-  Card
+  Card,
+  useToast,
+  Button
 } from '@superapp/ui-kit';
 import { useVideoScenes } from '@/hooks/useScenes';
 import { useCharacters } from '@/hooks/useCharacters';
@@ -213,6 +216,36 @@ export const ScriptEditorPanel = ({ project }: ScriptEditorPanelProps) => {
     await updateMutation.mutateAsync({ sceneId, data });
   }, [updateMutation]);
 
+  // --- Auto Match Logic ---
+  const [isAutoMatching, setIsAutoMatching] = useState(false);
+  const [hasPerformedAutoMatch, setHasPerformedAutoMatch] = useState(false);
+  const toast = useToast();
+
+  const handleAutoMatchAll = useCallback(() => {
+    if (scenes.length === 0 || !characters || characters.length === 0) return;
+      
+    setIsAutoMatching(true);
+    // TODO: Connect to Real Backend API (scriptService.autoMatchCharacters or similar)
+    // For now, simulating API call
+    setTimeout(() => {
+        setIsAutoMatching(false);
+        setHasPerformedAutoMatch(true);
+        toast.success(t('video_projects:script.auto_match_success'));
+        // In real impl, we would invalidate queries here
+    }, 1500);
+      
+  }, [scenes, characters, toast, t]);
+
+  // Check if any scene has characters assigned
+  const hasAssignedCharacters = useMemo(() => {
+    return scenes.some(scene => {
+       const s = scene as unknown as ExtendedScene;
+       return Array.isArray(s.characterIds) && s.characterIds.length > 0;
+    });
+  }, [scenes]);
+
+  const showAutoMatch = (!hasAssignedCharacters && !hasPerformedAutoMatch) || isAutoMatching;
+
   // Get validation issues per scene
   const getSceneIssues = (sceneId: string) => {
     return validation.issues.filter(i => i.sceneId === sceneId);
@@ -272,6 +305,18 @@ export const ScriptEditorPanel = ({ project }: ScriptEditorPanelProps) => {
             hasExistingScenes={scenes.length > 0}
             disabled={!hasStoryContent}
           />
+          {showAutoMatch && (
+            <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleAutoMatchAll}
+                loading={isAutoMatching}
+                disabled={scenes.length === 0 || (characters || []).length === 0}
+                title={t('video_projects:script.auto_match')}
+            >
+                <Wand2 size={18} />
+            </Button>
+          )}
         </div>
 
         {/* No story warning */}
