@@ -146,7 +146,10 @@
       "tips_title": "훌륭한 스토리를 위한 팁",
       "tip1": "명확한 캐릭터 묘사 포함 (외모, 성격)",
       "tip2": "중요한 장소와 배경 묘사",
-      "tip3": "간결하게 유지 - 15-60초 비디오 목표"
+      "tip3": "간결하게 유지 - 15-60초 비디오 목표",
+      "summarize_tooltip": "AI로 자동 요약",
+      "summarize_success": "설명이 성공적으로 요약되었습니다!",
+      "summarize_error": "콘텐츠를 요약하지 못했습니다"
     },
     "settings": {
       "platform_label": "대상 플랫폼",

@@ -12,6 +12,9 @@ export enum SWSettingKey {
   // Prompts for Visuals
   PROMPT_VISUAL_GEN_BASE = 'sw_prompt_visual_gen_base',
   
+  // Prompts for Summary/Description
+  PROMPT_SUMMARY_GEN = 'sw_prompt_summary_gen',
+  
   // Feature Flags
   FEATURE_USE_KOREAN_OPTIMIZATION = 'sw_feature_use_korean_opt',
 }

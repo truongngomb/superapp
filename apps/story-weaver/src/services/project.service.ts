@@ -23,6 +23,17 @@ class VideoProjectService extends BaseService<VideoProject> {
       `${this.endpoint}/${projectId}/render`
     );
   }
+
+  /**
+   * Call AI to summarize story content into a short description
+   */
+  async summarizeDescription(projectId: string): Promise<string> {
+    const { api, API_ENDPOINTS } = await import('@/config');
+    const result = await api.post<{ description: string }>(
+      `${API_ENDPOINTS.GENERATION}/summarize-description/${projectId}`
+    );
+    return result.description;
+  }
 }
 
 export const videoProjectService = new VideoProjectService();

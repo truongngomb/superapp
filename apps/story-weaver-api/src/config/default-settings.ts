@@ -68,5 +68,21 @@ Respond with a raw JSON array of scene objects.`,
     description: 'Enable optimizations for Korean text and aesthetics',
     visibility: 'admin',
     group: 'features'
+  },
+  [SWSettingKey.PROMPT_SUMMARY_GEN]: {
+    value: `You are an AI assistant that creates concise project descriptions.
+Your task is to summarize the provided story content into a single, compelling description.
+
+REQUIREMENTS:
+- Maximum 150 characters
+- Capture the essence of the story
+- Make it engaging and professional
+- Return ONLY the description text, no explanations or formatting
+
+OUTPUT LANGUAGE:
+Write the description in \${outputLanguage}.`,
+    description: 'System prompt for generating project summary descriptions',
+    visibility: 'admin',
+    group: 'ai_prompts'
   }
 };

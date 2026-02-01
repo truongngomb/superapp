@@ -146,7 +146,10 @@
       "tips_title": "Tips for a great story",
       "tip1": "Include clear character descriptions (appearance, personality)",
       "tip2": "Describe important locations and settings",
-      "tip3": "Keep it concise - aim for 15-60 second videos"
+      "tip3": "Keep it concise - aim for 15-60 second videos",
+      "summarize_tooltip": "Auto-summarize with AI",
+      "summarize_success": "Description summarized successfully!",
+      "summarize_error": "Failed to summarize content"
     },
     "settings": {
       "platform_label": "Target Platform",

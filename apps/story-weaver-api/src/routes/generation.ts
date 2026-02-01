@@ -51,4 +51,9 @@ generationRouter.post(
   asyncHandler(generationController.generatePortraits)
 );
 
+/** POST /summarize-description/:projectId - AI summarize story content to description */
+generationRouter.post(
+  '/summarize-description/:projectId',
+  asyncHandler(generationController.summarizeDescription)
+);
 

@@ -15,3 +15,4 @@ export * from './image-gen.service.js';
 export * from './motion-gen.service.js';
 export * from './rendering.service.js';
 export * from './ai-video.service.js';
+export * from './setting.service.js';

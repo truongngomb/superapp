@@ -11,8 +11,11 @@ import {
   characterService,
   videoSceneService,
   motionGenService,
-  renderingService
+  renderingService,
+  aiTextService,
+  settingService
 } from '../services/index.js';
+import { SWSettingKey } from '../types/settings.js';
 
 /**
  * Helper to verify project ownership
@@ -92,6 +95,49 @@ export const renderVideo = async (req: Request, res: Response) => {
 
   const result = await renderingService.renderProject(projectId);
   res.json({ success: true, data: result });
+};
+
+/**
+ * POST /summarize-description/:projectId
+ * Generate a short description from story content using AI
+ */
+export const summarizeDescription = async (req: Request, res: Response) => {
+  const projectId = req.params['projectId'] as string;
+  const project = await verifyProjectOwnership(projectId, req.user?.id);
+
+  if (!project.storyContent || project.storyContent.trim().length === 0) {
+    res.status(400).json({ 
+      success: false, 
+      error: 'No story content available to summarize' 
+    });
+    return;
+  }
+
+  // Determine output language based on project's scriptLanguage
+  const lang = project.scriptLanguage || 'vi';
+  const langMap: Record<string, string> = {
+    'vi': 'Vietnamese',
+    'en': 'English',
+    'ko': 'Korean'
+  };
+  const outputLanguage = langMap[lang] || 'Vietnamese';
+
+  // Load prompt from DB (follows architecture pattern)
+  const systemPromptTemplate = await settingService.get<string>(SWSettingKey.PROMPT_SUMMARY_GEN);
+  const systemPrompt = systemPromptTemplate.replace('${outputLanguage}', outputLanguage);
+
+  const userPrompt = `Summarize the following story content:\n\n${project.storyContent}`;
+
+  const result = await aiTextService.generate(userPrompt, {
+    systemPrompt,
+    maxTokens: 150,
+    temperature: 0.7
+  });
+
+  res.json({ 
+    success: true, 
+    data: { description: result.content.trim() } 
+  });
 };
 
 

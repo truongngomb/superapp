@@ -146,7 +146,10 @@
       "tips_title": "Mẹo để có câu chuyện tuyệt vời",
       "tip1": "Bao gồm mô tả nhân vật rõ ràng (ngoại hình, tính cách)",
       "tip2": "Mô tả các địa điểm và bối cảnh quan trọng",
-      "tip3": "Giữ ngắn gọn - hướng tới video 15-60 giây"
+      "tip3": "Giữ ngắn gọn - hướng tới video 15-60 giây",
+      "summarize_tooltip": "Tự động tóm tắt bằng AI",
+      "summarize_success": "Đã tóm tắt mô tả thành công!",
+      "summarize_error": "Không thể tóm tắt nội dung"
     },
     "settings": {
       "platform_label": "Nền Tảng Mục Tiêu",

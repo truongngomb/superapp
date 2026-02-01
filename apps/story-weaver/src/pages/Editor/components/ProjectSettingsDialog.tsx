@@ -135,7 +135,8 @@ export function ProjectSettingsDialog({ open, onOpenChange, project }: ProjectSe
                 <TabsContent value="general" className="mt-4">
                     <StoryInputStep 
                         data={data} 
-                        onUpdate={updateData} 
+                        onUpdate={updateData}
+                        projectId={project.id}
                     />
                 </TabsContent>
                 
