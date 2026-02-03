@@ -18,6 +18,7 @@ build/
 *.swp
 *.swo
 *~
+test/
 
 # OS files
 .DS_Store
@@ -59,3 +60,24 @@ implementation_plan.md
 .brain/preferences.json
 .brain/session.json
 .turbo/
+
+# BMAD Framework
+_bmad/_memory/
+_bmad/_cache/
+_bmad/_logs/
+_bmad/**/*.log
+
+# OpenCode
+# 1. Ignore thư mục .opencode nhưng KHÔNG ignore chính nó
+# (để có thể định nghĩa luật bên trong)
+.opencode/*
+# 2. Ngoại lệ: Giữ lại thư mục command và nội dung bên trong
+!.opencode/command/
+!.opencode/command/**
+# 3. (Tùy chọn) Ngoại lệ: Giữ lại các file config quan trọng khác nếu cần
+!.opencode/config.json
+!.opencode/settings.json
+# Loại bỏ các file rác/cá nhân trong .opencode (nếu có)
+.opencode/sessions/
+.opencode/history/
+.opencode/logs/

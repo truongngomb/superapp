@@ -1,0 +1,52 @@
+{
+"workflow_version": "1.2.0",
+"timestamps": {"started": "2026-02-04T10:00:00Z", "completed": "2026-02-04T11:05:00Z", "last_updated": "2026-02-04T11:05:00Z"},
+"mode": "initial_scan",
+"scan_level": "exhaustive",
+"project_root": "E:\\Workspaces\\NNT\\my-project",
+"output_folder": "E:\\Workspaces\\NNT\\my-project\\_bmad-output",
+"completed_steps": [
+  {"step": "step_1", "status": "completed", "timestamp": "2026-02-04T10:15:00Z", "summary": "Classified as monorepo"},
+  {"step": "step_2", "status": "completed", "timestamp": "2026-02-04T10:25:00Z", "summary": "Found existing docs"},
+  {"step": "step_3", "status": "completed", "timestamp": "2026-02-04T10:35:00Z", "summary": "Analyzed tech stack"},
+  {"step": "step_4", "status": "completed", "timestamp": "2026-02-04T10:55:00Z", "summary": "Detailed scan complete"},
+  {"step": "step_5", "status": "completed", "timestamp": "2026-02-04T10:56:00Z", "summary": "Source tree analyzed"},
+  {"step": "step_6", "status": "completed", "timestamp": "2026-02-04T10:58:00Z", "summary": "Dev/Deploy guides created"},
+  {"step": "step_7", "status": "completed", "timestamp": "2026-02-04T11:00:00Z", "summary": "Integration architecture documented"},
+  {"step": "step_8", "status": "completed", "timestamp": "2026-02-04T11:02:00Z", "summary": "Architecture docs created"},
+  {"step": "step_9", "status": "completed", "timestamp": "2026-02-04T11:03:00Z", "summary": "Supporting docs created"},
+  {"step": "step_10", "status": "completed", "timestamp": "2026-02-04T11:04:00Z", "summary": "Master index created"},
+  {"step": "step_11", "status": "completed", "timestamp": "2026-02-04T11:05:00Z", "summary": "Validation complete"},
+  {"step": "step_12", "status": "completed", "timestamp": "2026-02-04T11:05:00Z", "summary": "Workflow complete"}
+],
+"current_step": "completed",
+"findings": {
+  "project_classification": "Monorepo",
+  "technology_stack": "TypeScript, React, Express, PocketBase, Capacitor"
+},
+"outputs_generated": [
+  "project-scan-report.json",
+  "index.md",
+  "project-overview.md",
+  "source-tree-analysis.md",
+  "integration-architecture.md",
+  "development-guide.md",
+  "deployment-guide.md",
+  "architecture-api-server.md",
+  "architecture-story-weaver.md",
+  "architecture-story-weaver-api.md",
+  "architecture-web-core.md",
+  "architecture-ui-kit.md",
+  "api-contracts-api-server.md",
+  "data-models-api-server.md",
+  "api-contracts-story-weaver-api.md",
+  "data-models-story-weaver-api.md",
+  "api-contracts-story-weaver.md",
+  "component-inventory-story-weaver.md",
+  "api-contracts-web-core.md",
+  "component-inventory-web-core.md",
+  "component-inventory-ui-kit.md",
+  "project-parts.json"
+],
+"resume_instructions": "Workflow completed"
+}

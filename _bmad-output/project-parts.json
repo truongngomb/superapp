@@ -1,0 +1,42 @@
+{
+  "repository_type": "monorepo",
+  "parts": [
+    {
+      "id": "api-server",
+      "path": "apps/api-server",
+      "type": "backend",
+      "tech": ["Express", "TypeScript", "PocketBase"]
+    },
+    {
+      "id": "story-weaver",
+      "path": "apps/story-weaver",
+      "type": "web",
+      "tech": ["React", "Vite", "Tailwind"]
+    },
+    {
+      "id": "story-weaver-api",
+      "path": "apps/story-weaver-api",
+      "type": "backend",
+      "tech": ["Express", "OpenAI"]
+    },
+    {
+      "id": "web-core",
+      "path": "apps/web-core",
+      "type": "web",
+      "tech": ["React", "Capacitor"]
+    },
+    {
+      "id": "ui-kit",
+      "path": "packages/ui-kit",
+      "type": "web",
+      "tech": ["React", "Radix UI"]
+    }
+  ],
+  "integration_points": [
+    { "from": "story-weaver", "to": "story-weaver-api", "type": "REST" },
+    { "from": "story-weaver", "to": "api-server", "type": "REST" },
+    { "from": "web-core", "to": "api-server", "type": "REST" },
+    { "from": "api-server", "to": "PocketBase", "type": "SDK" },
+    { "from": "story-weaver-api", "to": "PocketBase", "type": "SDK" }
+  ]
+}

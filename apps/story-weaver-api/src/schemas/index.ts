@@ -14,16 +14,14 @@ import {
   updateVideoSceneSchema
 } from '../types/index.js';
 
-// IMPORTANT: We need to cast these to ZodSchema because shared-types might be using a different Zod version
-// or instance, causing 'not assignable' errors in strict TypeScript mode.
-export const VideoProjectCreateSchema = createVideoProjectSchema as unknown as z.ZodSchema;
-export const VideoProjectUpdateSchema = updateVideoProjectSchema as unknown as z.ZodSchema;
-export const VideoProjectSettingsSchema = videoProjectSettingsSchema as unknown as z.ZodSchema;
+export const VideoProjectCreateSchema = createVideoProjectSchema;
+export const VideoProjectUpdateSchema = updateVideoProjectSchema;
+export const VideoProjectSettingsSchema = videoProjectSettingsSchema;
 
-export const CharacterCreateSchema = createCharacterSchema as unknown as z.ZodSchema;
-export const CharacterUpdateSchema = updateCharacterSchema as unknown as z.ZodSchema;
+export const CharacterCreateSchema = createCharacterSchema;
+export const CharacterUpdateSchema = updateCharacterSchema;
 
-export const VideoSceneCreateSchema = createVideoSceneSchema as unknown as z.ZodSchema;
-export const VideoSceneUpdateSchema = updateVideoSceneSchema as unknown as z.ZodSchema;
+export const VideoSceneCreateSchema = createVideoSceneSchema;
+export const VideoSceneUpdateSchema = updateVideoSceneSchema;
 
 // Add other schemas as needed
