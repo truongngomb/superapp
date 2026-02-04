@@ -29,6 +29,8 @@ export interface ProtectedRouteProps {
   loadingFallback?: ReactNode;
   /** Custom forbidden component (optional) */
   forbiddenFallback?: ReactNode;
+  /** Force full page redirect (useful for breaking out of sub-app router) */
+  forceFullRedirect?: boolean;
 }
 
 // ============================================================================
@@ -45,10 +47,20 @@ export function ProtectedRoute({
   redirectTo = '/login',
   loadingFallback,
   forbiddenFallback,
+  forceFullRedirect = false,
 }: ProtectedRouteProps): ReactElement {
   const { t } = useTranslation(['uikit']);
   const { isAuthenticated, isLoading, checkPermission } = useAuth();
   const location = useLocation();
+
+  const handleRedirect = () => {
+    if (forceFullRedirect) {
+      const from = encodeURIComponent(window.location.pathname + window.location.search);
+      window.location.href = `${redirectTo}?from=${from}`;
+      return null;
+    }
+    return <Navigate to={redirectTo} state={{ from: location }} replace />;
+  };
 
   // Show loading state while checking auth
   if (isLoading) {
@@ -73,7 +85,9 @@ export function ProtectedRoute({
     
     // No permission - redirect to login if not authenticated
     if (!isAuthenticated) {
-      return <Navigate to={redirectTo} state={{ from: location }} replace />;
+      const redirect = handleRedirect();
+      if (redirect === null) return <></>;
+      return redirect;
     }
     
     // Authenticated but no permission - show forbidden
@@ -85,7 +99,9 @@ export function ProtectedRoute({
 
   // No permission check required - require authentication
   if (!isAuthenticated) {
-    return <Navigate to={redirectTo} state={{ from: location }} replace />;
+    const redirect = handleRedirect();
+    if (redirect === null) return <></>;
+    return redirect;
   }
 
   // Access granted

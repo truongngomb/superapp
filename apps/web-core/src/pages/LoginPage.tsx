@@ -6,7 +6,7 @@
 import { useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@superapp/core-logic';
 import { LoadingSpinner } from '@superapp/ui-kit';
 
@@ -45,17 +45,37 @@ export function LoginPage() {
   const { t } = useTranslation(['auth']);
   const { loginWithGoogle, isLoading, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      void navigate('/', { replace: true });
+      // Check for internal router state (from ProtectedRoute)
+      const stateFrom = (location.state as { from?: Location })?.from?.pathname;
+      
+      // Check for query param (from external app redirects)
+      const searchFrom = new URLSearchParams(location.search).get('from');
+      
+      const redirectTo = stateFrom || searchFrom || '/';
+      
+      // If redirecting to an external app path (like /story-weaver) or absolute URL
+      if (redirectTo.startsWith('/story-weaver') || redirectTo.startsWith('http')) {
+         window.location.href = redirectTo;
+      } else {
+         void navigate(redirectTo, { replace: true });
+      }
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, location]);
 
   const handleGoogleLogin = useCallback(() => {
-    loginWithGoogle();
-  }, [loginWithGoogle]);
+    // Get "from" location to pass to backend
+    const stateFrom = (location.state as { from?: Location })?.from?.pathname;
+    const searchFrom = new URLSearchParams(location.search).get('from');
+    const returnUrl = stateFrom || searchFrom;
+    
+    // Pass redirect URL directly to backend (will be stored in cookie)
+    loginWithGoogle(returnUrl || undefined);
+  }, [loginWithGoogle, location]);
 
   // Show loading while checking initial auth 
   if (isLoading) {

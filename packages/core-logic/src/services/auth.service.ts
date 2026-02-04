@@ -42,10 +42,12 @@ export const authService = {
   /**
    * Initiate Google OAuth login
    * Redirects browser to Google OAuth flow
+   * @param redirectTo - Optional URL to redirect after successful login
    */
-  loginWithGoogle(): void {
+  loginWithGoogle(redirectTo?: string): void {
     if (typeof window !== 'undefined') {
-      window.location.href = `/api${API_ENDPOINTS.AUTH.GOOGLE}`;
+      const params = redirectTo ? `?redirect_to=${encodeURIComponent(redirectTo)}` : '';
+      window.location.href = `/api${API_ENDPOINTS.AUTH.GOOGLE}${params}`;
     }
   },
 

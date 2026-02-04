@@ -35,12 +35,15 @@ const COOKIE_OPTIONS = {
 /**
  * GET /auth/google - Initiate Google OAuth flow
  */
-export const initGoogleAuth = async (_req: Request, res: Response) => {
+export const initGoogleAuth = async (req: Request, res: Response) => {
   try {
     const { url, state, codeVerifier } = await authService.initGoogleAuth();
+    
+    // Get redirect_to from query param (optional)
+    const redirectTo = req.query['redirect_to'] as string | undefined;
 
-    // Store state and verifier in cookie for callback
-    res.cookie('oauth_state', JSON.stringify({ state, codeVerifier }), {
+    // Store state, verifier, and optional redirect URL in cookie for callback
+    res.cookie('oauth_state', JSON.stringify({ state, codeVerifier, redirectTo }), {
       ...COOKIE_OPTIONS,
       maxAge: config.auth.oauthStateMaxAge,
     });
@@ -64,7 +67,11 @@ export const handleGoogleCallback = async (req: Request, res: Response) => {
       res.redirect(`${config.clientUrl}/login?error=invalid_callback`); return;
     }
 
-    const { state: savedState, codeVerifier } = JSON.parse(oauthState) as { state: string; codeVerifier: string };
+    const { state: savedState, codeVerifier, redirectTo } = JSON.parse(oauthState) as { 
+      state: string; 
+      codeVerifier: string;
+      redirectTo?: string;
+    };
 
     if (state !== savedState) {
       res.redirect(`${config.clientUrl}/login?error=state_mismatch`); return;
@@ -81,7 +88,17 @@ export const handleGoogleCallback = async (req: Request, res: Response) => {
       maxAge: config.auth.sessionMaxAge,
     });
 
-    res.redirect(config.clientUrl);
+    // Redirect to the original URL if provided, otherwise to home
+    if (redirectTo) {
+      // For security, only allow relative paths or same-origin URLs
+      if (redirectTo.startsWith('/')) {
+        res.redirect(`${config.clientUrl}${redirectTo}`);
+      } else {
+        res.redirect(config.clientUrl);
+      }
+    } else {
+      res.redirect(config.clientUrl);
+    }
   } catch (error) {
     log.error('Google callback error', error);
     res.redirect(`${config.clientUrl}/login?error=auth_failed`);

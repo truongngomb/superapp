@@ -41,14 +41,21 @@ const LibraryPlaceholder = () => {
     );
 };
 
+// Helper for redirects
+const RedirectToRootLogin = () => {
+  window.location.href = '/login';
+  return null;
+};
+
 export function AppRoutes() {
   return (
     <Routes>
       <Route element={<MainLayout />}>
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="login" element={<RedirectToRootLogin />} />
         
         <Route path="dashboard" element={
-          <ProtectedRoute>
+          <ProtectedRoute forceFullRedirect={true}>
             <LazyPage>
               <DashboardPage />
             </LazyPage>
@@ -56,7 +63,7 @@ export function AppRoutes() {
         } />
         
         <Route path="create" element={
-            <ProtectedRoute>
+            <ProtectedRoute forceFullRedirect={true}>
               <LazyPage>
                 <DashboardPage /> 
               </LazyPage>
@@ -65,7 +72,7 @@ export function AppRoutes() {
         />
 
         <Route path="library" element={
-            <ProtectedRoute>
+            <ProtectedRoute forceFullRedirect={true}>
               <LazyPage>
                 <LibraryPlaceholder />
               </LazyPage>
@@ -74,7 +81,7 @@ export function AppRoutes() {
         />
 
         <Route path="editor/:id" element={
-          <ProtectedRoute>
+          <ProtectedRoute forceFullRedirect={true}>
             <LazyPage>
               <EditorPage />
             </LazyPage>
@@ -82,7 +89,7 @@ export function AppRoutes() {
         } />
         
         <Route path="settings" element={
-            <ProtectedRoute>
+            <ProtectedRoute forceFullRedirect={true}>
               <LazyPage>
                  <SettingsPlaceholder />
               </LazyPage>

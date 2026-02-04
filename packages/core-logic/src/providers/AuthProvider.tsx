@@ -95,8 +95,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [checkAuth]);
 
   // Login with Google OAuth
-  const loginWithGoogle = useCallback(() => {
-    authService.loginWithGoogle();
+  const loginWithGoogle = useCallback((redirectTo?: string) => {
+    authService.loginWithGoogle(redirectTo);
   }, []);
 
   // Logout

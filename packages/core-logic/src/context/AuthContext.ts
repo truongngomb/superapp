@@ -10,8 +10,8 @@ export interface AuthContextType {
   isLoading: boolean;
   /** Auth error message */
   error: string | null;
-  /** Initiate Google OAuth login */
-  loginWithGoogle: () => void;
+  /** Initiate Google OAuth login with optional redirect URL */
+  loginWithGoogle: (redirectTo?: string) => void;
   /** Logout current user */
   logout: () => Promise<void>;
   /** Check if user has specific permission */
